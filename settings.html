@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>설정</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#08090B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="모두의 통사">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/favicon.png">
+<link rel="stylesheet" href="css/base.css?v=2cabad0f">
+<link rel="stylesheet" href="css/coach.css?v=098c724b">
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<style>
+  .wrapx{max-width:1080px;margin:0 auto;padding:0 var(--s3) var(--s6)}
+  h1,h2,h3{font-family:var(--title);font-weight:var(--tw);letter-spacing:var(--tls)}
+  .sec{margin-top:var(--s5)}
+  .sechd{display:flex;align-items:baseline;gap:12px;margin-bottom:var(--s2);flex-wrap:wrap}
+  .sechd h2{font-size:22px}
+  .sechd .cap{font-size:13.5px;color:var(--ink-4)}
+
+  /* 학년 */
+  .grades{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+  .gr{border:1px solid var(--line);border-radius:var(--r2);background:var(--surface);
+    padding:20px 22px;cursor:pointer;text-align:left;font-family:inherit;transition:.16s;
+    position:relative;display:block;width:100%}
+  .gr:hover{border-color:var(--line-3)}
+  .gr[aria-pressed="true"]{border-color:var(--red);box-shadow:0 0 0 1px var(--red) inset}
+  .gr .g{font-family:var(--mono);font-size:12px;color:var(--ink-4);letter-spacing:.1em}
+  .gr h3{font-size:19px;margin:8px 0 6px}
+  .gr p{font-size:13.5px;color:var(--ink-3);line-height:1.62}
+  .gr .tag{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:11px;
+    border:1px solid var(--line-2);color:var(--ink-3);padding:4px 10px;border-radius:6px}
+  .gr[aria-pressed="true"] .tag{border-color:var(--red-line);color:var(--red-2);
+    background:var(--red-soft)}
+
+  /* 디자인 */
+  /* 기록 옮기기 — 계정이 생기기 전까지의 안전장치 */
+  .keep{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:var(--s2)}
+  .keep button{appearance:none;border:1px solid var(--line-2);background:var(--surface);
+    color:var(--ink);border-radius:var(--r1);padding:11px 16px;font:inherit;
+    font-weight:600;cursor:pointer}
+  .keep button:hover{border-color:var(--mint);color:var(--mint)}
+  .keep .warn{border-color:var(--line-2);color:var(--ink-3)}
+  .keepcode{width:100%;min-height:76px;margin-top:10px;padding:10px 12px;
+    border:1px solid var(--line-2);border-radius:var(--r1);
+    background:var(--surface-2);color:var(--ink-3);font-family:var(--mono);
+    font-size:11.5px;line-height:1.5;resize:vertical}
+  .keepsay{margin-top:8px;font-size:13px;color:var(--ink-3)}
+  .keepsay.ok{color:var(--mint)}
+  .keepsay.no{color:var(--accent)}
+  .skins{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px}
+  .sk{border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;cursor:pointer;
+    background:var(--surface);padding:0;font-family:inherit;text-align:left;transition:.16s;
+    display:block;width:100%}
+  .sk:hover{border-color:var(--line-3)}
+  .sk[aria-pressed="true"]{border-color:var(--red);box-shadow:0 0 0 1px var(--red) inset}
+  .sk .prev{height:96px;position:relative;display:flex;align-items:center;
+    justify-content:center;gap:9px}
+  .sk .prev i{display:block;border-radius:50%;border-width:2px;border-style:solid}
+  .sk .nm{padding:12px 15px;border-top:1px solid var(--line);display:flex;
+    align-items:center;gap:8px;font-size:14.5px;font-weight:700;color:var(--ink)}
+  .sk .nm em{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:11px;
+    color:var(--ink-4)}
+  .sk[aria-pressed="true"] .nm em{color:var(--red-2)}
+
+  /* 목표일 */
+  .exams{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+  .ex{border:1px solid var(--line);border-radius:var(--r2);background:var(--surface);
+    padding:18px 20px}
+  .ex .k{font-size:13.5px;font-weight:700;color:var(--ink-2)}
+  .ex .d{font-family:var(--mono);font-size:34px;font-weight:600;color:var(--ink);
+    letter-spacing:-.045em;margin:8px 0 4px;line-height:1}
+  .ex .d.soon{color:var(--red-2)}
+  .ex input{width:100%;margin-top:9px;background:var(--surface-2);color:var(--ink-2);
+    border:1px solid var(--line);border-radius:var(--r1);padding:9px 11px;
+    font-family:var(--mono);font-size:13px}
+  .ex .note{font-size:12px;color:var(--ink-4);margin-top:8px;line-height:1.55}
+
+  /* 구독·확장팩 */
+  .plan{border:1px solid var(--line);border-radius:var(--r2);background:var(--surface);
+    padding:22px 24px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  .plan .tx{flex:1;min-width:240px}
+  .plan h3{font-size:18px;margin-bottom:7px}
+  .plan p{font-size:13.5px;color:var(--ink-3);line-height:1.65}
+  .sw{appearance:none;width:52px;height:30px;border-radius:999px;border:1px solid var(--line-2);
+    background:var(--surface-3);position:relative;cursor:pointer;transition:.2s;flex:0 0 auto}
+  .sw:after{content:"";position:absolute;left:3px;top:2.5px;width:23px;height:23px;
+    border-radius:50%;background:var(--ink-4);transition:.2s}
+  .sw[aria-checked="true"]{background:var(--red);border-color:var(--red)}
+  .sw[aria-checked="true"]:after{left:26px;background:#fff}
+
+  .pk .pkn{display:block;margin-top:3px;font-size:11.5px;color:var(--ink-4);
+    font-family:var(--mono)}
+  .pk .pkn.dim{opacity:.6}
+  .pk.off{opacity:.55;cursor:default}
+  .pk.off:hover{border-color:var(--line-2)}
+  .packs{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+  .pk{border:1px solid var(--line);border-radius:var(--r1);background:var(--surface);
+    padding:14px 16px;display:flex;align-items:center;gap:11px;cursor:pointer;
+    font-family:inherit;text-align:left;transition:.16s;width:100%}
+  .pk:hover{border-color:var(--line-3)}
+  .pk[aria-pressed="true"]{border-color:var(--red-line);background:var(--red-soft)}
+  .pk .bx{width:19px;height:19px;border-radius:6px;border:1.5px solid var(--line-3);
+    flex:0 0 19px;display:grid;place-items:center;font-size:12px;color:transparent}
+  .pk[aria-pressed="true"] .bx{background:var(--red);border-color:var(--red);color:#fff}
+  .pk .nm{flex:1;min-width:0}
+  .pk .nm b{display:block;font-size:14px;color:var(--ink-2);font-weight:700}
+  .pk .nm span{font-size:11.5px;color:var(--ink-4);font-family:var(--mono)}
+  .pk .st{font-family:var(--mono);font-size:10.5px;color:var(--ink-4);
+    border:1px solid var(--line);padding:3px 8px;border-radius:5px}
+
+  /* 교재 */
+  .books{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+  .bk{border:1px solid var(--line);border-radius:var(--r2);background:var(--surface);
+    overflow:hidden;display:flex;flex-direction:column}
+  .bk .cv{height:120px;display:flex;align-items:flex-end;padding:16px 18px;
+    background:linear-gradient(135deg,var(--red-soft),transparent 70%),var(--surface-2);
+    border-bottom:1px solid var(--line)}
+  .bk .cv b{font-size:19px;color:var(--ink);letter-spacing:-.04em;
+    font-family:var(--title);font-weight:var(--tw)}
+  .bk .bd{padding:16px 18px;flex:1;display:flex;flex-direction:column;gap:10px}
+  .bk p{font-size:13.5px;color:var(--ink-3);line-height:1.65;flex:1}
+  .bk .go{display:flex;align-items:center;gap:9px}
+  .bk .go .btn{font-size:13.5px;padding:10px 16px}
+
+  .note{font-size:12.5px;color:var(--ink-4);border-left:2px solid var(--line-2);
+    padding-left:13px;margin-top:16px;line-height:1.8;max-width:88ch}
+  .note b{color:var(--ink-3)}
+  @media(max-width:520px){.wrapx{padding:0 14px var(--s5)}}
+
+  /* ── 하루 루틴 ── */
+  .rt-set{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);
+    padding:var(--s4)}
+  .mins{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .mins button{appearance:none;border:1px solid var(--line-2);background:var(--surface);
+    color:var(--ink-2);border-radius:var(--r1);padding:13px 6px;cursor:pointer;
+    font-family:var(--mono);font-size:15px;transition:.15s;text-align:center}
+  .mins button b{display:block;font-size:21px;color:var(--ink);font-weight:600}
+  .mins button small{display:block;font-size:11px;color:var(--ink-4);margin-top:3px;
+    font-family:var(--sans)}
+  .mins button:hover{border-color:var(--ink-3)}
+  .mins button[aria-pressed="true"]{border-color:var(--red);background:var(--red-soft)}
+  .mins button[aria-pressed="true"] b{color:var(--red-2)}
+  .rt-what{margin-top:14px;padding-top:13px;border-top:1px solid var(--line);
+    display:grid;gap:7px}
+  .rt-what .r{display:flex;gap:10px;align-items:baseline;font-size:13.5px;color:var(--ink-2)}
+  .rt-what .r i{width:6px;height:6px;border-radius:50%;background:var(--red);
+    flex:0 0 auto;position:relative;top:-2px}
+  .rt-what .r .m2{margin-left:auto;font-family:var(--mono);font-size:12.5px;color:var(--ink-4)}
+  .nrow{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    margin-top:16px;padding-top:14px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .nrow .tx b{display:block;font-size:14px;color:var(--ink);font-weight:700}
+  .nrow .tx span{font-size:12px;color:var(--ink-4)}
+  .nrow .ct{display:flex;gap:9px;align-items:center}
+  .nrow input[type=time]{font-family:var(--mono);font-size:14px;padding:7px 10px;
+    border-radius:9px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+  /* ── 시험 범위 ── */
+  .scope{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);
+    padding:var(--s4)}
+  .sc-quick{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+  .sc-quick button{appearance:none;border:1px solid var(--line-2);background:var(--surface);
+    color:var(--ink-2);border-radius:99px;padding:7px 13px;font-size:12.5px;cursor:pointer}
+  .sc-quick button:hover{border-color:var(--red);color:var(--ink)}
+  .sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .sc-grid button{appearance:none;text-align:left;border:1px solid var(--line-2);
+    background:var(--surface);color:var(--ink-2);border-radius:var(--r1);
+    padding:12px 13px;cursor:pointer;transition:.15s;font-size:13.5px;line-height:1.45}
+  .sc-grid button b{display:block;color:var(--ink);font-size:14px;font-weight:700}
+  .sc-grid button small{color:var(--ink-4);font-size:11.5px;font-family:var(--mono)}
+  .sc-grid button:hover{border-color:var(--ink-3)}
+  .sc-grid button[aria-pressed="true"]{border-color:var(--red);background:var(--red-soft)}
+  .sc-grid button[aria-pressed="true"] b{color:var(--red-2)}
+  .sc-book{grid-column:1/-1;font-family:var(--mono);font-size:11px;color:var(--ink-4);
+    letter-spacing:.12em;margin-top:8px}
+  .sc-sum{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);
+    font-size:13.5px;color:var(--ink-2);line-height:1.7}
+  .sc-sum b{color:var(--ink)}
+  @media(max-width:520px){ .sc-grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="wrapx">
+  <div class="phead">
+    <div>
+      <span class="kicker"><i></i>설정</span>
+      <h1>내 학습 설정</h1>
+      <p class="sub" id="lede"></p>
+    </div>
+  </div>
+
+  <section class="sec">
+    <div class="sechd"><h2>하루 루틴</h2>
+      <span class="cap">매일 이만큼만 하면 됩니다</span></div>
+    <div class="rt-set" id="rtset"></div>
+    <p class="note" id="rtnote"></p>
+  </section>
+
+  <section class="sec">
+    <div class="sechd"><h2>이번 시험 범위</h2>
+      <span class="cap">학교마다 다르니 직접 고릅니다</span></div>
+    <div class="scope" id="scope"></div>
+    <p class="note" id="scnote"></p>
+  </section>
+
+  <section class="sec">
+    <div class="sechd"><h2>학년</h2>
+      <span class="cap">학년에 따라 배우는 과목과 겨누는 시험이 달라집니다</span></div>
+    <div class="grades" id="grades"></div>
+    <p class="note" id="gnote"></p>
+  </section>
+
+  <section class="sec">
+    <div class="sechd"><h2>스킬트리를 묶는 축</h2>
+      <span class="cap">통합사회는 통합 과목이라 한 가지로 안 갈립니다</span></div>
+    <div class="grades" id="axes"></div>
+    <p class="note" id="axnote"></p>
+  </section>
+
+  <section class="sec">
+    <div class="sechd"><h2>목표일</h2>
+      <span class="cap" id="excap"></span></div>
+    <div class="exams" id="exams"></div>
+  </section>
+
+  <section class="sec">
+    <div class="sechd"><h2>디자인</h2>
+      <span class="cap">고른 결은 이 브라우저에 남습니다</span></div>
+    <div class="skins" id="skins"></div>
+  </section>
+
+  <section class="sec">
+    <div class="sechd"><h2>구독</h2></div>
+    <div class="plan" id="plan"></div>
+  </section>
+
+  <section class="sec" id="packsec">
+    <div class="sechd"><h2>확장팩</h2>
+      <span class="cap">듣는 선택과목만 골라 붙입니다</span></div>
+    <div class="packs" id="packs"></div>
+    <p class="note">확장팩은 <b>선택과목 하나 단위</b>로 붙입니다. 통합사회 본품과 같은
+      스킬트리·문제풀이·트레이닝을 그 과목 범위로 쓰게 됩니다.<br>
+      <b>문항은 대부분 고3 기출(수능·모평·학력평가)입니다.</b>
+      고2 학력평가만으로는 한 과목에 100~300문항밖에 안 되어 범위를 채우지 못합니다 —
+      그래서 <b>범위에 맞는 고3 기출</b>로 채웁니다. 각 과목의 문항 수와 출처는 위에 적혀 있습니다.<br>
+      2022 개정으로 과목 이름이 바뀐 것은 <b>옛 이름</b>을 함께 적었습니다.
+      ‘정치’와 ‘법과 사회’는 옛 <b>정치와 법</b>이 둘로 갈린 것이라 단원별로 나눠 담았습니다.</p>
+  </section>
+
+  <section class="sec">
+    <div class="sechd"><h2>교재</h2><span class="cap" id="bkcap"></span></div>
+    <div class="books" id="books"></div>
+  </section>
+
+  <section class="sec">
+    <div class="sechd"><h2>기록 옮기기</h2>
+      <span class="cap">폰을 바꾸기 전에 꺼내 두세요</span></div>
+    <p class="note" style="margin-bottom:var(--s2)">지금까지 푼 기록은 <b>이 기기 이 브라우저</b>에만
+      있습니다. 폰을 바꾸거나 브라우저 자료를 지우면 사라집니다. 아래에서 꺼내 두면
+      다른 기기에서 그대로 이어서 할 수 있어요.</p>
+    <div class="keep">
+      <button id="kexp" type="button">파일로 내보내기</button>
+      <button id="kimp" type="button">파일에서 가져오기</button>
+      <button id="kcode" type="button">옮기기 코드 만들기</button>
+      <button id="kpaste" type="button" class="warn">코드로 되돌리기</button>
+    </div>
+    <input type="file" id="kfile" accept="application/json,.json" hidden>
+    <textarea class="keepcode" id="kbox" spellcheck="false"
+      placeholder="여기에 옮기기 코드가 나옵니다. 다른 기기에서는 이 칸에 붙여 넣고 ‘코드로 되돌리기’를 누르세요."></textarea>
+    <p class="keepsay" id="ksay"></p>
+  </section>
+
+  <p class="note" style="margin-top:var(--s5)">설정은 이 브라우저에만 저장됩니다(localStorage).
+    계정이 붙으면 그대로 옮겨 갑니다. <b>값이 정해지지 않은 것은 비워 두었습니다</b> —
+    교재 값과 확장팩 값은 아직 정하지 않아 적지 않았습니다.</p>
+</div>
+
+<script src="js/trend.js?v=53fd8a90"></script>
+<script src="js/tree.js?v=bcf14aaf"></script>
+<script src="js/lecture.js?v=978fa2e7"></script>
+<script src="js/video.js?v=489e4da1"></script>
+<script src="js/pool.js?v=4a7d39b1"></script>
+<script src="js/packs.js?v=41b3cef7"></script>
+<script src="js/drills.js?v=82b6c52c"></script>
+<script src="js/store.js?v=e28a9ee6"></script>
+<script src="js/coach.js?v=9bbd5a61"></script>
+<script src="js/notify.js?v=61699ebf"></script>
+<script>
+(function(){
+  var T=TERRA;
+  T.mountNav("settings.html");
+  var S=T.state();
+
+  function esc(t){ return String(t==null?"":t)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  /* ── 하루 루틴 ── */
+  var MINS=[10,15,20,30];
+  /* ── 이번 시험 범위 ──
+     내신 범위는 학교가 정하고 학교마다 다르다. 그래서 개인 설정이다.
+     범위를 정하면 킬러 훈련·오늘 루틴·문제풀이가 그 안에서만 돈다. */
+  var BOOK={
+    "통합사회 1":["A","B","C","D","E"],
+    "통합사회 2":["F","G","H","I","J"]
+  };
+  /* ★ 빠른 고르기는 **학기 × 중간·기말 넷**이다(2026-09-04 대표님 지시).
+     고1은 1학기에 통합사회 1, 2학기에 통합사회 2 를 배우므로 같은 "중간고사"라도
+     범위가 통째로 다르다. 값은 store.js 의 기본범위 한 곳에서 가져온다 —
+     여기에 숫자를 다시 적으면 두 벌이 되어 조용히 어긋난다. */
+  var 빠른 = (function(){
+    var B = T.기본범위 || {};
+    var 목록 = [];
+    ["s1mid","s1fin","s2mid","s2fin"].forEach(function(k){
+      var b = B[k];
+      if(!b) return;
+      목록.push({ name: b.name + " · " + b.단원, codes: b.roots.slice(),
+                 과목: b.과목, 근거: b.근거, key: k });
+    });
+    목록.push({name:"통합사회 1 전체", codes:["A","B","C","D","E"]});
+    목록.push({name:"통합사회 2 전체", codes:["F","G","H","I","J"]});
+    목록.push({name:"범위 지우기", codes:[]});
+    return 목록;
+  })();
+  function paintScope(){
+    var sc=T.scope();
+    var 칸="";
+    Object.keys(BOOK).forEach(function(bk){
+      칸+='<div class="sc-book">'+bk+'</div>';
+      BOOK[bk].forEach(function(code){
+        var r=T.BY[code];
+        if(!r) return;
+        var on=sc.indexOf(code)>=0;
+        var 몫=0;
+        r.mids.forEach(function(m){ m.leaves.forEach(function(l){ 몫+=T.mainCount(l); }); });
+        칸+='<button data-sc="'+code+'" aria-pressed="'+on+'">'+
+          '<b>'+esc(r.name)+'</b><small>지금 풀 수 있는 '+몫+'문항</small></button>';
+      });
+    });
+    document.getElementById("scope").innerHTML=
+      '<div class="sc-quick">'+빠른.map(function(q,i){
+        return '<button data-q="'+i+'">'+q.name+'</button>'; }).join("")+'</div>'+
+      '<div class="sc-grid">'+칸+'</div>'+
+      '<div class="sc-sum">'+(sc.length
+        ? '이번 시험 범위 <b>'+T.scopeName()+'</b>. '+
+          '킬러 훈련과 오늘 할 일이 이 범위 안에서만 나옵니다.'
+        : '아직 안 정했습니다 — <b>전 범위</b>로 나옵니다. '+
+          '범위를 정하면 시험에 안 나올 단원이 빠져 시간을 아낍니다.')+'</div>';
+    document.querySelectorAll("[data-sc]").forEach(function(b){
+      b.onclick=function(){
+        var c=b.dataset.sc, cur=T.scope().slice();
+        var i=cur.indexOf(c);
+        if(i>=0) cur.splice(i,1); else cur.push(c);
+        T.setScope(cur); paintScope();
+      };
+    });
+    document.querySelectorAll("[data-q]").forEach(function(b){
+      b.onclick=function(){ T.setScope(빠른[+b.dataset.q].codes.slice()); paintScope(); };
+    });
+    document.getElementById("scnote").innerHTML=
+      '대단원을 눌러 고릅니다. <b>사상가</b>는 교과서 대단원이 아니라 단원을 가로지르는 축이라, '+
+      '<b>행복</b>이나 <b>사회 정의와 불평등</b>이 범위에 들면 따라 붙습니다. '+
+      '범위를 정해도 그 밖의 단원이 사라지지는 않습니다 — 흐리게 표시될 뿐이라 언제든 볼 수 있습니다.';
+  }
+  paintScope();
+
+  function paintRt(){
+    var goal=T.goalMin(), R=T.routine();
+    document.getElementById("rtset").innerHTML=
+      '<div class="mins">'+MINS.map(function(v){
+        return '<button data-min="'+v+'" aria-pressed="'+(v===goal)+'">'+
+          '<b>'+v+'</b>분<small>'+
+          (v<=10?"딱 한 가지":v<=15?"권해요":v<=20?"넉넉히":"작정하고")+
+          '</small></button>'; }).join("")+'</div>'+
+      '<div class="rt-what">'+R.items.map(function(it){
+        return '<span class="r"><i></i>'+esc(it.title)+' — '+esc(it.say)+
+          '<span class="m2">'+it.min+'분</span></span>'; }).join("")+'</div>'+
+      (function(){
+        var N=window.TERRA_NOTIFY;
+        if(!N) return '';
+        var st=N.status();
+        return '<div class="nrow"><span class="tx"><b>알림</b>'+
+          '<span>'+esc(st.say)+'</span></span>'+
+          '<span class="ct"><input type="time" id="ntime2" value="'+st.at+'">'+
+          '<button class="sw" role="switch" id="ntog2" aria-checked="'+
+          (st.on&&st.granted)+'"></button></span></div>';
+      })();
+    document.querySelectorAll("[data-min]").forEach(function(b){
+      b.onclick=function(){ T.setGoalMin(+b.dataset.min); paintRt(); };
+    });
+    var N=window.TERRA_NOTIFY;
+    var tg=document.getElementById("ntog2");
+    if(tg&&N) tg.onclick=function(){
+      if(tg.getAttribute("aria-checked")==="true"){ N.disable(); paintRt(); return; }
+      N.enable().then(function(r){
+        if(r!=="granted") alert("브라우저가 알림을 막고 있어요.\n"+
+          "주소창 왼쪽 자물쇠를 눌러 알림을 허용해 주세요.");
+        paintRt();
+      });
+    };
+    var tm=document.getElementById("ntime2");
+    if(tm&&N) tm.onchange=function(){ N.setAt(this.value); paintRt(); };
+
+    document.getElementById("rtnote").innerHTML=
+      '분은 <b>어림값</b>이에요 — 문항 하나에 50초, 강의는 실제 길이, 트레이닝 한 세트 3분으로 잡았습니다. '+
+      '학평 통합사회가 25문항 30분(문항당 72초)인데, 되돌리는 문항은 이미 본 것이라 더 빠르다고 보았어요. '+
+      '리포트의 달력은 이 시간을 채운 날을 칠합니다.';
+  }
+  paintRt();
+
+  /* ── 학년 ── */
+  function paintGrades(){
+    var now=S.student.grade||"고1";
+    document.getElementById("grades").innerHTML=["고1","고2","고3"].map(function(g){
+      var G=T.GRADES[g];
+      return '<button class="gr" data-g="'+g+'" aria-pressed="'+(g===now)+'">'+
+        '<span class="g">'+g+'</span><h3>'+G.subject+'</h3>'+
+        '<p>'+G.say+'</p><span class="tag">'+G.ddayName+' 대비 · '+G.pool+'</span></button>';
+    }).join("");
+    document.querySelectorAll("[data-g]").forEach(function(b){
+      b.onclick=function(){ T.setGrade(b.dataset.g); paintAll(); };
+    });
+    var G=T.gradeInfo();
+    document.getElementById("lede").textContent=
+      "지금은 "+now+" 입니다. "+G.say;
+    document.getElementById("gnote").innerHTML=
+      "통합사회는 <b>고1 과목</b>입니다. 고2·고3 은 선택과목을 듣기 때문에, "+
+      "학년을 바꾸면 문항 풀과 목표일, 권해 드리는 것이 함께 바뀝니다. "+
+      (now==="고2"
+        ? "고2 는 아래 <b>확장팩</b>에서 듣는 과목을 골라 주세요."
+        : now==="고3"
+          ? "고3 은 평가원·교육청 기출을 대량으로 돌리는 쪽으로 맞춰 둡니다."
+          : "고1 은 학교 진도에 맞춘 개념 다지기와 내신 대비가 중심입니다.");
+    document.getElementById("packsec").style.display=(now==="고1")?"none":"";
+    document.getElementById("excap").textContent=
+      G.ddayName+" 날짜를 넣으면 리포트 맨 위에 남은 날이 뜹니다";
+    document.getElementById("bkcap").textContent=now+" 에게 맞는 것부터 보입니다";
+  }
+
+  /* ── 묶는 축 ──
+     지리·일반사회·윤리로 가르는 것은 "이 내용을 어느 수능 선택과목에서 다시 만나는가"다.
+     교과서에 그런 구분이 있는 것이 아니고, 실제로 깨끗하게 갈리지도 않는다
+     (2026-08-31 실측: 사회 정의와 불평등은 일반사회 55%·윤리 43%). */
+  var AXINFO={
+    "교과서":{name:"교과서 차례",
+      say:"통합사회 1·2 의 대단원 순서 그대로 — 학교 진도와 1:1 로 맞습니다. 내신에 바로 씁니다.",
+      tag:"통합사회 1 · 통합사회 2 · 사상가"},
+    "수능":{name:"수능 선택과목",
+      say:"이 내용을 세계지리·정치와법·생활과윤리 가운데 어디서 다시 만나는지로 묶습니다.",
+      tag:"지리 · 일반사회 · 윤리"}
+  };
+  function axisNow(){
+    var v="";
+    try{ v=localStorage.getItem("terra.axis")||""; }catch(e){}
+    return (v==="교과서"||v==="수능") ? v : "";
+  }
+  function axisAuto(){ return ((S.student||{}).grade==="고3")?"수능":"교과서"; }
+  function paintAxes(){
+    var now=axisNow(), eff=now||axisAuto();
+    var opts=[["","학년에 맞춰 자동",
+      "지금 학년("+(S.student.grade||"고1")+")이면 <b>"+AXINFO[axisAuto()].name+"</b>로 묶습니다.",
+      AXINFO[axisAuto()].tag]];
+    ["교과서","수능"].forEach(function(k){
+      opts.push([k,AXINFO[k].name,AXINFO[k].say,AXINFO[k].tag]);
+    });
+    document.getElementById("axes").innerHTML=opts.map(function(o){
+      return '<button class="gr" data-ax="'+o[0]+'" aria-pressed="'+(o[0]===now)+'">'+
+        '<span class="g">'+(o[0]?"직접 고름":"자동")+'</span><h3>'+o[1]+'</h3>'+
+        '<p>'+o[2]+'</p><span class="tag">'+o[3]+'</span></button>';
+    }).join("");
+    document.querySelectorAll("[data-ax]").forEach(function(b){
+      b.onclick=function(){
+        try{
+          if(b.dataset.ax) localStorage.setItem("terra.axis",b.dataset.ax);
+          else localStorage.removeItem("terra.axis");
+        }catch(e){}
+        paintAxes();
+      };
+    });
+    document.getElementById("axnote").innerHTML=
+      '지금 스킬트리는 <b>'+AXINFO[eff].name+'</b>로 묶여 있습니다. '+
+      '지리·일반사회·윤리라는 구분은 교과서에 있는 것이 아니라, 그 단원 문항이 '+
+      '어느 수능 선택과목 기출에서 왔는지로 저희가 가른 것입니다. '+
+      '실측해 보면 <b>사회 정의와 불평등</b>은 일반사회 55%·윤리 43%로 반씩이고, '+
+      '<b>통합적 관점</b>은 문항이 전부 통합사회 학평이라 판정할 근거조차 없습니다. '+
+      '그래서 고1·고2는 교과서 차례로, 고3은 수능 과목으로 묶어 둡니다.';
+  }
+
+  /* ── 목표일 ── */
+  function paintExams(){
+    var list=T.exams();
+    document.getElementById("exams").innerHTML=list.map(function(e){
+      var d=e.date?T.dday(e.date):null;
+      return '<div class="ex"><div class="k">'+esc(e.name)+'</div>'+
+        '<div class="d'+(d&&d.days<=30&&d.days>=0?" soon":"")+'">'+
+        (d?d.label:"—")+'</div>'+
+        '<input type="date" value="'+(e.date||"")+'" data-ex="'+e.id+'">'+
+        '<p class="note" style="border:0;padding:0;margin-top:8px">'+esc(e.note||"")+'</p></div>';
+    }).join("")+
+    '<div class="ex" style="display:flex;flex-direction:column;justify-content:center">'+
+    '<div class="k">일정 추가</div>'+
+    '<p class="note" style="border:0;padding:0;margin:8px 0 12px">수행평가·모의고사도 넣어 두면 함께 셉니다</p>'+
+    '<button class="btn ghost sm" id="addex">+ 추가</button></div>';
+    document.querySelectorAll("[data-ex]").forEach(function(inp){
+      inp.onchange=function(){ T.setExam(inp.dataset.ex,{date:inp.value}); paintExams(); };
+    });
+    document.getElementById("addex").onclick=function(){
+      T.addExam("새 일정",""); paintExams();
+    };
+  }
+
+  /* ── 디자인 ── */
+  var PREV={
+    "":     {bg:"#070B14", ring:"#4FC3E8", fill:"#2A7E95", ink:"#DEE8F8"},
+    "note": {bg:"#F6F2E7", ring:"#2F5AA8", fill:"#9DB4DC", ink:"#1F2B44"},
+    "jelly":{bg:"#FFF6FA", ring:"#F0417E", fill:"#F9A7C6", ink:"#33232C"},
+    "white":{bg:"#FFFFFF", ring:"#E5202E", fill:"#F5A3A8", ink:"#111419"}
+  };
+  function paintSkins(){
+    var now=T.skin();
+    document.getElementById("skins").innerHTML=T.SKINS.map(function(k){
+      var p=PREV[k.id]||PREV[""];
+      return '<button class="sk" data-sk="'+k.id+'" aria-pressed="'+(k.id===now)+'">'+
+        '<span class="prev" style="background:'+p.bg+'">'+
+        '<i style="width:34px;height:34px;border-color:'+p.ring+
+          ';background:linear-gradient(to top,'+p.fill+' 62%,transparent 62%)"></i>'+
+        '<i style="width:26px;height:26px;border-color:'+p.ring+
+          ';background:linear-gradient(to top,'+p.fill+' 28%,transparent 28%)"></i>'+
+        '<i style="width:20px;height:20px;border-color:'+p.ring+';opacity:.55"></i>'+
+        '</span><span class="nm">'+k.name+'<em>'+(k.id===now?"쓰는 중":"고르기")+'</em></span>'+
+        '</button>';
+    }).join("");
+    document.querySelectorAll("[data-sk]").forEach(function(b){
+      b.onclick=function(){ T.setSkin(b.dataset.sk); paintSkins(); };
+    });
+  }
+
+  /* ── 구독 ── */
+  function paintPlan(){
+    var p=T.plan();
+    document.getElementById("plan").innerHTML=
+      '<span class="tx"><h3>'+(p.sub?"구독 중":"무료로 쓰는 중")+'</h3>'+
+      '<p>'+(p.sub
+        ? "모든 단원의 문제풀이와 트레이닝, 리포트를 제한 없이 씁니다."+
+          (p.since?" "+p.since+" 부터.":"")
+        : "지금도 스킬트리와 리포트, 트레이닝을 쓸 수 있습니다. "+
+          "구독하면 문제풀이 분량과 확장팩 제한이 풀립니다.")+
+      ' <b style="color:var(--ink-3)">값은 아직 정하지 않았습니다.</b></p></span>'+
+      '<button class="sw" id="subsw" role="switch" aria-checked="'+(!!p.sub)+'"></button>';
+    document.getElementById("subsw").onclick=function(){
+      T.setPlan(!T.plan().sub); paintPlan();
+    };
+  }
+
+  /* ── 확장팩 ── */
+  function paintPacks(){
+    /* ★ 상태를 손으로 적지 않는다 — `packList()` 가 문항을 **세어서** 정한다.
+       전에는 자료에 박아 둔 state 를 그려서, 문항이 있어도 "준비 중" 이었다. */
+    var list=T.packList();
+    document.getElementById("packs").innerHTML=list.map(function(k){
+      var 상태 = k.state==="ready" ? "쓸 수 있음"
+               : (k.state==="thin" ? "문항 적음" : "준비 중");
+      /* 옛 과목 이름을 밝힌다 — "세계시민과 지리" 를 고른 학생이 받는 것은
+         옛 **세계지리** 기출이다. 알아야 범위를 스스로 가늠한다. */
+      var 밑 = k.n
+        ? ('<span class="pkn">' + k.n.toLocaleString() + '문항' +
+           (k.g3 ? ' · 고3 ' + k.g3 : '') + (k.g2 ? ' · 고2 ' + k.g2 : '') +
+           (k.was && k.was !== k.name ? ' · 옛 ' + k.was : '') + '</span>')
+        : '<span class="pkn dim">문항 준비 중</span>';
+      return '<button class="pk'+(k.state==="soon"?" off":"")+
+        '" data-pk="'+k.id+'" aria-pressed="'+k.on+'"'+
+        (k.state==="soon"?' disabled':'')+'>'+
+        '<span class="bx">✓</span><span class="nm"><b>'+k.name+'</b>'+
+        '<span>'+k.group+'</span>'+밑+'</span>'+
+        '<span class="st">'+상태+'</span></button>';
+    }).join("");
+    document.querySelectorAll("[data-pk]").forEach(function(b){
+      b.onclick=function(){ T.togglePack(b.dataset.pk); paintPacks(); };
+    });
+  }
+
+  /* ── 교재 ── */
+  function paintBooks(){
+    var g=S.student.grade||"고1";
+    var list=T.BOOKS.filter(function(b){ return b.grade===g||b.grade==="*"; });
+    document.getElementById("books").innerHTML=list.map(function(b){
+      return '<div class="bk"><div class="cv"><b>'+b.name+'</b></div>'+
+        '<div class="bd"><p>'+b.say+'</p><div class="go">'+
+        '<button class="btn quiet" disabled>'+
+        (b.state==="soon"?"준비 중":"보러 가기")+'</button>'+
+        '<span style="font-size:12px;color:var(--ink-4)">값·출간일 미정</span>'+
+        '</div></div></div>';
+    }).join("");
+  }
+
+  function paintAll(){
+    S=T.state();
+    paintGrades(); paintAxes(); paintExams(); paintSkins(); paintPlan();
+    paintPacks(); paintBooks();
+  }
+  /* ── 기록 옮기기 ──────────────────────────────
+     기록이 이 기기에만 있다. 계정이 붙기 전까지의 안전장치다.
+
+     ★ 되돌리기는 **지금 기록을 덮는다.** 되돌릴 수 없다.
+       그래서 덮기 전에 지금 것과 들어올 것을 나란히 보여 주고 묻는다. */
+  var 상자=document.getElementById("kbox"), 말=document.getElementById("ksay");
+  function 알림(t,꼴){ 말.textContent=t; 말.className="keepsay"+(꼴?" "+꼴:""); }
+
+  function 사람말(요약){
+    var 조각=[];
+    if(요약.문항) 조각.push("문항 "+요약.문항+"개");
+    if(요약.훈련) 조각.push("훈련 "+요약.훈련+"번");
+    if(요약.시험) 조각.push("모의고사 "+요약.시험+"회");
+    return 조각.length?조각.join(" · "):"기록 없음";
+  }
+
+  /* 덮기 전에 묻는다 — 무엇을 잃고 무엇을 얻는지 적어서 */
+  function 덮을까(들어올것){
+    var 지금=T.짐요약(T.기록모으기());
+    return confirm(
+      "지금 이 기기의 기록을 덮어씁니다." + "\n\n" +
+      "  지금  " + 사람말(지금) + "\n" +
+      "  들어옴 " + 사람말(들어올것) +
+      (들어올것.만든때 ? "  (" + 들어올것.만든때.slice(0, 10) + " 에 꺼낸 것)" : "") +
+      "\n\n" + "덮으면 되돌릴 수 없습니다. 계속할까요?");
+  }
+
+  document.getElementById("kexp").onclick=function(){
+    try{ 알림("내려받았어요 — "+T.파일로내보내기(), "ok"); }
+    catch(e){ 알림("내보내지 못했어요: "+e.message, "no"); }
+  };
+
+  document.getElementById("kcode").onclick=function(){
+    알림("코드를 만드는 중이에요…");
+    /* 압축은 비동기다 — 기다리지 않으면 상자에 "[object Promise]" 가 찍힌다 */
+    T.옮기기코드().then(function(코드){
+      상자.value=코드;
+      상자.select();
+      알림("이 글자를 통째로 복사해 다른 기기의 같은 칸에 붙여 넣으세요. "+
+           "("+코드.length.toLocaleString()+"자 — 길면 파일 내보내기가 편해요)", "ok");
+    }).catch(function(e){ 알림("코드를 만들지 못했어요: "+e.message, "no"); });
+  };
+
+  document.getElementById("kpaste").onclick=function(){
+    var v=(상자.value||"").trim();
+    if(!v){ 알림("먼저 위 칸에 옮기기 코드를 붙여 넣어 주세요.", "no"); return; }
+    /* 덮기 전에 **읽어만** 본다 — 깨진 코드면 여기서 멈춘다 */
+    알림("코드를 읽는 중이에요…");
+    T.코드읽기(v).then(function(짐){
+      var 들어올것=T.짐요약(짐);
+      if(!덮을까(들어올것)) { 알림("그대로 두었어요."); return; }
+      var r=T.기록되돌리기(짐);
+      알림("되돌렸어요 — "+사람말(r)+". 새로 고치면 반영됩니다.", "ok");
+      paintAll();
+    }).catch(function(e){
+      알림("이 코드는 읽을 수 없어요. 통째로 복사됐는지 확인해 주세요.", "no");
+    });
+  };
+
+  var 파일=document.getElementById("kfile");
+  document.getElementById("kimp").onclick=function(){ 파일.value=""; 파일.click(); };
+  파일.onchange=function(){
+    var f=파일.files && 파일.files[0];
+    if(!f) return;
+    var rd=new FileReader();
+    rd.onload=function(){
+      var 짐;
+      try{ 짐=JSON.parse(rd.result); }
+      catch(e){ 알림("이 파일은 읽을 수 없어요.", "no"); return; }
+      var 들어올것;
+      try{ 들어올것=T.짐요약(짐); }
+      catch(e){ 알림("학습 기록이 없는 파일이에요.", "no"); return; }
+      if(!덮을까(들어올것)) { 알림("그대로 두었어요."); return; }
+      try{
+        var r=T.기록되돌리기(짐);
+        알림("되돌렸어요 — "+사람말(r)+". 새로 고치면 반영됩니다.", "ok");
+        paintAll();
+      }catch(e){ 알림("되돌리지 못했어요: "+e.message, "no"); }
+    };
+    rd.readAsText(f);
+  };
+
+  paintAll();
+  window.addEventListener("terra:skin",function(){ paintSkins(); });
+})();
+</script>
+<script>
+/* ★ 개발 중(localhost)에는 서비스워커를 **등록하지 않고, 이미 등록된 것은 푼다.**
+   js·css 를 캐시 먼저 주는 전략이라 고치고 열면 늘 한 판 늦는다 —
+   실제로 확장팩 화면이 열 개 전부 "준비 중" 으로 보여 한참 헤맸다(2026-09-03).
+   개발서버는 no-store 인데 서비스워커는 서버 헤더와 무관하게 제 캐시를 준다.
+   배포 주소에서는 그대로 등록한다 — 오프라인은 실사용에서 값어치가 있다. */
+(function () {
+  if (!("serviceWorker" in navigator)) return;
+  var 개발 = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  if (개발) {
+    navigator.serviceWorker.getRegistrations().then(function (rs) {
+      rs.forEach(function (r) { r.unregister(); });
+    }).catch(function () {});
+    if (window.caches) caches.keys().then(function (ks) {
+      ks.forEach(function (k) { caches.delete(k); });
+    }).catch(function () {});
+    return;
+  }
+  addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").catch(function () {});
+  });
+})();
+</script>
+</body>
+</html>

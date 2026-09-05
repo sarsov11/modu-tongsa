@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>개념 카드 — 모두의 통사</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#08090B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="모두의 통사">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/favicon.png">
+<link rel="stylesheet" href="css/base.css?v=2cabad0f">
+<link rel="stylesheet" href="css/coach.css?v=098c724b">
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<style>
+  .page{max-width:820px;margin:0 auto;padding:0 var(--s3) var(--s6)}
+  .hd{padding:var(--s5) 0 var(--s3)}
+  .hd .eb{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--ink-4);
+    text-transform:uppercase}
+  .hd h1{font-size:28px;letter-spacing:-.04em;margin:8px 0 5px}
+  .hd p{color:var(--ink-3);font-size:14.5px;margin:0}
+
+  .prog{display:flex;gap:5px;margin:var(--s3) 0 var(--s2)}
+  .prog i{flex:1;height:4px;border-radius:99px;background:var(--surface-3)}
+  .prog i.ok{background:var(--mint)}
+  .prog i.no{background:var(--red)}
+  .prog i.now{background:var(--ink-4)}
+
+  /* ── 지식 카드 — 장황하지 않게. 두세 줄이면 충분하다 ── */
+  .card{border:1px solid var(--line-2);border-radius:var(--r3);background:var(--surface);
+    padding:26px 28px;margin-bottom:var(--s2);position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+    background:var(--fam-geo)}
+  .card[data-k="조문"]::before{background:var(--fam-soc)}
+  .card[data-k="사상가"]::before{background:var(--fam-eth)}
+  .card .badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);
+    font-size:11px;font-weight:700;letter-spacing:.08em;padding:4px 9px;border-radius:5px;
+    border:1px solid var(--line-2);color:var(--ink-3)}
+  .card h2{font-size:21px;margin:12px 0 14px;letter-spacing:-.03em}
+  .card ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+  .card li{display:flex;gap:11px;align-items:flex-start;font-size:16px;line-height:1.7;
+    color:var(--ink)}
+  .card li i{flex:0 0 auto;width:6px;height:6px;border-radius:50%;margin-top:11px;
+    background:var(--red)}
+  .card .src{margin-top:16px;padding-top:13px;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:11.5px;color:var(--ink-4)}
+  .card .act{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+
+  /* ── 바로 확인 ── */
+  .qz{border:1px solid var(--line-2);border-radius:var(--r3);background:var(--surface);
+    padding:24px 26px;margin-bottom:var(--s2)}
+  .qz .lab{font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;color:var(--ink-4);
+    text-transform:uppercase}
+  .qz .stem{font-size:18px;font-weight:700;line-height:1.65;margin:12px 0 20px;
+    color:var(--ink);letter-spacing:-.02em}
+  .ox{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .ox button{font-family:inherit;font-size:24px;font-weight:800;padding:20px;
+    border-radius:var(--r2);border:1px solid var(--line-2);background:var(--surface-2);
+    color:var(--ink-2);cursor:pointer;transition:.15s}
+  .ox button:hover{border-color:var(--line-3);color:var(--ink)}
+  .ox button[disabled]{opacity:.45;pointer-events:none}
+
+  .verdict{border-radius:var(--r2);padding:18px 20px;margin-top:16px;
+    border:1px solid var(--line-2);background:var(--surface-2)}
+  .verdict.good{border-color:rgba(47,224,206,.4);background:rgba(47,224,206,.07)}
+  .verdict.bad{border-color:var(--red-line);background:var(--red-soft)}
+  .verdict.warn{border-color:rgba(240,150,40,.45);background:rgba(240,150,40,.09)}
+  .verdict .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .verdict .mark{font-size:16px;font-weight:800;color:var(--ink)}
+  .verdict .kind{font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+    padding:3px 8px;border-radius:5px;border:1px solid var(--line-2);color:var(--ink-3)}
+  .verdict .say{margin:10px 0 0;font-size:15px;color:var(--ink-2);line-height:1.65}
+  .verdict .act{margin-top:14px;display:flex;gap:9px;flex-wrap:wrap}
+
+  .done{border:1px solid var(--line-2);border-radius:var(--r3);background:var(--surface);
+    padding:30px 28px;text-align:center}
+  .done h2{font-size:24px;margin-bottom:8px;letter-spacing:-.03em}
+  .done p{color:var(--ink-3);font-size:14.5px;margin-bottom:8px}
+  .done .ubar{max-width:400px;margin:18px auto 22px}
+  .done .ubar .lab{display:flex;justify-content:space-between;font-size:12.5px;
+    color:var(--ink-4);margin-bottom:5px}
+  .done .ubar .lab b{color:var(--ink-2);font-family:var(--mono)}
+  .done .act{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  @media(max-width:520px){
+    .page{padding:0 14px var(--s5)}
+    .card,.qz{padding:20px 18px}
+    .card h2{font-size:19px}
+    .card li{font-size:15px}
+  }
+</style>
+</head>
+<body>
+<div id="nav"></div>
+<div class="page">
+  <div class="hd">
+    <span class="eb" id="eb"></span>
+    <h1 id="ttl">개념 카드</h1>
+    <p id="lede">읽고 바로 확인합니다. 강의를 볼 시간이 없을 때 이걸로 대신하세요.</p>
+  </div>
+  <div class="prog" id="prog"></div>
+  <div id="stage"></div>
+</div>
+
+<script src="js/tree.js?v=bcf14aaf"></script>
+<script src="js/qbank.js?v=a75ab4a3"></script>
+<script src="js/oxbank.js?v=cef819c2"></script>
+<script src="js/cards.js?v=b13e045d"></script>
+<script src="js/judge.js?v=58560af7"></script>
+<script src="js/pool.js?v=4a7d39b1"></script>
+<script src="js/drills.js?v=82b6c52c"></script>
+<script src="js/trend.js?v=53fd8a90"></script>
+<script src="js/store.js?v=e28a9ee6"></script>
+<script src="js/coach.js?v=9bbd5a61"></script>
+<script>
+(function(){
+  var T=window.TERRA, J=window.JUDGE;
+  var CARDS=window.CARDS||{}, BANK=window.OXBANK||[];
+  T.mountNav && T.mountNav("card");
+
+  function esc(s){ return String(s==null?"":s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function el(id){ return document.getElementById(id); }
+
+  /* OX 를 id 로 빨리 찾는다 */
+  var OXBY={}; BANK.forEach(function(x){ OXBY[x.id]=x; });
+
+  /* ── 어느 리프의 카드인가 ────────────────────────────
+     주소로 받거나, 없으면 **오늘 할 것**을 그대로 쓴다.
+     화면마다 다른 것을 권하면 안 되므로 store 의 오늘의리프를 부른다. */
+  var QS=new URLSearchParams(location.search);
+  var leaf=QS.get("leaf");
+  if(!leaf || !CARDS[leaf]){
+    var 후보=(T.오늘의리프?T.오늘의리프({전부:true}):[]).filter(function(c){
+      return CARDS[c.code] && CARDS[c.code].cards.length;
+    });
+    leaf = 후보.length ? 후보[0].code : Object.keys(CARDS)[0];
+  }
+  var 묶음 = CARDS[leaf];
+
+  if(!묶음){
+    el("stage").innerHTML='<div class="done"><h2>아직 카드가 없어요</h2>'+
+      '<p>이 단원은 문제로 먼저 익히는 편이 빨라요.</p>'+
+      '<div class="act"><a class="btn" href="study.html">문제 풀러 가기</a>'+
+      '<a class="btn ghost" href="skilltree.html">스킬트리</a></div></div>';
+    return;
+  }
+
+  var 장들 = 묶음.cards.slice(0,5);
+  var i=0, 결과=[];
+  if(window.COACH) COACH.begin({kind:"card"});   // 리프를 안 넘긴다 — 카드는 이해도를 안 움직인다
+
+  el("eb").textContent = 묶음.root+" "+(T.BY[leaf]&&T.BY[leaf].mid.root.name||"")+" · "+묶음.mid;
+  el("ttl").textContent = 묶음.name;
+  el("lede").textContent = "카드 "+장들.length+"장이에요. 하나 읽고 바로 확인합니다 — "
+    + "다 맞히면 바로 문제로 넘어가면 돼요. 이해도는 문제를 맞힌 만큼 올라요.";
+
+  function 진행(){
+    el("prog").innerHTML = 장들.map(function(_,k){
+      var r=결과[k];
+      return '<i class="'+(r?(r.ok?"ok":"no"):(k===i?"now":""))+'"></i>';
+    }).join("");
+  }
+
+  function 카드그리기(){
+    진행();
+    if(i>=장들.length) return 끝();
+    var c=장들[i];
+    el("stage").innerHTML =
+      '<div class="card" data-k="'+esc(c.k)+'">'+
+        '<span class="badge">'+esc(c.k)+'</span>'+
+        '<h2>'+esc(c.title)+'</h2>'+
+        '<ul>'+c.lines.map(function(t){
+          return '<li><i></i><span>'+esc(t)+'</span></li>'; }).join("")+'</ul>'+
+        (c.src?'<p class="src">'+esc(c.src)+'</p>':'')+
+        '<div class="act"><button class="btn" id="ok">읽었어요 — 확인 →</button>'+
+          (i>0?'<button class="btn ghost" id="back">앞 카드</button>':'')+
+        '</div>'+
+      '</div>';
+    el("ok").onclick=확인;
+    if(el("back")) el("back").onclick=function(){ i=Math.max(0,i-1); 카드그리기(); };
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  var 시작시각=0, 지금문항=null;
+  function 확인(){
+    var c=장들[i];
+    var ids=(c.check||[]).filter(function(id){ return OXBY[id]; });
+    if(!ids.length){                      // 확인 문항이 없으면 그냥 넘긴다
+      결과[i]={ok:true, skip:true}; i++; return 카드그리기();
+    }
+    지금문항 = OXBY[ids[0]];
+    시작시각 = Date.now();
+    el("stage").insertAdjacentHTML("beforeend",
+      '<div class="qz" id="qz">'+
+        '<span class="lab">바로 확인</span>'+
+        '<p class="stem">'+esc(지금문항.t)+'</p>'+
+        '<div class="ox"><button data-v="1">O</button><button data-v="0">X</button></div>'+
+      '</div>');
+    document.querySelectorAll("#qz .ox button").forEach(function(b){
+      b.onclick=function(){ 답하기(b.dataset.v==="1"); };
+    });
+    el("qz").scrollIntoView({behavior:"smooth",block:"center"});
+  }
+
+  function 답하기(고른){
+    var x=지금문항, ok=(!!x.a===고른);
+    var ms=Date.now()-시작시각;
+    document.querySelectorAll("#qz .ox button").forEach(function(b){ b.disabled=true; });
+
+    /* 기록 — ★ 확인 문항은 OX 문장(id "B1.1_1")이지 문항은행 문항이 아니다.
+       T.answer(x.id, …) 는 QOF 에 없어 **조용히 null 을 돌려주고 아무것도 안 남겼다**(2026-09-05 실측).
+       개념 체크(ox.html)와 같은 꼴로 훈련 기록(k:"x", t:"card")에 남긴다 —
+       오늘 분·훈련 수에 들어가고 선생님 띠가 반응한다. 이해도는 문항으로만 찬다(대표님 원칙). */
+    T.drill && T.drill("card", ok);
+    T.save && T.save();
+
+    var st=T.leafStat?T.leafStat(leaf):null;
+    var v=J.판정({
+      ok:ok, conf:"sure", ms:ms, attempt:1, qid:x.id,
+      mastery:(st&&st.solved)?(st.correct/st.solved):null,
+      streak: T.연속오답 ? T.연속오답(leaf) : 0
+    });
+    결과[i]={ok:ok, kind:v.kind};
+    진행();
+
+    el("qz").insertAdjacentHTML("beforeend",
+      '<div class="verdict '+v.tone+'">'+
+        '<div class="top"><span class="mark">'+(ok?"○ 맞았어요":"✕ 아니에요")+'</span>'+
+          '<span class="kind">'+esc(v.kind)+'</span></div>'+
+        '<p class="say">'+esc(v.say)+'</p>'+
+        (!ok ? '<p class="say" style="margin-top:8px"><b>카드로 돌아가 한 번 더 읽어 보세요.</b> '+
+               '방금 읽은 것과 어긋난 자리예요.</p>' : '')+
+        '<div class="act">'+
+          (!ok?'<button class="btn ghost" id="again">카드 다시 보기</button>':'')+
+          '<button class="btn" id="next">'+
+            (i+1>=장들.length?"끝내기":"다음 카드 →")+'</button>'+
+        '</div>'+
+      '</div>');
+    if(el("again")) el("again").onclick=function(){ 카드그리기(); };
+    el("next").onclick=function(){ i++; 카드그리기(); };
+  }
+
+  function 끝(){
+    var 맞=결과.filter(function(r){ return r&&r.ok; }).length;
+    var u=T.이해도?T.이해도(leaf):0;
+    /* 카드는 이해도를 안 움직인다(문항으로만 찬다) — 결산에 이해도 막대를 안 넣는다 */
+    if(window.COACH) COACH.wrap({got:맞, total:장들.length, kind:"card",
+      more:{label:"문제 풀러 가기", onclick:function(){ location.href="study.html?leaf="+leaf; }}});
+    el("stage").innerHTML=
+      '<div class="done">'+
+        '<h2>'+esc(묶음.name)+' — 카드 '+장들.length+'장 끝</h2>'+
+        '<p>'+맞+' / '+장들.length+' 맞혔어요.</p>'+
+        '<div class="ubar"><div class="lab"><span>이해도</span><b>'+u+' / 100</b></div>'+
+          '<span class="track"><i style="width:'+u+'%;background:'+
+          (u>=80?"var(--mint)":"var(--lv2)")+'"></i></span></div>'+
+        '<p>'+(u>=80
+          ? "여기는 잡혔어요. 문제로 굳히면 끝납니다."
+          : "이제 문제로 확인할 차례예요. 맞힌 만큼 이해도가 올라갑니다.")+'</p>'+
+        '<div class="act">'+
+          '<a class="btn" href="study.html?leaf='+leaf+'">문제 풀러 가기 →</a>'+
+          '<a class="btn ghost" href="skilltree.html?area='+묶음.root+'">스킬트리</a>'+
+        '</div>'+
+      '</div>';
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  카드그리기();
+})();
+</script>
+<script>
+/* 개발 중(localhost)에는 서비스워커를 등록하지 않고, 이미 등록된 것은 푼다 */
+(function(){
+  var 로컬=/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname);
+  if(!("serviceWorker" in navigator)) return;
+  if(로컬){
+    navigator.serviceWorker.getRegistrations&&navigator.serviceWorker.getRegistrations()
+      .then(function(rs){ rs.forEach(function(r){ r.unregister(); }); });
+    return;
+  }
+  navigator.serviceWorker.register("sw.js").catch(function(){});
+})();
+</script>
+</body>
+</html>

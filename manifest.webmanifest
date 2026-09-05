@@ -1,0 +1,44 @@
+{
+ "name": "모두의 통사",
+ "short_name": "모두의 통사",
+ "description": "통합사회 스킬트리 · 기출 문제풀이 · 킬러 트레이닝",
+ "start_url": "./index.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "portrait-primary",
+ "background_color": "#08090B",
+ "theme_color": "#08090B",
+ "lang": "ko",
+ "icons": [
+  {
+   "src": "icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "icons/icon-mask.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "스킬트리",
+   "url": "./skilltree.html"
+  },
+  {
+   "name": "문제풀이",
+   "url": "./study.html"
+  },
+  {
+   "name": "킬러 트레이닝",
+   "url": "./drill.html"
+  }
+ ]
+}

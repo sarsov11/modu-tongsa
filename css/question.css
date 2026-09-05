@@ -1,0 +1,126 @@
+/* 문항 조판 — 화면이 달라도 **같은 문항은 같게** 보여야 한다.
+ *
+ * 크롭 이미지를 붙이던 것을 걷어내고 텍스트로 짠다.
+ * 글꼴·크기·줄간격을 여기 한 곳에서 정한다. 화면마다 따로 두면
+ * 같은 문항이 문제풀이와 시험지에서 다르게 보인다.
+ *
+ * 실제 시험지를 흉내 내되 화면에서 읽기 좋게 — 종이보다 줄간격을 넉넉히.
+ */
+
+/* ── 발문 ────────────────────────────────── */
+.stem{
+  font-size:17px; font-weight:700; color:var(--ink); line-height:1.62;
+  letter-spacing:-.022em; margin:0 0 16px;
+  word-break:keep-all;                 /* 한글은 낱말 가운데서 안 끊는다 */
+}
+
+/* ㉠ ㄱ (가) 같은 표지 — 문항이 가리키는 자리다 */
+.mk{ color:var(--red-2); font-weight:700; }
+
+/* ── 자료 상자 ───────────────────────────── */
+.data{
+  border-radius:var(--r1); padding:17px 19px; margin:0 0 14px;
+  background:var(--surface-2); border:1px solid var(--line);
+  border-left:3px solid var(--mint);
+  font-size:15.5px; line-height:1.86; color:var(--ink-2);
+  word-break:keep-all;
+}
+.data p{ margin:0 0 8px; }
+.data p:last-child{ margin-bottom:0; }
+
+/* 갑·을 대화 — 누가 한 말인지 보여야 한다 */
+.data .say{ display:flex; gap:10px; align-items:baseline; }
+.data .say .who{
+  flex:0 0 auto; width:20px; height:20px; border-radius:50%;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:var(--line-2); color:var(--ink); font-size:12px; font-weight:700;
+}
+
+/* ── 보기 상자 ───────────────────────────── */
+.boki{
+  border-radius:var(--r1); padding:15px 18px 15px; margin:0 0 14px;
+  background:var(--surface-2); border:1px dashed var(--line-2);
+  font-size:15px; line-height:1.8; color:var(--ink-2);
+  word-break:keep-all;
+}
+.boki:before{
+  content:"보 기"; display:block; text-align:center;
+  font-family:var(--mono); font-size:11px; letter-spacing:.28em;
+  color:var(--ink-4); margin-bottom:10px;
+  padding-bottom:8px; border-bottom:1px solid var(--line);
+}
+.boki p{ display:flex; gap:8px; margin:0 0 6px; }
+.boki p:last-child{ margin-bottom:0; }
+.boki .bk{ flex:0 0 auto; color:var(--ink-3); font-weight:600; }
+
+/* ── 표 ──────────────────────────────────── */
+.qtab{ overflow-x:auto; margin:0 0 14px; }
+.qtab table{
+  width:100%; border-collapse:collapse; font-size:14px;
+  background:var(--surface-2); border:1px solid var(--line-2);
+  border-radius:var(--r1); overflow:hidden;
+}
+.qtab th,.qtab td{
+  border:1px solid var(--line); padding:9px 11px; text-align:center;
+  color:var(--ink-2); white-space:nowrap;
+}
+.qtab th{ background:var(--surface); color:var(--ink); font-weight:600; }
+.qtab td:first-child{ text-align:left; white-space:normal; }
+
+/* ── 그림 — 꼭 필요할 때만 ─────────────────
+   발문·선지는 그림에 넣지 않는다. 답이 그림 속에 숨기 때문이다. */
+.qfig{ margin:0 0 14px; background:var(--surface-2); border-radius:var(--r1);
+  overflow:hidden; border:1px solid var(--line); }
+.qfig img{ display:block; width:100%; height:auto;
+  filter:invert(1) contrast(1.06) brightness(.97); }
+:root[data-skin="note"] .qfig img,
+:root[data-skin="jelly"] .qfig img,
+:root[data-skin="white"] .qfig img{ filter:none; }
+:root[data-skin="note"] .qfig,
+:root[data-skin="jelly"] .qfig,
+:root[data-skin="white"] .qfig{ background:#fff; }
+.qfig figcaption{
+  padding:7px 12px; font-family:var(--mono); font-size:11px;
+  color:var(--ink-4); background:var(--surface); border-top:1px solid var(--line);
+}
+
+/* ── 선지 — 읽기만 할 때 ──────────────────── */
+.opts5{ list-style:none; margin:0; padding:0; }
+.opts5 li{
+  display:flex; gap:9px; align-items:baseline; padding:7px 2px;
+  font-size:15.5px; line-height:1.68; color:var(--ink-2); word-break:keep-all;
+}
+.opts5 .n{ flex:0 0 auto; font-size:15px; color:var(--ink-3); font-weight:600; }
+
+/* ── 선지 — 고를 때 ───────────────────────── */
+.picks{ display:flex; flex-direction:column; gap:8px; }
+/* 선지 수만큼 칸을 낸다 — 4지선다에 빈 칸이 생기면 안 된다 */
+.picks.row{ display:grid; grid-template-columns:repeat(var(--n,5),1fr); }
+.picks .pick{
+  appearance:none; display:flex; gap:10px; align-items:baseline;
+  text-align:left; width:100%;
+  border:1px solid var(--line-2); background:var(--surface-2); color:var(--ink-2);
+  border-radius:var(--r1); padding:13px 15px; cursor:pointer;
+  font-size:15.5px; line-height:1.6; transition:.12s; word-break:keep-all;
+}
+.picks.row .pick{ justify-content:center; padding:13px 6px; font-size:17px; }
+/* 원문자 ①②③④⑤ 는 고정폭 글꼴에 없다 — 본문 글꼴로 그려야 또렷하다.
+   (원문자는 그 자체로 폭이 같아 고정폭이 필요 없다) */
+.picks .pick .n{ flex:0 0 auto; color:var(--ink-3); font-weight:600; }
+.picks .pick:hover{ border-color:var(--ink-3); color:var(--ink); }
+.picks .pick[aria-pressed="true"]{
+  border-color:var(--mint); background:var(--mint-soft); color:var(--ink);
+}
+.picks .pick[aria-pressed="true"] .n{ color:var(--mint-2); font-weight:700; }
+/* 채점 뒤 */
+.picks .pick[data-s="ok"]{ border-color:var(--mint); background:var(--mint-soft); color:var(--ink); }
+.picks .pick[data-s="no"]{ border-color:var(--red); background:var(--red-soft); color:var(--red-2); }
+.picks .pick[data-s="ans"]{ border-color:var(--mint); color:var(--mint-2); font-weight:600; }
+.picks .pick:disabled{ cursor:default; }
+
+@media(max-width:560px){
+  .stem{ font-size:16px; }
+  .data,.boki{ font-size:14.5px; padding:14px 15px; }
+  .opts5 li,.picks .pick{ font-size:14.5px; }
+  .picks.row .pick{ font-size:16px; padding:11px 4px; }
+}

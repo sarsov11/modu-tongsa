@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>문제풀이</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#08090B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="모두의 통사">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/favicon.png">
+<link rel="stylesheet" href="css/base.css?v=2cabad0f">
+<link rel="stylesheet" href="css/coach.css?v=098c724b">
+<link rel="stylesheet" href="css/question.css?v=d65c13a7">
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<style>
+  .wrapx{max-width:1360px;margin:0 auto;padding:0 var(--s3) var(--s6)}
+  .cols{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:var(--s3);
+    align-items:start;margin-top:var(--s3)}
+
+  /* ── 문항 ── */
+  .qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r2);
+    overflow:hidden}
+  .qtop{display:flex;align-items:center;gap:12px;padding:15px 22px;flex-wrap:wrap;
+    border-bottom:1px solid var(--line)}
+  .qtop .no{font-family:var(--mono);font-size:13px;color:var(--ink-4);font-weight:600}
+  .qtop .srcline{font-family:var(--mono);font-size:12px;color:var(--ink-4);margin-left:auto}
+  .qbody{padding:24px 26px 26px}
+  .stem{font-size:18px;font-weight:700;color:var(--ink);line-height:1.62;
+    letter-spacing:-.025em;margin-bottom:18px}
+  .data{position:relative;border-radius:var(--r1);padding:20px 22px;margin-bottom:16px;
+    background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--mint);
+    font-size:16px;line-height:1.92;color:var(--ink-2)}
+  .boki{border-radius:var(--r1);padding:16px 20px;margin-bottom:16px;
+    background:var(--surface-2);border:1px dashed var(--line-2);
+    font-size:15.5px;line-height:1.85;color:var(--ink-2)}
+  .boki:before{content:"보 기";display:block;font-family:var(--mono);font-size:11px;
+    letter-spacing:.2em;color:var(--ink-4);margin-bottom:8px}
+  /* 표·지도는 원본이 있어야 읽힌다.
+     어두운 스킨에서는 **반전**해서 검은 바탕에 흰 글씨로 만든다 —
+     흑백 인쇄물이라 반전만으로 화면과 한 몸이 된다.
+     (전에는 mix-blend-mode:multiply 를 썼는데, 그건 흰 바탕을 지우는 게 아니라
+      글자까지 어둡게 만들어 검은 화면에서 아무것도 안 보이게 했다.) */
+  .figure{border-radius:var(--r1);overflow:hidden;border:1px solid var(--line-2);
+    margin:0 -26px 12px;background:var(--surface-2);padding:0;position:relative}
+  @media(max-width:640px){ .figure{margin:0 -16px 12px;border-radius:0;border-left:0;border-right:0} }
+  .figure img{display:block;width:100%;height:auto;
+    filter:invert(1) contrast(1.06) brightness(.97)}
+  :root[data-skin="note"] .figure img,
+  :root[data-skin="jelly"] .figure img,
+  :root[data-skin="white"] .figure img{filter:none}
+  :root[data-skin="note"] .figure,
+  :root[data-skin="jelly"] .figure,
+  :root[data-skin="white"] .figure{background:#fff}
+  .figure figcaption{display:flex;align-items:center;gap:10px}
+  .figure .zoom{margin-left:auto;appearance:none;flex:0 0 auto;
+    border:1px solid var(--line-2);background:var(--surface);color:var(--ink-2);
+    border-radius:8px;font-size:12px;padding:6px 12px;cursor:pointer;
+    font-family:var(--mono)}
+  .figure .zoom:hover{border-color:var(--red);color:var(--ink)}
+  /* 크게 보기 */
+  .lens{position:fixed;inset:0;z-index:120;background:rgba(4,6,10,.96);
+    display:none;overflow:auto;padding:56px 10px 20px;
+    -webkit-overflow-scrolling:touch;touch-action:pinch-zoom pan-x pan-y}
+  .lens.on{display:block}
+  /* 원본 크기로 둔다 — 화면 폭에 맞추면 카드와 같은 크기라 크게 볼 까닭이 없다 */
+  .lens img{display:block;margin:0 auto;width:auto;max-width:none;height:auto;
+    filter:invert(1) contrast(1.06);border-radius:10px}
+  .lens .hint2{position:fixed;left:0;right:0;bottom:0;text-align:center;
+    font-family:var(--mono);font-size:11.5px;color:var(--ink-4);
+    padding:10px;background:linear-gradient(transparent,rgba(4,6,10,.9) 40%)}
+  :root[data-skin="note"] .lens img,
+  :root[data-skin="jelly"] .lens img,
+  :root[data-skin="white"] .lens img{filter:none;background:#fff}
+  .lens .x{position:absolute;top:14px;right:16px;appearance:none;border:0;
+    background:var(--surface);color:var(--ink);border-radius:10px;
+    font-size:15px;padding:9px 14px;cursor:pointer}
+  .figcap{font-size:13px;color:var(--ink-4);margin:0 0 6px;font-family:var(--mono)}
+
+  /* ── 자료 표 ── */
+  .qtab{margin:0 0 14px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+    border:1px solid var(--line-2);border-radius:var(--r1);background:var(--surface)}
+  .qtab table{border-collapse:collapse;width:100%;min-width:max-content;
+    font-size:14px;line-height:1.5}
+  .qtab th,.qtab td{border:1px solid var(--line-2);padding:9px 13px;
+    text-align:center;white-space:nowrap;color:var(--ink-2)}
+  .qtab th{background:var(--surface-2);color:var(--ink);font-weight:700}
+  .qtab tr:first-child td{background:var(--surface-2);color:var(--ink);font-weight:700}
+  /* 첫 열이 항목 이름이면 왼쪽으로 */
+  .qtab td:first-child,.qtab th:first-child{text-align:left;
+    background:var(--surface-2);color:var(--ink);font-weight:600}
+  .qtab + .qtab{margin-top:-6px}
+  @media(max-width:640px){
+    .qtab table{font-size:13px}
+    .qtab th,.qtab td{padding:7px 10px}
+  }
+  .opts.nums{flex-direction:row;flex-wrap:wrap;gap:10px}
+  .opts.nums .opt{flex:1;min-width:78px;justify-content:center;padding:16px 10px}
+  .opts.nums .opt .k{width:30px;height:30px;flex:0 0 30px;font-size:15px}
+  .figure figcaption{font-family:var(--mono);font-size:11px;color:var(--ink-4);
+    padding:7px 12px;background:var(--surface-2);border-top:1px solid var(--line)}
+  .datafold{margin-bottom:16px}
+  .datafold summary{cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--ink-4);
+    padding:8px 0;list-style:none;display:flex;align-items:center;gap:7px}
+  .datafold summary:before{content:"+";font-size:14px;color:var(--ink-3)}
+  .datafold[open] summary:before{content:"–"}
+  .datafold summary:hover{color:var(--ink-3)}
+  .datafold .data{margin-bottom:0}
+
+  .opts{display:flex;flex-direction:column;gap:9px;margin-top:20px}
+  .opt{display:flex;gap:13px;align-items:flex-start;padding:14px 17px;border-radius:var(--r1);
+    border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2);cursor:pointer;
+    font-family:inherit;font-size:15.5px;line-height:1.6;text-align:left;transition:.14s}
+  .opt:hover:not([disabled]){border-color:var(--line-3);color:var(--ink)}
+  .opt .k{flex:0 0 24px;height:24px;border-radius:7px;background:var(--surface-3);
+    display:grid;place-items:center;font-family:var(--mono);font-size:12.5px;font-weight:700;
+    color:var(--ink-3)}
+  .opt[data-s="ok"]{border-color:var(--mint);background:rgba(47,224,206,.10);color:var(--ink)}
+  .opt[data-s="ok"] .k{background:var(--mint);color:#06110F}
+  .opt[data-s="no"]{border-color:var(--red);background:var(--red-soft)}
+  .opt[data-s="no"] .k{background:var(--red);color:#fff}
+  .opt[disabled]{cursor:default}
+
+  .verdict{margin-top:20px;border-radius:var(--r1);border:1px solid var(--line);
+    background:var(--surface-2);padding:18px 20px}
+  .verdict .vl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .verdict .tag2{font-family:var(--mono);font-size:12px;font-weight:700;padding:4px 11px;
+    border-radius:6px}
+  .verdict .tag2.ok{background:var(--mint);color:#06110F}
+  .verdict .tag2.no{background:var(--red);color:#fff}
+  .verdict p{font-size:14.5px;line-height:1.78;color:var(--ink-2)}
+  /* ── 왜 틀렸나 ──
+     정답만 알려 주면 학생은 제 답이 왜 아닌지를 스스로 찾아 읽어야 한다.
+     고른 선지의 설명을 맨 앞에 둔다. */
+  .whyrow{display:flex;gap:10px;align-items:flex-start;padding:13px 15px;
+    border-radius:var(--r1);margin-bottom:9px;font-size:14px;line-height:1.7}
+  .whyrow .no{flex:0 0 24px;height:24px;border-radius:7px;display:grid;place-items:center;
+    font-family:var(--mono);font-size:12.5px;font-weight:700}
+  .whyrow .tt{flex:1;min-width:0}
+  .whyrow .tt b{display:block;font-size:12px;margin-bottom:3px;letter-spacing:.02em}
+  .whyrow.mine{background:var(--red-soft);border:1px solid var(--red-line)}
+  .whyrow.mine .no{background:var(--red);color:#fff}
+  .whyrow.mine .tt b{color:var(--red-2)}
+  .whyrow.right{background:rgba(47,224,206,.09);border:1px solid rgba(47,224,206,.32)}
+  .whyrow.right .no{background:var(--mint);color:#06110F}
+  .whyrow.right .tt b{color:var(--mint)}
+  .whyrow .tt span{color:var(--ink-2)}
+  .whymore{margin-top:4px}
+  .whymore summary{cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--ink-4);
+    padding:7px 0;list-style:none;display:flex;align-items:center;gap:7px}
+  .whymore summary:before{content:"+";font-size:14px}
+  .whymore[open] summary:before{content:"–"}
+  .whymore summary:hover{color:var(--ink-3)}
+  .whymore .whyrow{background:var(--surface-2);border:1px solid var(--line)}
+  .whymore .whyrow .no{background:var(--surface-3);color:var(--ink-3)}
+
+  .verdict .src{display:block;margin-top:12px;font-family:var(--mono);font-size:11.5px;
+    color:var(--ink-4)}
+  .gorow{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;align-items:center}
+  .gorow .hint{font-family:var(--mono);font-size:12.5px;color:var(--ink-4)}
+
+  /* ── 진행 ── */
+  .prog{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 22px;
+    border-bottom:1px solid var(--line);background:var(--surface-2)}
+  .pips{display:flex;gap:4px;flex-wrap:wrap}
+  .pips i{width:20px;height:5px;border-radius:3px;background:var(--line-2);display:block}
+  .pips i.ok{background:var(--mint)} .pips i.no{background:var(--red)}
+  .pips i.now{background:var(--ink-3)}
+  .prog .sc{font-family:var(--mono);font-size:13px;color:var(--ink-3)}
+  .prog .sc b{color:var(--ink);font-size:16px}
+
+  /* ── 사이드 ── */
+  .side{display:flex;flex-direction:column;gap:var(--s2)}
+  .side .card .bd{padding:16px 18px}
+  .lf{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--surface-2);
+    font-size:13.5px;cursor:pointer;border-radius:9px;border:1px solid transparent;
+    transition:.14s;margin-bottom:5px}
+  .lf:hover{border-color:var(--line-2)}
+  .lf.on{border-color:var(--red-line);background:var(--red-soft)}
+  .lf .dot{width:8px;height:8px;border-radius:50%;flex:0 0 8px;background:var(--lv1)}
+  .lf .nm{flex:1;min-width:0;color:var(--ink-2);font-weight:600;overflow:hidden;
+    text-overflow:ellipsis;white-space:nowrap}
+  .lf .n{font-family:var(--mono);font-size:11px;color:var(--ink-4)}
+
+  /* ── 고르는 화면 ── */
+  .pickwrap{margin-top:var(--s3)}
+  .pickgrid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+  .pk{border:1px solid var(--line);border-radius:var(--r2);padding:18px 20px;
+    background:var(--surface);cursor:pointer;transition:.15s;text-align:left;
+    font-family:inherit;display:block;width:100%}
+  .pk:hover{border-color:var(--line-3);transform:translateY(-2px)}
+  .pk .eb{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ink-4)}
+  .pk h3{font-size:16.5px;margin:7px 0 9px;letter-spacing:-.03em}
+  .pk .meta{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+  .pk .track{margin-top:11px}
+  .empty{padding:60px 20px;text-align:center;color:var(--ink-3)}
+
+  @media(max-width:1080px){.cols{grid-template-columns:1fr}
+    .side{flex-direction:row;flex-wrap:wrap}.side .card{flex:1;min-width:260px}}
+  @media(max-width:640px){
+    .wrapx{padding:0 14px var(--s5)}
+    .qbody{padding:18px 16px 20px}.qtop{padding:13px 16px}.prog{padding:12px 16px}
+    .stem{font-size:16.5px}.opt{font-size:15px;padding:13px 14px}
+    .data{padding:16px 16px;font-size:15px}
+    .side{flex-direction:column}}
+
+  /* ── 오늘 할 것 (2026-09-04) — 고르는 시간을 없앤다 ── */
+  .todaywrap{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(260px,.85fr);
+    gap:var(--s3);align-items:start;margin-top:var(--s3)}
+  @media(max-width:900px){.todaywrap{grid-template-columns:1fr}}
+  .today{border:1px solid var(--line-2);border-radius:var(--r3);background:var(--surface);
+    padding:26px 28px;position:relative;overflow:hidden}
+  .today::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+    background:var(--red)}
+  .today .eb{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;
+    color:var(--ink-4);text-transform:uppercase}
+  .today h2{font-size:clamp(24px,3.2vw,34px);margin:9px 0 10px;letter-spacing:-.045em;
+    line-height:1.2}
+  .today .why{font-size:15px;color:var(--ink-2);line-height:1.65;max-width:52ch}
+  .today .facts{display:flex;gap:18px;flex-wrap:wrap;margin:18px 0 6px;
+    font-family:var(--mono);font-size:13px;color:var(--ink-3)}
+  .today .facts b{color:var(--ink);font-weight:600}
+  .today .ubar{margin:14px 0 20px;max-width:420px}
+  .today .ubar .lab{display:flex;justify-content:space-between;font-size:12.5px;
+    color:var(--ink-4);margin-bottom:5px}
+  .today .ubar .lab b{color:var(--ink-2);font-family:var(--mono)}
+  .today .go{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .today .go .btn{font-size:16px;padding:14px 26px}
+
+  .side{display:flex;flex-direction:column;gap:12px}
+  .side .more{width:100%;font-family:inherit;font-size:14.5px;font-weight:700;
+    padding:14px 16px;border-radius:var(--r2);border:1px solid var(--line-2);
+    background:var(--surface-2);color:var(--ink-2);cursor:pointer;text-align:left;
+    display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .side .more:hover{color:var(--ink);border-color:var(--line-3)}
+  .side .more i{font-style:normal;color:var(--ink-4);font-size:13px}
+  .rep{border:1px solid var(--line);border-radius:var(--r2);background:var(--surface);
+    padding:16px 18px}
+  .rep h3{font-size:13px;color:var(--ink-4);font-family:var(--mono);letter-spacing:.12em;
+    text-transform:uppercase;margin-bottom:11px;font-weight:600}
+  .rep ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+  .rep li{display:flex;gap:9px;align-items:flex-start;font-size:13.5px;color:var(--ink-2);
+    line-height:1.55}
+  .rep li i{flex:0 0 auto;width:7px;height:7px;border-radius:50%;margin-top:6px;
+    background:var(--ink-4)}
+  .rep li.good i{background:#2FE0CE}
+  .rep li.bad  i{background:var(--red)}
+  .rep li b{color:var(--ink)}
+  .rep .note{margin-top:12px;padding-top:11px;border-top:1px solid var(--line);
+    font-size:12.5px;color:var(--ink-4);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrapx">
+  <div class="phead">
+    <div>
+      <span class="kicker"><i></i>문제풀이</span>
+      <h1 id="ttl">문제풀이</h1>
+      <p class="sub" id="lede"></p>
+    </div>
+    <div class="pheadact" id="headact"></div>
+  </div>
+  <div id="root"></div>
+</div>
+
+<script src="js/trend.js?v=53fd8a90"></script>
+<script src="js/tree.js?v=bcf14aaf"></script>
+<script src="js/qbank.js?v=a75ab4a3"></script>
+<script src="js/pool.js?v=4a7d39b1"></script>
+<script src="js/drills.js?v=82b6c52c"></script>
+<script src="js/qrender.js?v=a26db44e"></script>
+<script src="js/store.js?v=e28a9ee6"></script>
+<script src="js/coach.js?v=9bbd5a61"></script>
+<script>
+(function(){
+  var T=TERRA, Q=window.QBANK||{};
+  T.mountNav("study.html");
+  var P=new URLSearchParams(location.search);
+  var leafCode=P.get("leaf")||"", wrongOnly=(P.get("mode")==="wrong");
+  var leaf=leafCode?T.BY[leafCode]:null;
+  var list=[], i=0, marks=[], picked=null, done=false;
+
+  function esc(t){ return String(t==null?"":t)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  /* 풀 수 있는 문항 = 은행에 글이 들어와 있는 것 */
+  /* WebP 가 아직 안 만들어진 그림은 JPEG 로 되돌아간다 */
+  function webpFallback(host){
+    (host||document).querySelectorAll('img[src$=".webp"]').forEach(function(im){
+      if(im.dataset.fb) return;
+      im.dataset.fb="1";
+      im.addEventListener("error",function(){
+        if(im.dataset.done) return;
+        im.dataset.done="1";
+        im.src=im.src.replace(/\.webp$/,".jpg");
+      });
+    });
+  }
+  function playable(l){
+    return (l.play||[]).filter(function(q){ return Q[q.id]; });
+  }
+  function buildList(){
+    var all=playable(leaf);
+    if(wrongOnly){
+      var S=T.state();
+      all=all.filter(function(q){ var a=S.ans[q.id]; return a && !a.ok; });
+    }
+    /* ★ 학년이 겨누는 시험이 다르다.
+       전에는 **정렬**만 했더니 20문항 중 앞 몇 개만 통합사회고 나머지가
+       선택과목이었다(고1 화면의 81%). 이제 갈래로 나눈다. */
+    var S2=T.state(), grade=(S2.student&&S2.student.grade)||"고1";
+    /* ★ 텍스트로 못 내는 문항은 빼고 시작한다.
+       크롭 이미지를 붙이지 않기로 했으므로, 글이 온전하지 않으면
+       화면에 올려도 못 푼다. 실제로 났다 — 선지가 "① ㄱ, ㄴ" 인데
+       보기 상자가 통째로 없어 ㄱ·ㄴ 이 무슨 말인지 알 수 없었다. */
+    if(window.QRENDER){
+      var 되는것=all.filter(function(q){ return QRENDER.ok(Q[q.id], q); });
+      if(되는것.length) all=되는것;      // 하나도 안 남으면 어쩔 수 없이 그대로
+    }
+    var 갈래=T.splitPool(all, grade);
+    function 신선(a){ return !S2.ans[a.id]; }
+    function 줄세우기(arr){
+      return arr.filter(신선).concat(arr.filter(function(x){ return !신선(x); }));
+    }
+    var 본=줄세우기(갈래.main), 심화=줄세우기(갈래.extra);
+    붙임=0;
+    if(!wrongOnly && 본.length<20){
+      붙임=Math.min(심화.length, 20-본.length);   // 모자라면 심화를 덧붙인다
+    }
+    list=(wrongOnly?all:본.concat(심화.slice(0,붙임))).slice(0,20);
+    i=0; marks=[]; done=false;
+    if(window.COACH) COACH.begin({leaf:leaf.code, kind:wrongOnly?"wrong":"q"});
+  }
+
+  /* ══════ 고르는 화면 — leaf 없이 들어왔을 때 ══════ */
+  var 붙임=0;
+  function renderPick(){
+    document.getElementById("ttl").textContent="오늘 할 것";
+    var S=T.state();
+    var rows=T.LEAVES.map(function(l){
+      var st=T.leafStat(l.code), n=playable(l).length;
+      return {l:l, st:st, n:n};
+    }).filter(function(r){ return r.n>0; });
+    var 총=rows.reduce(function(s2,r){return s2+r.n;},0);
+
+    /* ★ 오늘 할 것은 store.js 한 곳에서 고른다 — 홈·루틴과 같은 점수를 써야
+       화면마다 다른 것을 권하지 않는다. */
+    var 후보=(T.오늘의리프?T.오늘의리프({전부:true}):[]).filter(function(c){
+      return playable(c.leaf).length>0;
+    });
+    var 오늘=후보[0];
+    if(!오늘){ 목록화면(rows,S,true); return; }
+
+    var st=오늘.st, n=playable(오늘.leaf).length;
+    var 분=Math.max(3,Math.round(Math.min(n,20)*50/60));
+    document.getElementById("lede").textContent=
+      "고를 것 없이 이것부터 하면 됩니다. 오늘 이 하나면 충분해요.";
+    document.getElementById("headact").innerHTML="";
+
+    /* ── 리포팅 — 잘 잡힌 곳 · 급한 곳 · 오늘 하면 뭐가 좋아지나 ── */
+    var 푼것=후보.filter(function(c){ return c.st.solved>=3; });
+    var 잘함=푼것.slice().sort(function(a,b){ return b.이해도-a.이해도; })[0];
+    var 급함=후보.filter(function(c){ return c.code!==오늘.code; })[0];
+    /* ★ "약한 곳 36 → 35" 는 표가 안 난다(범위 안 리프가 55개다).
+       범위 전체 **이해도 평균**으로 말하면 오늘 한 일이 얼마나 움직이는지 보인다. */
+    var 범위것=후보.filter(function(c){ return c.범위안; });
+    var 지금평균=범위것.length
+      ? Math.round(범위것.reduce(function(a,c){return a+c.이해도;},0)/범위것.length) : 0;
+    var 뒤평균=범위것.length
+      ? Math.round((범위것.reduce(function(a,c){return a+c.이해도;},0)
+                    - 오늘.이해도 + 100)/범위것.length) : 0;
+    var 줄=[];
+    if(잘함 && 잘함.이해도>=55 && 잘함.code!==오늘.code)
+      줄.push({k:"good", t:"<b>"+esc(잘함.st.name)+"</b>은 이해도가 "+잘함.이해도+
+                        "예요. 지금은 안 해도 돼요."});
+    if(급함)
+      줄.push({k:"bad", t:"다음으로 급한 곳은 <b>"+esc(급함.st.name)+"</b>이에요."});
+    줄.push({k:"", t:"오늘 이걸 다 맞히면 시험 범위 이해도가 <b>"+지금평균+"% → "+
+                     뒤평균+"%</b>로 올라요."});
+
+    document.getElementById("root").innerHTML=
+      '<div class="todaywrap">'+
+        '<section class="today">'+
+          '<span class="eb">'+esc(오늘.leaf.mid.root.code+" "+오늘.leaf.mid.root.name)+
+            ' · '+esc(오늘.leaf.mid.name)+'</span>'+
+          '<h2>'+esc(st.name)+'</h2>'+
+          '<p class="why">'+esc(T.오늘의까닭?T.오늘의까닭(오늘):"")+'</p>'+
+          '<div class="facts"><span>문항 <b>'+Math.min(n,20)+'</b></span>'+
+            '<span>예상 <b>'+분+'분</b></span>'+
+            '<span>지금까지 <b>'+st.solved+'문항</b>'+
+              (st.pct==null?'':' · 정답률 <b>'+st.pct+'%</b>')+'</span></div>'+
+          '<div class="ubar"><div class="lab"><span>이해도</span>'+
+            '<b>'+오늘.이해도+' / 100</b></div>'+
+            '<span class="track"><i style="width:'+오늘.이해도+
+              '%;background:'+(오늘.이해도>=80?"#2FE0CE":"var(--lv2)")+'"></i></span></div>'+
+          '<div class="go"><a class="btn" href="study.html?leaf='+오늘.code+'">지금 풀기 →</a>'+
+            '<a class="btn ghost" href="card.html?leaf='+오늘.code+
+              '">개념 카드로 먼저</a></div>'+
+        '</section>'+
+        '<aside class="side">'+
+          '<button class="more" id="moreBtn">다른 단원이 더 필요해요<i>펼치기</i></button>'+
+          '<div class="rep"><h3>지금 상태</h3><ul>'+
+            줄.map(function(x){ return '<li class="'+x.k+'"><i></i><span>'+x.t+'</span></li>'; }).join("")+
+          '</ul><p class="note">글로 풀 수 있는 문항 '+총.toLocaleString()+'개 가운데서 골랐어요. '+
+            '정답률·안 푼 정도·시험 범위를 함께 봅니다.</p></div>'+
+        '</aside>'+
+      '</div>'+
+      '<div id="morehost" hidden></div>';
+
+    var mb=document.getElementById("moreBtn");
+    if(mb) mb.onclick=function(){
+      var h=document.getElementById("morehost");
+      if(!h) return;
+      if(h.hidden){ h.hidden=false; h.innerHTML=목록HTML(rows,S);
+        mb.innerHTML='다른 단원이 더 필요해요<i>접기</i>';
+        묶기(); h.scrollIntoView({behavior:"smooth",block:"start"}); }
+      else { h.hidden=true; mb.innerHTML='다른 단원이 더 필요해요<i>펼치기</i>'; }
+    };
+    묶기();
+  }
+
+  /* 펼쳤을 때 나오는 예전 목록 — 그대로 쓴다 */
+  function 목록HTML(rows,S){
+    var last=S.last&&S.last.leaf?T.BY[S.last.leaf]:null;
+    var wrong=rows.filter(function(r){ return r.st.solved && r.st.pct!==null && r.st.pct<70; })
+      .sort(function(a,b){ return a.st.pct-b.st.pct; }).slice(0,3);
+    var going=rows.filter(function(r){ return r.st.solved>0 && r.st.solved<r.n; })
+      .sort(function(a,b){ return b.st.solved-a.st.solved; }).slice(0,3);
+    var start=rows.filter(function(r){ return !r.st.solved; })
+      .sort(function(a,b){ return b.n-a.n; }).slice(0,6);
+    function block(title, cap, arr){
+      if(!arr.length) return "";
+      return '<section class="pickwrap"><div class="secthead"><h2>'+title+'</h2>'+
+        '<span class="mono" style="color:var(--ink-4);font-size:12.5px">'+cap+'</span></div>'+
+        '<div class="pickgrid">'+arr.map(function(r){
+          var st=r.st;
+          return '<button class="pk" data-go="'+r.l.code+'">'+
+            '<span class="eb">'+r.l.mid.root.code+' '+r.l.mid.name+'</span>'+
+            '<h3>'+esc(r.l.name)+'</h3>'+
+            '<span class="meta">'+r.n+'문항'+
+            (st.solved?' · 푼 '+st.solved+' · 정답률 '+(st.pct==null?"—":st.pct+"%"):' · 아직 안 풂')+
+            '</span><span class="track"><i style="width:'+
+            (r.n?Math.round(st.solved/r.n*100):0)+'%;background:var(--lv2)"></i></span></button>';
+        }).join("")+'</div></section>';
+    }
+    return (last?'<section class="pickwrap"><div class="secthead"><h2>이어서 풀기</h2></div>'+
+        '<div class="pickgrid"><button class="pk" data-go="'+last.code+'">'+
+        '<span class="eb">마지막으로 본 곳</span><h3>'+esc(last.name)+'</h3>'+
+        '<span class="meta">'+playable(last).length+'문항</span></button></div></section>':"")+
+      block("틀린 게 몰린 곳","정답률 낮은 순",wrong)+
+      block("풀다 만 곳","푼 문항 많은 순",going)+
+      block("아직 손 안 댄 곳","문항 많은 순",start)+
+      '<p class="note" style="margin-top:var(--s3);font-size:12.5px;color:var(--ink-4)">'+
+      '스킬트리에서 단원을 눌러 들어와도 됩니다.</p>';
+  }
+  function 목록화면(rows,S){
+    document.getElementById("root").innerHTML=목록HTML(rows,S);
+    묶기();
+  }
+  function 묶기(){
+    document.querySelectorAll("[data-go]").forEach(function(b){
+      b.onclick=function(){ location.href="study.html?leaf="+b.dataset.go; };
+    });
+  }
+
+  /* ══════ 푸는 화면 ══════ */
+  function shell(){
+    var st=T.leafStat(leaf.code);
+    document.getElementById("ttl").textContent=leaf.name;
+    var S3=T.state(), g3=(S3.student&&S3.student.grade)||"고1";
+    document.getElementById("lede").textContent=
+      leaf.mid.root.name+" · "+leaf.mid.name+
+      " — 글로 풀 수 있는 "+playable(leaf).length+"문항 가운데 "+list.length+"문항을 냅니다. "+
+      (wrongOnly?"지난번에 틀린 것만 모았습니다."
+        : 붙임>0
+          ? (g3==="고3"
+              ? "이 단원은 수능 기출이 " + (list.length-붙임) + "문항뿐이라, 통합사회 학평 "
+                + 붙임 + "문항을 함께 냈어요."
+              : ((list.length-붙임)===0
+                  ? "이 단원은 학교에서 아직 안 배웠을 수 있어요 — 통합사회 학평 문항이 없습니다. "
+                    + "수능에 나오는 " + 붙임 + "문항으로 미리 봐 두세요."
+                  : "통합사회 학평이 " + (list.length-붙임) + "문항이라, "
+                    + "수능에 나오는 심화 " + 붙임 + "문항을 함께 냈어요."))
+          : g3==="고3" ? "수능 선택과목 기출입니다."
+          : "학교에서 배우는 통합사회 학평 문항입니다.");
+    document.getElementById("headact").innerHTML=
+      '<a class="btn ghost sm" href="skilltree.html?area='+leaf.mid.root.code+'">스킬트리</a>'+
+      '<a class="btn ghost sm" href="study.html">다른 단원</a>';
+    document.getElementById("root").innerHTML=
+      '<div class="cols"><div><div class="qcard">'+
+      '<div class="prog" id="prog"></div><div id="stage"></div></div></div>'+
+      '<aside class="side">'+
+      '<div class="card"><div class="hd"><h3>이번 세션</h3></div><div class="bd" id="sess"></div></div>'+
+      '<div class="card"><div class="hd"><h3>같은 중영역</h3></div><div class="bd" id="sibs"></div></div>'+
+      '<div class="card"><div class="hd"><h3>근거</h3></div><div class="bd" id="basis"></div></div>'+
+      '</aside></div>';
+    document.getElementById("basis").innerHTML=
+      '<p style="font-size:12.5px;line-height:1.75;color:var(--ink-4)">'+
+      '발문·자료·선지·해설은 <b style="color:var(--ink-3)">출제기관 원문</b>을 그대로 싣습니다. '+
+      '도표나 지도가 있어야 읽히는 문항은 그 그림을 함께 보여 줍니다. '+
+      '정답은 원 자료의 값이고, 배정된 개념은 개념트리 '+leaf.code+' 입니다.</p>';
+    sibs();
+  }
+  function sibs(){
+    document.getElementById("sibs").innerHTML=leaf.mid.leaves.map(function(l){
+      var s2=T.leafStat(l.code), n=playable(l).length;
+      var col=!s2.solved?"var(--lv1)":s2.achieve>=60?"var(--lv3)":"var(--lv2)";
+      return '<div class="lf'+(l.code===leaf.code?" on":"")+'" data-sib="'+l.code+'">'+
+        '<span class="dot" style="background:'+col+'"></span>'+
+        '<span class="nm">'+esc(l.name)+'</span><span class="n">'+n+'</span></div>';
+    }).join("");
+    document.querySelectorAll("[data-sib]").forEach(function(b){
+      b.onclick=function(){ location.href="study.html?leaf="+b.dataset.sib; };
+    });
+  }
+  /* 크게 보기 — 폰에서는 원본이 작아 축 숫자와 범례를 못 읽는다 */
+  function lens(src){
+    var el=document.getElementById("lens");
+    if(!el){
+      el=document.createElement("div");
+      el.className="lens"; el.id="lens";
+      el.innerHTML='<button class="x" type="button">닫기 ✕</button>'+
+        '<img alt="문항 자료 크게">'+
+        '<span class="hint2">두 손가락으로 더 키울 수 있어요 · 옆으로 밀어서 보세요</span>';
+      document.body.appendChild(el);
+      el.onclick=function(e){
+        if(e.target===el||e.target.className==="x") el.classList.remove("on");
+      };
+      document.addEventListener("keydown",function(e){
+        if(e.key==="Escape") el.classList.remove("on"); });
+    }
+    el.querySelector("img").src=src;
+    el.classList.add("on");
+  }
+  document.addEventListener("click",function(e){
+    var b=e.target.closest && e.target.closest(".figure .zoom");
+    if(!b) return;
+    var fg=b.closest("figure");
+    var im=fg&&fg.querySelector("img");
+    if(im) lens(im.src);
+  });
+
+  function progress(){
+    var pips=[];
+    for(var k=0;k<list.length;k++){
+      var c=k<marks.length?(marks[k]?"ok":"no"):(k===i?"now":"");
+      pips.push('<i class="'+c+'"></i>');
+    }
+    var got=marks.filter(Boolean).length;
+    document.getElementById("prog").innerHTML=
+      '<div class="pips">'+pips.join("")+'</div>'+
+      '<div class="sc"><b>'+got+'</b> / '+marks.length+' 맞음</div>'+
+      '<div class="sc" style="margin-left:auto">'+(done?list.length:(i+1))+' / '+list.length+'</div>';
+  }
+  function session(){
+    var got=marks.filter(Boolean).length, n=marks.length;
+    document.getElementById("sess").innerHTML=
+      '<div class="stats" style="grid-template-columns:1fr 1fr">'+
+      '<div class="stat"><b>'+n+'</b><span>푼 문항</span></div>'+
+      '<div class="stat"><b>'+(n?Math.round(got/n*100)+"%":"—")+'</b><span>정답률</span></div></div>';
+  }
+
+  function render(){
+    if(i>=list.length){ return finish(); }
+    var q=list[i], d=Q[q.id];
+    progress(); session();
+    // 표·그림이 있어야 읽히는 문항은 원본 그림을 먼저 보이고, 글은 접어 둔다.
+    // 표를 글로 펴면 행과 열이 무너져 아예 못 읽는다.
+    /* 표 — 크롭 대신 진짜 표. 원본 PDF 의 셀 좌표에서 뽑았다. */
+    var tabs = (d.t || []).map(function(rows){
+      if(!rows || !rows.length) return '';
+      var head = rows[0], body = rows.slice(1);
+      // 첫 행이 머리인가 — 숫자만 있는 행이면 머리가 아니라 값이다
+      var 머리 = head.some(function(c){ return c && !/^[\d.,%\s()-]*$/.test(c); });
+      var h = 머리
+        ? '<thead><tr>'+head.map(function(c){ return '<th>'+esc(c)+'</th>'; }).join('')+'</tr></thead>'
+        : '';
+      var rest = 머리 ? body : rows;
+      return '<div class="qtab"><table>'+h+'<tbody>'+
+        rest.map(function(r){
+          return '<tr>'+r.map(function(c){ return '<td>'+esc(c)+'</td>'; }).join('')+'</tr>';
+        }).join('')+'</tbody></table></div>';
+    }).join('');
+
+    /* 문항은 **텍스트로 조판**한다(js/qrender.js).
+       지면을 통째로 베낀 크롭을 붙이지 않는다 — 글꼴이 제각각이고
+       확대·복사가 안 되며 답이 그림 속에 숨는다.
+       그림이 꼭 필요한 자료만 조판기가 그 자리에 넣는다. */
+    var 몸 = window.QRENDER ? QRENDER.html(d, q, {}) : '';
+    document.getElementById("stage").innerHTML=
+      '<div class="qtop"><span class="no">'+(i+1)+'번</span>'+
+      '<span class="chip mono">'+leaf.code+'</span>'+
+      (q.lb?'<span class="chip mono">'+esc(q.lb)+'</span>':'')+
+      '<span class="srcline">'+esc(q.g||"")+' '+esc(q.d||"")+'</span></div>'+
+      '<div class="qbody">'+
+      /* 선지는 조판기가 그린 읽기용 목록을 걷어내고 **누를 수 있는 단추**로 */
+      몸.replace(/<ol class="opts5">[\s\S]*?<\/ol>/, '')+
+      /* 선지가 그림 안에 있으면 번호만 — 글은 그림에 있다 */
+      '<div class="opts'+(q.ff?' nums':'')+'">'+
+      (q.ff?[0,1,2,3,4]:d.o.map(function(_,i){return i;})).map(function(k){
+        var o=d.o[k];
+        return '<button class="opt" data-v="'+k+'"><span class="k">'+
+          "①②③④⑤".charAt(k)+'</span>'+
+          (q.ff?'':'<span>'+(window.QRENDER?QRENDER.body(o):esc(o))+'</span>')+
+          '</button>';
+      }).join("")+'</div><div id="v"></div></div>';
+    document.querySelectorAll(".opt").forEach(function(b){
+      b.onclick=function(){ judge(q,d,+b.dataset.v,b); };
+    });
+    webpFallback(document);
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+
+  /* 고른 선지의 설명을 맨 앞에, 정답 설명을 그다음에.
+     쪼개지지 않은 문항은 원문 해설을 그대로 쓴다(2158 중 649 개가 쪼개졌다). */
+  function whyHtml(d, pick, ok){
+    var M="①②③④⑤";
+    if(!d.w){
+      return d.x
+        ? '<p>'+esc(d.x)+'</p>'
+        : '<p style="color:var(--ink-4)">이 문항은 해설이 함께 오지 않았어요. '+
+          '선지를 하나씩 지워 가며 왜 남는지를 적어 두세요.</p>';
+    }
+    var out='';
+    if(!ok && d.w[String(pick+1)])
+      out+='<div class="whyrow mine"><span class="no">'+M.charAt(pick)+'</span>'+
+        '<span class="tt"><b>내가 고른 것 — 왜 아닌가</b>'+
+        '<span>'+esc(d.w[String(pick+1)])+'</span></span></div>';
+    var why=d.c||d.w[String(d.a+1)]||"";
+    if(why)
+      out+='<div class="whyrow right"><span class="no">'+M.charAt(d.a)+'</span>'+
+        '<span class="tt"><b>'+(ok?"이래서 맞았어요":"이게 정답인 이유")+'</b>'+
+        '<span>'+esc(why)+'</span></span></div>';
+    else if(ok)
+      out+='<div class="whyrow right"><span class="no">'+M.charAt(d.a)+'</span>'+
+        '<span class="tt"><b>맞았어요</b><span>나머지 선지가 왜 아닌지는 아래에서 볼 수 있어요.</span>'+
+        '</span></div>';
+    var rest=Object.keys(d.w).filter(function(k){
+      return (+k-1)!==d.a && (ok || (+k-1)!==pick); });
+    if(rest.length)
+      out+='<details class="whymore"><summary>나머지 선지도 보기</summary>'+
+        rest.sort().map(function(k){
+          return '<div class="whyrow"><span class="no">'+M.charAt(+k-1)+'</span>'+
+            '<span class="tt"><span>'+esc(d.w[k])+'</span></span></div>';
+        }).join("")+'</details>';
+    return out;
+  }
+
+  function judge(q,d,vpick,btn){
+    var r=T.answer(q.id,vpick), ok=r?r.ok:(vpick===d.a);
+    marks.push(ok);
+    document.querySelectorAll(".opt").forEach(function(b,k){
+      b.disabled=true;
+      if(k===d.a) b.dataset.s="ok"; else if(b===btn) b.dataset.s="no";
+    });
+    progress(); session();
+    var last=(i+1>=list.length);
+    document.getElementById("v").innerHTML=
+      '<div class="verdict"><div class="vl">'+
+      '<span class="tag2 '+(ok?"ok":"no")+'">'+(ok?"정답":"오답")+'</span>'+
+      '<span class="mono" style="font-size:13px;color:var(--ink-3)">정답 '+
+      "①②③④⑤".charAt(d.a)+(ok?'':' · 내가 고른 것 '+"①②③④⑤".charAt(vpick))+'</span></div>'+
+      whyHtml(d,vpick,ok)+
+      '<span class="src">'+esc(q.g||"")+' '+esc(q.d||"")+' '+(q.n||"")+'번 · '+
+      esc(q.lb||"")+' · 개념트리 '+leaf.code+'</span></div>'+
+      '<div class="gorow"><button class="btn" id="next">'+(last?"결과 보기":"다음 문제")+'</button>'+
+      '<span class="hint">'+(i+1)+' / '+list.length+' 째</span></div>';
+    document.getElementById("next").onclick=function(){ i++; render(); };
+  }
+
+  function finish(){
+    done=true; progress(); session();
+    var got=marks.filter(Boolean).length;
+    var missed=list.filter(function(q,k){ return marks[k]===false; });
+    document.getElementById("stage").innerHTML=
+      '<div class="qbody" style="text-align:center;padding:52px 20px 46px">'+
+      '<div style="font-family:var(--mono);font-size:64px;font-weight:600;color:var(--ink);'+
+      'letter-spacing:-.05em;line-height:1">'+got+
+      '<span style="color:var(--ink-4);font-size:34px"> / '+list.length+'</span></div>'+
+      '<p style="margin-top:12px;color:var(--ink-3);font-size:15px">'+
+      (got===list.length?"전부 맞혔습니다.":
+       missed.length<=2?"거의 다 왔습니다. 놓친 것만 다시 보세요.":
+       "틀린 것을 모아 두었습니다. 바로 다시 갈 수 있습니다.")+'</p>'+
+      '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px">'+
+      (missed.length?'<button class="btn" id="retry">틀린 '+missed.length+'개만 다시</button>':'')+
+      '<button class="btn '+(missed.length?"ghost":"")+'" id="more">이 단원 더 풀기</button>'+
+      '<a class="btn ghost" href="study.html">다른 단원</a>'+
+      '<a class="btn ghost" href="index.html">학습 홈</a></div></div>';
+    function retry(){ list=missed; i=0; marks=[]; done=false;
+      if(window.COACH) COACH.begin({leaf:leaf.code, kind:"retry"}); render(); }
+    function more(){ buildList(); render(); }
+    var rt=document.getElementById("retry");
+    if(rt) rt.onclick=retry;
+    document.getElementById("more").onclick=more;
+    /* ★ 결산 — 짠. 맞은 수·이해도 변화·오늘 누적을 한 화면에 */
+    if(window.COACH) COACH.wrap({got:got, total:list.length, leaf:leaf.code, kind:"q",
+      retry: missed.length ? {label:"틀린 "+missed.length+"개만 다시", onclick:retry} : null,
+      more: {label:"이 단원 더 풀기", onclick:more}});
+  }
+
+  /* ══════ 시작 ══════ */
+  if(!leaf){ renderPick(); }
+  else{
+    buildList();
+    if(!list.length){
+      shell();
+      document.getElementById("stage").innerHTML=
+        '<div class="empty"><p style="font-size:16px;color:var(--ink-2)">'+
+        (wrongOnly?"이 단원에서 틀린 문항이 없습니다.":"이 단원은 아직 글로 풀 수 있는 문항이 없습니다.")+
+        '</p><p style="margin-top:8px;font-size:14px">도표나 지도가 있어야 읽히는 문항이라 '+
+        '크롭 작업이 끝나야 올라옵니다.</p>'+
+        '<div style="margin-top:22px"><a class="btn" href="study.html">다른 단원 고르기</a></div></div>';
+    }else{
+      shell(); render();
+    }
+  }
+  window.addEventListener("terra:skin", function(){});
+})();
+</script>
+<script>
+/* ★ 개발 중(localhost)에는 서비스워커를 **등록하지 않고, 이미 등록된 것은 푼다.**
+   js·css 를 캐시 먼저 주는 전략이라 고치고 열면 늘 한 판 늦는다 —
+   실제로 확장팩 화면이 열 개 전부 "준비 중" 으로 보여 한참 헤맸다(2026-09-03).
+   개발서버는 no-store 인데 서비스워커는 서버 헤더와 무관하게 제 캐시를 준다.
+   배포 주소에서는 그대로 등록한다 — 오프라인은 실사용에서 값어치가 있다. */
+(function () {
+  if (!("serviceWorker" in navigator)) return;
+  var 개발 = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  if (개발) {
+    navigator.serviceWorker.getRegistrations().then(function (rs) {
+      rs.forEach(function (r) { r.unregister(); });
+    }).catch(function () {});
+    if (window.caches) caches.keys().then(function (ks) {
+      ks.forEach(function (k) { caches.delete(k); });
+    }).catch(function () {});
+    return;
+  }
+  addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").catch(function () {});
+  });
+})();
+</script>
+</body>
+</html>

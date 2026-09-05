@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>개념 체크 — 모두의 통사</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#08090B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="모두의 통사">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/favicon.png">
+<link rel="stylesheet" href="css/base.css?v=2cabad0f">
+<link rel="stylesheet" href="css/coach.css?v=098c724b">
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<style>
+  .page{max-width:820px;margin:0 auto;padding:0 var(--s3) var(--s6)}
+  .hd{padding:var(--s5) 0 var(--s3)}
+  .hd h1{font-size:26px;letter-spacing:-.03em;margin:0 0 4px}
+  .hd p{color:var(--ink-3);font-size:14px;margin:0}
+
+  /* 진행 */
+  .prog{display:flex;gap:5px;margin:var(--s3) 0 var(--s2)}
+  .prog i{flex:1;height:4px;border-radius:99px;background:var(--surface-3)}
+  .prog i.ok{background:var(--mint)}
+  .prog i.no{background:var(--accent)}
+  .prog i.now{background:var(--ink-4)}
+
+  /* 문장 카드 */
+  .card{border:1px solid var(--line-2);border-radius:var(--r2);
+    background:var(--surface);padding:var(--s5) var(--s4);margin-bottom:var(--s3)}
+  .card .tag{display:flex;gap:8px;align-items:center;margin-bottom:var(--s3);
+    font-size:11.5px;color:var(--ink-4);font-family:var(--mono)}
+  .card .tag b{color:var(--mint);font-weight:700}
+  .sent{font-size:20px;line-height:1.62;font-weight:600;letter-spacing:-.02em;
+    color:var(--ink);margin:0}
+
+  /* 1단계 — 확신도 */
+  .step{margin-top:var(--s4)}
+  .step h3{font-size:13.5px;color:var(--ink-3);margin:0 0 10px;font-weight:600}
+  .conf{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+  .conf button{appearance:none;border:1.5px solid var(--line-2);background:var(--surface-2);
+    color:var(--ink-2);border-radius:var(--r1);padding:13px 8px;font:inherit;
+    font-size:14.5px;font-weight:600;cursor:pointer;transition:.12s}
+  .conf button:hover{border-color:var(--ink-4)}
+  .conf button[aria-pressed="true"]{border-color:var(--mint);background:var(--mint-soft);
+    color:var(--mint)}
+  .conf button .em{display:block;font-size:19px;margin-bottom:3px}
+
+  /* 2단계 — O/X */
+  .ox{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:11px}
+  .ox button{appearance:none;border:2px solid var(--line-2);background:var(--surface-2);
+    color:var(--ink);border-radius:var(--r2);padding:20px;font:inherit;
+    font-size:30px;font-weight:800;cursor:pointer;transition:.12s;line-height:1}
+  .ox button:hover:not(:disabled){transform:translateY(-2px)}
+  .ox button.o:hover:not(:disabled){border-color:var(--mint);color:var(--mint)}
+  .ox button.x:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+  .ox button:disabled{opacity:.35;cursor:default}
+  .ox button.pick.o{border-color:var(--mint);background:var(--mint-soft);color:var(--mint);opacity:1}
+  .ox button.pick.x{border-color:var(--accent);background:rgba(229,72,77,.12);
+    color:var(--accent);opacity:1}
+  .lock{font-size:12.5px;color:var(--ink-4);margin-top:9px;text-align:center}
+
+  /* 판정 */
+  .verdict{border-radius:var(--r2);padding:var(--s4);margin-top:var(--s3);
+    border:1.5px solid var(--line-2);background:var(--surface-2)}
+  .verdict.good{border-color:var(--mint);background:var(--mint-soft)}
+  .verdict.bad{border-color:var(--accent);background:rgba(229,72,77,.09)}
+  .verdict.warn{border-color:var(--amber);background:rgba(232,163,61,.10)}
+  .verdict .top{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+  .verdict .mark{font-size:22px;font-weight:800;line-height:1}
+  .verdict.good .mark{color:var(--mint)} .verdict.bad .mark{color:var(--accent)}
+  .verdict.warn .mark{color:var(--amber)}
+  .verdict .kind{font-size:12px;font-family:var(--mono);color:var(--ink-4);
+    border:1px solid var(--line-2);border-radius:99px;padding:2px 9px}
+  .verdict .say{font-size:15.5px;line-height:1.6;color:var(--ink);margin:0 0 4px;font-weight:500}
+  .verdict .why{margin-top:11px;padding-top:11px;border-top:1px solid var(--line-2);
+    font-size:13.5px;line-height:1.66;color:var(--ink-3)}
+  .verdict .why b{color:var(--ink-2)}
+  .verdict .src{display:block;margin-top:8px;font-size:11px;font-family:var(--mono);
+    color:var(--ink-4)}
+
+  /* 다음 행동 */
+  .nextbar{display:flex;gap:10px;align-items:center;margin-top:var(--s3);flex-wrap:wrap}
+  .nextbar .lbl{font-size:12.5px;color:var(--ink-4);font-family:var(--mono)}
+  .nextbar button,.nextbar a{appearance:none;text-decoration:none;
+    border:1px solid var(--line-2);background:var(--surface);color:var(--ink);
+    border-radius:var(--r1);padding:11px 17px;font:inherit;font-size:14.5px;
+    font-weight:600;cursor:pointer}
+  .nextbar .go{border-color:var(--mint);background:var(--mint);color:#04150E}
+  .nextbar .why2{font-size:12.5px;color:var(--ink-4);flex:1 0 100%}
+
+  /* 끝 화면 */
+  .done{text-align:center;padding:var(--s6) var(--s4)}
+  .done h2{font-size:24px;margin:0 0 8px}
+  .done p{color:var(--ink-3);margin:0 0 var(--s4)}
+  .tally{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:10px;margin:var(--s4) 0}
+  .tally div{border:1px solid var(--line-2);border-radius:var(--r1);
+    background:var(--surface);padding:13px}
+  .tally b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+  .tally span{font-size:12px;color:var(--ink-4)}
+  .tally .warn b{color:var(--amber)}
+  @media(max-width:520px){ .sent{font-size:18px} .ox button{font-size:26px;padding:16px} }
+</style>
+</head>
+<body>
+<div id="nav"></div>
+<div class="page">
+  <div class="hd">
+    <h1>개념 체크</h1>
+    <p id="lede">문장이 맞는지 O·X 로 답합니다. <b>얼마나 확신하는지</b>를 먼저 고르면
+      틀렸을 때 무엇을 해야 하는지 정확히 짚어 드려요.</p>
+  </div>
+  <div class="prog" id="prog"></div>
+  <div id="stage"></div>
+</div>
+
+<script src="js/tree.js?v=bcf14aaf"></script>
+<script src="js/qbank.js?v=a75ab4a3"></script>
+<script src="js/oxbank.js?v=cef819c2"></script>
+<script src="js/judge.js?v=58560af7"></script>
+<script src="js/pool.js?v=4a7d39b1"></script>
+<script src="js/drills.js?v=82b6c52c"></script>
+<script src="js/trend.js?v=53fd8a90"></script>
+<script src="js/store.js?v=e28a9ee6"></script>
+<script src="js/coach.js?v=9bbd5a61"></script>
+<script>
+(function(){
+  var T=window.TERRA, J=window.JUDGE, BANK=window.OXBANK||[];
+  T.mountNav && T.mountNav("ox");
+
+  function esc(s){ return String(s==null?"":s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+  var 세트수 = 8;
+  var 세트=[], i=0, 결과=[], 확신=null, 시작=0;
+
+  /* ── 무엇을 낼 것인가 ─────────────────────────
+     ★ O 와 X 를 **반반으로** 섞는다. 자료는 O 38% · X 62% 라
+       그대로 내면 "모르면 X" 가 통해 버린다.
+     ★ 그 학생이 **약한 리프**를 먼저 낸다 — 훈련 추천과 같은 원리다.
+     ★ 시험 범위를 정했으면 그 안에서만 — 다만 **사상가는 배우는 단원으로** 본다.
+       롤스는 정의(G) 단원에서, 시민 불복종은 인권·헌법(F) 단원에서 배운다.
+       사상가를 제 축(K)으로 두면 F·G·I 범위인 학생에게 374개가 통째로 안 나온다.
+       들일 때 `sroot` 를 달아 두었다(OX들이기.py). 옛 자료에는 없으니 root 로 물러선다. */
+  function 범위대영역(x){ return x.sroot || x.root; }
+  function 고르기(){
+    var 범위 = BANK.filter(function(x){
+      return !T.scopeOn || !T.scopeOn() || T.inScope(범위대영역(x));
+    });
+    if(!범위.length) 범위 = BANK.slice();
+
+    /* 리프 약점 — 못하는 리프일수록 앞으로 */
+    function 점수(x){
+      var st = T.leafStat ? T.leafStat(x.leaf) : null;
+      var 못함 = (st && st.solved) ? (1 - st.correct/st.solved) : 0.5;
+      var 본적 = (T.state().ox||{})[x.id];
+      /* 이미 맞힌 것은 뒤로, 틀린 것은 앞으로 */
+      var 지난 = 본적 ? (본적.ok ? -0.6 : 0.5) : 0;
+      return 못함 + 지난 + Math.random()*0.25;
+    }
+    var O = 범위.filter(function(x){return x.a}).sort(function(a,b){return 점수(b)-점수(a)});
+    var X = 범위.filter(function(x){return !x.a}).sort(function(a,b){return 점수(b)-점수(a)});
+    var 반 = Math.ceil(세트수/2);
+    var 뽑 = O.slice(0,반).concat(X.slice(0,세트수-반));
+    /* 섞는다 — O 가 앞에 몰리면 눈치챈다 */
+    for(var k=뽑.length-1;k>0;k--){ var j=Math.floor(Math.random()*(k+1)); var t=뽑[k]; 뽑[k]=뽑[j]; 뽑[j]=t; }
+    return 뽑;
+  }
+
+  function 진행그리기(){
+    var h="";
+    for(var k=0;k<세트.length;k++){
+      var c = k<결과.length ? (결과[k].ok?"ok":"no") : (k===i?"now":"");
+      h+='<i class="'+c+'"></i>';
+    }
+    document.getElementById("prog").innerHTML=h;
+  }
+
+  function 문장그리기(){
+    var x=세트[i];
+    확신=null; 시작=Date.now();
+    document.getElementById("stage").innerHTML=
+      '<div class="card">'+
+        '<div class="tag"><b>'+esc(x.leafName||x.leaf)+'</b>'+
+        '<span>· '+(i+1)+' / '+세트.length+'</span></div>'+
+        '<p class="sent">'+esc(x.t)+'</p>'+
+      '</div>'+
+      '<div class="step">'+
+        '<h3>얼마나 확신하나요?</h3>'+
+        '<div class="conf" id="conf">'+
+          J.확신단계.map(function(c,k){
+            var em=["🎯","🤔","🎲"][k];
+            return '<button type="button" data-c="'+c.v+'" aria-pressed="false">'+
+              '<span class="em">'+em+'</span>'+esc(c.name)+'</button>';
+          }).join("")+
+        '</div>'+
+        '<div class="ox" id="ox">'+
+          '<button type="button" class="o" data-v="1" disabled>O</button>'+
+          '<button type="button" class="x" data-v="0" disabled>X</button>'+
+        '</div>'+
+        '<p class="lock" id="lock">확신도를 먼저 고르면 O·X 를 누를 수 있어요</p>'+
+      '</div>';
+
+    document.querySelectorAll("#conf button").forEach(function(b){
+      b.onclick=function(){
+        확신=b.dataset.c;
+        document.querySelectorAll("#conf button").forEach(function(z){
+          z.setAttribute("aria-pressed", z===b ? "true":"false"); });
+        document.querySelectorAll("#ox button").forEach(function(z){ z.disabled=false; });
+        document.getElementById("lock").textContent="이 문장이 맞으면 O, 틀리면 X";
+      };
+    });
+    document.querySelectorAll("#ox button").forEach(function(b){
+      b.onclick=function(){ 답하기(b.dataset.v==="1", b); };
+    });
+  }
+
+  function 답하기(고른것, 단추){
+    var x=세트[i];
+    var ms=Date.now()-시작;
+    var ok=(고른것===x.a);
+
+    /* 누른 것을 남긴다 — 무엇을 골랐는지 보여야 납득한다 */
+    document.querySelectorAll("#ox button").forEach(function(z){
+      z.disabled=true; if(z===단추) z.classList.add("pick");
+    });
+
+    /* ── 기록 ── */
+    var S=T.state();
+    if(!S.ox) S.ox={};
+    var 앞=S.ox[x.id];
+    var 시도=(앞&&앞.n?앞.n:0)+1;
+    S.ox[x.id]={ok:ok,c:확신,ms:ms,n:시도,at:Date.now()};
+    /* 리프 통계에도 넣는다 — 개념 체크도 학습이다 */
+    T.drill && T.drill("ox", ok);
+    T.save && T.save();
+
+    /* ── 판정 — 규칙 엔진이 0.01초에 가른다 ── */
+    var st=T.leafStat?T.leafStat(x.leaf):null;
+    var v=J.판정({
+      ok:ok, conf:확신, ms:ms, attempt:시도, qid:x.id,
+      mastery:(st&&st.solved)?(st.correct/st.solved):null,
+      streak: T.연속오답 ? T.연속오답(x.leaf) : 0
+    });
+    결과.push({ok:ok, kind:v.kind, conf:확신, ms:ms, leaf:x.leaf});
+    진행그리기();
+
+    var n=J.다음말[v.next]||J.다음말.forward;
+    var 갈곳 = v.next==="lecture" ? "skilltree.html"
+             : (v.next==="concept" ? ("study.html?leaf="+x.leaf) : null);
+
+    document.getElementById("stage").insertAdjacentHTML("beforeend",
+      '<div class="verdict '+v.tone+'">'+
+        '<div class="top"><span class="mark">'+(ok?"○ 맞았어요":"✕ 아니에요")+'</span>'+
+        '<span class="kind">'+esc(v.kind)+'</span></div>'+
+        '<p class="say">'+esc(v.say)+'</p>'+
+        (x.why ? '<div class="why"><b>근거</b> — '+esc(x.why)+
+                 (x.src?'<span class="src">'+esc(x.src)+'</span>':'')+'</div>' : '')+
+      '</div>'+
+      '<div class="nextbar">'+
+        '<span class="lbl">다음</span>'+
+        (갈곳 ? '<a href="'+갈곳+'">'+esc(n.t)+' →</a>' : '')+
+        '<button type="button" class="go" id="next">'+
+          (i+1>=세트.length?"결과 보기":"이어서 풀기")+'</button>'+
+        '<span class="why2">'+esc(n.why)+'</span>'+
+      '</div>');
+
+    /* ★ 판정이 정한 다음 행동을 **실제로 한다.**
+       "이 개념 하나 더" 라고 말해 놓고 그냥 넘어가면 그 말을 안 믿게 된다. */
+    document.getElementById("next").onclick=function(){
+      끼우기(v.next, x);
+      i++;
+      if(i>=세트.length) 끝내기(); else { 문장그리기(); 진행그리기(); }
+      window.scrollTo({top:0,behavior:"smooth"});
+    };
+  }
+
+  /* 판정이 고른 다음 문장을 **바로 뒤에 끼운다.**
+       same    같은 리프에서 아직 안 본 것
+       similar 같은 리프에서 O/X 가 반대인 것 — 같은 개념을 뒤집어 확인한다
+       easier  같은 대영역에서 그 학생이 이미 맞힌 적 있는 리프의 것
+     끼울 것이 없으면 그냥 넘어간다. **없는 것을 지어내지 않는다.** */
+  function 끼우기(next, 방금){
+    if(next!=="same" && next!=="similar" && next!=="easier") return;
+    if(세트.length >= 세트수 + 4) return;          // 너무 늘어지면 안 한다
+    var 이미 = {}; 세트.forEach(function(z){ 이미[z.id]=1; });
+
+    var 후보 = BANK.filter(function(z){
+      if(이미[z.id]) return false;
+      if(T.scopeOn && T.scopeOn() && !T.inScope(범위대영역(z))) return false;
+      if(next==="easier")
+        return 범위대영역(z)===범위대영역(방금) && z.leaf!==방금.leaf;
+      if(next==="similar") return z.leaf===방금.leaf && z.a!==방금.a;
+      return z.leaf===방금.leaf;                   // same
+    });
+    if(!후보.length && next==="similar")
+      후보 = BANK.filter(function(z){ return !이미[z.id] && z.leaf===방금.leaf; });
+    if(!후보.length) return;
+
+    /* easier 는 **이미 맞힌 적 있는 리프**를 고른다 — 한 단계 낮추는 것이 목적이다 */
+    if(next==="easier"){
+      var 쉬운 = 후보.filter(function(z){
+        var st=T.leafStat?T.leafStat(z.leaf):null;
+        return st && st.solved && (st.correct/st.solved) >= 0.6;
+      });
+      if(쉬운.length) 후보=쉬운;
+    }
+    세트.splice(i+1, 0, 후보[Math.floor(Math.random()*후보.length)]);
+  }
+
+  function 끝내기(){
+    var 맞 = 결과.filter(function(r){return r.ok}).length;
+    if(window.COACH) COACH.wrap({got:맞, total:결과.length, kind:"ox",
+      more:{label:"한 세트 더", onclick:시작하기}});
+    var 오개념 = 결과.filter(function(r){return r.kind==="오개념"}).length;
+    var 찍음 = 결과.filter(function(r){return r.conf==="guess"}).length;
+    var 평균 = Math.round(결과.reduce(function(t,r){return t+r.ms},0)/결과.length/1000);
+
+    /* 무엇을 해야 하는지 한 가지만 짚는다 — 여럿을 주면 아무것도 안 한다 */
+    var 할일, 링크="skilltree.html";
+    if(오개념){
+      할일="확실하다고 했는데 틀린 게 "+오개념+"개 있어요. 그 개념부터 다시 봅니다.";
+      var 첫 = 결과.filter(function(r){return r.kind==="오개념"})[0];
+      링크="study.html?leaf="+첫.leaf;
+    } else if(찍음>=Math.ceil(결과.length/2)){
+      할일="절반 넘게 찍었어요. 문제보다 강의가 빠른 자리예요.";
+    } else if(맞===결과.length){
+      할일="전부 맞았어요. 다음 개념으로 넘어가도 되겠어요.";
+    } else {
+      할일="틀린 것만 모아 한 번 더 보면 오늘 몫은 끝납니다.";
+    }
+
+    document.getElementById("stage").innerHTML=
+      '<div class="card done">'+
+        '<h2>'+맞+' / '+결과.length+'</h2>'+
+        '<p>'+esc(할일)+'</p>'+
+        '<div class="tally">'+
+          '<div><b>'+맞+'</b><span>맞은 것</span></div>'+
+          '<div class="'+(오개념?"warn":"")+'"><b>'+오개념+'</b><span>확신했는데 틀림</span></div>'+
+          '<div><b>'+찍음+'</b><span>찍은 것</span></div>'+
+          '<div><b>'+평균+'초</b><span>평균</span></div>'+
+        '</div>'+
+        '<div class="nextbar" style="justify-content:center">'+
+          '<a href="'+링크+'">이어서 하기 →</a>'+
+          '<button type="button" class="go" id="again">한 세트 더</button>'+
+        '</div>'+
+      '</div>';
+    document.getElementById("again").onclick=function(){ 시작하기(); };
+  }
+
+  function 시작하기(){
+    세트=고르기(); i=0; 결과=[];
+    if(!세트.length){
+      document.getElementById("stage").innerHTML=
+        '<div class="card"><p class="sent">낼 수 있는 개념 문장이 없어요.</p>'+
+        '<p style="color:var(--ink-4);font-size:13.5px;margin-top:10px">'+
+        '시험 범위를 좁게 잡았다면 넓혀 보세요.</p></div>';
+      return;
+    }
+    if(window.COACH) COACH.begin({kind:"ox"});
+    문장그리기(); 진행그리기();
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  시작하기();
+})();
+</script>
+<script>
+/* ★ 개발 중(localhost)에는 서비스워커를 **등록하지 않고, 이미 등록된 것은 푼다.**
+   js·css 를 캐시 먼저 주는 전략이라 고치고 열면 늘 한 판 늦는다. */
+(function () {
+  if (!("serviceWorker" in navigator)) return;
+  var 개발 = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  if (개발) {
+    navigator.serviceWorker.getRegistrations().then(function (rs) {
+      rs.forEach(function (r) { r.unregister(); });
+    }).catch(function () {});
+    if (window.caches) caches.keys().then(function (ks) {
+      ks.forEach(function (k) { caches.delete(k); });
+    }).catch(function () {});
+    return;
+  }
+  addEventListener("load", function () {
+    navigator.serviceWorker.register("sw.js").catch(function () {});
+  });
+})();
+</script>
+</body>
+</html>

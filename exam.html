@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>내신 모의고사</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#08090B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="모두의 통사">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/favicon.png">
+<link rel="stylesheet" href="css/base.css?v=2cabad0f">
+<link rel="stylesheet" href="css/coach.css?v=098c724b">
+<link rel="stylesheet" href="css/question.css?v=d65c13a7">
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<style>
+  .wrapx{max-width:900px;margin:0 auto;padding:0 var(--s3) var(--s6)}
+
+  /* ── 시험 머리띠 — 남은 시간과 진행이 늘 보여야 한다 ── */
+  .exbar{position:sticky;top:0;z-index:40;background:var(--bg);
+    border-bottom:1px solid var(--line);padding:11px 0;margin-bottom:var(--s3)}
+  .exbar .in{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .exbar .rd{font-family:var(--mono);font-size:12px;color:var(--ink-4);letter-spacing:.1em}
+  .exbar .tm{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--ink);
+    font-variant-numeric:tabular-nums;letter-spacing:.02em}
+  .exbar .tm.warn{color:var(--red-2)}
+  .exbar .pg{margin-left:auto;font-size:13px;color:var(--ink-3)}
+  .exbar .pg b{color:var(--ink);font-family:var(--mono)}
+  .exbar .bar{height:3px;background:var(--line);border-radius:99px;margin-top:9px;overflow:hidden}
+  .exbar .bar i{display:block;height:100%;background:var(--mint);width:0;transition:width .2s}
+
+  /* ── 번호판 — 실제 OMR 처럼 앞뒤로 짚어 간다 ── */
+  .omr{display:grid;grid-template-columns:repeat(13,1fr);gap:4px;margin-top:9px}
+  .omr button{appearance:none;border:1px solid var(--line);background:var(--surface);
+    color:var(--ink-4);border-radius:5px;padding:5px 0;cursor:pointer;
+    font-family:var(--mono);font-size:11.5px;line-height:1.2;transition:.12s}
+  .omr button:hover{border-color:var(--ink-3);color:var(--ink-2)}
+  .omr button[data-done="1"]{background:var(--mint-soft);border-color:var(--mint);
+    color:var(--ink)}
+  .omr button[data-kl="1"]{box-shadow:inset 0 -2px 0 var(--red)}
+  .omr button[data-s="ok"]{background:var(--mint-soft);border-color:var(--mint);color:var(--ink)}
+  .omr button[data-s="no"]{background:var(--red-soft);border-color:var(--red);color:var(--red-2)}
+  @media(max-width:560px){ .omr{grid-template-columns:repeat(9,1fr)} }
+
+  /* ── 문항 ── */
+  .qs{display:flex;flex-direction:column;gap:var(--s3)}
+  .qc{background:var(--surface);border:1px solid var(--line);border-radius:var(--r2);
+    overflow:hidden;scroll-margin-top:96px}
+  .qc[data-done="1"]{border-color:var(--line-2)}
+  .qh{display:flex;align-items:center;gap:10px;padding:13px 20px;flex-wrap:wrap;
+    border-bottom:1px solid var(--line)}
+  .qh .no{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--ink)}
+  .qh .pt{font-family:var(--mono);font-size:11.5px;color:var(--ink-4)}
+  .qh .kl{font-size:11px;font-weight:700;color:var(--red-2);background:var(--red-soft);
+    border-radius:99px;padding:3px 9px;letter-spacing:.02em}
+  .qh .lb{font-size:12px;color:var(--ink-4);margin-left:auto;max-width:46%;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .qb{padding:18px 20px 20px}
+  .qb figure{margin:0 0 14px}
+  /* 기출 크롭은 흰 종이다. 어두운 스킨에서는 반전해 지면에 녹인다 —
+     study.html 과 같은 규칙이라야 두 화면이 같은 문항을 같게 보여 준다. */
+  /* 문항 조판은 css/question.css 한 곳에서 정한다 —
+     화면마다 따로 두면 같은 문항이 다르게 보인다 */
+
+  /* ── 아래 고정 막대 ── */
+  .foot{position:sticky;bottom:0;z-index:40;background:var(--bg);
+    border-top:1px solid var(--line);padding:13px 0;margin-top:var(--s4)}
+  .foot .in{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .foot .left{font-size:13.5px;color:var(--ink-3)}
+  .foot .left b{color:var(--ink)}
+  .foot .act{margin-left:auto;display:flex;gap:9px}
+
+  /* ── 결과 ── */
+  .res{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);
+    padding:var(--s4);margin-bottom:var(--s3)}
+  .res .big{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .res .sc{font-size:52px;font-weight:900;letter-spacing:-.04em;color:var(--ink);line-height:1}
+  .res .sc small{font-size:20px;color:var(--ink-4);font-weight:400}
+  .res .gr{font-size:15px;color:var(--ink-3)}
+  .res .rows{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+    gap:10px;margin-top:18px}
+  .res .cell{background:var(--surface);border:1px solid var(--line);border-radius:var(--r1);
+    padding:13px 15px}
+  .res .cell b{display:block;font-family:var(--mono);font-size:20px;color:var(--ink)}
+  .res .cell span{font-size:12px;color:var(--ink-4)}
+  .res .say{margin-top:16px;font-size:14.5px;line-height:1.8;color:var(--ink-2)}
+  .res .say b{color:var(--ink)}
+
+  /* 회차 추이 */
+  .trend{display:flex;align-items:flex-end;gap:6px;height:64px;margin-top:16px}
+  .trend .b{flex:1;background:var(--line-2);border-radius:3px 3px 0 0;min-height:3px;
+    position:relative}
+  .trend .b.now{background:var(--mint)}
+  .trend .b span{position:absolute;top:-17px;left:50%;transform:translateX(-50%);
+    font-family:var(--mono);font-size:10.5px;color:var(--ink-4)}
+
+  .note{font-size:13.5px;color:var(--ink-4);line-height:1.75}
+  .why{margin-top:14px;padding:14px 16px;background:var(--surface-2);
+    border:1px solid var(--line);border-left:3px solid var(--mint);
+    border-radius:var(--r1);font-size:14.5px;line-height:1.8;color:var(--ink-2)}
+  .why .src{display:block;margin-top:9px;font-family:var(--mono);font-size:11px;
+    color:var(--ink-4)}
+  @media(max-width:560px){
+    .picks{grid-template-columns:repeat(5,1fr);gap:6px}
+    .picks button{padding:11px 0;font-size:16px}
+    .exbar .tm{font-size:19px}
+  }
+</style>
+</head>
+<body>
+<div class="wrapx">
+  <div class="phead">
+    <div>
+      <span class="kicker"><i></i>내신 모의고사</span>
+      <h1 id="ttl">오늘의 모의고사</h1>
+      <p class="sub" id="lede"></p>
+    </div>
+    <div class="pheadact" id="headact"></div>
+  </div>
+  <div id="root"></div>
+</div>
+
+<script src="js/trend.js?v=53fd8a90"></script>
+<script src="js/tree.js?v=bcf14aaf"></script>
+<script src="js/qbank.js?v=a75ab4a3"></script>
+<script src="js/pool.js?v=4a7d39b1"></script>
+<script src="js/drills.js?v=82b6c52c"></script>
+<script src="js/store.js?v=e28a9ee6"></script>
+<script src="js/coach.js?v=9bbd5a61"></script>
+<script src="js/qrender.js?v=a26db44e"></script>
+<script src="js/exam.js?v=154e7ceb"></script>
+<script src="js/notify.js?v=61699ebf"></script>
+<script>
+(function(){
+  var T=TERRA, E=window.TERRA_EXAM, Q=window.QBANK||{};
+  T.mountNav("exam.html");
+
+  function esc(t){ return String(t==null?"":t)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+  /* webp 가 없는 기기를 위해 png 로 되돌린다 (study.html 과 같은 처리) */
+  function webpFallback(host){
+    (host||document).querySelectorAll("img[src$='.webp']").forEach(function(im){
+      im.onerror=function(){ if(!im.dataset.fb){ im.dataset.fb="1";
+        im.src=im.src.replace(/\.webp$/,".png"); } };
+    });
+  }
+
+  var root=document.getElementById("root");
+  var day=T.dayKey ? T.dayKey() : new Date().toISOString().slice(0,10);
+  var paper=null, picks={}, 시작=null, 끝남=false, 타이머=null;
+
+  /* ── 남은 시간 ──────────────────────────────
+     시작 시각을 저장해 둔다. 앱을 껐다 켜도 시간은 흘러간 것으로 친다 —
+     그래야 시험이다. 다만 하루가 지나면 새 회차이므로 초기화된다. */
+  function 남은초(){
+    if(!시작) return paper.minutes*60;
+    var 간 = Math.floor((Date.now()-시작)/1000);
+    return Math.max(0, paper.minutes*60 - 간);
+  }
+  function 시분(s){
+    var m=Math.floor(s/60), x=s%60;
+    return (m<10?"0":"")+m+":"+(x<10?"0":"")+x;
+  }
+
+  /* ── 저장 — 나갔다 와도 이어서 ───────────────── */
+  function 저장(){
+    if(끝남) return;
+    E.saveNow({day:day, picks:picks, start:시작});
+  }
+  function 불러오기(){
+    var n=E.now();
+    if(n && n.day===day){ picks=n.picks||{}; 시작=n.start||null; }
+  }
+
+  /* ── 그리기 ─────────────────────────────────── */
+  /* 문항은 **텍스트로 조판**한다. 지면을 통째로 베낀 크롭을 붙이지 않는다.
+     조판은 js/qrender.js 가 한다 — 문제풀이 화면과 같은 조판기를 써야
+     같은 문항이 두 화면에서 같게 보인다. */
+  function 문항HTML(it, i){
+    var d=Q[it.id]||{};
+    var 몸 = window.QRENDER
+      ? QRENDER.html(d, {img:it.img}, {})
+      : '<p class="stem">'+esc(d.q||"")+'</p>';
+    /* 선지는 조판기가 그린 것을 지우고 **누를 수 있는 단추**로 바꾼다 */
+    몸 = 몸.replace(/<ol class="opts5">[\s\S]*?<\/ol>/, '');
+    /* 선지가 그림 안에 있는 문항은 번호 단추만 낸다 — 글은 그림에 있다 */
+    var 선지 = window.QRENDER
+      ? QRENDER.picks(d, {qid:it.id, numbersOnly:!!it.ff}) : '';
+    return '<article class="qc" id="q'+(i+1)+'" data-done="'+
+      (picks[it.id]===undefined?0:1)+'">'+
+      '<div class="qh"><span class="no">'+(i+1)+'</span>'+
+      '<span class="pt">'+it.point+'점</span>'+
+      /* 킬러 배지는 채점 뒤에 붙인다 — 시험 중에 보이면 포기하게 된다 */
+      (끝남&&it.killer?'<span class="kl">킬러</span>':'')+
+      /* 단원 이름도 채점 뒤에. 어느 단원인지 알면 답의 폭이 좁아진다 */
+      (끝남?'<span class="lb">'+esc(it.leafName||"")+'</span>':'')+'</div>'+
+      '<div class="qb">'+몸+선지+'<div class="v" id="v'+(i+1)+'"></div></div></article>';
+  }
+
+  function 머리띠(){
+    var 푼 = paper.items.filter(function(x){ return picks[x.id]!==undefined; }).length;
+    var s = 남은초();
+    return '<div class="exbar"><div class="in">'+
+      '<span class="rd">'+paper.round+'회차 · '+esc(paper.day)+'</span>'+
+      '<span class="tm'+(s<=300?" warn":"")+'" id="tm">'+시분(s)+'</span>'+
+      '<span class="pg">푼 문항 <b>'+푼+'</b> / '+paper.items.length+'</span>'+
+      '</div><div class="bar"><i id="pgbar" style="width:'+
+      Math.round(푼/paper.items.length*100)+'%"></i></div>'+
+      '<div class="omr" id="omr">'+paper.items.map(function(it,i){
+        return '<button type="button" data-go="'+(i+1)+'" data-kl="'+
+          (끝남&&it.killer?1:0)+'" data-done="'+(picks[it.id]===undefined?0:1)+'" '+
+          'title="'+esc(it.leafName||"")+'">'+(i+1)+'</button>';
+      }).join("")+'</div></div>';
+  }
+
+  function 그리기(){
+    root.innerHTML =
+      머리띠()+
+      '<div class="qs">'+paper.items.map(문항HTML).join("")+'</div>'+
+      '<div class="foot"><div class="in">'+
+        '<span class="left" id="ftxt"></span>'+
+        '<span class="act">'+
+          '<button class="btn ghost" id="jump">안 푼 문항으로</button>'+
+          '<button class="btn" id="submit">채점하기</button>'+
+        '</span></div></div>';
+    document.querySelectorAll(".picks .pick").forEach(function(b){
+      b.onclick=function(){ 고르기(b); };
+    });
+    document.getElementById("submit").onclick=제출;
+    document.getElementById("jump").onclick=안푼곳으로;
+    document.querySelectorAll("#omr button").forEach(function(b){
+      b.onclick=function(){
+        var el=document.getElementById("q"+b.dataset.go);
+        if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+      };
+    });
+    webpFallback(root);
+    갱신();
+  }
+
+  function 고르기(b){
+    if(끝남) return;
+    if(!시작){ 시작=Date.now(); 타이머시작(); }
+    var id=b.dataset.q, v=+b.dataset.v;
+    if(picks[id]===v) delete picks[id];          // 다시 누르면 취소
+    else picks[id]=v;
+    b.parentNode.querySelectorAll(".pick").forEach(function(x){
+      x.setAttribute("aria-pressed", picks[id]===+x.dataset.v);
+    });
+    b.closest(".qc").dataset.done = (picks[id]===undefined?0:1);
+    저장(); 갱신();
+  }
+
+  function 갱신(){
+    var 푼 = paper.items.filter(function(x){ return picks[x.id]!==undefined; }).length;
+    var n = paper.items.length;
+    var pg=document.querySelector(".exbar .pg");
+    if(pg) pg.innerHTML='푼 문항 <b>'+푼+'</b> / '+n;
+    var bar=document.getElementById("pgbar");
+    if(bar) bar.style.width=Math.round(푼/n*100)+"%";
+    /* 번호판도 함께 — 어디를 안 풀었는지 늘 보여야 한다 */
+    paper.items.forEach(function(it,i){
+      var b=document.querySelector('#omr button[data-go="'+(i+1)+'"]');
+      if(b) b.dataset.done = (picks[it.id]===undefined?0:1);
+    });
+    var f=document.getElementById("ftxt");
+    if(f) f.innerHTML = 끝남 ? '채점을 마쳤어요.'
+      : (푼===n ? '<b>다 풀었어요.</b> 채점해 볼까요?'
+               : '아직 <b>'+(n-푼)+'문항</b> 남았어요. 다 안 풀어도 채점할 수 있어요.');
+  }
+
+  function 안푼곳으로(){
+    for(var i=0;i<paper.items.length;i++){
+      if(picks[paper.items[i].id]===undefined){
+        var el=document.getElementById("q"+(i+1));
+        if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+        return;
+      }
+    }
+    alert("안 푼 문항이 없어요.");
+  }
+
+  /* ── 타이머 ─────────────────────────────────── */
+  function 타이머시작(){
+    if(타이머) return;
+    타이머=setInterval(function(){
+      if(끝남){ clearInterval(타이머); 타이머=null; return; }
+      var s=남은초(), el=document.getElementById("tm");
+      if(el){ el.textContent=시분(s); el.className="tm"+(s<=300?" warn":""); }
+      if(s<=0){ clearInterval(타이머); 타이머=null; 제출(true); }
+    },1000);
+  }
+
+  /* ── 채점 ───────────────────────────────────── */
+  function 제출(자동){
+    if(끝남) return;
+    var 푼 = paper.items.filter(function(x){ return picks[x.id]!==undefined; }).length;
+    if(!자동 && 푼 < paper.items.length){
+      if(!confirm("아직 "+(paper.items.length-푼)+"문항이 남았어요. 지금 채점할까요?")) return;
+    }
+    끝남=true;
+    var res=E.grade(paper, picks);
+    E.record(paper, res, picks);
+    /* 오늘 루틴에도 반영 — 모의고사를 푼 것도 공부다 */
+    try {
+      paper.items.forEach(function(it){
+        if(picks[it.id]!==undefined) T.answer(it.id, picks[it.id]);
+      });
+    } catch(e){}
+    결과그리기(res);
+    if(window.COACH) COACH.wrap({got:res.right, total:paper.items.length, kind:"exam"});
+  }
+
+  function 등급말(pct){
+    if(pct>=95) return "이대로면 1등급 다툼입니다.";
+    if(pct>=88) return "2등급 언저리예요. 킬러만 잡으면 올라갑니다.";
+    if(pct>=76) return "3등급 언저리. 틀린 곳이 몰린 단원이 보일 거예요.";
+    if(pct>=60) return "아직 채울 곳이 많아요. 틀린 것부터 다시 봅시다.";
+    return "지금 점수는 신경 쓰지 마세요. 오답이 곧 오늘 할 일입니다.";
+  }
+
+  function 결과그리기(res){
+    /* 틀린 곳이 몰린 단원 */
+    var byLeaf={};
+    res.wrongList.forEach(function(w){
+      (byLeaf[w.leaf]=byLeaf[w.leaf]||{n:0,name:w.leafName}).n++;
+    });
+    var 몰린 = Object.keys(byLeaf).sort(function(a,b){ return byLeaf[b].n-byLeaf[a].n; })[0];
+
+    var L=E.log();
+    var 추이 = L.slice(-8).map(function(r,i,arr){
+      var h=Math.max(3, Math.round(r.pct*0.6));
+      return '<div class="b'+(i===arr.length-1?" now":"")+'" style="height:'+h+'%">'+
+        '<span>'+r.pct+'</span></div>';
+    }).join("");
+
+    var head =
+      '<div class="res"><div class="big">'+
+        '<span class="sc">'+res.score+'<small> / '+res.total+'점</small></span>'+
+        '<span class="gr">'+esc(등급말(res.pct))+'</span></div>'+
+      '<div class="rows">'+
+        '<div class="cell"><b>'+res.right+' / '+paper.items.length+'</b><span>맞힌 문항</span></div>'+
+        '<div class="cell"><b>'+res.killer.right+' / '+res.killer.n+'</b><span>킬러 문항</span></div>'+
+        '<div class="cell"><b>'+시분(paper.minutes*60-남은초())+'</b><span>걸린 시간</span></div>'+
+        '<div class="cell"><b>'+paper.round+'회차</b><span>오늘까지</span></div>'+
+      '</div>'+
+      (몰린 ? '<p class="say">틀린 것이 <b>'+esc(byLeaf[몰린].name)+'</b>에 '+
+              byLeaf[몰린].n+'개 몰렸어요. 여기부터 다시 보면 점수가 가장 크게 움직입니다. '+
+              '<a href="study.html?leaf='+esc(몰린)+'&mode=wrong">그 단원 다시 풀기 →</a></p>' : '')+
+      (L.length>1 ? '<div class="trend">'+추이+'</div>'+
+        '<p class="note" style="margin-top:8px">최근 '+Math.min(8,L.length)+'회차 점수</p>' : '')+
+      '</div>';
+
+    /* 문항마다 정답·해설을 편다 */
+    paper.items.forEach(function(it,i){
+      var wrap=document.getElementById("q"+(i+1));
+      if(!wrap) return;
+      var p=picks[it.id];
+      wrap.querySelectorAll(".picks .pick").forEach(function(b){
+        b.disabled=true;
+        var v=+b.dataset.v;
+        if(v===it.a) b.dataset.s = (p===it.a ? "ok" : "ans");
+        else if(v===p) b.dataset.s="no";
+      });
+      var d=Q[it.id]||{};
+      var ok=(p===it.a);
+      var 해설 = d.x ? esc(d.x)
+        : (d.w && d.w[String(it.a+1)] ? esc(d.w[String(it.a+1)])
+        : "이 문항은 해설이 함께 오지 않았어요. 선지를 하나씩 지워 가며 왜 남는지 적어 두세요.");
+      document.getElementById("v"+(i+1)).innerHTML =
+        '<div class="why"><b>'+(ok?"맞았습니다.":"틀렸습니다.")+'</b> '+
+        '정답 '+"①②③④⑤".charAt(it.a)+
+        (p===undefined ? ' · 안 골랐어요' : (ok?'':' · 내가 고른 것 '+"①②③④⑤".charAt(p)))+
+        '<br>'+해설+
+        '<span class="src">'+esc(it.leafName||"")+' · '+esc(it.src||"")+'</span></div>';
+    });
+
+    /* 채점했으니 이제 편다 — 킬러가 어디였는지, 어느 단원이었는지.
+       시험 중에는 감췄던 것들이다. */
+    paper.items.forEach(function(it,i){
+      var b=document.querySelector('#omr button[data-go="'+(i+1)+'"]');
+      if(b){
+        b.dataset.s = (picks[it.id]===it.a ? "ok" : "no");
+        b.dataset.kl = it.killer ? 1 : 0;
+        b.title = (it.leafName||"") + (it.killer ? " · 킬러" : "");
+      }
+      var qh=document.querySelector("#q"+(i+1)+" .qh");
+      if(qh && !qh.querySelector(".lb")){
+        if(it.killer) qh.insertAdjacentHTML("beforeend",'<span class="kl">킬러</span>');
+        qh.insertAdjacentHTML("beforeend",
+          '<span class="lb">'+esc(it.leafName||"")+'</span>');
+      }
+    });
+    var host=document.querySelector(".exbar");
+    if(host) host.insertAdjacentHTML("afterend", head);
+    var foot=document.querySelector(".foot .act");
+    if(foot) foot.innerHTML =
+      '<a class="btn ghost" href="index.html">홈으로</a>'+
+      (몰린 ? '<a class="btn" href="study.html?leaf='+esc(몰린)+'&mode=wrong">틀린 단원 다시 풀기</a>'
+            : '<a class="btn" href="drill.html">킬러 훈련</a>');
+    갱신();
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  /* ── 이미 오늘 회차를 끝냈나 ──────────────────── */
+  function 오늘끝냈나(){
+    return E.log().some(function(r){ return r.day===day; });
+  }
+
+  /* ── 시작 ───────────────────────────────────── */
+  function 시작하기(){
+    paper=E.paper(day);
+    if(!paper){
+      root.innerHTML='<p class="note">시험 범위 안에 낼 문항이 모자랍니다. '+
+        '<a href="settings.html">범위를 다시 정해</a> 주세요.</p>';
+      return;
+    }
+    document.getElementById("lede").textContent =
+      paper.round+"회차 · "+paper.items.length+"문항 "+paper.total+"점 · "+
+      paper.minutes+"분" + (paper.scope ? " · 범위 "+paper.scope : "");
+    document.getElementById("headact").innerHTML =
+      '<a class="btn ghost" href="settings.html">범위·시험일</a>';
+    불러오기();
+    그리기();
+    if(시작) 타이머시작();
+  }
+
+  if(오늘끝냈나() && !new URLSearchParams(location.search).get("again")){
+    var r=E.log().filter(function(x){ return x.day===day; })[0];
+    document.getElementById("lede").textContent="오늘 회차는 이미 끝냈어요.";
+    root.innerHTML =
+      '<div class="res"><div class="big">'+
+        '<span class="sc">'+r.score+'<small> / '+r.total+'점</small></span>'+
+        '<span class="gr">'+esc(등급말(r.pct))+'</span></div>'+
+      '<div class="rows">'+
+        '<div class="cell"><b>'+r.right+' / '+r.n+'</b><span>맞힌 문항</span></div>'+
+        '<div class="cell"><b>'+(r.killer?r.killer.right+' / '+r.killer.n:"—")+
+          '</b><span>킬러 문항</span></div>'+
+        '<div class="cell"><b>'+r.round+'회차</b><span>오늘까지</span></div>'+
+      '</div>'+
+      '<p class="say">하루 한 회가 원칙이에요. 오늘은 <b>틀린 것 다시 보기</b>가 남았습니다.</p>'+
+      '</div>'+
+      '<div class="foot"><div class="in"><span class="left">'+
+      '내일 새 회차가 열려요.</span><span class="act">'+
+      '<a class="btn ghost" href="exam.html?again=1">그래도 한 번 더</a>'+
+      '<a class="btn" href="index.html">오늘 할 일 보기</a>'+
+      '</span></div></div>';
+  } else {
+    시작하기();
+  }
+})();
+</script>
+</body>
+</html>
