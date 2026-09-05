@@ -1248,7 +1248,9 @@
         '"></i></span></span>'+
         '<span class="go">'+(function(){
           var V=(window.VIDEO||{})[x.code];
-          if(!V) return '<button class="btn quiet soon" disabled>강의 준비 중</button>';
+          /* ★ 항목은 있는데 주소가 둘 다 비면(배포판 — 영상을 못 올린 편) 준비 중으로.
+             단추만 살아 있으면 "눌러도 안 나오는 강의" 가 된다. */
+          if(!V || !(V.web||V.local)) return '<button class="btn quiet soon" disabled>강의 준비 중</button>';
           return '<button class="btn play" data-leaf="'+x.code+'">강의 '+V.min+'분</button>';
         })()+
         (x.play?'<a class="btn ghost" href="study.html?leaf='+x.code+'">문제 '+x.play+'</a>':'')+
