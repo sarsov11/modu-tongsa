@@ -14,8 +14,8 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=2cabad0f">
-<link rel="stylesheet" href="css/coach.css?v=098c724b">
+<link rel="stylesheet" href="css/base.css?v=3412bcd2">
+<link rel="stylesheet" href="css/coach.css?v=6f83040b">
 <link rel="stylesheet" href="css/question.css?v=d65c13a7">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -494,13 +494,13 @@
 <script src="js/tree.js?v=bcf14aaf"></script>
 <script src="js/qbank.js?v=a75ab4a3"></script>
 <script src="js/lecture.js?v=978fa2e7"></script>
-<script src="js/video.js?v=489e4da1"></script>
+<script src="js/video.js?v=b02e3de6"></script>
 <script src="js/qrender.js?v=a26db44e"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/oxindex.js?v=0f8fbf03"></script>
 <script src="js/cards.js?v=b13e045d"></script>
-<script src="js/store.js?v=e28a9ee6"></script>
+<script src="js/store.js?v=5d8ce5eb"></script>
 <script src="js/coach.js?v=9bbd5a61"></script>
 <script src="js/notify.js?v=61699ebf"></script>
 <script>
@@ -636,9 +636,9 @@
       /* 성격이 다른 항목은 알아볼 수 있게 — 색과 배지를 준다.
          `note` 는 시간이 거의 안 드는 알림(범위 갱신·다음 범위)이다. */
       var 꼴 = { due:" due", after:" after", weekly:" weekly", vacation:" vacation",
-                 scopeold:" note", nextscope:" note", ox:" oxstep" }[it.kind] || "";
+                 scopeold:" note", nextscope:" note", ox:" oxstep", card:" oxstep" }[it.kind] || "";
       var 배지 = { after:"시험 직후", weekly:"이번 주", vacation:"방학",
-                   scopeold:"확인", nextscope:"다음", ox:"O·X" }[it.kind];
+                   scopeold:"확인", nextscope:"다음", ox:"O·X", card:"카드" }[it.kind];
       return '<a class="stp2'+꼴+(fin?" done":"")+
         '" href="'+it.href+'">'+
         '<span class="no">'+(fin?"✓":(k+1))+'</span>'+

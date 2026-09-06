@@ -1355,8 +1355,32 @@
        ★ 확신도를 함께 묻기 때문에 그냥 문제풀이와 다르다.
          "확실하다고 했는데 틀린 것"(오개념)을 잡아내는 것이 이 항목의 값어치다. */
     var 강의봄 = items.some(function (x) { return x.kind === "lec"; });
+    /* 2-2) ★ 강의가 없으면 **개념 카드**가 배우는 자리다(2026-09-06 — 드림3기 영상 전부 폐기로
+       VIDEO 가 비었다. 대표님: "강의 선호하면 강의, 개념카드 보고 공부하고 싶으면 그걸로").
+       카드가 있는 리프 가운데 오늘의리프 점수가 가장 큰 것 하나. 카드 없는 화면(cards.js 안 실림)에서는
+       권하지 않는다 — 없는 것을 권하면 "준비 중" 함정과 같다. */
+    var 배움 = 강의봄;
+    /* 카드 몫은 강의 몫과 같다 — 학년마다 다르다(고1 절반 · 고2 되짚기 · 고3 0).
+       고정 4분으로 두면 고1의 문항 시간이 고2보다 길어져 학년 차이가 뒤집힌다(검산기가 잡았다). */
+    var CARD몫 = Math.max(0, Math.min(left - DRILL_MIN, lec몫));
+    if (!강의봄 && window.CARDS && CARD몫 >= 3 && XM.mode !== "real") {
+      var 카드후보 = 오늘의리프({ 전부: true }).filter(function (c) {
+        return window.CARDS[c.code] && window.CARDS[c.code].cards.length;
+      });
+      if (카드후보.length) {
+        var cc = 카드후보[0], 장 = Math.min(5, window.CARDS[cc.code].cards.length, Math.max(2, Math.round(CARD몫 / 1.4)));
+        var 학년3 = (S.student && S.student.grade) || "고1";
+        items.push({ kind: "card", min: CARD몫, leaf: cc.code, n: 장,
+          title: 학년3 === "고1" ? "오늘 개념 카드" : "개념 카드로 되짚기",
+          say: cc.st.name + " · 카드 " + 장 + "장",
+          why: "읽고 바로 확인해요. 강의 대신 이걸로 배우고, 다 맞히면 문제로 넘어가요.",
+          href: "card.html?leaf=" + cc.code, cta: "읽기" });
+        left -= CARD몫; 배움 = true;
+      }
+    }
+
     var OX몫 = 3;
-    if (left >= OX몫 && (강의봄 || !due.length) && XM.mode !== "real") {
+    if (left >= OX몫 && (배움 || !due.length) && XM.mode !== "real") {
       /* ★ 홈은 **개수만** 알면 된다 — "여덟 문장이 되는가".
          그 한 가지 때문에 800KB 짜리 전문을 첫 화면에 싣지 않는다.
          `js/oxindex.js` 가 단원별 개수표(0.4KB)다. 전문이 이미 실려 있으면
@@ -1378,10 +1402,11 @@
       })();
       if (몇개 >= 8) {
         items.push({ kind: "ox", min: OX몫, n: 8,
-          title: 강의봄 ? "배운 것 바로 확인" : "개념 체크",
+          title: 배움 ? "배운 것 바로 확인" : "개념 체크",
           say: "O·X 여덟 문장",
-          why: 강의봄
-            ? "방금 본 강의를 확인하는 자리예요. 지금이 제일 잘 남습니다."
+          why: 배움
+            ? (강의봄 ? "방금 본 강의를 확인하는 자리예요. 지금이 제일 잘 남습니다."
+                      : "방금 읽은 카드를 확인하는 자리예요. 지금이 제일 잘 남습니다.")
             : "얼마나 확신하는지도 함께 고르면, 틀렸을 때 무엇을 할지 바로 알려 드려요.",
           href: "ox.html", cta: "개념 체크" });
         left -= OX몫;
@@ -1629,10 +1654,10 @@
     /* ★ 개념 카드 — 강의 대신 **읽고 바로 확인**하는 길(2026-09-04 대표님 지시).
        "강의 선호하면 강의, 개념카드 보고 공부하고 싶으면 그걸로" 하려면
        학생이 찾아갈 자리가 있어야 한다. 강의(스킬트리) 바로 뒤에 둔다. */
-    var items = [["index.html", "리포트"], ["skilltree.html", "스킬트리"],
-                 ["card.html", "개념 카드"],
-                 ["study.html", "문제풀이"], ["ox.html", "개념 체크"],
-                 ["drill.html", "킬러 / 준킬러"], ["settings.html", "설정"]];
+    /* ★ 나비는 넷(2026-09-06 대표님: "개념카드, 문제풀이, 어쩌구 존나 많아서 더 정신없음").
+       개념 카드·문제풀이·개념 체크는 홈의 '지금 할 것' 과 스킬트리에서 간다. */
+    var items = [["index.html", "홈"], ["skilltree.html", "스킬트리"],
+                 ["drill.html", "훈련"], ["settings.html", "설정"]];
     return '<nav class="nav"><div class="wrap">' +
       '<a class="logo" href="index.html"><span class="dot"></span>모두의 통사<small>테라러닝</small></a>' +
       '<div class="navlinks">' + items.map(function (it) {
@@ -1689,7 +1714,24 @@
     };
   }
 
+  /* ★ 처음 온 학생은 설정 화면(start.html)부터 본다 — 이름·학년·시험·범위·하루 분·알림 시각을
+     한 화면에 하나씩 묻고, 끝나면 오늘 할 것 하나를 내민다(헤이링 첫 UX, 2026-09-06 대표님).
+     검사기(헤드리스)는 건너뛴다 — navigator.webdriver. ?skip 으로도 건너뛴다. */
+  function 처음인가() {
+    try {
+      if (localStorage.getItem("terra.onboarded") === "1") return false;
+      if (navigator.webdriver) return false;
+      /* 크롬을 직접 headless 로 띄운 검사기는 webdriver 가 false 다 — UA 로 가린다 */
+      if (/HeadlessChrome/.test(navigator.userAgent || "")) return false;
+      if (/[?&]skip\b/.test(location.search)) return false;
+    } catch (e) { return false; }
+    return true;
+  }
   function mountNav(active) {
+    var here0 = (location.pathname.split("/").pop() || "index.html");
+    if (here0 !== "start.html" && here0 !== "parent.html" && 처음인가()) {
+      location.replace("start.html"); return;
+    }
     /* ★ 고1이 범위를 한 번도 안 정했으면 **서문여고 기본값**을 넣는다.
        모든 화면이 이 함수를 부르므로 여기 한 줄이면 전부에 걸린다.
        학생이 직접 정한 값은 절대 덮지 않는다(scopeAt 이 있으면 손대지 않는다). */

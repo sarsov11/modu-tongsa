@@ -18,6 +18,11 @@
   padding:7px 10px;border-radius:8px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink-2);cursor:pointer}
 .nextbar.coach .skinpick button[aria-pressed="true"]{border-color:var(--red);color:var(--ink)}
 .nextbar.coach .skinpick button i{width:12px;height:12px;border-radius:50%;display:inline-block}
+@media(max-width:880px){
+  /* 아래 탭(.navlinks) 위에 띠가 얹힌다 */
+  .nextbar{bottom:calc(58px + env(safe-area-inset-bottom,0))}
+  body.hasnext{padding-bottom:calc(58px + 66px + env(safe-area-inset-bottom,0))}
+}
 @media(max-width:640px){
   /* base.css 의 .chip{display:inline-flex} 가 .hide-sm 보다 뒤에 있어 폰에서 칩이 안 숨었다 —
      그래서 오른쪽 단추가 화면 밖으로 밀려 나갔다(375px 실측). 여기서 다시 숨긴다 */

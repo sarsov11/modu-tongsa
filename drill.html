@@ -14,8 +14,8 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=2cabad0f">
-<link rel="stylesheet" href="css/coach.css?v=098c724b">
+<link rel="stylesheet" href="css/base.css?v=3412bcd2">
+<link rel="stylesheet" href="css/coach.css?v=6f83040b">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .page{max-width:var(--wrap);margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -382,17 +382,18 @@
 <script src="js/tree.js?v=bcf14aaf"></script>
 <script src="js/atlas.js?v=b77a2dac"></script>
 <script src="js/thinker.js?v=e4907d89"></script>
-<script src="js/subkiller.js?v=1e792c75"></script>
+<script src="js/subkiller.js?v=2cbd516f"></script>
 <script src="js/laborcase.js?v=786e26c2"></script>
 <script src="js/econcase.js?v=a06c335f"></script>
 <script src="js/consticase.js?v=cd204a55"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
-<script src="js/rights.js?v=d8cd8fef"></script>
+<script src="js/rights.js?v=07b8651a"></script>
 <script src="js/power.js?v=e8c8a180"></script>
 <script src="js/peace.js?v=47dd7698"></script>
 <script src="js/justice.js?v=4843e05f"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
-<script src="js/store.js?v=e28a9ee6"></script>
+<script src="js/cards.js?v=b13e045d"></script>
+<script src="js/store.js?v=5d8ce5eb"></script>
 <script src="js/coach.js?v=9bbd5a61"></script>
 <script src="js/notify.js?v=61699ebf"></script>
 <script>
@@ -1395,10 +1396,15 @@
     var pool=(SK.consti.real||[]).concat(SK.consti.drill||[]);
     var c=pick(pool), real=(SK.consti.real||[]).indexOf(c)>=0;
     var st=[];
-    st.push({q:"이 사건에서 문제 된 기본권은?", show:"facts",
-      o:shuffle([c.right].concat(c.rightAlt.slice(0,1))), a:c.right,
-      why:"사실관계에서 <b>여럿이 모여 뜻을 알리는 행위</b>가 막혔는지, "+
-          "아니면 다른 자유가 막혔는지를 봅니다. 여기서는 <b>"+c.right+"</b>입니다."});
+    /* ★ 통합사회는 기본권을 자유·평등·참정·청구·사회 5유형으로만 배운다 (대표님 2026-09-06).
+       「집회의 자유 vs 결사의 자유」 처럼 세부 이름을 고르게 하면 정치와법 수준이 된다.
+       ⇒ 1단계는 5유형을 고르고, 세부 이름은 설명에만 둔다. */
+    var 유형5=["자유권","평등권","참정권","청구권","사회권"];
+    var 답유형=c.rightKind||"자유권";
+    st.push({q:"이 사건에서 문제 된 기본권은 어느 유형인가요? (자유·평등·참정·청구·사회)", show:"facts",
+      o:shuffle([답유형].concat(shuffle(유형5.filter(function(k){return k!==답유형;})).slice(0,3))),
+      a:답유형,
+      why:"<b>"+c.right+"</b> → <b>"+답유형+"</b>. "+(c.rightWhy||"")});
     st.push({q:"이 사건은 어떤 심판인가요?", show:"facts",
       o:shuffle([c.kind, c.kind==="위헌법률심판"?"헌법소원심판":"위헌법률심판"]), a:c.kind,
       why:c.kindWhy});
