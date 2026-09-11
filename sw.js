@@ -67,18 +67,22 @@ self.addEventListener("periodicsync", function (e) {
       return self.registration.showNotification("모두의 통사 · 오늘 15분", {
         body: "짧게 한 번 하고 갈까요?",
         icon: "./icons/icon-192.png", badge: "./icons/icon-192.png",
-        tag: "terra-daily", data: { url: "./index.html" }
+        tag: "terra-daily", data: { url: "./index.html?go=1" }
       });
     }));
 });
 
 self.addEventListener("notificationclick", function (e) {
   e.notification.close();
-  var url = (e.notification.data && e.notification.data.url) || "./index.html";
+  var url = (e.notification.data && e.notification.data.url) || "./index.html?go=1";
   e.waitUntil(self.clients.matchAll({ type: "window", includeUncontrolled: true })
     .then(function (cs) {
       for (var i = 0; i < cs.length; i++)
-        if ("focus" in cs[i]) return cs[i].focus();
+        if ("focus" in cs[i]) {
+          /* ★ 떠 있는 창도 오늘 할 것으로 옮겨 준다 — focus 만 하면 보던 화면 그대로다 */
+          if ("navigate" in cs[i]) { try { cs[i].navigate(url); } catch (err) {} }
+          return cs[i].focus();
+        }
       return self.clients.openWindow(url);
     }));
 });

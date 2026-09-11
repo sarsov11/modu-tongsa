@@ -501,8 +501,8 @@
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/cards.js?v=1a50b0db"></script>
 <script src="js/store.js?v=5d8ce5eb"></script>
-<script src="js/coach.js?v=9bbd5a61"></script>
-<script src="js/notify.js?v=61699ebf"></script>
+<script src="js/coach.js?v=7a724956"></script>
+<script src="js/notify.js?v=11011d39"></script>
 <script>
 (function(){
   var T=TERRA, Q=window.QBANK||{};
@@ -619,6 +619,12 @@
     var acc=0, spent=R.spent, heroIdx=-1, acc0=0;
     for(var hk=0;hk<R.items.length;hk++){ acc0+=R.items[hk].min; if(spent<acc0){ heroIdx=hk; break; } }
     var heroIt = heroIdx>=0 ? R.items[heroIdx] : null;
+    /* ★ 알림에서 왔으면(?go=1) 홈을 거치지 않고 오늘 할 것으로 바로 넘긴다 (대표님 2026-09-11).
+       넘기기 전에 주소에서 표를 지워, 뒤로 가기로 홈에 돌아와도 되돌이가 안 생기게 한다. */
+    if(heroIt && /[?&]go=1\b/.test(location.search)){
+      try{ history.replaceState(null,"",location.pathname); }catch(e){}
+      location.href = heroIt.href; return;
+    }
     var hero = heroIt
       ? '<a class="hero" href="'+heroIt.href+'"><span class="tx">'+
         '<span class="lbl">지금 할 것</span>'+

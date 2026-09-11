@@ -118,14 +118,14 @@
         body: body, icon: "icons/icon-192.png", badge: "icons/icon-192.png",
         tag: "terra-daily", renotify: false
       });
-      n.onclick = function () { window.focus(); location.href = "index.html"; n.close(); };
+      n.onclick = function () { window.focus(); location.href = "index.html?go=1"; n.close(); };  /* ★ 홈이 아니라 오늘 할 것으로 (대표님 2026-09-11) */
     } catch (e) {
       /* 안드로이드 크롬은 SW 를 거쳐야 뜬다 */
       if (navigator.serviceWorker && navigator.serviceWorker.ready) {
         navigator.serviceWorker.ready.then(function (reg) {
           reg.showNotification("모두의 통사 · " + m.t, {
             body: body, icon: "icons/icon-192.png", badge: "icons/icon-192.png",
-            tag: "terra-daily", data: { url: "index.html" }
+            tag: "terra-daily", data: { url: "index.html?go=1" }
           });
         }).catch(function () {});
       } else { return false; }

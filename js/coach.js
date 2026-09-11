@@ -101,7 +101,7 @@
       var w = v.개념 || "";
       if (!w) return "";
       return k === "개념은" ? 은는(w) : k === "개념이" ? 이가(w) : k === "개념을" ? 을를(w) : w;
-    }).replace(/\{(\w+)\}/g, function (_, k) { return v[k] == null ? "" : v[k]; })
+    }).replace(/\{([^{}]+)\}/g, function (_, k) { return v[k] == null ? "" : v[k]; })  /* ★ \w 는 ASCII 만 본다 — {시험} 같은 한글 자리가 안 채워져 그대로 찍혔다 (2026-09-11) */
       .replace(/^\s+/, "");
   }
 
