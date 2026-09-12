@@ -106,6 +106,28 @@
   .tally span{font-size:12px;color:var(--ink-4)}
   .tally .warn b{color:var(--amber)}
   @media(max-width:520px){ .sent{font-size:18px} .ox button{font-size:26px;padding:16px} }
+  /* ── 기출 선지 판별 (대표님 2026-09-12) ───────────────────────── */
+  .qwrap{border:1px solid var(--line-2);border-radius:var(--r2);
+    background:var(--bg-2);padding:var(--s4);margin-bottom:var(--s4)}
+  .qwrap .qtag{display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+    font-size:12px;color:var(--ink-3);margin-bottom:var(--s3)}
+  .qwrap .qtag b{color:var(--mint);font-weight:700}
+  .qwrap .qtag .src{margin-left:auto;font-variant-numeric:tabular-nums}
+  .qstem{font-size:15px;line-height:1.6;font-weight:600;margin:0 0 10px}
+  .qdata{border:1px solid var(--line);border-radius:var(--r3);padding:12px 14px;
+    font-size:13.5px;line-height:1.72;white-space:pre-wrap;color:var(--ink-2);margin-bottom:12px}
+  .qpick{display:flex;gap:10px;align-items:flex-start;
+    border:2px solid var(--mint);border-radius:var(--r3);padding:14px 16px;
+    background:color-mix(in srgb, var(--mint) 10%, transparent)}
+  .qpick .no{flex:none;font-weight:800;color:var(--mint);font-size:17px;line-height:1.5}
+  .qpick .tx{font-size:17px;line-height:1.62;font-weight:600;letter-spacing:-.01em}
+  .qhint{font-size:12.5px;color:var(--ink-3);margin:8px 2px 0}
+  .qrest{margin-top:10px;font-size:13px;color:var(--ink-2)}
+  .qrest summary{cursor:pointer;color:var(--ink-3);font-size:12.5px}
+  .qrest ol{margin:8px 0 0;padding-left:20px;line-height:1.7}
+  .qrest li.hit{color:var(--mint);font-weight:600}
+  .qfall{font-size:12.5px;color:var(--ink-3);margin:0 2px 10px}
+  @media(max-width:520px){ .qpick .tx{font-size:15.5px} .qdata{font-size:12.5px} }
 </style>
 </head>
 <body>
@@ -127,18 +149,24 @@
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
+<script src="js/conceptq.js?v=fc0c09eb"></script>
 <script src="js/cards.js?v=1a50b0db"></script>
 <script src="js/store.js?v=5d8ce5eb"></script>
 <script src="js/coach.js?v=7a724956"></script>
 <script>
 (function(){
   var T=window.TERRA, J=window.JUDGE, BANK=window.OXBANK||[];
+  var CQ=window.CONCEPTQ||{};
+  /* ★ 카드에서 넘어왔으면 그 리프의 기출로 (대표님 2026-09-12) */
+  var 리프표 = (location.search.match(/[?&]leaf=([^&]+)/)||[])[1];
+  if(리프표) 리프표 = decodeURIComponent(리프표);
+  var 기출판 = false;
   T.mountNav && T.mountNav("ox");
 
   function esc(s){ return String(s==null?"":s)
     .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
-  var 세트수 = 8;
+  var 세트수 = 10;   /* 대표님 2026-09-12 — 기출 10문제 */
   var 세트=[], i=0, 결과=[], 확신=null, 시작=0;
 
   /* ── 무엇을 낼 것인가 ─────────────────────────
@@ -150,7 +178,46 @@
        사상가를 제 축(K)으로 두면 F·G·I 범위인 학생에게 374개가 통째로 안 나온다.
        들일 때 `sroot` 를 달아 두었다(OX들이기.py). 옛 자료에는 없으니 root 로 물러선다. */
   function 범위대영역(x){ return x.sroot || x.root; }
+  /* ★ 기출 선지 판별 재료를 먼저 쓴다 — 없으면 옛 문장 O/X 로 물러선다 (대표님 2026-09-12) */
+  function 기출고르기(){
+    var 풀 = [];
+    if(리프표 && CQ[리프표]) 풀 = CQ[리프표].slice();
+    else {
+      Object.keys(CQ).forEach(function(k){
+        CQ[k].forEach(function(z){
+          if(T.scopeOn && T.scopeOn() && !T.inScope(z.sroot||z.root)) return;
+          풀.push(z);
+        });
+      });
+    }
+    if(풀.length < 4) return null;
+    function 점수(x){
+      var 본적=(T.state().ox||{})[x.id];
+      var 지난=본적?(본적.ok?-0.6:0.5):0;
+      return 지난 + Math.random();
+    }
+    /* O 와 X 를 반반으로 — 한쪽만 나가면 「모르면 X」 가 통한다 */
+    var O=풀.filter(function(z){return z.a}).sort(function(a,b){return 점수(b)-점수(a)});
+    var X=풀.filter(function(z){return !z.a}).sort(function(a,b){return 점수(b)-점수(a)});
+    var 반=Math.ceil(세트수/2);
+    var 뽑=O.slice(0,반).concat(X.slice(0,세트수-반));
+    if(뽑.length < 4) return null;
+    /* 한 문항에서 두 선지가 잇달아 나오지 않게 섞는다 */
+    for(var k=뽑.length-1;k>0;k--){ var j=Math.floor(Math.random()*(k+1)); var t=뽑[k]; 뽑[k]=뽑[j]; 뽑[j]=t; }
+    기출판 = true;
+    /* 머리 문구도 바꾼다 — 「문장이 맞는지」 라고 해 놓고 기출을 내밀면 딴 화면 같다 */
+    try{
+      var _h=document.getElementById('lede');
+      if(_h) _h.innerHTML='방금 본 개념으로 <b>기출 문제</b>를 봅니다. 문제마다 <b>한 선지만 하이라이팅</b>했어요 — 그것만 O·X 로 답하면 돼요.';
+      var _t=_h && _h.parentNode ? _h.parentNode.querySelector('h1') : null;
+      if(_t) _t.textContent='기출로 확인';
+    }catch(e){}
+    return 뽑;
+  }
+
   function 고르기(){
+    var 기 = 기출고르기();
+    if(기) return 기;
     var 범위 = BANK.filter(function(x){
       return !T.scopeOn || !T.scopeOn() || T.inScope(범위대영역(x));
     });
@@ -186,12 +253,29 @@
   function 문장그리기(){
     var x=세트[i];
     확신=null; 시작=Date.now();
+    /* ★ 기출 문항이면 «자료 + 중립 발문 + 하이라이팅한 선지 하나» 로 그린다.
+       나머지 넷은 채점 뒤에 열린다 — 다섯을 한꺼번에 보이면 소거법이 되어
+       「방금 본 개념 하나로 판단」 이라는 목적이 흐려진다 (대표님 2026-09-12). */
+    var 머리 = x.q
+      ? '<div class="qwrap">'+
+          '<div class="qtag"><b>'+esc(x.leafName||x.leaf)+'</b>'+
+          '<span>· '+(i+1)+' / '+세트.length+'</span>'+
+          (x.dt?'<span class="src">'+esc((x.g?x.g+' ':'')+String(x.dt).slice(0,7).replace("-","."))+'</span>':'')+
+          '</div>'+
+          '<p class="qstem">'+esc(x.stem||"")+'</p>'+
+          (x.d?'<div class="qdata">'+esc(x.d)+'</div>':'')+
+          '<div class="qpick"><span class="no">'+"①②③④⑤".charAt(x.i||0)+'</span>'+
+          '<span class="tx">'+esc(x.t)+'</span></div>'+
+          '<p class="qhint">이 선지 하나만 보면 돼요. 나머지 선지는 채점하면 열려요.</p>'+
+        '</div>'
+      : '<div class="card">'+
+          '<div class="tag"><b>'+esc(x.leafName||x.leaf)+'</b>'+
+          '<span>· '+(i+1)+' / '+세트.length+'</span></div>'+
+          (기출판?'':'<p class="qfall">이 범위는 기출 재료가 모자라 개념 문장으로 확인해요.</p>')+
+          '<p class="sent">'+esc(x.t)+'</p>'+
+        '</div>';
     document.getElementById("stage").innerHTML=
-      '<div class="card">'+
-        '<div class="tag"><b>'+esc(x.leafName||x.leaf)+'</b>'+
-        '<span>· '+(i+1)+' / '+세트.length+'</span></div>'+
-        '<p class="sent">'+esc(x.t)+'</p>'+
-      '</div>'+
+      머리+
       '<div class="step">'+
         '<h3>얼마나 확신하나요?</h3>'+
         '<div class="conf" id="conf">'+
@@ -214,7 +298,7 @@
         document.querySelectorAll("#conf button").forEach(function(z){
           z.setAttribute("aria-pressed", z===b ? "true":"false"); });
         document.querySelectorAll("#ox button").forEach(function(z){ z.disabled=false; });
-        document.getElementById("lock").textContent="이 문장이 맞으면 O, 틀리면 X";
+        document.getElementById("lock").textContent = 세트[i].q ? "하이라이팅한 선지가 맞으면 O, 틀리면 X" : "이 문장이 맞으면 O, 틀리면 X";
       };
     });
     document.querySelectorAll("#ox button").forEach(function(b){
@@ -263,6 +347,10 @@
         '<p class="say">'+esc(v.say)+'</p>'+
         (x.why ? '<div class="why"><b>근거</b> — '+esc(x.why)+
                  (x.src?'<span class="src">'+esc(x.src)+'</span>':'')+'</div>' : '')+
+        /* ★ 채점한 뒤에야 나머지 선지를 연다 — 풀 때 보이면 소거법이 된다 */
+        (x.o ? '<details class="qrest" open><summary>이 문제의 선지 다섯</summary><ol>'+
+               x.o.map(function(s,k){ return '<li'+(k===x.i?' class="hit"':'')+'>'+esc(s)+'</li>'; }).join("")+
+               '</ol></details>' : '')+
       '</div>'+
       '<div class="nextbar">'+
         '<span class="lbl">다음</span>'+

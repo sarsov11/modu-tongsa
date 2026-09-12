@@ -92,6 +92,16 @@
     .card h2{font-size:19px}
     .card li{font-size:15px}
   }
+  /* ── 카드 끝: 이해 확인 → 기출 (대표님 2026-09-12) ───────────── */
+  .ask{border:1px solid var(--line-2);border-radius:var(--r2);background:var(--bg-2);
+    padding:22px 20px;margin-top:var(--s4);text-align:center}
+  .ask h3{margin:0 0 6px;font-size:19px;letter-spacing:-.02em}
+  .ask p{margin:0 0 16px;font-size:13.5px;color:var(--ink-3);line-height:1.6}
+  .ask .yes{display:block;width:100%;padding:16px;border:0;border-radius:var(--r3);
+    background:var(--mint);color:#06231C;font-weight:800;font-size:16px;cursor:pointer}
+  .ask .no{display:block;width:100%;margin-top:8px;padding:12px;border:1px solid var(--line-2);
+    border-radius:var(--r3);background:transparent;color:var(--ink-2);font-size:13.5px;cursor:pointer}
+  .ask .fall{font-size:12.5px;color:var(--ink-3);margin-top:10px}
 </style>
 </head>
 <body>
@@ -109,6 +119,7 @@
 <script src="js/tree.js?v=c7593fc6"></script>
 <script src="js/qbank.js?v=a75ab4a3"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
+<script src="js/conceptq.js?v=fc0c09eb"></script>
 <script src="js/cards.js?v=1a50b0db"></script>
 <script src="js/judge.js?v=58560af7"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
@@ -245,12 +256,15 @@
     el("next").onclick=function(){ i++; 카드그리기(); };
   }
 
+  /* 그 리프에 기출 선지 재료가 있는가 — 없으면 문제풀이로 물러선다 */
+  var 있나 = !!((window.CONCEPTQ||{})[leaf] || []).length;
+
   function 끝(){
     var 맞=결과.filter(function(r){ return r&&r.ok; }).length;
     var u=T.이해도?T.이해도(leaf):0;
     /* 카드는 이해도를 안 움직인다(문항으로만 찬다) — 결산에 이해도 막대를 안 넣는다 */
     if(window.COACH) COACH.wrap({got:맞, total:장들.length, kind:"card",
-      more:{label:"문제 풀러 가기", onclick:function(){ location.href="study.html?leaf="+leaf; }}});
+      more:{label:(있나?"기출 풀러 가기":"문제 풀러 가기"), onclick:function(){ location.href=(있나?("ox.html?leaf="+encodeURIComponent(leaf)):("study.html?leaf="+leaf)); }}});
     el("stage").innerHTML=
       '<div class="done">'+
         '<h2>'+esc(묶음.name)+' — 카드 '+장들.length+'장 끝</h2>'+
@@ -261,11 +275,26 @@
         '<p>'+(u>=80
           ? "여기는 잡혔어요. 문제로 굳히면 끝납니다."
           : "이제 문제로 확인할 차례예요. 맞힌 만큼 이해도가 올라갑니다.")+'</p>'+
-        '<div class="act">'+
-          '<a class="btn" href="study.html?leaf='+leaf+'">문제 풀러 가기 →</a>'+
-          '<a class="btn ghost" href="skilltree.html?area='+묶음.root+'">스킬트리</a>'+
+        /* ★ 고르게 하지 않는다 — 묻고, 답하면, 바로 띄운다 (대표님 2026-09-12) */
+        '<div class="ask" id="ask">'+
+          '<h3>여기까지 이해되었나요?</h3>'+
+          '<p>이해했으면 방금 본 개념으로 <b>기출 문제</b>를 봅니다.</p>'+
+          '<button type="button" class="yes" id="yes">네, 이해했어요</button>'+
+          '<button type="button" class="no" id="re">아직요 — 카드 다시 볼래요</button>'+
+          (있나 ? '' : '<p class="fall">이 범위는 기출 재료가 모자라 문제풀이로 갑니다.</p>')+
         '</div>'+
       '</div>';
+    var 갈곳 = 있나 ? ("ox.html?leaf="+encodeURIComponent(leaf)) : ("study.html?leaf="+leaf);
+    el("yes").onclick=function(){
+      var a=el("ask");
+      a.innerHTML='<h3>그럼 문제 풀어볼까요?</h3>'+
+        '<p>기출 <b>10문제</b>예요. 문제마다 <b>방금 본 개념과 닿는 선지 하나</b>만 하이라이팅했어요.</p>'+
+        '<button type="button" class="yes" id="go">기출 풀러 가기 →</button>';
+      el("go").onclick=function(){ location.href=갈곳; };
+      el("go").focus();
+      a.scrollIntoView({block:"center",behavior:"smooth"});
+    };
+    el("re").onclick=function(){ i=0; 결과=[]; 카드그리기(); window.scrollTo({top:0,behavior:"smooth"}); };
     window.scrollTo({top:0,behavior:"smooth"});
   }
 
