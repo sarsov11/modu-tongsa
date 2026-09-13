@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=3412bcd2">
+<link rel="stylesheet" href="css/base.css?v=2613afc7">
 <link rel="stylesheet" href="css/coach.css?v=6f83040b">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -291,7 +291,7 @@
 <script src="js/packs.js?v=c8178b32"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/cards.js?v=1a50b0db"></script>
-<script src="js/store.js?v=5d8ce5eb"></script>
+<script src="js/store.js?v=5451d06f"></script>
 <script src="js/coach.js?v=7a724956"></script>
 <script src="js/notify.js?v=11011d39"></script>
 <script>
@@ -422,7 +422,7 @@
     document.getElementById("grades").innerHTML=["고1","고2","고3"].map(function(g){
       var G=T.GRADES[g];
       return '<button class="gr" data-g="'+g+'" aria-pressed="'+(g===now)+'">'+
-        '<span class="g">'+g+'</span><h3>'+G.subject+'</h3>'+
+        '<span class="g">'+g+'</span><h3>'+(G.re?'<span class="re">'+G.re+'</span> ':'')+G.subject+'</h3>'+
         '<p>'+G.say+'</p><span class="tag">'+G.ddayName+' 대비 · '+G.pool+'</span></button>';
     }).join("");
     document.querySelectorAll("[data-g]").forEach(function(b){
@@ -435,10 +435,10 @@
       "통합사회는 <b>고1 과목</b>입니다. 고2·고3 은 선택과목을 듣기 때문에, "+
       "학년을 바꾸면 문항 풀과 목표일, 권해 드리는 것이 함께 바뀝니다. "+
       (now==="고2"
-        ? "고2 는 아래 <b>확장팩</b>에서 듣는 과목을 골라 주세요."
+        ? "고2 는 <b>REWIND</b> — 고1 통합사회를 되감아 수능 꼴로 바꿔 풉니다. 듣는 선택과목은 아래 <b>확장팩</b>으로 붙일 수 있어요."
         : now==="고3"
-          ? "고3 은 평가원·교육청 기출을 대량으로 돌리는 쪽으로 맞춰 둡니다."
-          : "고1 은 학교 진도에 맞춘 개념 다지기와 내신 대비가 중심입니다.");
+          ? "고3 은 <b>REWIRE</b> — 평가원·교육청 기출을 실전처럼 대량으로 돌리는 쪽으로 맞춰 둡니다."
+          : "고1 은 <b>REMIND</b> — 학교 진도에 맞춘 개념 다지기와 내신 대비가 중심입니다.");
     document.getElementById("packsec").style.display=(now==="고1")?"none":"";
     document.getElementById("excap").textContent=
       G.ddayName+" 날짜를 넣으면 리포트 맨 위에 남은 날이 뜹니다";

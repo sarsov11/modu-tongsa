@@ -460,17 +460,26 @@
      통합사회는 고1 과목이다. 고2~3 은 선택과목(세계시민과 지리 등)을 듣고,
      고3 은 수능을 본다. 그래서 문항 풀·목표일·파는 것이 학년마다 갈린다. */
   var GRADES = {
+    /* ★ 학년마다 공부 방식에 이름을 붙인다 — REMIND · REWIND · REWIRE (대표님 2026-09-13).
+         고1 은 배운 것을 시험 전에 다시 떠올리고(내신), 고2 는 고1 통합사회를 되감아 수능 꼴로 바꾸고,
+         고3 은 공부 회로를 수능 실전으로 통째로 바꾼다. 하루 몫 비율은 js/trend.js 의 GRADE_MIX 가 같은 뜻으로 갈린다. */
     "고1": { key: "고1", subject: "통합사회 1·2",
+      re: "REMIND", reKo: "내신 대비형",
+      reSay: "학교에서 배운 개념을 시험 전에 다시 떠올려요.",
       say: "학교 진도에 맞춰 개념을 다지고, 내신 시험을 겨눕니다.",
       focus: "내신", pool: "통합사회 학평", ddayName: "내신 시험",
       sell: { kind: "book", id: "naesin", name: "범위별 내신 모의고사",
               say: "학교에서 나간 범위만 잘라 만든 실전 대비 모의고사" } },
-    "고2": { key: "고2", subject: "사회과 선택과목",
-      say: "통합사회는 지났습니다. 고른 선택과목을 확장팩으로 붙여 쓰세요.",
-      focus: "선택과목 내신", pool: "선택과목 기출", ddayName: "내신 시험",
+    "고2": { key: "고2", subject: "통합사회 되감기 · 수능 전환",
+      re: "REWIND", reKo: "복습 · 수능 전환형",
+      reSay: "고1에 배운 통합사회를 되감아, 수능 문항 꼴로 바꿔 풀어요.",
+      say: "통합사회는 고1에 다 배웠습니다. 잊은 곳을 되감고 수능 꼴로 바꿔 풉니다.",
+      focus: "수능 전환", pool: "통합사회 학평 · 예비시행", ddayName: "내신 시험",
       sell: { kind: "pack", id: "elective", name: "선택과목 확장팩",
               say: "듣는 과목만 골라 저렴하게 붙이는 확장팩" } },
     "고3": { key: "고3", subject: "수능 사회탐구",
+      re: "REWIRE", reKo: "수능 완전 대비형",
+      reSay: "공부 방식을 수능 실전으로 통째로 바꿔요.",
       say: "기출을 대량으로 돌립니다. 남은 날짜에 맞춰 분량을 잡아 드립니다.",
       focus: "수능", pool: "평가원·교육청 기출", ddayName: "수능",
       sell: { kind: "book", id: "silmo", name: "실전 모의고사",
@@ -1741,7 +1750,7 @@
       b.onclick = function () { setSkin(b.dataset.skinbtn); };
     });
     var gb = document.getElementById("navgrade");
-    if (gb) gb.textContent = (S.student.grade || "고1") + " · " + gradeInfo().focus;
+    if (gb) gb.textContent = (S.student.grade || "고1") + " · " + (gradeInfo().re || gradeInfo().focus);
     var hide = false;
     try { hide = sessionStorage.getItem("terra.nexthide") === "1"; } catch (e) {}
     /* ★ 선생님 층(js/coach.js)이 실려 있으면 띠는 그쪽이 맡는다 — 모든 화면, 홈 포함.

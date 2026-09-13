@@ -461,3 +461,10 @@ body.hasnext{padding-bottom:74px}
 :root[data-skin="white"] .btn{box-shadow:none}
 :root[data-skin="white"] .btn.ghost{border-color:var(--line-2)}
 :root[data-skin="white"] .navlinks a.on::after{height:2px}
+
+/* 학년 공부 방식 딱지 — REMIND · REWIND · REWIRE (2026-09-13) */
+.re{display:inline-block;font-family:var(--mono);font-size:.72em;font-weight:800;letter-spacing:.08em;
+  padding:2px 7px;margin-right:6px;border-radius:6px;color:var(--mint);background:var(--mint-soft);
+  border:1px solid var(--mint);vertical-align:middle}
+.remode{margin:6px 0 2px;font-size:13.5px;color:var(--ink-2)}
+.tile b .re,.tiles .re{display:inline-block!important;width:auto!important;margin:0 6px 2px 0;font-size:11px;padding:1px 6px}

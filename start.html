@@ -11,7 +11,7 @@
 <meta name="theme-color" content="#08090B">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=3412bcd2">
+<link rel="stylesheet" href="css/base.css?v=2613afc7">
 <link rel="stylesheet" href="css/question.css?v=d65c13a7">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -150,7 +150,7 @@
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/cards.js?v=1a50b0db"></script>
-<script src="js/store.js?v=5d8ce5eb"></script>
+<script src="js/store.js?v=5451d06f"></script>
 <script src="js/notify.js?v=11011d39"></script>
 <script>
 (function(){
@@ -233,8 +233,9 @@
       st.innerHTML=머리("2 / 7",esc(MSG.gradeH),esc(MSG.gradeP))+
         '<div class="tiles">'+["고1","고2","고3"].map(function(g){
           var x=G[g]||{};
+          /* 학년마다 공부 방식 이름 — REMIND · REWIND · REWIRE */
           return '<button class="tile" data-g="'+g+'" aria-pressed="'+(A.grade===g)+'"><span class="ic">'+g+'</span>'+
-            '<span><b>'+esc(x.subject||g)+'</b><span>'+esc(x.focus||"")+'</span></span></button>';
+            '<span><b><span class="re">'+esc(x.re||"")+'</span> '+esc(x.reKo||x.subject||g)+'</b><span>'+esc(x.reSay||x.focus||"")+'</span></span></button>';
         }).join("")+'</div>';
       st.querySelectorAll(".tile").forEach(function(b){ b.onclick=function(){ A.grade=b.dataset.g; T.setGrade(A.grade); 눌림(st,".tile",function(x){return x.dataset.g===A.grade;}); }; });
       단추("다음");
@@ -262,6 +263,8 @@
       if(A.grade==="고3"){ i++; return 그리기(); }        // 고3은 범위가 없다 — 수능 전 범위
       var B=T.기본범위||{}, roots=T.ROOTS.filter(function(r){ return /^[A-J]$/.test(r.code); });
       if(!A.scope){ var sc=T.scope?T.scope():null; A.scope=(sc&&sc.length)?sc.slice():(B.s2mid?B.s2mid.roots.slice():[]); }
+      /* ★ 고2 REWIND 는 고1 통합사회 **전 범위**를 되감는다 — 내신 범위로 좁히지 않는다 */
+      if(A.grade==="고2" && !A.scope고2){ A.scope=roots.map(function(r){return r.code;}); A.scope고2=1; }
       var presets=["s1mid","s1fin","s2mid","s2fin"].filter(function(k){return B[k];});
       function same(a,b){ return a.slice().sort().join()===b.slice().sort().join(); }
       st.innerHTML=머리("4 / 7",esc(MSG.scopeH),esc(MSG.scopeP))+
@@ -270,7 +273,7 @@
         '<div class="units">'+["통합사회 1","통합사회 2"].map(function(bk,z){
           return '<span class="bk">'+bk+'</span>'+roots.filter(function(r){ return z===0?/^[A-E]$/.test(r.code):/^[F-J]$/.test(r.code); }).map(function(r,k){
             return '<button class="u" data-r="'+r.code+'" aria-pressed="'+(A.scope.indexOf(r.code)>=0)+'"><b>'+(k+1)+'단원</b>'+esc(r.name)+'</button>'; }).join(""); }).join("")+'</div>'+
-        '<p class="note">'+(B.학교?esc(B.학교)+' 기준이 미리 눌려 있어요. 우리 학교와 다르면 고쳐 주세요.':'')+'</p>';
+        '<p class="note">'+(A.grade==="고2"?'고2 REWIND 는 통합사회 전 범위를 되감아요. 빼고 싶은 단원만 눌러 끄세요.':(B.학교?esc(B.학교)+' 기준이 미리 눌려 있어요. 우리 학교와 다르면 고쳐 주세요.':''))+'</p>';
       function paint(){ 눌림(st,".units .u",function(b){return A.scope.indexOf(b.dataset.r)>=0;});
         눌림(st,".chips button",function(b){return same(A.scope,B[b.dataset.p].roots);}); el("next").disabled=!A.scope.length; }
       st.querySelectorAll(".chips button").forEach(function(b){ b.onclick=function(){ A.scope=B[b.dataset.p].roots.slice(); paint(); }; });

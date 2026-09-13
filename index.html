@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=3412bcd2">
+<link rel="stylesheet" href="css/base.css?v=2613afc7">
 <link rel="stylesheet" href="css/coach.css?v=6f83040b">
 <link rel="stylesheet" href="css/question.css?v=d65c13a7">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
@@ -425,6 +425,7 @@
     <div>
       <span class="kicker"><i></i><span id="today"></span></span>
       <h1 id="hi"></h1>
+      <p class="remode" id="remode"></p>
       <p class="sub" id="lede"></p>
     </div>
     <div class="pheadact" id="headact"></div>
@@ -500,7 +501,7 @@
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/cards.js?v=1a50b0db"></script>
-<script src="js/store.js?v=5d8ce5eb"></script>
+<script src="js/store.js?v=5451d06f"></script>
 <script src="js/coach.js?v=7a724956"></script>
 <script src="js/notify.js?v=11011d39"></script>
 <script>
@@ -579,6 +580,9 @@
     (d.getMonth()+1)+"월 "+d.getDate()+"일 · "+r.streak+"일 연속";
   var name=(S.student&&S.student.name)||"학생";
   document.getElementById("hi").innerHTML=name+" 학생의 <em>오늘</em>";
+  /* 학년 공부 방식 — REMIND · REWIND · REWIRE */
+  (function(){ var gi=T.gradeInfo(); if(!gi.re) return;
+    document.getElementById("remode").innerHTML='<span class="re">'+gi.re+'</span>'+esc(gi.reKo)+' · '+esc(gi.reSay); })();
   var todayAll=r.answers+r.drills;
   /* ★ 인사는 선생님 층이 만든다 — 어제 몇 문항 맞혔는지, 오늘은 무엇부터인지.
      "오늘 할 것만 골라 뒀어요" 는 누구에게나 같은 말이라 아무 말도 아니었다. */
