@@ -103,6 +103,8 @@
   .ask .no{display:block;width:100%;margin-top:8px;padding:12px;border:1px solid var(--line-2);
     border-radius:var(--r3);background:transparent;color:var(--ink-2);font-size:13.5px;cursor:pointer}
   .ask .fall{font-size:12.5px;color:var(--ink-3);margin-top:10px}
+  .hot{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;font-size:.45em;vertical-align:middle;
+    background:var(--red,#e5484d);color:#fff;font-weight:700;letter-spacing:0}
 </style>
 </head>
 <body>
@@ -124,12 +126,12 @@
 <script src="js/cards.js?v=1a50b0db"></script>
 <script src="js/keyword.js?v=9ead7c20"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
-<script src="js/judge.js?v=58560af7"></script>
+<script src="js/judge.js?v=95725065"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/store.js?v=5451d06f"></script>
-<script src="js/coach.js?v=93e654c5"></script>
+<script src="js/store.js?v=4d4a9000"></script>
+<script src="js/coach.js?v=365e93e4"></script>
 <script src="js/kwask.js?v=ec4f88f7"></script>
 <script>
 (function(){
@@ -137,6 +139,9 @@
   var CARDS=window.CARDS||{}, BANK=window.OXBANK||[];
   T.mountNav && T.mountNav("card");
 
+  /* 리프 이름 끝의 ★ 는 «빈출» 딱지로 — ★ 만으로는 뜻이 안 보인다 (2026-09-13) */
+  function 이름꼴(n){ n=String(n||""); var hot=/\s*★\s*$/.test(n); n=n.replace(/\s*★\s*$/,"");
+    return esc(n)+(hot?' <span class="hot">빈출</span>':''); }
   function esc(s){ return String(s==null?"":s)
     .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
   function el(id){ return document.getElementById(id); }
@@ -175,10 +180,9 @@
   var k=0, 개념어결과=[];
   if(window.COACH) COACH.begin({kind:"card"});   // 리프를 안 넘긴다 — 카드는 이해도를 안 움직인다
 
-  el("eb").textContent = 묶음.root+" "+(T.BY[leaf]&&T.BY[leaf].mid.root.name||"")+" · "+묶음.mid;
-  el("ttl").textContent = 묶음.name;
-  el("lede").textContent = "카드 "+장들.length+"장이에요. 하나 읽고 바로 확인합니다 — "
-    + "다 맞히면 바로 문제로 넘어가면 돼요. 이해도는 문제를 맞힌 만큼 올라요.";
+  el("eb").textContent = (T.BY[leaf]&&T.BY[leaf].mid.root.name||"")+" · "+묶음.mid;   // 단원 코드(F)는 안 보인다
+  el("ttl").innerHTML = 이름꼴(묶음.name);
+  el("lede").textContent = "카드 "+장들.length+"장을 읽고 바로 확인 문제를 풀어요. 다 맞히면 기출로 넘어가요.";
 
   function 진행(){
     el("prog").innerHTML = 장들.map(function(_,n){
@@ -255,7 +259,7 @@
     el("qz").insertAdjacentHTML("beforeend",
       '<div class="verdict '+v.tone+'">'+
         '<div class="top"><span class="mark">'+(ok?"○ 맞았어요":"✕ 아니에요")+'</span>'+
-          '<span class="kind">'+esc(v.kind)+'</span></div>'+
+          '<span class="kind">'+esc(v.label||v.kind)+'</span></div>'+
         '<p class="say">'+esc(v.say)+'</p>'+
         (!ok ? '<p class="say" style="margin-top:8px"><b>카드로 돌아가 한 번 더 읽어 보세요.</b> '+
                '방금 읽은 것과 어긋난 자리예요.</p>' : '')+
@@ -273,7 +277,7 @@
   function 개념어로(){
     if(k>=개념어.length) return 끝();
     if(k===0){
-      머리 = { eb:el("eb").textContent, ttl:el("ttl").textContent, lede:el("lede").textContent };
+      머리 = { eb:el("eb").textContent, ttl:el("ttl").innerHTML, lede:el("lede").textContent };
     }
     진행();
     el("eb").textContent = "개념어 쓰기";
@@ -308,14 +312,14 @@
   function 끝(){
     var 맞=결과.filter(function(r){ return r&&r.ok; }).length;
     var 어맞=개념어결과.filter(function(r){ return r&&r.ok; }).length;
-    if(머리.ttl){ el("eb").textContent=머리.eb; el("ttl").textContent=머리.ttl; el("lede").textContent=머리.lede; }
+    if(머리.ttl){ el("eb").textContent=머리.eb; el("ttl").innerHTML=머리.ttl; el("lede").textContent=머리.lede; }
     var u=T.이해도?T.이해도(leaf):0;
     /* 카드는 이해도를 안 움직인다(문항으로만 찬다) — 결산에 이해도 막대를 안 넣는다 */
     if(window.COACH) COACH.wrap({got:맞+어맞, total:장들.length+개념어결과.length, kind:"card",
-      more:{label:(있나?"기출 풀러 가기":"문제 풀러 가기"), onclick:function(){ location.href=(있나?("ox.html?leaf="+encodeURIComponent(leaf)):("study.html?leaf="+leaf)); }}});
+      more:{label:(있나?"기출 풀기":"문제 풀기"), onclick:function(){ location.href=(있나?("ox.html?leaf="+encodeURIComponent(leaf)):("study.html?leaf="+leaf)); }}});
     el("stage").innerHTML=
       '<div class="done">'+
-        '<h2>'+esc(묶음.name)+' — 카드 '+장들.length+'장 끝</h2>'+
+        '<h2>카드를 다 읽었어요</h2>'+
         '<p>'+맞+' / '+장들.length+' 맞혔어요.'+
           (개념어결과.length ? ' 개념어 쓰기 '+어맞+' / '+개념어결과.length+'.' : '')+'</p>'+
         '<div class="ubar"><div class="lab"><span>이해도</span><b>'+u+' / 100</b></div>'+
@@ -323,11 +327,11 @@
           (u>=80?"var(--mint)":"var(--lv2)")+'"></i></span></div>'+
         '<p>'+(u>=80
           ? "여기는 잡혔어요. 문제로 굳히면 끝납니다."
-          : "이제 문제로 확인할 차례예요. 맞힌 만큼 이해도가 올라갑니다.")+'</p>'+
+          : "이제 문제로 확인해요. 맞힐수록 이해도가 올라가요.")+'</p>'+
         /* ★ 고르게 하지 않는다 — 묻고, 답하면, 바로 띄운다 (대표님 2026-09-12) */
         '<div class="ask" id="ask">'+
-          '<h3>여기까지 이해되었나요?</h3>'+
-          '<p>이해했으면 방금 본 개념으로 <b>기출 문제</b>를 봅니다.</p>'+
+          '<h3>여기까지 이해됐나요?</h3>'+
+          '<p>이해했다면 이 개념이 나온 <b>기출</b>을 풀어 봐요.</p>'+
           '<button type="button" class="yes" id="yes">네, 이해했어요</button>'+
           '<button type="button" class="no" id="re">아직요 — 카드 다시 볼래요</button>'+
           (있나 ? '' : '<p class="fall">이 범위는 기출 재료가 모자라 문제풀이로 갑니다.</p>')+
@@ -336,9 +340,9 @@
     var 갈곳 = 있나 ? ("ox.html?leaf="+encodeURIComponent(leaf)) : ("study.html?leaf="+leaf);
     el("yes").onclick=function(){
       var a=el("ask");
-      a.innerHTML='<h3>그럼 문제 풀어볼까요?</h3>'+
-        '<p>기출 <b>10문제</b>예요. 문제마다 <b>방금 본 개념과 닿는 선지 하나</b>만 하이라이팅했어요.</p>'+
-        '<button type="button" class="yes" id="go">기출 풀러 가기 →</button>';
+      a.innerHTML='<h3>기출 10문제예요.</h3>'+
+        '<p>문제마다 <b>방금 배운 개념이 들어간 선지 하나</b>에 형광펜을 칠해 뒀어요.</p>'+
+        '<button type="button" class="yes" id="go">기출 풀기 →</button>';
       el("go").onclick=function(){ location.href=갈곳; };
       el("go").focus();
       a.scrollIntoView({block:"center",behavior:"smooth"});

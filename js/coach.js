@@ -49,7 +49,7 @@
     /* 띠 — 상황별. {n} 숫자, {개념} 리프 이름 자리 */
     idleStart:    "오늘 몫은 {goal}분이에요. 첫 줄부터 시작하면 돼요.",
     idleMid:      "오늘 {spent}분 했어요. {left}분만 더 하면 오늘 몫이 끝나요.",
-    idleDone:     "오늘 몫을 다 했어요. 더 하면 내일이 가벼워져요.",
+    idleDone:     "오늘 목표를 채웠어요. 더 풀면 내일 할 게 줄어요.",
     upToday:      "오늘 이해도가 오른 곳이 {n}군데예요.",
     streakDay:    "{n}일째 이어 오고 있어요.",
     cardWait:     "오늘의 개념 카드가 아직 안 열렸어요.",
@@ -64,12 +64,12 @@
     missRun3:     "세 번 이어서 놓쳤어요. 개념 카드로 한 번 정리하고 오는 게 빨라요.",
     drillOk:      "훈련 정답이에요. 오늘 훈련 {n}문항째예요.",
     drillMiss:    "훈련은 틀려도 정답률에 안 들어가요. 한 번 더 해 보면 돼요.",
-    oxOk:         "맞았어요. 오늘 개념 확인 {n}문장째예요.",
-    oxMiss:       "O·X는 틀려도 정답률에 안 들어가요. 근거 한 줄만 읽고 넘어가면 돼요.",
+    oxOk:         "맞았어요. 오늘 O·X {n}문제째예요.",
+    oxMiss:       "O·X는 틀려도 정답률에 들어가지 않아요. 근거만 읽고 넘어가세요.",
     kwOk:         "맞았어요. 직접 써서 맞힌 개념어는 오래 남아요.",
     kwMiss:       "개념어 쓰기는 틀려도 정답률에 안 들어가요. 정답 한 줄만 보고 가면 돼요.",
     watched:      "강의를 봤어요. 바로 개념 체크로 확인하면 제일 잘 남아요.",
-    skinNudge:    "화면 결이 안 맞으면 바꿔도 돼요. 밤·모눈 노트·젤리·화이트 네 벌이에요.",
+    skinNudge:    "화면 테마를 바꿀 수 있어요. 밤·모눈 노트·젤리·화이트가 있어요.",
     examSoon:     "{시험} D-{n}이에요. 오늘은 모의고사부터예요.",
     /* 결산 */
     wrapAll:      "전부 맞았어요.",
@@ -85,6 +85,9 @@
     /* 인사 */
     hiFirst:      "처음 오셨어요. 오늘 할 것 하나만 골라 뒀어요.",
     hiBack:       "{ago} {n}문항 중 {ok}개 맞혔어요. 오늘은 {next}부터예요.",
+    hiBackLead:   "{ago} {n}문항 중 {ok}개 맞혔어요. 오늘은 {lead}.",
+    hiBackNoQLead: "{ago} 다녀갔어요. 오늘은 {lead}.",
+    hiTodayLead:  "오늘 {n}문항 중 {ok}개 맞혔어요. 이어서 {lead}.",
     hiBackNoQ:    "{ago} 다녀갔어요. 오늘은 {next}부터예요.",
     hiToday:      "오늘 {n}문항 중 {ok}개 맞혔어요. 다음은 {next}예요.",
     hiTodayDone:  "오늘 {n}문항 중 {ok}개 맞혔어요. 오늘 몫은 끝났어요.",
@@ -185,13 +188,15 @@
   /* ── 인사 한 줄 — 홈 머리에 쓴다 ────────────────────── */
   function greeting() {
     var t = tally(), step = nextStep(false), nx = step ? step.title : "오늘 할 것";
+    /* 할 일에 문장꼴(lead)이 있으면 그걸 쓴다 — 「틀린 문제 다시 풀기부터예요」 는 어색하다 (2026-09-13) */
+    var ld = step && step.lead;
     var out = [];
-    if (t.ans) out.push(fmt(t.done ? "hiTodayDone" : "hiToday", { n: t.ans, ok: t.ok, next: nx }));
+    if (t.ans) out.push(fmt(t.done ? "hiTodayDone" : (ld ? "hiTodayLead" : "hiToday"), { n: t.ans, ok: t.ok, next: nx, lead: ld }));
     else {
       var lv = lastVisit();
       if (!lv) out.push(fmt("hiFirst"));
-      else if (lv.n) out.push(fmt("hiBack", { ago: lv.ago, n: lv.n, ok: lv.ok, next: nx }));
-      else out.push(fmt("hiBackNoQ", { ago: lv.ago, next: nx }));
+      else if (lv.n) out.push(fmt(ld ? "hiBackLead" : "hiBack", { ago: lv.ago, n: lv.n, ok: lv.ok, next: nx, lead: ld }));
+      else out.push(fmt(ld ? "hiBackNoQLead" : "hiBackNoQ", { ago: lv.ago, next: nx, lead: ld }));
     }
     /* 연속일은 머리띠에, 오른 곳은 바로 밑 칸에 있다 — 여기서 또 말하면 네 문장이 된다 */
     return out.join(" ");
@@ -218,7 +223,7 @@
 
   function chips(t) {
     return '<span class="chips">' +
-      '<span class="chip"><b>' + t.ok + '</b>맞힘</span>' +
+      '<span class="chip"><b>' + t.ok + '</b>문제 맞힘</span>' +   /* 「오늘」 까지 붙이면 띠 문장이 다 잘린다 */
       '<span class="chip hide-sm"><b>' + t.ans + '</b>풂</span>' +
       '<span class="chip hide-sm"><b>' + t.spent + '</b>/' + t.goal + '분</span>' +
       (t.up ? '<span class="chip up hide-sm"><b>+' + t.up + '</b>오른 곳</span>' : '') +

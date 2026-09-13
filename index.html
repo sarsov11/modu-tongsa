@@ -501,9 +501,9 @@
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/cards.js?v=1a50b0db"></script>
-<script src="js/store.js?v=5451d06f"></script>
-<script src="js/coach.js?v=93e654c5"></script>
-<script src="js/notify.js?v=11011d39"></script>
+<script src="js/store.js?v=4d4a9000"></script>
+<script src="js/coach.js?v=365e93e4"></script>
+<script src="js/notify.js?v=9f8c340a"></script>
 <script>
 (function(){
   var T=TERRA, Q=window.QBANK||{};
@@ -577,12 +577,12 @@
 
   /* ── 머리 ── */
   document.getElementById("today").textContent=
-    (d.getMonth()+1)+"월 "+d.getDate()+"일 · "+r.streak+"일 연속";
+    (d.getMonth()+1)+"월 "+d.getDate()+"일"+(r.streak?" · "+r.streak+"일 연속":"");
   var name=(S.student&&S.student.name)||"학생";
   document.getElementById("hi").innerHTML=name+" 학생의 <em>오늘</em>";
   /* 학년 공부 방식 — REMIND · REWIND · REWIRE */
   (function(){ var gi=T.gradeInfo(); if(!gi.re) return;
-    document.getElementById("remode").innerHTML='<span class="re">'+gi.re+'</span>'+esc(gi.reKo)+' · '+esc(gi.reSay); })();
+    document.getElementById("remode").innerHTML='<span class="re">'+gi.re+'</span> · '+esc(gi.reKo)+' · '+esc(gi.reSay); })();
   var todayAll=r.answers+r.drills;
   /* ★ 인사는 선생님 층이 만든다 — 어제 몇 문항 맞혔는지, 오늘은 무엇부터인지.
      "오늘 할 것만 골라 뒀어요" 는 누구에게나 같은 말이라 아무 말도 아니었다. */
@@ -608,7 +608,7 @@
     var bits=[];
     if(sp.q) bits.push("문제 "+sp.q+"개");
     if(sp.lec) bits.push("강의 "+sp.lec+"분");
-    if(sp.drill) bits.push("트레이닝 "+sp.drill+"문항");
+    if(sp.drill) bits.push("훈련 "+sp.drill+"문항");
 
     var said = R.done
       ? "오늘 몫을 채웠어요"+(bits.length?" — "+bits.join(" · ")+".":".")+
@@ -616,7 +616,7 @@
       : R.spent
         ? "지금까지 <b>"+R.spent+"분</b>"+(bits.length?" ("+bits.join(" · ")+")":"")+
           ". <b>"+Math.max(1,R.goal-R.spent)+"분</b>만 더 하면 끝나요."
-        : "<b>"+R.goal+"분</b>이면 끝나요. 아래 것부터 누르면 돼요.";
+        : "<b>"+R.goal+"분</b>이면 끝나요. 위에서부터 차례로 누르세요.";
 
     /* 남은 시간을 조각에 나눠 어디까지 왔는지 표시한다.
        ★ 첫 미완 항목 하나를 크게 내민다(hero). 넷을 같은 크기로 늘어놓으면 또 고르게 된다. */
@@ -648,7 +648,7 @@
       var 꼴 = { due:" due", after:" after", weekly:" weekly", vacation:" vacation",
                  scopeold:" note", nextscope:" note", ox:" oxstep", card:" oxstep" }[it.kind] || "";
       var 배지 = { after:"시험 직후", weekly:"이번 주", vacation:"방학",
-                   scopeold:"확인", nextscope:"다음", ox:"O·X", card:"카드" }[it.kind];
+                   scopeold:"확인", nextscope:"다음" }[it.kind];   // 카드·O·X 딱지는 제목과 같은 말이라 뺐다 (2026-09-13)
       return '<a class="stp2'+꼴+(fin?" done":"")+
         '" href="'+it.href+'">'+
         '<span class="no">'+(fin?"✓":(k+1))+'</span>'+
@@ -1063,13 +1063,13 @@
       if(T.scopeOn() && 안.length){
         var 못한=안.filter(function(d){ return T.drillStat(d.id).n===0; });
         var 하나=(못한.length?못한:안)[0];
-        todo.push({t:"이번 시험 범위",h:하나.name+" 트레이닝",
+        todo.push({t:"이번 시험 범위",h:하나.name+" 훈련",
           p:하나.desc,href:"drill.html?type="+하나.id});
         if(범위썼나) todo.push({t:"알림",h:"시험 범위 안은 여기까지예요",
           p:"위쪽 몇 줄은 범위 밖입니다. 범위 안에서 더 풀 것이 없어 채웠어요.",
           href:"settings.html"});
       }else{
-        todo.push({t:"트레이닝",h:"킬러 / 준킬러",
+        todo.push({t:"훈련",h:"킬러 / 준킬러",
           p:D.map(function(d){ return d.name; }).join(" · ")+" — 오늘 바로 됩니다.",
           href:"drill.html"});
       }
@@ -1104,7 +1104,7 @@
     var base=T.BOOKS.filter(function(b){ return b.grade==="*"; })[0];
     if(base) cards.push({eb:"기본서",name:base.name,p:base.say,
       btn:"준비 중",href:"settings.html",st:"값·출간일 미정",dim:true});
-    cards.push({eb:"지금 되는 것",name:"킬러 / 준킬러 트레이닝",
+    cards.push({eb:"지금 되는 것",name:"킬러 / 준킬러 훈련",
       p:(window.DRILLS||[]).map(function(d){ return d.name; }).join(" · ")+
         ". 오늘 바로 쓸 수 있습니다.",
       btn:"들어가기",href:"drill.html",st:"무료"});

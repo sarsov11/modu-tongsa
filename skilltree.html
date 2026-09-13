@@ -350,8 +350,8 @@
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/cards.js?v=1a50b0db"></script>
-<script src="js/store.js?v=5451d06f"></script>
-<script src="js/coach.js?v=93e654c5"></script>
+<script src="js/store.js?v=4d4a9000"></script>
+<script src="js/coach.js?v=365e93e4"></script>
 <script>
 (function(){
   var T=TERRA, L=window.LECT||{};
@@ -731,11 +731,16 @@
       txt(gp,shown,{x:x,y:y+L.fName*.42,"text-anchor":"middle",fill:SINK,
         "font-size":Math.round(L.fName*(shown.length>4?1.05:1.35)),"font-weight":900,
         "font-family":cv("--title")||"Noto Sans KR","pointer-events":"none"});
+      /* ★ 위쪽 갈래는 이름표를 **원 위에** 단다 — 밑에 달면 가운데 원에 가려진다
+         (2026-09-13 신청서 스크린샷에서 「21강 · 예상 8시간」이 반쯤 묻혔다). */
+      var 위 = Math.sin(rad(a)) < -0.5;
+      var y1 = 위 ? y-rr-(L.fSub+1)-18 : y+rr+L.fName+8;
+      var y2 = 위 ? y-rr-8 : y+rr+L.fName*2+13;
       var l1=txt(labs,M.lec+"강 · 예상 "+Math.round(M.mins/60)+"시간",
-        {x:x,y:y+rr+L.fName+8,"text-anchor":"middle",fill:SINK,
+        {x:x,y:y1,"text-anchor":"middle",fill:SINK,
          "font-size":L.fName,"font-weight":700,"font-family":cv("--kr")});
       var l2=txt(labs,"기출 "+M.n.toLocaleString()+"문항 · 성취도 "+av+"%",
-        {x:x,y:y+rr+L.fName*2+13,"text-anchor":"middle",fill:SINK2,
+        {x:x,y:y2,"text-anchor":"middle",fill:SINK2,
          "font-size":L.fSub+1,"font-weight":600,"font-family":cv("--kr")});
       [l1,l2].forEach(function(e){ e.classList.add("lbl"); });
       function open(){ if(!busy) goFam(f,x,y); }
@@ -1066,9 +1071,8 @@
     if(level===0){
       c.innerHTML='<span class="swapin">통합사회</span>';
       document.getElementById("lede").textContent=
-        AX.name+(bat(AX.name)?"으로":"로")+" 묶었습니다 — "+AX.say+
-        ". 눌러서 들어가 보세요. 기출 "+
-        ALL.n.toLocaleString()+"문항 · "+ALL.lec+"강 · 예상 "+Math.round(ALL.mins/60)+"시간";
+        (AX.name==="시험 범위" ? "이번 시험에 나오는 단원만 모았어요." : AX.name+(bat(AX.name)?"으로":"로")+" 묶었어요 — "+AX.say+".")+
+        " 기출 "+ALL.n.toLocaleString()+"문항 · 강의 "+ALL.lec+"강 · 약 "+Math.round(ALL.mins/60)+"시간";
       document.getElementById("plateTitle").textContent="통합사회";
       document.getElementById("plateSub").textContent=AX.name;
     }else if(level===2&&grp){
@@ -1159,8 +1163,8 @@
       /* 들을 게 없다 = 편성된 강의를 다 봤다 */
       host.innerHTML='<div class="pick done"><span class="dot2">✓</span>'+
         '<span class="tx2"><span class="lbl">오늘</span>'+
-        '<h3>들을 강의를 다 봤어요</h3>'+
-        '<p>남은 건 문제로 굳히는 일이에요. 아래에서 단원을 골라 풀어 보세요.</p></span>'+
+        '<h3>이번 범위 강의를 다 들었어요</h3>'+
+        '<p>이제 문제로 다질 차례예요.</p></span>'+
         '<span class="act"><a class="btn" href="study.html">문제 풀기</a></span></div>';
       return;
     }
@@ -1457,7 +1461,7 @@
         '<b>전체를 보는 중</b> — 시험 범위 밖 단원도 함께 그렸어요. '+
         '<em>시험 범위는 '+((bb&&bb.name)||"시험")+' 그대로 남아 있어요.</em></span>'+
         '<span class="act"><a href="skilltree.html">범위만 보기</a>'+
-        '<a href="settings.html#scope">범위 고치기</a></span>';
+        '<a href="settings.html#scope">범위 바꾸기</a></span>';
       return;
     }
     if(안.length===전체.length){ host.hidden=true; return; }   // 줄지 않았다
@@ -1472,14 +1476,13 @@
     }
     host.hidden=false;
     host.innerHTML =
-      '<span class="ic">범</span>' +
-      '<span class="tx"><b>' + (b&&b.name ? b.name : "시험") + ' 범위만 보이는 중</b> — ' +
-        이름 + ' (' + 안.length + '/' + 전체.length + ' 단원)' + 꼬리 + '</span>' +
+            '<span class="tx"><b>' + (b&&b.name ? b.name : "시험") + ' 범위</b> · ' +
+        이름 + ' (' + 전체.length + '단원 중 ' + 안.length + '단원)' + 꼬리 + '</span>' +
       '<span class="act">' +
         (범위풀기
           ? '<a href="skilltree.html">범위로 돌아가기</a>'
           : '<a href="skilltree.html?scope=all">전체 보기</a>') +
-        '<a href="settings.html#scope">범위 고치기</a></span>';
+        '<a href="settings.html#scope">범위 바꾸기</a></span>';
   }
 
   /* 추천 띠는 지도를 다 그린 뒤 한 번 그린다 */

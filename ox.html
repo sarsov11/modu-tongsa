@@ -129,6 +129,8 @@
   .qrest li.hit{color:var(--mint);font-weight:600}
   .qfall{font-size:12.5px;color:var(--ink-3);margin:0 2px 10px}
   @media(max-width:520px){ .qpick .tx{font-size:15.5px} .qdata{font-size:12.5px} }
+  .hot{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;font-size:10px;vertical-align:middle;
+    background:var(--red,#e5484d);color:#fff;font-weight:700}
 </style>
 </head>
 <body>
@@ -146,7 +148,7 @@
 <script src="js/tree.js?v=c7593fc6"></script>
 <script src="js/qbank.js?v=6fddd77e"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
-<script src="js/judge.js?v=58560af7"></script>
+<script src="js/judge.js?v=95725065"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
@@ -154,8 +156,8 @@
 <script src="js/cards.js?v=1a50b0db"></script>
 <script src="js/keyword.js?v=9ead7c20"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
-<script src="js/store.js?v=5451d06f"></script>
-<script src="js/coach.js?v=93e654c5"></script>
+<script src="js/store.js?v=4d4a9000"></script>
+<script src="js/coach.js?v=365e93e4"></script>
 <script src="js/kwask.js?v=ec4f88f7"></script>
 <script>
 (function(){
@@ -167,6 +169,12 @@
   var 기출판 = false;
   T.mountNav && T.mountNav("ox");
 
+  /* ★ → «빈출» 딱지 · 출처는 «2023년 7월 고3 학력평가» 꼴로 (2026-09-13) */
+  function 이름꼴(n){ n=String(n||""); var hot=/\s*★\s*$/.test(n); n=n.replace(/\s*★\s*$/,"");
+    return esc(n)+(hot?' <span class="hot">빈출</span>':''); }
+  function 출처꼴(x){ var d=String(x.dt||""), y=d.slice(0,4), m=parseInt(d.slice(5,7),10), g=x.g||"";
+    var 시험 = g==="고3" && m===11 ? "수능" : (g==="고3" && (m===6||m===9) ? "모의평가" : "학력평가");
+    return (y?y+"년 ":"")+(m?m+"월 ":"")+(g?g+" ":"")+시험; }
   function esc(s){ return String(s==null?"":s)
     .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
@@ -212,7 +220,7 @@
     /* 머리 문구도 바꾼다 — 「문장이 맞는지」 라고 해 놓고 기출을 내밀면 딴 화면 같다 */
     try{
       var _h=document.getElementById('lede');
-      if(_h) _h.innerHTML='방금 본 개념으로 <b>기출 문제</b>를 봅니다. 문제마다 <b>한 선지만 하이라이팅</b>했어요 — 그것만 O·X 로 답하면 돼요.';
+      if(_h) _h.innerHTML='방금 배운 개념이 나온 <b>기출</b>이에요. <b>형광펜 친 선지 하나</b>만 O·X로 답하세요.';
       var _t=_h && _h.parentNode ? _h.parentNode.querySelector('h1') : null;
       if(_t) _t.textContent='기출로 확인';
     }catch(e){}
@@ -297,18 +305,18 @@
        「방금 본 개념 하나로 판단」 이라는 목적이 흐려진다 (대표님 2026-09-12). */
     var 머리 = x.q
       ? '<div class="qwrap">'+
-          '<div class="qtag"><b>'+esc(x.leafName||x.leaf)+'</b>'+
+          '<div class="qtag"><b>'+이름꼴(x.leafName||x.leaf)+'</b>'+
           '<span>· '+(i+1)+' / '+세트.length+'</span>'+
-          (x.dt?'<span class="src">'+esc((x.g?x.g+' ':'')+String(x.dt).slice(0,7).replace("-","."))+'</span>':'')+
+          (x.dt?'<span class="src">'+esc(출처꼴(x))+'</span>':'')+
           '</div>'+
           '<p class="qstem">'+esc(x.stem||"")+'</p>'+
           (x.d?'<div class="qdata">'+esc(x.d)+'</div>':'')+
           '<div class="qpick"><span class="no">'+"①②③④⑤".charAt(x.i||0)+'</span>'+
           '<span class="tx">'+esc(x.t)+'</span></div>'+
-          '<p class="qhint">이 선지 하나만 보면 돼요. 나머지 선지는 채점하면 열려요.</p>'+
+          '<p class="qhint">이 선지만 답하세요. 나머지 선지는 채점한 뒤에 보여요.</p>'+
         '</div>'
       : '<div class="card">'+
-          '<div class="tag"><b>'+esc(x.leafName||x.leaf)+'</b>'+
+          '<div class="tag"><b>'+이름꼴(x.leafName||x.leaf)+'</b>'+
           '<span>· '+(i+1)+' / '+세트.length+'</span></div>'+
           (기출판?'':'<p class="qfall">이 범위는 기출 재료가 모자라 개념 문장으로 확인해요.</p>')+
           '<p class="sent">'+esc(x.t)+'</p>'+
@@ -337,7 +345,7 @@
         document.querySelectorAll("#conf button").forEach(function(z){
           z.setAttribute("aria-pressed", z===b ? "true":"false"); });
         document.querySelectorAll("#ox button").forEach(function(z){ z.disabled=false; });
-        document.getElementById("lock").textContent = 세트[i].q ? "하이라이팅한 선지가 맞으면 O, 틀리면 X" : "이 문장이 맞으면 O, 틀리면 X";
+        document.getElementById("lock").textContent = 세트[i].q ? "형광펜 친 선지가 옳으면 O, 틀리면 X" : "이 문장이 맞으면 O, 틀리면 X";
       };
     });
     document.querySelectorAll("#ox button").forEach(function(b){
@@ -382,12 +390,12 @@
     document.getElementById("stage").insertAdjacentHTML("beforeend",
       '<div class="verdict '+v.tone+'">'+
         '<div class="top"><span class="mark">'+(ok?"○ 맞았어요":"✕ 아니에요")+'</span>'+
-        '<span class="kind">'+esc(v.kind)+'</span></div>'+
+        '<span class="kind">'+esc(v.label||v.kind)+'</span></div>'+
         '<p class="say">'+esc(v.say)+'</p>'+
         (x.why ? '<div class="why"><b>근거</b> — '+esc(x.why)+
                  (x.src?'<span class="src">'+esc(x.src)+'</span>':'')+'</div>' : '')+
         /* ★ 채점한 뒤에야 나머지 선지를 연다 — 풀 때 보이면 소거법이 된다 */
-        (x.o ? '<details class="qrest" open><summary>이 문제의 선지 다섯</summary><ol>'+
+        (x.o ? '<details class="qrest" open><summary>나머지 선지 보기</summary><ol>'+
                x.o.map(function(s,k){ return '<li'+(k===x.i?' class="hit"':'')+'>'+esc(s)+'</li>'; }).join("")+
                '</ol></details>' : '')+
       '</div>'+

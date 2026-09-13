@@ -459,6 +459,9 @@
   /* ── 학년마다 배우는 것이 다르다 ───────────────────
      통합사회는 고1 과목이다. 고2~3 은 선택과목(세계시민과 지리 등)을 듣고,
      고3 은 수능을 본다. 그래서 문항 풀·목표일·파는 것이 학년마다 갈린다. */
+  /* 리프 이름의 부제 「 — 」 를 괄호로 묶는다 — 한 줄 설명에 대시가 두 번 들어가면 읽기 어렵다 (2026-09-13) */
+  function 부제괄호(n) { n = String(n || ""); var k = n.indexOf(" — "); return k < 0 ? n : n.slice(0, k) + "(" + n.slice(k + 3) + ")"; }
+
   var GRADES = {
     /* ★ 학년마다 공부 방식에 이름을 붙인다 — REMIND · REWIND · REWIRE (대표님 2026-09-13).
          고1 은 배운 것을 시험 전에 다시 떠올리고(내신), 고2 는 고1 통합사회를 되감아 수능 꼴로 바꾸고,
@@ -977,15 +980,15 @@
     }).sort(function (a, b) { return (b.vol || 0) - (a.vol || 0); })[0];
     if (fresh)
       steps.push({ kind: "new", leaf: fresh.code,
-        title: "새로 열어 볼 곳",
+        title: "처음 배우는 개념",
         say: fresh.name + " — 아직 손 안 댄 곳 가운데 시험에서 제일 무겁습니다.",
         href: "study.html?leaf=" + fresh.code, cta: "시작하기" });
     var dr = drillStat();
     steps.push({ kind: "drill",
       title: "하루 한 세트",
-      say: dr.n ? "트레이닝을 " + dr.n + "문항 풀었어요. 오늘 한 세트 더?"
+      say: dr.n ? "훈련을 " + dr.n + "문항 풀었어요. 오늘 한 세트 더?"
                 : "킬러 유형은 하루 한 세트씩만 해도 감이 붙어요.",
-      href: "drill.html", cta: "트레이닝" });
+      href: "drill.html", cta: "훈련" });
     return { quota: q, steps: steps, due: due.length };
   }
 
@@ -1301,10 +1304,11 @@
       var take = Math.min(byLeaf[top].length, Math.floor(due분 * 60 / SEC_PER_Q));
       var m = Math.max(1, Math.round(take * SEC_PER_Q / 60));
       items.push({ kind: "due", min: m, n: take, leaf: top,
-        title: "먼저 되돌리기",
-        say: (BY[top] ? BY[top].name : top) + "에서 틀렸던 " + take + "문항",
-        why: "틀린 지 " + due[0].days + "일 됐어요. 지금이 다시 볼 때예요.",
-        href: "study.html?leaf=" + top + "&mode=wrong", cta: "되돌리기" });
+        title: "틀린 문제 다시 풀기", lead: "틀린 문제부터 다시 풀어요",
+        say: 부제괄호(BY[top] ? BY[top].name : top) + " · 틀렸던 " + take + "문항",
+        sayShort: String(BY[top] ? BY[top].name : top).split(" — ")[0] + " " + take + "문항",
+        why: due[0].days + "일 전에 틀린 문제예요. 잊기 전에 다시 풀어요.",
+        href: "study.html?leaf=" + top + "&mode=wrong", cta: "다시 풀기" });
       left -= m;
     }
 
@@ -1411,7 +1415,7 @@
       })();
       if (몇개 >= 8) {
         items.push({ kind: "ox", min: OX몫, n: 8,
-          title: 배움 ? "배운 것 바로 확인" : "개념 체크",
+          title: 배움 ? "O·X로 바로 확인" : "개념 체크",
           say: "O·X 여덟 문장",
           why: 배움
             ? (강의봄 ? "방금 본 강의를 확인하는 자리예요. 지금이 제일 잘 남습니다."
@@ -1445,12 +1449,12 @@
                            : (골라.level === "기초" ? "준킬러부터" : "오늘의 킬러"),
           say: 하나.name + " 한 세트",
           why: (하나.tier ? "준킬러예요. " : "킬러예요. ") + 까닭,
-          href: "drill.html?type=" + 하나.id, cta: "트레이닝" });
+          href: "drill.html?type=" + 하나.id, cta: "훈련" });
       } else {
         items.push({ kind: "drill", min: DRILL_MIN,
           title: "마무리 한 세트", say: "킬러 유형 5문항",
           why: "짧게 매일 하는 게 몰아서 하는 것보다 오래 남아요.",
-          href: "drill.html", cta: "트레이닝" });
+          href: "drill.html", cta: "훈련" });
       }
       left -= DRILL_MIN;
     }
@@ -1482,7 +1486,7 @@
         }), function (l) { return l.code; })
           .sort(function (a, b) { return (b.vol || 0) - (a.vol || 0); })[0];
         tgt = fresh || (S.last && BY[S.last.leaf]);
-        제목 = fresh ? "새로 열어 볼 곳" : "보던 데 마저";
+        제목 = fresh ? "처음 배우는 개념" : "보던 데 마저";
         왜 = fresh ? "아직 손 안 댄 곳 가운데 시험에서 제일 무거워요."
                    : "여기까지 하면 오늘 몫이 끝나요.";
       }
@@ -1759,7 +1763,7 @@
       try { if (window.COACH) window.COACH.mount(active); else mountNext(active); } catch (e) {}
     }, 500);
     var el = document.getElementById("navstreak");
-    if (el) el.textContent = report().streak + "일 연속";
+    if (el) { var 연 = report().streak; el.textContent = 연 + "일 연속"; el.style.display = 연 ? "" : "none"; }   // 0일 연속은 숨긴다 (.chip 의 display 가 hidden 을 덮는다)
     available().then(function (ok) {
       var f = document.getElementById("srcflag");
       if (f) f.textContent = ok ? "실데이터 연결됨" : "시연 데이터";
