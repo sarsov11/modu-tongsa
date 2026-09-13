@@ -1,11 +1,12 @@
 /* 모두의 통사 — 오프라인 캐시.
    틀(HTML·CSS)은 새것을 먼저 보고, 자료(js)는 캐시를 먼저 준 뒤 뒤에서 갱신한다.
    문항 그림은 미리 받지 않고 본 것만 남긴다(1,600장을 통째로 받으면 안 된다). */
-var VER = "terra-v6";   // 첫 설정(start.html)·아래 탭이 들어가 캐시를 새로 판다 //   // 선생님 층(coach.js·coach.css·card·ox)이 들어가 캐시를 새로 판다   // 확장팩·루틴 주기·훈련 개인화가 들어가 캐시를 새로 판다   // 루틴·알림이 들어가 캐시를 새로 판다
+var VER = "terra-v7";   // 핵심 개념어 쓰기(keyword·kwgrade·kwask·keyword.css)가 들어가 캐시를 새로 판다 //   // 첫 설정(start.html)·아래 탭이 들어가 캐시를 새로 판다 //   // 선생님 층(coach.js·coach.css·card·ox)이 들어가 캐시를 새로 판다   // 확장팩·루틴 주기·훈련 개인화가 들어가 캐시를 새로 판다   // 루틴·알림이 들어가 캐시를 새로 판다
 var SHELL = [
   "./", "./index.html", "./skilltree.html", "./study.html",
   "./drill.html", "./settings.html", "./card.html", "./ox.html", "./exam.html", "./start.html",
-  "./css/base.css", "./css/coach.css", "./js/coach.js", "./js/cards.js", "./js/judge.js", "./js/oxbank.js",
+  "./css/base.css", "./css/coach.css", "./css/keyword.css", "./js/coach.js",
+  "./js/keyword.js", "./js/kwgrade.js", "./js/kwask.js", "./js/cards.js", "./js/judge.js", "./js/oxbank.js",
   "./js/store.js", "./js/tree.js", "./js/lecture.js",
   "./js/atlas.js", "./js/thinker.js", "./js/subkiller.js", "./js/notify.js",
   "./js/trend.js", "./js/packs.js", "./js/drills.js", "./js/pool.js",

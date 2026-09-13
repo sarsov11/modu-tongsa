@@ -66,6 +66,8 @@
     drillMiss:    "훈련은 틀려도 정답률에 안 들어가요. 한 번 더 해 보면 돼요.",
     oxOk:         "맞았어요. 오늘 개념 확인 {n}문장째예요.",
     oxMiss:       "O·X는 틀려도 정답률에 안 들어가요. 근거 한 줄만 읽고 넘어가면 돼요.",
+    kwOk:         "맞았어요. 직접 써서 맞힌 개념어는 오래 남아요.",
+    kwMiss:       "개념어 쓰기는 틀려도 정답률에 안 들어가요. 정답 한 줄만 보고 가면 돼요.",
     watched:      "강의를 봤어요. 바로 개념 체크로 확인하면 제일 잘 남아요.",
     skinNudge:    "화면 결이 안 맞으면 바꿔도 돼요. 밤·모눈 노트·젤리·화이트 네 벌이에요.",
     examSoon:     "{시험} D-{n}이에요. 오늘은 모의고사부터예요.",
@@ -311,8 +313,12 @@
         else say(fmt("missOne"), "", "");
       }
     } else if (e.k === "x") {
+      var isKw = e.t === "kw";                       // 핵심 개념어 쓰기 (2026-09-13)
       var isOx = e.t === "ox" || e.t === "card";
-      if (e.ok) say(fmt(isOx ? "oxOk" : "drillOk", { n: T.report().drills }), "", "good");
+      if (isKw) {
+        if (e.ok) say(fmt("kwOk"), "", "good");
+        else say(fmt("kwMiss"), "", "");
+      } else if (e.ok) say(fmt(isOx ? "oxOk" : "drillOk", { n: T.report().drills }), "", "good");
       else say(fmt(isOx ? "oxMiss" : "drillMiss"), "", "");
     } else if (e.k === "l") {
       say(fmt("watched"), "", "good", 9000);
