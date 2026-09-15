@@ -170,6 +170,8 @@
   function qHtml(q,d,opts){
     var 몸=window.QRENDER?QRENDER.html(d,q,{}):('<p>'+esc(d.q)+'</p>');
     if(opts.strip) 몸=몸.replace(/<ol class="opts5">[\s\S]*?<\/ol>/,'');
+    /* 순서도 문항은 (나) 그림의 낱말이 글로 흩어져 들어온다 — 그림은 아래에 다시 그리므로 그 줄은 뺀다 */
+    if(opts.flowText) 몸=몸.replace(esc(opts.flowText),'');
     return '<div class="qcard"><div class="qtop">'+
       '<span class="chip">'+esc(opts.label||"기출")+'</span>'+(q.lb?'<span class="chip">'+esc(q.lb)+'</span>':'')+
       '<span class="srcline">'+src(q)+'</span></div>'+
@@ -181,7 +183,7 @@
     var dq=item(s.demo), dd=Q[s.demo];
     var demo='';
     if(dq&&dd){
-      demo=qHtml(dq,dd,{label:"따라 하기",strip:true,extra:
+      demo=qHtml(dq,dd,{label:"따라 하기",strip:true,flowText:s.flow?(dd.d||"").slice((dd.d||"").indexOf("(나)")+3).trim():null,extra:
         (s.flow?flowHtml(s.flow):'')+
         '<div class="walk">'+s.walk.map(function(w,i){ return '<div class="w"><i>'+(i+1)+'</i><span>'+esc(w)+'</span></div>'; }).join("")+'</div>'+
         '<div class="ans">정답 <b>'+M.charAt(dd.a)+'</b> '+esc(dd.o[dd.a]||"")+'</div>'});
