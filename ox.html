@@ -14,15 +14,15 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=2613afc7">
-<link rel="stylesheet" href="css/coach.css?v=6f83040b">
-<link rel="stylesheet" href="css/keyword.css?v=d5536402">
-<script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<link rel="stylesheet" href="css/base.css?v=7bcef92a">
+<link rel="stylesheet" href="css/coach.css?v=208a602f">
+<link rel="stylesheet" href="css/keyword.css?v=e00f83be">
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s===null)_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .page{max-width:820px;margin:0 auto;padding:0 var(--s3) var(--s6)}
   .hd{padding:var(--s5) 0 var(--s3)}
   .hd h1{font-size:26px;letter-spacing:-.03em;margin:0 0 4px}
-  .hd p{color:var(--ink-3);font-size:14px;margin:0}
+  .hd p{color:var(--ink-3);font-size:16px;margin:0}
 
   /* 진행 */
   .prog{display:flex;gap:5px;margin:var(--s3) 0 var(--s2)}
@@ -35,18 +35,18 @@
   .card{border:1px solid var(--line-2);border-radius:var(--r2);
     background:var(--surface);padding:var(--s5) var(--s4);margin-bottom:var(--s3)}
   .card .tag{display:flex;gap:8px;align-items:center;margin-bottom:var(--s3);
-    font-size:11.5px;color:var(--ink-4);font-family:var(--mono)}
+    font-size:14.5px;color:var(--ink-4);font-family:var(--mono);font-weight:800}
   .card .tag b{color:var(--mint);font-weight:700}
   .sent{font-size:20px;line-height:1.62;font-weight:600;letter-spacing:-.02em;
     color:var(--ink);margin:0}
 
   /* 1단계 — 확신도 */
   .step{margin-top:var(--s4)}
-  .step h3{font-size:13.5px;color:var(--ink-3);margin:0 0 10px;font-weight:600}
+  .step h3{font-size:15.5px;color:var(--ink-3);margin:0 0 10px;font-weight:600}
   .conf{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
   .conf button{appearance:none;border:1.5px solid var(--line-2);background:var(--surface-2);
     color:var(--ink-2);border-radius:var(--r1);padding:13px 8px;font:inherit;
-    font-size:14.5px;font-weight:600;cursor:pointer;transition:.12s}
+    font-size:15.5px;font-weight:600;cursor:pointer;transition:.12s}
   .conf button:hover{border-color:var(--ink-4)}
   .conf button[aria-pressed="true"]{border-color:var(--mint);background:var(--mint-soft);
     color:var(--mint)}
@@ -64,7 +64,7 @@
   .ox button.pick.o{border-color:var(--mint);background:var(--mint-soft);color:var(--mint);opacity:1}
   .ox button.pick.x{border-color:var(--accent);background:rgba(229,72,77,.12);
     color:var(--accent);opacity:1}
-  .lock{font-size:12.5px;color:var(--ink-4);margin-top:9px;text-align:center}
+  .lock{font-size:14.5px;color:var(--ink-4);margin-top:9px;text-align:center}
 
   /* 판정 */
   .verdict{border-radius:var(--r2);padding:var(--s4);margin-top:var(--s3);
@@ -76,24 +76,24 @@
   .verdict .mark{font-size:22px;font-weight:800;line-height:1}
   .verdict.good .mark{color:var(--mint)} .verdict.bad .mark{color:var(--accent)}
   .verdict.warn .mark{color:var(--amber)}
-  .verdict .kind{font-size:12px;font-family:var(--mono);color:var(--ink-4);
-    border:1px solid var(--line-2);border-radius:99px;padding:2px 9px}
+  .verdict .kind{font-size:14.5px;font-family:var(--mono);color:var(--ink-4);
+    border:1px solid var(--line-2);border-radius:99px;padding:2px 9px;font-weight:800}
   .verdict .say{font-size:15.5px;line-height:1.6;color:var(--ink);margin:0 0 4px;font-weight:500}
   .verdict .why{margin-top:11px;padding-top:11px;border-top:1px solid var(--line-2);
-    font-size:13.5px;line-height:1.66;color:var(--ink-3)}
+    font-size:15.5px;line-height:1.66;color:var(--ink-3)}
   .verdict .why b{color:var(--ink-2)}
-  .verdict .src{display:block;margin-top:8px;font-size:11px;font-family:var(--mono);
-    color:var(--ink-4)}
+  .verdict .src{display:block;margin-top:8px;font-size:14.5px;font-family:var(--mono);
+    color:var(--ink-4);font-weight:800}
 
   /* 다음 행동 */
   .nextbar{display:flex;gap:10px;align-items:center;margin-top:var(--s3);flex-wrap:wrap}
-  .nextbar .lbl{font-size:12.5px;color:var(--ink-4);font-family:var(--mono)}
+  .nextbar .lbl{font-size:14.5px;color:var(--ink-4);font-family:var(--mono);font-weight:800}
   .nextbar button,.nextbar a{appearance:none;text-decoration:none;
     border:1px solid var(--line-2);background:var(--surface);color:var(--ink);
-    border-radius:var(--r1);padding:11px 17px;font:inherit;font-size:14.5px;
+    border-radius:var(--r1);padding:11px 17px;font:inherit;font-size:15.5px;
     font-weight:600;cursor:pointer}
   .nextbar .go{border-color:var(--mint);background:var(--mint);color:#04150E}
-  .nextbar .why2{font-size:12.5px;color:var(--ink-4);flex:1 0 100%}
+  .nextbar .why2{font-size:14.5px;color:var(--ink-4);flex:1 0 100%}
 
   /* 끝 화면 */
   .done{text-align:center;padding:var(--s6) var(--s4)}
@@ -104,32 +104,32 @@
   .tally div{border:1px solid var(--line-2);border-radius:var(--r1);
     background:var(--surface);padding:13px}
   .tally b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
-  .tally span{font-size:12px;color:var(--ink-4)}
+  .tally span{font-size:14.5px;color:var(--ink-4)}
   .tally .warn b{color:var(--amber)}
   @media(max-width:520px){ .sent{font-size:18px} .ox button{font-size:26px;padding:16px} }
   /* ── 기출 선지 판별 (대표님 2026-09-12) ───────────────────────── */
   .qwrap{border:1px solid var(--line-2);border-radius:var(--r2);
     background:var(--bg-2);padding:var(--s4);margin-bottom:var(--s4)}
   .qwrap .qtag{display:flex;gap:8px;align-items:center;flex-wrap:wrap;
-    font-size:12px;color:var(--ink-3);margin-bottom:var(--s3)}
+    font-size:14.5px;color:var(--ink-3);margin-bottom:var(--s3)}
   .qwrap .qtag b{color:var(--mint);font-weight:700}
   .qwrap .qtag .src{margin-left:auto;font-variant-numeric:tabular-nums}
-  .qstem{font-size:15px;line-height:1.6;font-weight:600;margin:0 0 10px}
+  .qstem{font-size:16px;line-height:1.6;font-weight:600;margin:0 0 10px}
   .qdata{border:1px solid var(--line);border-radius:var(--r3);padding:12px 14px;
-    font-size:13.5px;line-height:1.72;white-space:pre-wrap;color:var(--ink-2);margin-bottom:12px}
+    font-size:15.5px;line-height:1.72;white-space:pre-wrap;color:var(--ink-2);margin-bottom:12px}
   .qpick{display:flex;gap:10px;align-items:flex-start;
     border:2px solid var(--mint);border-radius:var(--r3);padding:14px 16px;
     background:color-mix(in srgb, var(--mint) 10%, transparent)}
   .qpick .no{flex:none;font-weight:800;color:var(--mint);font-size:17px;line-height:1.5}
   .qpick .tx{font-size:17px;line-height:1.62;font-weight:600;letter-spacing:-.01em}
-  .qhint{font-size:12.5px;color:var(--ink-3);margin:8px 2px 0}
-  .qrest{margin-top:10px;font-size:13px;color:var(--ink-2)}
-  .qrest summary{cursor:pointer;color:var(--ink-3);font-size:12.5px}
+  .qhint{font-size:14.5px;color:var(--ink-3);margin:8px 2px 0}
+  .qrest{margin-top:10px;font-size:15px;color:var(--ink-2)}
+  .qrest summary{cursor:pointer;color:var(--ink-3);font-size:14.5px}
   .qrest ol{margin:8px 0 0;padding-left:20px;line-height:1.7}
   .qrest li.hit{color:var(--mint);font-weight:600}
-  .qfall{font-size:12.5px;color:var(--ink-3);margin:0 2px 10px}
-  @media(max-width:520px){ .qpick .tx{font-size:15.5px} .qdata{font-size:12.5px} }
-  .hot{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;font-size:10px;vertical-align:middle;
+  .qfall{font-size:14.5px;color:var(--ink-3);margin:0 2px 10px}
+  @media(max-width:520px){ .qpick .tx{font-size:15.5px} .qdata{font-size:14.5px} }
+  .hot{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;font-size:14.5px;vertical-align:middle;
     background:var(--red,#e5484d);color:#fff;font-weight:700}
 </style>
 </head>
@@ -148,7 +148,7 @@
 <script src="js/tree.js?v=c7593fc6"></script>
 <script src="js/qbank.js?v=6fddd77e"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
-<script src="js/judge.js?v=95725065"></script>
+<script src="js/judge.js?v=43f690d4"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
@@ -156,9 +156,12 @@
 <script src="js/cards.js?v=1a50b0db"></script>
 <script src="js/keyword.js?v=9ead7c20"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
-<script src="js/store.js?v=4d4a9000"></script>
-<script src="js/coach.js?v=365e93e4"></script>
-<script src="js/kwask.js?v=ec4f88f7"></script>
+<script src="js/store.js?v=0fb25aff"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supa.config.js?v=e1d10860"></script>
+<script src="js/auth.js?v=72d8dbed"></script>
+<script src="js/coach.js?v=a47134ba"></script>
+<script src="js/kwask.js?v=50e0f53f"></script>
 <script>
 (function(){
   var T=window.TERRA, J=window.JUDGE, BANK=window.OXBANK||[];
@@ -182,7 +185,7 @@
   var 세트=[], i=0, 결과=[], 확신=null, 시작=0;
 
   /* ── 무엇을 낼 것인가 ─────────────────────────
-     ★ O 와 X 를 **반반으로** 섞는다. 자료는 O 38% · X 62% 라
+     ★ O 와 X 를 **반반으로** 섞는다. 자료는 O 38%, X 62% 라
        그대로 내면 "모르면 X" 가 통해 버린다.
      ★ 그 학생이 **약한 리프**를 먼저 낸다 — 훈련 추천과 같은 원리다.
      ★ 시험 범위를 정했으면 그 안에서만 — 다만 **사상가는 배우는 단원으로** 본다.
@@ -467,7 +470,7 @@
     } else if(찍음>=Math.ceil(결과.length/2)){
       할일="절반 넘게 찍었어요. 문제보다 강의가 빠른 자리예요.";
     } else if(맞===결과.length){
-      할일="전부 맞았어요. 다음 개념으로 넘어가도 되겠어요.";
+      할일="전부 맞았어요. 다음 개념으로 넘어가요.";
     } else {
       할일="틀린 것만 모아 한 번 더 보면 오늘 몫은 끝납니다.";
     }

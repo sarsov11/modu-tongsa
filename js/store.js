@@ -210,9 +210,9 @@
 
   /* ── 무엇을 권할 것인가 ───────────────────────
      점수 = 못하는 정도 × 2 + 묵은 정도
-     · 안 해본 것은 0.6(중간값). 1등으로 두면 늘 새것만 돌고 틀린 것을 안 준다.
-     · 묵은 정도는 마지막으로 한 지 며칠인가(14일이면 만점).
-     · 수준에 안 맞는 티어는 0.3 을 곱해 뒤로 민다(아주 막지는 않는다). */
+    , 안 해본 것은 0.6(중간값). 1등으로 두면 늘 새것만 돌고 틀린 것을 안 준다.
+    , 묵은 정도는 마지막으로 한 지 며칠인가(14일이면 만점).
+    , 수준에 안 맞는 티어는 0.3 을 곱해 뒤로 민다(아주 막지는 않는다). */
   function 훈련점수(d, level) {
     var st = drillStat(d.id);
     /* ★ 안 해본 것을 너무 높이 두면 **약점이 뒤로 밀린다.**
@@ -473,11 +473,11 @@
       focus: "내신", pool: "통합사회 학평", ddayName: "내신 시험",
       sell: { kind: "book", id: "naesin", name: "범위별 내신 모의고사",
               say: "학교에서 나간 범위만 잘라 만든 실전 대비 모의고사" } },
-    "고2": { key: "고2", subject: "통합사회 되감기 · 수능 전환",
-      re: "REWIND", reKo: "복습 · 수능 전환형",
+    "고2": { key: "고2", subject: "통합사회 되감기, 수능 전환",
+      re: "REWIND", reKo: "복습, 수능 전환형",
       reSay: "고1에 배운 통합사회를 되감아, 수능 문항 꼴로 바꿔 풀어요.",
       say: "통합사회는 고1에 다 배웠습니다. 잊은 곳을 되감고 수능 꼴로 바꿔 풉니다.",
-      focus: "수능 전환", pool: "통합사회 학평 · 예비시행", ddayName: "내신 시험",
+      focus: "수능 전환", pool: "통합사회 학평, 예비시행", ddayName: "내신 시험",
       sell: { kind: "pack", id: "elective", name: "선택과목 확장팩",
               say: "듣는 과목만 골라 저렴하게 붙이는 확장팩" } },
     "고3": { key: "고3", subject: "수능 사회탐구",
@@ -672,8 +672,8 @@
   /* ── 시험 범위 기본값 ───────────────────────────
      ★ 학교마다 범위가 다르다. 안 정하면 **서문여고 기준**으로 세팅한다
        (2026-09-03 대표님 지시). 통사2 단원 ↔ 대영역은 실측으로 확인했다 —
-         1단원 F 인권 보장과 헌법 · 2단원 G 사회 정의와 불평등
-         3단원 H 시장경제 · 4단원 I 세계화와 평화 · 5단원 J 미래와 지속가능
+         1단원 F 인권 보장과 헌법, 2단원 G 사회 정의와 불평등
+         3단원 H 시장경제, 4단원 I 세계화와 평화, 5단원 J 미래와 지속가능
 
        서문여고 — 중간 1·2·4단원 = **F·G·I** / 기말 3·5단원 = **H·J**
 
@@ -734,7 +734,7 @@
   /* 지금 범위가 **자동으로 넣은 것**인가 — 화면이 "서문여고 기준" 이라 밝힐 때 쓴다 */
   function 범위자동인가() { return !!S.scopeAuto && !S.scopeAt; }
 
-  /* ★★ 스킬트리가 그릴 대영역 (2026-09-04 대표님 지시)
+  /* ★★ 개념트리가 그릴 대영역 (2026-09-04 대표님 지시)
      전에는 학년 필터(`보이는대영역`)만 걸고 **시험 범위를 아예 안 봤다** —
      설정에서 범위를 F·G·I 로 잡아도 지도는 A~J 를 다 그렸다.
      시험을 고르면 그 범위만 그린다. 범위를 지우면 다시 전부 나온다.
@@ -873,20 +873,23 @@
   /* ── 스킨 ──
      내용은 그대로 두고 옷만 갈아입는다. 고른 값은 이 브라우저에 남는다.
      화면이 뜨기 전에 <head> 안 한 줄이 먼저 입혀 준다(깜빡임 방지). */
-  var SKINS = [{id: "", name: "밤", dot: "#0B1120"},
+  var SKINS = [{id: "paper", name: "종이", dot: "#FAF8F3"},   /* 기본 — 모두의 수학 모눈 노트 (2026-09-16) */
+               {id: "", name: "밤", dot: "#0B1120"},
                {id: "note", name: "모눈 노트", dot: "#F0EBDA"},
                {id: "jelly", name: "젤리", dot: "#FFC2DC"},
                {id: "white", name: "화이트", dot: "#FFFFFF"}];
   function skin() {
     try {
-      var v = localStorage.getItem("terra.skin") || "";
+      var v = localStorage.getItem("terra.skin");
+      if (v === null) v = "paper";            // 아무것도 안 골랐으면 종이(기본)
+      if (v === "night") v = "";              // 밤을 직접 고른 학생은 "night" 로 남겨 둔다
       if (v === "diary") { v = "jelly"; localStorage.setItem("terra.skin", v); }  // 옛 값 이사
       if (v && !SKINS.some(function (k) { return k.id === v; })) v = "";
       return v;
     } catch (e) { return ""; }
   }
   function setSkin(v) {
-    try { v ? localStorage.setItem("terra.skin", v) : localStorage.removeItem("terra.skin"); }
+    try { localStorage.setItem("terra.skin", v || "night"); }   /* 밤은 "night" — 비워 두면 기본(종이)이 된다 */
     catch (e) {}
     if (v) document.documentElement.dataset.skin = v;
     else delete document.documentElement.dataset.skin;
@@ -986,9 +989,9 @@
     var dr = drillStat();
     steps.push({ kind: "drill",
       title: "하루 한 세트",
-      say: dr.n ? "훈련을 " + dr.n + "문항 풀었어요. 오늘 한 세트 더?"
+      say: dr.n ? "Killer Drill을 " + dr.n + "문항 풀었어요. 오늘 한 세트 더?"
                 : "킬러 유형은 하루 한 세트씩만 해도 감이 붙어요.",
-      href: "drill.html", cta: "훈련" });
+      href: "drill.html", cta: "Killer Drill" });
     return { quota: q, steps: steps, due: due.length };
   }
 
@@ -1125,7 +1128,7 @@
        진도 압박이 없으니 앞쪽 절반은 보충, 뒤쪽 절반은 선행이다. */
     if (방학인가()) {
       return { mode: "vacation", stage: 방학단계(), exam: x ? x.exam : null,
-               days: x ? x.days : null, label: "방학 · " + 방학단계(),
+               days: x ? x.days : null, label: "방학, " + 방학단계(),
                since: 실전시작일,
                untilReal: x ? Math.max(0, x.days - 실전시작일) : null };
     }
@@ -1150,7 +1153,7 @@
   }
 
   /* 오늘 시간을 어떤 몫으로 나눌 것인가.
-     학년으로 정하되, **고3은 시기마다 다시 갈린다**(3~6 개념기출 · 7~9 실전 · 10~11 마무리). */
+     학년으로 정하되, **고3은 시기마다 다시 갈린다**(3~6 개념기출, 7~9 실전, 10~11 마무리). */
   function 오늘몫표() {
     var 학년 = (S.student && S.student.grade) || "고1";
     if (학년 === "고3") {
@@ -1305,7 +1308,7 @@
       var m = Math.max(1, Math.round(take * SEC_PER_Q / 60));
       items.push({ kind: "due", min: m, n: take, leaf: top,
         title: "틀린 문제 다시 풀기", lead: "틀린 문제부터 다시 풀어요",
-        say: 부제괄호(BY[top] ? BY[top].name : top) + " · 틀렸던 " + take + "문항",
+        say: 부제괄호(BY[top] ? BY[top].name : top) + "에서 틀렸던 " + take + "문항",
         sayShort: String(BY[top] ? BY[top].name : top).split(" — ")[0] + " " + take + "문항",
         why: due[0].days + "일 전에 틀린 문제예요. 잊기 전에 다시 풀어요.",
         href: "study.html?leaf=" + top + "&mode=wrong", cta: "다시 풀기" });
@@ -1354,8 +1357,8 @@
         say: c.title,
         why: c.seen ? ("전체 " + c.len + "분 가운데 " + c.seen + "분까지 봤어요.")
                     : (c.sum ? c.sum
-                             : c.root + " · " + c.midName + " · " + c.v.grade) +
-                      (c.rest > part ? (" · 전체 " + c.len + "분 중 오늘 " + part + "분") : ""),
+                             : c.root + ", " + c.midName + ", " + c.v.grade) +
+                      (c.rest > part ? (", 전체 " + c.len + "분 중 오늘 " + part + "분") : ""),
         href: "skilltree.html?lec=" + c.v.code, cta: c.seen ? "이어 보기" : "보기" });
       left -= part;
     }
@@ -1384,8 +1387,8 @@
         var cc = 카드후보[0], 장 = Math.min(5, window.CARDS[cc.code].cards.length, Math.max(2, Math.round(CARD몫 / 1.4)));
         var 학년3 = (S.student && S.student.grade) || "고1";
         items.push({ kind: "card", min: CARD몫, leaf: cc.code, n: 장,
-          title: 학년3 === "고1" ? "오늘 개념 카드" : "개념 카드로 되짚기",
-          say: cc.st.name + " · 카드 " + 장 + "장",
+          title: 학년3 === "고1" ? "오늘 개념 읽기" : "개념 다시 읽기",
+          say: cc.st.name + " " + 장 + "개",
           why: "읽고 바로 확인해요. 강의 대신 이걸로 배우고, 다 맞히면 문제로 넘어가요.",
           href: "card.html?leaf=" + cc.code, cta: "읽기" });
         left -= CARD몫; 배움 = true;
@@ -1419,7 +1422,7 @@
           say: "O·X 여덟 문장",
           why: 배움
             ? (강의봄 ? "방금 본 강의를 확인하는 자리예요. 지금이 제일 잘 남습니다."
-                      : "방금 읽은 카드를 확인하는 자리예요. 지금이 제일 잘 남습니다.")
+                      : "방금 읽은 개념을 O·X로 확인해요.")
             : "얼마나 확신하는지도 함께 고르면, 틀렸을 때 무엇을 할지 바로 알려 드려요.",
           href: "ox.html", cta: "개념 체크" });
         left -= OX몫;
@@ -1440,21 +1443,21 @@
         /* ★ **왜 이것이 나왔는지** 말해 준다. 수준과 약점으로 골랐으므로
            "안 해 본 것" 한 마디로는 설명이 안 된다 — 학생이 납득해야 한다. */
         var 까닭 = st9.n === 0
-          ? "아직 안 해 본 훈련이에요."
+          ? "아직 안 해 본 Killer Drill이에요."
           : (st9.pct != null && st9.pct < 60
               ? "지난번 정답률이 " + st9.pct + "%였어요. 여기가 지금 제일 약합니다."
               : "해 둔 지 좀 됐어요. 잊기 전에 한 번 돌립니다.");
         items.push({ kind: "drill", min: DRILL_MIN, drill: 하나.id,
-          title: scopeOn() ? "시험 범위 훈련"
+          title: scopeOn() ? "시험 범위 Killer Drill"
                            : (골라.level === "기초" ? "준킬러부터" : "오늘의 킬러"),
           say: 하나.name + " 한 세트",
           why: (하나.tier ? "준킬러예요. " : "킬러예요. ") + 까닭,
-          href: "drill.html?type=" + 하나.id, cta: "훈련" });
+          href: "drill.html?type=" + 하나.id, cta: "Killer Drill" });
       } else {
         items.push({ kind: "drill", min: DRILL_MIN,
           title: "마무리 한 세트", say: "킬러 유형 5문항",
           why: "짧게 매일 하는 게 몰아서 하는 것보다 오래 남아요.",
-          href: "drill.html", cta: "훈련" });
+          href: "drill.html", cta: "Killer Drill" });
       }
       left -= DRILL_MIN;
     }
@@ -1539,14 +1542,14 @@
      고3 에게는 **선택과목 수능**이 시험이다. 같은 문항 더미를 그대로 주면
      고1 은 안 배운 과목 문제를 80% 풀게 된다(실측 2026-09-01).
 
-       T 통합사회 학평 · V 예비시행 — 고1·고2 의 본 문항
+       T 통합사회 학평, V 예비시행 — 고1·고2 의 본 문항
        그 밖(G 세계지리·E 윤리와사상 …)  — 고3 의 본 문항
 
      심화를 감추지는 않는다. 고1 도 수능에 통합사회가 나오므로,
      본 문항이 모자라면 덧붙이고 **왜 붙였는지 밝힌다.** */
   var 통사표 = { "T": 1, "V": 1 };
 
-  /* ── 스킬트리에 세울 대영역 ─────────────────────
+  /* ── 개념트리에 세울 대영역 ─────────────────────
      ★ 사상가(K)는 `cross: true` — **단원이 아니라 여러 단원을 가로지르는 축**이다.
        롤스는 정의(G)에서, 칸트는 평화(I)에서 만난다.
        별도 축으로 세우면 고1이 "이건 몇 단원이지?" 하고 헷갈린다
@@ -1657,7 +1660,7 @@
       var r = BY[c];
       return r ? r.name : c;
     });
-    return nm.join(" · ");
+    return nm.join(", ");
   }
 
   function nav(active) {
@@ -1666,11 +1669,11 @@
        보호자에게 보여 줄 때는 설정 안쪽에서 연다. */
     /* ★ 개념 카드 — 강의 대신 **읽고 바로 확인**하는 길(2026-09-04 대표님 지시).
        "강의 선호하면 강의, 개념카드 보고 공부하고 싶으면 그걸로" 하려면
-       학생이 찾아갈 자리가 있어야 한다. 강의(스킬트리) 바로 뒤에 둔다. */
+       학생이 찾아갈 자리가 있어야 한다. 강의(개념트리) 바로 뒤에 둔다. */
     /* ★ 나비는 넷(2026-09-06 대표님: "개념카드, 문제풀이, 어쩌구 존나 많아서 더 정신없음").
-       개념 카드·문제풀이·개념 체크는 홈의 '지금 할 것' 과 스킬트리에서 간다. */
-    var items = [["index.html", "홈"], ["skilltree.html", "스킬트리"],
-                 ["drill.html", "훈련"], ["settings.html", "설정"]];
+       개념 카드·문제풀이·개념 체크는 홈의 '지금 할 것' 과 개념트리에서 간다. */
+    var items = [["index.html", "홈"], ["skilltree.html", "개념트리"], ["skills.html", "스킬트리"],
+                 ["drill.html", "Killer Drill"], ["settings.html", "설정"]];
     return '<nav class="nav"><div class="wrap">' +
       '<a class="logo" href="index.html"><span class="dot"></span>모두의 통사<small>테라러닝</small></a>' +
       '<div class="navlinks">' + items.map(function (it) {
@@ -1713,8 +1716,8 @@
         ' stroke-dasharray="' + on + ' ' + (C - on).toFixed(1) + '"/></svg>' +
       '<b>' + done + '</b></span>' +
       '<span class="tx"><b>' + (full ? "오늘 몫을 다 했어요"
-          : step.title + " · " + step.min + "분") + '</b>' +
-      '<span>' + (full ? "더 해 두면 내일이 가벼워져요 · " : "") + step.say + '</span></span>' +
+          : step.title + " " + step.min + "분") + '</b>' +
+      '<span>' + step.say + '</span></span>' +
       '<span class="go"><a class="btn" href="' + step.href + '">' + step.cta + '</a>' +
       '<button class="x" aria-label="닫기">✕</button></span></div>';
     document.body.appendChild(el);
@@ -1742,7 +1745,7 @@
   }
   function mountNav(active) {
     var here0 = (location.pathname.split("/").pop() || "index.html");
-    if (here0 !== "start.html" && here0 !== "parent.html" && 처음인가()) {
+    if (here0 !== "start.html" && here0 !== "parent.html" && here0 !== "login.html" && 처음인가()) {
       location.replace("start.html"); return;
     }
     /* ★ 고1이 범위를 한 번도 안 정했으면 **서문여고 기본값**을 넣는다.
@@ -1754,7 +1757,7 @@
       b.onclick = function () { setSkin(b.dataset.skinbtn); };
     });
     var gb = document.getElementById("navgrade");
-    if (gb) gb.textContent = (S.student.grade || "고1") + " · " + (gradeInfo().re || gradeInfo().focus);
+    if (gb) gb.textContent = (S.student.grade || "고1") + " " + (gradeInfo().re || gradeInfo().focus);
     var hide = false;
     try { hide = sessionStorage.getItem("terra.nexthide") === "1"; } catch (e) {}
     /* ★ 선생님 층(js/coach.js)이 실려 있으면 띠는 그쪽이 맡는다 — 모든 화면, 홈 포함.
@@ -1816,7 +1819,7 @@
        메신저 한 통에 안 들어가고, 붙여 넣다 잘리면 통째로 못 쓴다.
        gzip 을 거치면 11,708자로 90% 줄어든다.
      ★ CompressionStream 을 모르는 브라우저가 있으므로 압축 없이도 낼 수 있게 하고,
-       받는 쪽은 **머리 글자로 가려** 둘 다 읽는다.  T1: 그대로 · T2: gzip */
+       받는 쪽은 **머리 글자로 가려** 둘 다 읽는다.  T1: 그대로, T2: gzip */
   function 바이트를글자로(b) {
     var s2 = "", 조각 = 0x8000;          // 한 번에 다 넘기면 인자 수 한도에 걸린다
     for (var i = 0; i < b.length; i += 조각)

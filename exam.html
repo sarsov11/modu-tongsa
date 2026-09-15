@@ -14,10 +14,10 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=2613afc7">
-<link rel="stylesheet" href="css/coach.css?v=6f83040b">
-<link rel="stylesheet" href="css/question.css?v=d65c13a7">
-<script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<link rel="stylesheet" href="css/base.css?v=7bcef92a">
+<link rel="stylesheet" href="css/coach.css?v=208a602f">
+<link rel="stylesheet" href="css/question.css?v=354698c6">
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s===null)_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:900px;margin:0 auto;padding:0 var(--s3) var(--s6)}
 
@@ -25,12 +25,12 @@
   .exbar{position:sticky;top:0;z-index:40;background:var(--bg);
     border-bottom:1px solid var(--line);padding:11px 0;margin-bottom:var(--s3)}
   .exbar .in{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-  .exbar .rd{font-family:var(--mono);font-size:12px;color:var(--ink-4);letter-spacing:.1em}
-  .exbar .tm{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--ink);
+  .exbar .rd{font-family:var(--kr);font-weight:700;font-size:14.5px;color:var(--ink-4);letter-spacing:-.01em;}
+  .exbar .tm{font-family:var(--mono);font-size:22px;font-weight:800;color:var(--ink);
     font-variant-numeric:tabular-nums;letter-spacing:.02em}
   .exbar .tm.warn{color:var(--red-2)}
-  .exbar .pg{margin-left:auto;font-size:13px;color:var(--ink-3)}
-  .exbar .pg b{color:var(--ink);font-family:var(--mono)}
+  .exbar .pg{margin-left:auto;font-size:15px;color:var(--ink-3)}
+  .exbar .pg b{color:var(--ink);font-family:var(--mono);font-weight:800}
   .exbar .bar{height:3px;background:var(--line);border-radius:99px;margin-top:9px;overflow:hidden}
   .exbar .bar i{display:block;height:100%;background:var(--mint);width:0;transition:width .2s}
 
@@ -38,7 +38,7 @@
   .omr{display:grid;grid-template-columns:repeat(13,1fr);gap:4px;margin-top:9px}
   .omr button{appearance:none;border:1px solid var(--line);background:var(--surface);
     color:var(--ink-4);border-radius:5px;padding:5px 0;cursor:pointer;
-    font-family:var(--mono);font-size:11.5px;line-height:1.2;transition:.12s}
+    font-family:var(--mono);font-size:14.5px;line-height:1.2;transition:.12s;font-weight:800}
   .omr button:hover{border-color:var(--ink-3);color:var(--ink-2)}
   .omr button[data-done="1"]{background:var(--mint-soft);border-color:var(--mint);
     color:var(--ink)}
@@ -54,11 +54,11 @@
   .qc[data-done="1"]{border-color:var(--line-2)}
   .qh{display:flex;align-items:center;gap:10px;padding:13px 20px;flex-wrap:wrap;
     border-bottom:1px solid var(--line)}
-  .qh .no{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--ink)}
-  .qh .pt{font-family:var(--mono);font-size:11.5px;color:var(--ink-4)}
-  .qh .kl{font-size:11px;font-weight:700;color:var(--red-2);background:var(--red-soft);
+  .qh .no{font-family:var(--mono);font-size:16px;font-weight:800;color:var(--ink)}
+  .qh .pt{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-weight:800}
+  .qh .kl{font-size:14.5px;font-weight:700;color:var(--red-2);background:var(--red-soft);
     border-radius:99px;padding:3px 9px;letter-spacing:.02em}
-  .qh .lb{font-size:12px;color:var(--ink-4);margin-left:auto;max-width:46%;
+  .qh .lb{font-size:14.5px;color:var(--ink-4);margin-left:auto;max-width:46%;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .qb{padding:18px 20px 20px}
   .qb figure{margin:0 0 14px}
@@ -71,7 +71,7 @@
   .foot{position:sticky;bottom:0;z-index:40;background:var(--bg);
     border-top:1px solid var(--line);padding:13px 0;margin-top:var(--s4)}
   .foot .in{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .foot .left{font-size:13.5px;color:var(--ink-3)}
+  .foot .left{font-size:15.5px;color:var(--ink-3)}
   .foot .left b{color:var(--ink)}
   .foot .act{margin-left:auto;display:flex;gap:9px}
 
@@ -81,14 +81,14 @@
   .res .big{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
   .res .sc{font-size:52px;font-weight:900;letter-spacing:-.04em;color:var(--ink);line-height:1}
   .res .sc small{font-size:20px;color:var(--ink-4);font-weight:400}
-  .res .gr{font-size:15px;color:var(--ink-3)}
+  .res .gr{font-size:16px;color:var(--ink-3)}
   .res .rows{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
     gap:10px;margin-top:18px}
   .res .cell{background:var(--surface);border:1px solid var(--line);border-radius:var(--r1);
     padding:13px 15px}
-  .res .cell b{display:block;font-family:var(--mono);font-size:20px;color:var(--ink)}
-  .res .cell span{font-size:12px;color:var(--ink-4)}
-  .res .say{margin-top:16px;font-size:14.5px;line-height:1.8;color:var(--ink-2)}
+  .res .cell b{display:block;font-family:var(--mono);font-size:20px;color:var(--ink);font-weight:800}
+  .res .cell span{font-size:14.5px;color:var(--ink-4)}
+  .res .say{margin-top:16px;font-size:15.5px;line-height:1.8;color:var(--ink-2)}
   .res .say b{color:var(--ink)}
 
   /* 회차 추이 */
@@ -97,14 +97,14 @@
     position:relative}
   .trend .b.now{background:var(--mint)}
   .trend .b span{position:absolute;top:-17px;left:50%;transform:translateX(-50%);
-    font-family:var(--mono);font-size:10.5px;color:var(--ink-4)}
+    font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-weight:800}
 
-  .note{font-size:13.5px;color:var(--ink-4);line-height:1.75}
+  .note{font-size:15.5px;color:var(--ink-4);line-height:1.75}
   .why{margin-top:14px;padding:14px 16px;background:var(--surface-2);
     border:1px solid var(--line);border-left:3px solid var(--mint);
-    border-radius:var(--r1);font-size:14.5px;line-height:1.8;color:var(--ink-2)}
-  .why .src{display:block;margin-top:9px;font-family:var(--mono);font-size:11px;
-    color:var(--ink-4)}
+    border-radius:var(--r1);font-size:15.5px;line-height:1.8;color:var(--ink-2)}
+  .why .src{display:block;margin-top:9px;font-family:var(--mono);font-size:14.5px;
+    color:var(--ink-4);font-weight:800}
   @media(max-width:560px){
     .picks{grid-template-columns:repeat(5,1fr);gap:6px}
     .picks button{padding:11px 0;font-size:16px}
@@ -131,11 +131,14 @@
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/cards.js?v=1a50b0db"></script>
-<script src="js/store.js?v=4d4a9000"></script>
-<script src="js/coach.js?v=365e93e4"></script>
+<script src="js/store.js?v=0fb25aff"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supa.config.js?v=e1d10860"></script>
+<script src="js/auth.js?v=72d8dbed"></script>
+<script src="js/coach.js?v=a47134ba"></script>
 <script src="js/qrender.js?v=a26db44e"></script>
 <script src="js/exam.js?v=154e7ceb"></script>
-<script src="js/notify.js?v=9f8c340a"></script>
+<script src="js/notify.js?v=a6c06818"></script>
 <script>
 (function(){
   var T=TERRA, E=window.TERRA_EXAM, Q=window.QBANK||{};
@@ -208,7 +211,7 @@
     var 푼 = paper.items.filter(function(x){ return picks[x.id]!==undefined; }).length;
     var s = 남은초();
     return '<div class="exbar"><div class="in">'+
-      '<span class="rd">'+paper.round+'회차 · '+esc(paper.day)+'</span>'+
+      '<span class="rd">'+paper.round+'회차, '+esc(paper.day)+'</span>'+
       '<span class="tm'+(s<=300?" warn":"")+'" id="tm">'+시분(s)+'</span>'+
       '<span class="pg">푼 문항 <b>'+푼+'</b> / '+paper.items.length+'</span>'+
       '</div><div class="bar"><i id="pgbar" style="width:'+
@@ -272,7 +275,7 @@
     });
     var f=document.getElementById("ftxt");
     if(f) f.innerHTML = 끝남 ? '채점을 마쳤어요.'
-      : (푼===n ? '<b>다 풀었어요.</b> 채점해 볼까요?'
+      : (푼===n ? '<b>다 풀었어요.</b> 채점해요.'
                : '아직 <b>'+(n-푼)+'문항</b> 남았어요. 다 안 풀어도 채점할 수 있어요.');
   }
 
@@ -377,9 +380,9 @@
       document.getElementById("v"+(i+1)).innerHTML =
         '<div class="why"><b>'+(ok?"맞았습니다.":"틀렸습니다.")+'</b> '+
         '정답 '+"①②③④⑤".charAt(it.a)+
-        (p===undefined ? ' · 안 골랐어요' : (ok?'':' · 내가 고른 것 '+"①②③④⑤".charAt(p)))+
+        (p===undefined ? ', 안 골랐어요' : (ok?'':', 내가 고른 것 '+"①②③④⑤".charAt(p)))+
         '<br>'+해설+
-        '<span class="src">'+esc(it.leafName||"")+' · '+esc(it.src||"")+'</span></div>';
+        '<span class="src">'+esc(it.leafName||"")+', '+esc(it.src||"")+'</span></div>';
     });
 
     /* 채점했으니 이제 편다 — 킬러가 어디였는지, 어느 단원이었는지.
@@ -389,7 +392,7 @@
       if(b){
         b.dataset.s = (picks[it.id]===it.a ? "ok" : "no");
         b.dataset.kl = it.killer ? 1 : 0;
-        b.title = (it.leafName||"") + (it.killer ? " · 킬러" : "");
+        b.title = (it.leafName||"") + (it.killer ? ", 킬러" : "");
       }
       var qh=document.querySelector("#q"+(i+1)+" .qh");
       if(qh && !qh.querySelector(".lb")){
@@ -423,8 +426,8 @@
       return;
     }
     document.getElementById("lede").textContent =
-      paper.round+"회차 · "+paper.items.length+"문항 "+paper.total+"점 · "+
-      paper.minutes+"분" + (paper.scope ? " · 범위 "+paper.scope : "");
+      paper.round+"회차, "+paper.items.length+"문항 "+paper.total+"점, "+
+      paper.minutes+"분" + (paper.scope ? ", 범위 "+paper.scope : "");
     document.getElementById("headact").innerHTML =
       '<a class="btn ghost" href="settings.html">범위·시험일</a>';
     불러오기();

@@ -2,9 +2,9 @@
  *
  * 왜 있는가 — 사이트가 자료는 다 있는데 **가만히 있으면 아무 말도 안 했다.**
  *   오늘 할 것은 홈에만 있고, 문제를 맞혀도 화면은 "정답" 한 글자였고,
- *   이해도가 올라도 스킬트리를 다시 열어 봐야 알았다. 학생 눈에는 죽은 사이트다.
+ *   이해도가 올라도 개념트리를 다시 열어 봐야 알았다. 학생 눈에는 죽은 사이트다.
  *   (2026-09-05 대표님: "과외선생님처럼 오늘 할 공부를 제시해주고 응원해주고,
- *    스킬트리 변화를 보여주고 맞은 정답수를 보여주고 … 가만히 있어도 제시")
+ *    개념트리 변화를 보여주고 맞은 정답수를 보여주고 … 가만히 있어도 제시")
  *
  * 무엇을 하는가 — 화면마다 따라다니는 층 하나.
  *   ① 선생님 띠(bar)   — 모든 화면 아래에 붙어 지금 할 것 하나 + 오늘 수치 + 한마디
@@ -47,43 +47,43 @@
   /* ── 화면에 나가는 말 — 전부 여기 ─────────────────── */
   var MSG = {
     /* 띠 — 상황별. {n} 숫자, {개념} 리프 이름 자리 */
-    idleStart:    "오늘 몫은 {goal}분이에요. 첫 줄부터 시작하면 돼요.",
-    idleMid:      "오늘 {spent}분 했어요. {left}분만 더 하면 오늘 몫이 끝나요.",
-    idleDone:     "오늘 목표를 채웠어요. 더 풀면 내일 할 게 줄어요.",
+    idleStart:    "오늘 몫은 {goal}분이에요. 첫 줄부터 시작합니다.",
+    idleMid:      "오늘 {spent}분 했어요. {left}분 남았어요.",
+    idleDone:     "오늘 몫을 채웠어요.",
     upToday:      "오늘 이해도가 오른 곳이 {n}군데예요.",
     streakDay:    "{n}일째 이어 오고 있어요.",
-    cardWait:     "오늘의 개념 카드가 아직 안 열렸어요.",
+    cardWait:     "오늘 개념을 아직 안 읽었어요.",
     okOne:        "맞았어요. 오늘 {n}번째 정답이에요.",
-    okRun3:       "세 문항 연속이에요. 이 흐름 그대로 가면 돼요.",
-    okRun5:       "다섯 연속. {개념은} 잡혀 가고 있어요.",
-    okRun8:       "여덟 연속이에요. 이 단원은 오늘 끝을 볼 수 있겠어요.",
-    okAfterMiss:  "바로 되찾았어요. 방금 틀린 건 3일 뒤에 한 번 더 나와요.",
-    missOne:      "이건 3일 뒤 되돌리기에 들어가요. 다음 문항으로 가면 돼요.",
-    missSure:     "확실했는데 답이 달랐어요. {개념} 여기만 짚고 가면 돼요.",
-    missGuess:    "찍었다고 했으니 괜찮아요. 해설 한 줄만 읽고 넘어가면 돼요.",
-    missRun3:     "세 번 이어서 놓쳤어요. 개념 카드로 한 번 정리하고 오는 게 빨라요.",
-    drillOk:      "훈련 정답이에요. 오늘 훈련 {n}문항째예요.",
-    drillMiss:    "훈련은 틀려도 정답률에 안 들어가요. 한 번 더 해 보면 돼요.",
+    okRun3:       "세 문항 연속 정답이에요.",
+    okRun5:       "다섯 문항 연속 정답이에요.",
+    okRun8:       "여덟 문항 연속 정답이에요.",
+    okAfterMiss:  "맞았어요. 방금 틀린 문항은 3일 뒤에 다시 나와요.",
+    missOne:      "틀렸어요. 3일 뒤에 다시 나와요.",
+    missSure:     "확실했는데 틀렸어요. {개념을} 다시 봐요.",
+    missGuess:    "찍은 문항이에요. 해설 한 줄만 읽어요.",
+    missRun3:     "세 문항 연속 틀렸어요. 개념부터 다시 읽어요.",
+    drillOk:      "Killer Drill 정답이에요. 오늘 Killer Drill {n}문항째예요.",
+    drillMiss:    "Killer Drill은 정답률에 들어가지 않아요. 한 번 더 해요.",
     oxOk:         "맞았어요. 오늘 O·X {n}문제째예요.",
-    oxMiss:       "O·X는 틀려도 정답률에 들어가지 않아요. 근거만 읽고 넘어가세요.",
-    kwOk:         "맞았어요. 직접 써서 맞힌 개념어는 오래 남아요.",
-    kwMiss:       "개념어 쓰기는 틀려도 정답률에 안 들어가요. 정답 한 줄만 보고 가면 돼요.",
-    watched:      "강의를 봤어요. 바로 개념 체크로 확인하면 제일 잘 남아요.",
-    skinNudge:    "화면 테마를 바꿀 수 있어요. 밤·모눈 노트·젤리·화이트가 있어요.",
+    oxMiss:       "O·X는 정답률에 들어가지 않아요. 근거만 읽어요.",
+    kwOk:         "맞았어요. 직접 쓴 개념어예요.",
+    kwMiss:       "개념어 쓰기는 정답률에 들어가지 않아요. 정답을 한 번 읽어요.",
+    watched:      "강의를 봤어요. 바로 O·X로 확인해요.",
+    skinNudge:    "화면 테마를 바꿀 수 있어요. 밤, 모눈 노트, 젤리, 화이트가 있어요.",
     examSoon:     "{시험} D-{n}이에요. 오늘은 모의고사부터예요.",
     /* 결산 */
     wrapAll:      "전부 맞았어요.",
-    wrapMost:     "거의 다 맞았어요. 놓친 것만 다시 보면 돼요.",
-    wrapHalf:     "절반은 잡혔어요. 틀린 것이 오늘 할 일이 됐어요.",
-    wrapLow:      "이 단원은 처음이라 그래요. 틀린 것부터 다시 보면 금방 올라와요.",
+    wrapMost:     "거의 다 맞았어요. 틀린 것만 다시 봐요.",
+    wrapHalf:     "절반 맞았어요. 틀린 것이 오늘 할 일이에요.",
+    wrapLow:      "이 단원은 처음이에요. 틀린 것부터 다시 봐요.",
     wrapUp:       "{개념} 이해도가 {before}에서 {after}로 올랐어요.",
-    wrapSame:     "{개념} 이해도는 {after} 그대로예요. 맞힌 수가 쌓이면 올라가요.",
+    wrapSame:     "{개념} 이해도는 {after} 그대로예요.",
     wrapDone:     "이걸로 오늘 몫이 끝났어요.",
     wrapLeft:     "오늘 몫까지 {left}분 남았어요.",
-    wrapFirst:    "오늘 첫 세트예요. 여기서부터 쌓여요.",
-    wrapTree:     "스킬트리에서 {개념이} {d} 올랐어요.",
+    wrapFirst:    "오늘 첫 세트예요.",
+    wrapTree:     "개념트리에서 {개념이} {d} 올랐어요.",
     /* 인사 */
-    hiFirst:      "처음 오셨어요. 오늘 할 것 하나만 골라 뒀어요.",
+    hiFirst:      "처음이에요. 오늘 할 것 하나를 골라 뒀어요.",
     hiBack:       "{ago} {n}문항 중 {ok}개 맞혔어요. 오늘은 {next}부터예요.",
     hiBackLead:   "{ago} {n}문항 중 {ok}개 맞혔어요. 오늘은 {lead}.",
     hiBackNoQLead: "{ago} 다녀갔어요. 오늘은 {lead}.",
@@ -93,11 +93,11 @@
     hiTodayDone:  "오늘 {n}문항 중 {ok}개 맞혔어요. 오늘 몫은 끝났어요.",
     hiStreak:     "{n}일째예요.",
     /* 카드 */
-    cardSealed:   "오늘의 개념 카드",
+    cardSealed:   "오늘 개념",
     cardTap:      "눌러서 열기",
-    cardOpened:   "오늘 카드예요. 읽고 바로 확인하면 이해도에 들어가요.",
-    cardCount:    "모은 카드 {n}장",
-    cardNone:     "오늘은 문항으로 바로 가면 돼요. 이 범위에는 카드가 없어요."
+    cardOpened:   "오늘 개념이에요. 읽고 바로 확인해요.",
+    cardCount:    "읽은 개념 {n}개",
+    cardNone:     "이 범위에는 읽을 개념이 없어요. 문항으로 바로 가요."
   };
   function fmt(key, v) {
     var s = MSG[key] || "";
@@ -142,7 +142,7 @@
     out.sort(function (a, b) { return b.d - a.d; });
     return { list: out, up: out.filter(function (x) { return x.d > 0; }).length };
   }
-  /* 중영역 단위로 묶은 오늘 변화 — 스킬트리가 쓴다 */
+  /* 중영역 단위로 묶은 오늘 변화 — 개념트리가 쓴다 */
   function midDelta() {
     var d = todayDelta().list, by = {};
     d.forEach(function (x) {
@@ -255,7 +255,7 @@
       chips(t) +
       '<span class="go">' +
       (opts.html ? opts.html : (step ? '<a class="btn" href="' + step.href + '">' +
-        esc(step.cta || "하기") + ' · ' + step.min + '분</a>' : '')) +
+        esc(step.cta || "하기") + ' ' + step.min + '분</a>' : '')) +
       '<button class="x" aria-label="닫기">✕</button></span></div>';
     bar.querySelector(".x").onclick = function () {
       bar.classList.remove("on");
@@ -380,13 +380,24 @@
     if (m && md[m.code] && md[m.code].d > 0) tline = fmt("wrapTree", { 개념: m.name, d: "+" + md[m.code].d });
     var dline = t.done ? fmt("wrapDone") : (시작 && !시작.ans && t.ans ? fmt("wrapFirst") + " " : "") + fmt("wrapLeft", { left: t.left });
 
+    /* ★ 15분 흐름 (2026-09-15 대표님) — 학생이 고르지 않는다. 결산이 뜨면 오늘 루틴의
+       어디까지 왔는지 막대로 보이고, 다음 항목을 한 줄로 알린 뒤 **3초 뒤 저절로** 연다.
+       닫기·다시 풀기를 누르면 멈춘다. 오늘 몫이 끝났으면 자동으로 안 넘긴다. */
+    var R0 = T.routine(), acc0 = 0, bars = "";
+    for (var bi = 0; bi < R0.items.length; bi++) {
+      var it0 = R0.items[bi]; acc0 += it0.min;
+      var cls = R0.spent >= acc0 ? "done" : (step && it0.href === step.href ? "next" : "");
+      bars += '<span class="seg ' + cls + '" style="flex:' + Math.max(1, it0.min) + ' 1 0"></span>';
+    }
+    var autoNext = !!(step && !t.done);
     var ov = document.createElement("div");
     ov.className = "wrapov";
     ov.innerHTML =
       '<div class="wrapbox" role="dialog" aria-label="결산">' +
       '<div class="conf" aria-hidden="true"></div>' +
-      '<span class="eb">' + esc(opts.kind === "ox" ? "개념 체크 끝" : opts.kind === "drill" ? "훈련 한 세트 끝"
-                                 : opts.kind === "card" ? "개념 카드 끝" : "한 세트 끝") + '</span>' +
+      '<div class="flowbar" aria-label="오늘 15분 진행">' + bars + '</div>' +
+      '<span class="eb">' + esc(opts.kind === "ox" ? "개념 체크 끝" : opts.kind === "drill" ? "Killer Drill 한 세트 끝"
+                                 : opts.kind === "card" ? "개념 끝" : "한 세트 끝") + '</span>' +
       (total ? '<div class="big"><b class="n">0</b><span> / ' + total + '</span></div>' : '') +
       (head ? '<p class="head">' + esc(head) + '</p>' : '') +
       (leaf ? '<div class="ubar"><div class="lab"><span>' + esc(개념) + ' 이해도</span>' +
@@ -401,9 +412,11 @@
       '<div><b>' + t.streak + '</b><span>일 연속</span></div>' +
       (t.up ? '<div class="up"><b>+' + t.up + '</b><span>오른 곳</span></div>' : '') + '</div>' +
       '<p class="dline">' + esc(dline) + '</p>' +
+      (autoNext ? '<p class="autonext">이제 ' + esc(step.title) + ', ' + step.min + '분이에요. ' +
+                  '<b class="cnt">3</b>초 뒤 저절로 넘어가요.</p>' : '') +
       '<div class="act">' +
       (opts.retry ? '<button class="btn" data-act="retry">' + esc(opts.retry.label) + '</button>' : '') +
-      (step ? '<a class="btn' + (opts.retry ? " ghost" : "") + '" href="' + step.href + '">다음 · ' +
+      (step ? '<a class="btn' + (opts.retry ? " ghost" : "") + '" href="' + step.href + '">다음, ' +
               esc(step.title) + ' ' + step.min + '분 →</a>' : '') +
       (opts.more ? '<button class="btn ghost" data-act="more">' + esc(opts.more.label) + '</button>' : '') +
       '<button class="btn ghost" data-act="close">닫기</button></div></div>';
@@ -415,9 +428,22 @@
       var now = ov.querySelector(".track .now");
       if (now) setTimeout(function () { now.style.width = now.dataset.to + "%"; }, 350);
     });
-    function close() { ov.classList.remove("on"); setTimeout(function () { ov.remove(); }, 300); paint(idleLine()); }
+    /* 자동 넘김 — 단추를 하나라도 누르면 멈춘다 */
+    var autoT = null, cntEl = ov.querySelector(".autonext .cnt");
+    if (autoNext) {
+      var left = 3;
+      autoT = setInterval(function () {
+        left -= 1;
+        if (cntEl) cntEl.textContent = String(Math.max(0, left));
+        if (left <= 0) { clearInterval(autoT); autoT = null; location.href = step.href; }
+      }, 1000);
+    }
+    function stopAuto() { if (autoT) { clearInterval(autoT); autoT = null; }
+      var a = ov.querySelector(".autonext"); if (a) a.remove(); }
+    function close() { stopAuto(); ov.classList.remove("on"); setTimeout(function () { ov.remove(); }, 300); paint(idleLine()); }
     ov.querySelectorAll("[data-act]").forEach(function (b) {
       b.onclick = function () {
+        stopAuto();
         var a = b.dataset.act;
         close();
         if (a === "retry" && opts.retry && opts.retry.onclick) opts.retry.onclick();
@@ -464,7 +490,7 @@
     }
     function face(c) {
       return '<div class="face back">' +
-        '<span class="eb">' + esc(c.set.root + " · " + c.set.mid) + '</span>' +
+        '<span class="eb">' + esc(c.set.root + " " + c.set.mid) + '</span>' +
         '<h3>' + esc(c.card.title) + '</h3>' +
         '<ul>' + c.card.lines.slice(0, 3).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join("") + '</ul>' +
         '<p class="cap">' + esc(MSG.cardOpened) + '</p>' +
@@ -510,12 +536,12 @@
       '<div class="k' + (t.up ? " up" : "") + '"><b>' + (t.up ? "+" + t.up : "0") + '</b><span>오른 곳</span></div>' +
       '</div>' +
       '<p class="tline">' +
-      (tops.length ? "오늘 오른 곳 — " + tops.map(function (x) { return esc(x.name) + " <b>+" + x.d + "</b>"; }).join(" · ") + ". "
+      (tops.length ? "오늘 오른 곳 — " + tops.map(function (x) { return esc(x.name) + " <b>+" + x.d + "</b>"; }).join(", ") + ". "
                    : (t.ans ? "" : "오늘은 아직 시작 전이에요. ")) +
       esc(비교) + '</p>';
   }
 
-  /* ── 스킬트리 — 오늘 오른 곳 띠 ─────────────────────── */
+  /* ── 개념트리 — 오늘 오른 곳 띠 ─────────────────────── */
   function mountTreeDelta(host, onPick) {
     if (!host) return;
     var d = todayDelta().list.filter(function (x) { return x.d > 0; }).slice(0, 6);

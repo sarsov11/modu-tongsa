@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>킬러 / 준킬러 트레이닝</title>
+<title>Killer Drill</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
@@ -14,9 +14,9 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=2613afc7">
-<link rel="stylesheet" href="css/coach.css?v=6f83040b">
-<script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<link rel="stylesheet" href="css/base.css?v=7bcef92a">
+<link rel="stylesheet" href="css/coach.css?v=208a602f">
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s===null)_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .page{max-width:var(--wrap);margin:0 auto;padding:0 var(--s3) var(--s6)}
 
@@ -45,7 +45,7 @@
   .pulse{fill:none;stroke:#2FE0CE;stroke-width:.9;vector-effect:non-scaling-stroke}
   .clab{font-family:"Noto Sans KR",sans-serif;font-weight:700;fill:#EAF6F8;paint-order:stroke;
     stroke:#05070A;stroke-width:3.5;stroke-linejoin:round}
-  .maplegend{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--ink-4)}
+  .maplegend{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;font-size:14.5px;color:var(--ink-4)}
   .maplegend i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:5px;
     vertical-align:-1px}
 
@@ -53,11 +53,11 @@
   .count{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
     justify-content:center;gap:10px;background:rgba(5,7,10,.55);backdrop-filter:blur(1.5px);
     z-index:2;pointer-events:none}
-  .count .n{font-family:var(--mono);font-size:clamp(74px,11vw,128px);font-weight:600;
+  .count .n{font-family:var(--mono);font-size:clamp(74px,11vw,128px);font-weight:800;
     color:var(--ink);letter-spacing:-.06em;line-height:1;
     animation:cpop .92s cubic-bezier(.16,.84,.3,1) both}
-  .count .cap{font-size:14px;color:var(--ink-3);letter-spacing:.02em}
-  .count .rg{font-family:var(--mono);font-size:12px;color:#2FE0CE;letter-spacing:.14em}
+  .count .cap{font-size:16px;color:var(--ink-3);letter-spacing:.02em}
+  .count .rg{font-family:var(--kr);font-weight:700;font-size:14.5px;color:#2FE0CE;letter-spacing:-.01em;}
   @keyframes cpop{0%{opacity:0;transform:scale(1.5)}42%{opacity:1;transform:scale(1)}
     100%{opacity:.25;transform:scale(.94)}}
   .opts.wait{opacity:.4;pointer-events:none}
@@ -65,16 +65,16 @@
   .review{margin:30px auto 0;max-width:860px;text-align:left;border:1px solid var(--line);
     border-radius:14px;background:var(--bg-2);padding:22px}
   .review .rvhd h3{font-size:19px;margin-top:8px;letter-spacing:-.03em}
-  .review .rvhd p{font-size:13px;color:var(--ink-4);margin-top:5px;font-family:var(--mono)}
+  .review .rvhd p{font-size:15px;color:var(--ink-4);margin-top:5px;font-family:var(--mono);font-weight:800}
   .review .mapwrap{margin-top:16px}
   .rvcity{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-  .rc{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--ink-2);
+  .rc{display:inline-flex;align-items:center;gap:7px;font-size:15px;color:var(--ink-2);
     border:1px solid var(--line-2);border-radius:8px;padding:6px 11px}
   .rc i{width:9px;height:9px;border-radius:2px;display:block}
-  .rc b{font-family:var(--mono);font-size:12px;color:var(--ink)}
-  .rvq{margin-top:14px;font-size:13.5px;line-height:1.75;color:var(--ink-3);
+  .rc b{font-family:var(--mono);font-size:14.5px;color:var(--ink);font-weight:800}
+  .rvq{margin-top:14px;font-size:15.5px;line-height:1.75;color:var(--ink-3);
     border-left:2px solid var(--line-3);padding-left:14px}
-  .rvnote{margin-top:12px;font-size:12.5px;color:var(--ink-4)}
+  .rvnote{margin-top:12px;font-size:14.5px;color:var(--ink-4)}
 
   /* ── 선택지 ── */
   .opts{display:grid;gap:9px;margin-top:18px}
@@ -84,11 +84,11 @@
   .opts.c2{grid-template-columns:1fr 1fr}
   .opt{display:flex;gap:11px;align-items:center;padding:14px 16px;border-radius:11px;
     border:1px solid var(--line-2);background:var(--surface-2);cursor:pointer;text-align:left;
-    font-family:inherit;font-size:15px;color:var(--ink-2);transition:.14s}
+    font-family:inherit;font-size:16px;color:var(--ink-2);transition:.14s}
   .opt:hover{border-color:var(--line-3);color:var(--ink)}
   .opt .k{flex:0 0 22px;height:22px;border-radius:6px;background:var(--surface-3);
     display:flex;align-items:center;justify-content:center;font-family:var(--mono);
-    font-size:11.5px;font-weight:700;color:var(--ink-4)}
+    font-size:14.5px;font-weight:800;color:var(--ink-4)}
   .opt b{color:var(--ink);font-weight:700}
   .opt[data-s="ok"]{border-color:#2FE0CE;background:rgba(47,224,206,.10);color:var(--ink)}
   .opt[data-s="no"]{border-color:var(--red);background:var(--red-soft)}
@@ -96,60 +96,60 @@
 
   .gorow{display:flex;align-items:center;gap:14px;margin-top:18px;flex-wrap:wrap}
   .btn.big{font-size:16px;padding:14px 30px;border-radius:11px}
-  .gohint{font-family:var(--mono);font-size:12.5px;color:var(--ink-4)}
+  .gohint{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-weight:800}
   /* 시험 범위 밖 훈련 */
   .mode.out{opacity:.42}
   .mode.out:after{content:"이번 범위 아님";display:block;margin-top:5px;
-    font-family:var(--mono);font-size:10.5px;color:var(--ink-4)}
+    font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-weight:800}
   .scopebar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
     background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r1);
-    padding:11px 14px;margin-bottom:var(--s3);font-size:13px;color:var(--ink-3)}
+    padding:11px 14px;margin-bottom:var(--s3);font-size:15px;color:var(--ink-3)}
   .scopebar b{color:var(--ink)}
-  .scopebar a{margin-left:auto;font-size:12px;color:var(--red-2)}
+  .scopebar a{margin-left:auto;font-size:14.5px;color:var(--red-2)}
   /* 조문 */
   .arti{margin:14px 0 4px;border:1px solid var(--line-2);border-radius:var(--r1);
     background:var(--surface-2);overflow:hidden}
   .arti .ah{display:flex;align-items:center;gap:8px;padding:9px 13px;
     background:var(--surface);border-bottom:1px solid var(--line);
-    font-family:var(--mono);font-size:11.5px;color:var(--ink-3);letter-spacing:.04em}
-  .arti .ah b{color:var(--ink);font-size:12.5px}
-  .arti pre{margin:0;padding:12px 14px;font-family:var(--sans);font-size:13.5px;
+    font-family:var(--mono);font-size:14.5px;color:var(--ink-3);letter-spacing:.04em;font-weight:800}
+  .arti .ah b{color:var(--ink);font-size:14.5px}
+  .arti pre{margin:0;padding:12px 14px;font-family:var(--sans);font-size:15.5px;
     line-height:1.85;color:var(--ink-2);white-space:pre-wrap;word-break:keep-all}
   .sitbox{padding:15px 16px;border-radius:var(--r1);background:var(--surface);
-    border:1px solid var(--line-2);font-size:14.5px;line-height:1.8;color:var(--ink-2)}
-  .trapline{margin-top:12px;font-size:13px;color:var(--ink-3);line-height:1.7;
+    border:1px solid var(--line-2);font-size:15.5px;line-height:1.8;color:var(--ink-2)}
+  .trapline{margin-top:12px;font-size:15px;color:var(--ink-3);line-height:1.7;
     padding:11px 13px;border-radius:var(--r1);background:var(--red-soft);
     border:1px solid var(--red-line)}
   .econone{display:block}
   .ehint{margin-top:12px;padding:11px 13px;border-radius:var(--r1);
     border:1px dashed var(--line-3);background:var(--surface-2);
-    font-size:13px;color:var(--ink-3);line-height:1.6}
-  .ehint b{color:var(--ink-2);font-family:var(--mono);font-size:11px;
-    letter-spacing:.1em;display:block;margin-bottom:4px}
+    font-size:15px;color:var(--ink-3);line-height:1.6}
+  .ehint b{color:var(--ink-2);font-family:var(--kr);font-weight:700;font-size:14.5px;
+    letter-spacing:-.01em;display:block;margin-bottom:4px}
   /* 결론 — 세 단계를 푼 보람 */
   .edone{text-align:center;padding:8px 0 4px}
   .edone h3{font-family:var(--title);font-size:24px;font-weight:900;letter-spacing:-.02em}
-  .edone .lead{font-size:14.5px;color:var(--ink-3);margin-top:8px;line-height:1.7}
+  .edone .lead{font-size:15.5px;color:var(--ink-3);margin-top:8px;line-height:1.7}
   .edone .lead b{color:var(--ink-1)}
   .ecomp{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:center;
     margin-top:20px;text-align:left}
   .ecol{border:1px solid var(--line);border-radius:var(--r1);padding:13px 14px;
     background:var(--surface-2)}
   .ecol.win{border-color:var(--mint);background:rgba(47,224,206,.07)}
-  .ecol .cap3{font-family:var(--mono);font-size:11px;color:var(--ink-4);letter-spacing:.06em}
-  .ecol .big2{font-family:var(--mono);font-size:21px;font-weight:600;margin-top:5px}
+  .ecol .cap3{font-family:var(--kr);font-weight:700;font-size:14.5px;color:var(--ink-4);letter-spacing:-.01em;}
+  .ecol .big2{font-family:var(--mono);font-size:21px;font-weight:800;margin-top:5px}
   .ecol.win .big2{color:var(--mint)}
-  .ecol .sub3{font-size:12px;color:var(--ink-4);margin-top:4px;line-height:1.5}
-  .earrow{font-family:var(--mono);font-size:19px;color:var(--ink-4)}
+  .ecol .sub3{font-size:14.5px;color:var(--ink-4);margin-top:4px;line-height:1.5}
+  .earrow{font-family:var(--mono);font-size:19px;color:var(--ink-4);font-weight:800}
   @media(max-width:560px){ .ecomp{grid-template-columns:1fr;gap:9px}
     .earrow{text-align:center;transform:rotate(90deg)} }
-  .verdict-line{display:inline-block;font-family:var(--mono);font-size:12px;font-weight:700;
-    letter-spacing:.08em;padding:4px 9px;border-radius:6px;margin-right:8px}
+  .verdict-line{display:inline-block;font-family:var(--kr);font-size:14.5px;font-weight:700;
+    letter-spacing:-.01em;padding:4px 9px;border-radius:6px;margin-right:8px}
   .verdict-line.ok{color:#2FE0CE;background:rgba(47,224,206,.12);border:1px solid rgba(47,224,206,.4)}
   .verdict-line.no{color:var(--red-2);background:var(--red-soft);border:1px solid var(--red-line)}
 
   /* ── 노동 사례 판단 (조합형) ── */
-  .lcflag{display:inline-block;font-size:11.5px;letter-spacing:.02em;
+  .lcflag{display:inline-block;font-size:14.5px;letter-spacing:.02em;
     padding:3px 9px;border-radius:999px;margin-bottom:10px;
     background:var(--mint-soft);color:var(--mint);border:1px solid var(--mint)}
   .lcflag.realcase{background:var(--mint-soft);color:var(--mint);border-color:var(--mint)}
@@ -160,14 +160,14 @@
   .lcresult b{color:var(--mint)}
   .lcitems{margin:14px 0 0;padding:0;list-style:none;
     border:1px solid var(--line-2);border-radius:var(--r1);overflow:hidden}
-  .lcitems li{display:flex;gap:10px;padding:11px 13px;font-size:14.5px;line-height:1.6}
+  .lcitems li{display:flex;gap:10px;padding:11px 13px;font-size:15.5px;line-height:1.6}
   .lcitems li+li{border-top:1px solid var(--line-2)}
   .lcitems .m{flex:0 0 auto;font-weight:700;color:var(--ink-3)}
   /* 채점 뒤에만 색을 준다 — 풀기 전에 색이 있으면 답이 샌다 */
   .lcitems li[data-s="ok"]{background:var(--mint-soft)}
   .lcitems li[data-s="ok"] .m{color:var(--mint)}
   .lcitems li[data-s="no"] .m{color:var(--accent)}
-  .ectab{border-collapse:collapse;margin:12px 0 2px;font-size:14px}
+  .ectab{border-collapse:collapse;margin:12px 0 2px;font-size:16px}
   .ectab th,.ectab td{border:1px solid var(--line-2);padding:7px 14px;text-align:center}
   .ectab thead th{background:var(--surface-2);color:var(--ink-2);font-weight:700}
   .ectab tbody th{background:var(--surface-2);color:var(--ink-2)}
@@ -177,29 +177,29 @@
   .lcrow .m{flex:0 0 auto;font-weight:700}
   .lcrow[data-ok="1"] .m{color:var(--mint)}
   .lcrow[data-ok="0"] .m{color:var(--accent)}
-  .lcrow .cite{display:block;margin-top:5px;font-size:11.5px;color:var(--ink-4)}
+  .lcrow .cite{display:block;margin-top:5px;font-size:14.5px;color:var(--ink-4)}
   .lclaw{margin-top:12px;border:1px dashed var(--line-2);border-radius:var(--r1);
     padding:11px 13px;background:var(--surface-2)}
-  .lclaw summary{cursor:pointer;font-size:13px;color:var(--ink-3);font-weight:600}
+  .lclaw summary{cursor:pointer;font-size:15px;color:var(--ink-3);font-weight:600}
   .lclaw dl{margin:9px 0 0}
-  .lclaw dt{font-size:12.5px;font-weight:700;color:var(--ink-2);margin-top:8px}
+  .lclaw dt{font-size:14.5px;font-weight:700;color:var(--ink-2);margin-top:8px}
   .lclaw dd{margin:3px 0 0;font-size:12.6px;line-height:1.62;color:var(--ink-3)}
   /* ── 해설 ── */
   .why{margin-top:18px;padding:16px 18px;border-radius:12px;background:var(--surface-2);
-    border:1px solid var(--line);font-size:14.5px;line-height:1.72;color:var(--ink-2)}
+    border:1px solid var(--line);font-size:15.5px;line-height:1.72;color:var(--ink-2)}
   .why b{color:var(--ink)}
-  .why .src{display:block;margin-top:11px;font-family:var(--mono);font-size:11px;color:var(--ink-4)}
-  .hits{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12px;
+  .why .src{display:block;margin-top:11px;font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-weight:800}
+  .hits{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:14.5px;
     padding:5px 10px;border-radius:6px;border:1px solid var(--red-line);color:var(--red-2);
-    background:var(--red-soft)}
+    background:var(--red-soft);font-weight:800}
 
   .ev{margin-top:14px;border-left:2px solid var(--line-3);padding:2px 0 2px 14px}
-  .ev .evhd{font-family:var(--mono);font-size:11.5px;color:var(--ink-4);letter-spacing:.04em}
-  .ev p{margin-top:6px;font-size:13.5px;line-height:1.7;color:var(--ink-3)}
+  .ev .evhd{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);letter-spacing:.04em;font-weight:800}
+  .ev p{margin-top:6px;font-size:15.5px;line-height:1.7;color:var(--ink-3)}
   .amb{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--red-soft);
-    border:1px solid var(--red-line);font-size:13.5px;line-height:1.7;color:var(--ink-2)}
+    border:1px solid var(--red-line);font-size:15.5px;line-height:1.7;color:var(--ink-2)}
   .amb b{color:var(--red-2)}
-  .gnote{margin-top:10px;font-size:12.5px;line-height:1.65;color:var(--ink-4);
+  .gnote{margin-top:10px;font-size:14.5px;line-height:1.65;color:var(--ink-4);
     border:1px dashed var(--line-2);border-radius:8px;padding:9px 12px}
 
   /* ── 문항 이미지 ── */
@@ -211,12 +211,12 @@
     word-break:keep-all;text-wrap:pretty}
   .passage:before{content:"\201C";position:absolute;left:18px;top:6px;font-size:52px;
     color:#2A3B54;line-height:1;font-family:Georgia,serif}
-  .passage .src{display:block;margin-top:16px;font-family:var(--mono);font-size:11.5px;
-    color:var(--ink-4);letter-spacing:.04em}
+  .passage .src{display:block;margin-top:16px;font-family:var(--mono);font-size:14.5px;
+    color:var(--ink-4);letter-spacing:.04em;font-weight:800}
   .hintrow{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 4px;align-items:center}
-  .hintrow .lab{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ink-4)}
+  .hintrow .lab{font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--ink-4)}
   .hint{appearance:none;border:1px dashed var(--line-3);background:transparent;cursor:pointer;
-    font-family:inherit;font-size:13px;color:var(--ink-3);padding:7px 13px;border-radius:9px;
+    font-family:inherit;font-size:15px;color:var(--ink-3);padding:7px 13px;border-radius:9px;
     transition:.15s}
   .hint:hover{color:var(--ink);border-color:var(--mint)}
   .hint[data-open="1"]{border-style:solid;border-color:var(--mint);color:var(--mint);
@@ -225,20 +225,20 @@
   .whocard .av{flex:0 0 46px;height:46px;border-radius:12px;display:grid;place-items:center;
     font-weight:900;font-size:17px;background:var(--surface-3);color:var(--ink-2)}
   .whocard .tx b{font-size:17px;color:var(--ink)}
-  .whocard .tx p{margin:5px 0 0;font-size:14px;color:var(--ink-3);line-height:1.66}
+  .whocard .tx p{margin:5px 0 0;font-size:16px;color:var(--ink-3);line-height:1.66}
   .vs{display:flex;gap:10px;align-items:stretch;margin-top:14px}
   .vs .col{flex:1;min-width:0;border:1px solid var(--line);border-radius:11px;padding:13px 15px;
     background:var(--surface-2)}
   .vs .col.me{border-color:var(--mint)}
-  .vs .col h5{margin:0 0 6px;font-size:13.5px;color:var(--ink-2)}
-  .vs .col p{margin:0;font-size:13px;color:var(--ink-3);line-height:1.62}
+  .vs .col h5{margin:0 0 6px;font-size:15.5px;color:var(--ink-2)}
+  .vs .col p{margin:0;font-size:15px;color:var(--ink-3);line-height:1.62}
 
   /* 준킬러 — 판례·사례·자료 */
-  .mgrp{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--ink-4);
+  .mgrp{font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--ink-4);
     align-self:center;margin:0 2px 0 8px}
   .mgrp:first-child{margin-left:0}
   .caseflag{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);
-    font-size:11.5px;padding:5px 11px;border-radius:7px;margin-bottom:12px;letter-spacing:.02em}
+    font-size:14.5px;padding:5px 11px;border-radius:7px;margin-bottom:12px;letter-spacing:.02em;font-weight:800}
   .caseflag:before{content:"";width:7px;height:7px;border-radius:50%}
   .caseflag.real{background:rgba(47,224,206,.10);color:var(--mint);
     border:1px solid rgba(47,224,206,.32)}
@@ -249,22 +249,22 @@
     letter-spacing:-.035em}
   .dtable{border:1px solid var(--line);border-radius:var(--r1);overflow:hidden;
     background:var(--surface-2)}
-  .dtable table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:15px}
+  .dtable table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:16px;font-weight:800}
   .dtable th,.dtable td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:center}
-  .dtable th{background:var(--surface-3);color:var(--ink-2);font-weight:700;font-size:14px}
+  .dtable th{background:var(--surface-3);color:var(--ink-2);font-weight:700;font-size:16px}
   .dtable td:first-child,.dtable th:first-child{text-align:left;color:var(--ink-3);
-    font-family:var(--kr);font-size:14px}
+    font-family:var(--kr);font-size:16px}
   .dtable tbody tr:last-child td{border-bottom:0}
-  .dnote{font-size:12.5px;color:var(--ink-4);padding:10px 14px;margin:0;
+  .dnote{font-size:14.5px;color:var(--ink-4);padding:10px 14px;margin:0;
     border-top:1px solid var(--line);background:var(--surface)}
 
   /* 시작 화면 — 들어가자마자 시계가 돌면 안 된다 */
   .startcard{text-align:center;padding:52px 20px 46px}
   .startcard h3{font-size:27px;margin:0 0 10px;letter-spacing:-.045em}
-  .startcard p{font-size:15px;color:var(--ink-3);max-width:46ch;margin:0 auto 8px;line-height:1.7}
+  .startcard p{font-size:16px;color:var(--ink-3);max-width:46ch;margin:0 auto 8px;line-height:1.7}
   .startcard .rule{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:22px 0 26px}
-  .startcard .rule span{font-family:var(--mono);font-size:12px;color:var(--ink-3);
-    border:1px solid var(--line);border-radius:8px;padding:7px 12px;background:var(--surface-2)}
+  .startcard .rule span{font-family:var(--mono);font-size:14.5px;color:var(--ink-3);
+    border:1px solid var(--line);border-radius:8px;padding:7px 12px;background:var(--surface-2);font-weight:800}
   .startcard .btn.big{font-size:17px;padding:16px 40px}
 
   .qimg{border-radius:11px;overflow:hidden;border:1px solid var(--line);background:#0F1216}
@@ -273,34 +273,34 @@
   /* ── 경제 ── */
   .econgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:20px}
   @media(max-width:900px){.econgrid{grid-template-columns:1fr}}
-  .dtable{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:14px}
+  .dtable{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:16px;font-weight:800}
   .dtable th,.dtable td{border:1px solid var(--line-2);padding:10px 14px;text-align:center}
-  .dtable th{background:var(--surface-2);color:var(--ink-4);font-size:12px}
+  .dtable th{background:var(--surface-2);color:var(--ink-4);font-size:14.5px}
   .dtable td{color:var(--ink)}
   .dtable td.lab{background:var(--surface-2);color:var(--ink-3)}
-  .tnote{font-size:12.5px;color:var(--ink-4);margin-top:9px;line-height:1.65}
+  .tnote{font-size:14.5px;color:var(--ink-4);margin-top:9px;line-height:1.65}
   .tnote b{color:var(--ink-2)}
   .ppc{background:#0B0E12;border:1px solid var(--line);border-radius:11px}
   .ppc svg{display:block;width:100%;height:auto}
   .slider{margin-top:16px}
-  .slider label{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-3);
-    font-family:var(--mono);margin-bottom:8px}
+  .slider label{display:flex;justify-content:space-between;font-size:15px;color:var(--ink-3);
+    font-family:var(--mono);margin-bottom:8px;font-weight:800}
   .slider input{width:100%;accent-color:var(--red)}
   .verdict{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
   .gains{display:flex;flex-direction:column;gap:11px}
-  .gcap{font-size:12px;color:var(--ink-4);font-family:var(--mono)}
-  .grow{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:13px}
+  .gcap{font-size:14.5px;color:var(--ink-4);font-family:var(--mono);font-weight:800}
+  .grow{display:flex;align-items:center;gap:12px;font-family:var(--mono);font-size:15px;font-weight:800}
   .grow .n{flex:0 0 62px;color:var(--ink-3)}
   .grow .bwrap{flex:1;height:12px;background:var(--surface-2);border-radius:3px;overflow:hidden}
   .grow .bwrap i{display:block;height:100%;border-radius:3px;transition:width .18s}
   .grow .bwrap i.up{background:#2FE0CE}
   .grow .bwrap i.dn{background:var(--red)}
   .grow .v{flex:0 0 56px;text-align:right}
-  .grow .u{flex:0 0 92px;text-align:right;color:var(--ink-4);font-size:12px}
+  .grow .u{flex:0 0 92px;text-align:right;color:var(--ink-4);font-size:14.5px}
   .grow .v.up{color:#2FE0CE}
   .grow .v.dn{color:var(--red-2)}
-  .vpill{font-family:var(--mono);font-size:12.5px;padding:7px 12px;border-radius:7px;
-    border:1px solid var(--line-2);color:var(--ink-3)}
+  .vpill{font-family:var(--mono);font-size:14.5px;padding:7px 12px;border-radius:7px;
+    border:1px solid var(--line-2);color:var(--ink-3);font-weight:800}
   .vpill.good{border-color:#2FE0CE;color:#2FE0CE;background:rgba(47,224,206,.09)}
   .vpill.bad{border-color:var(--red-line);color:var(--red-2);background:var(--red-soft)}
 
@@ -312,8 +312,8 @@
   .pushrow{display:flex;align-items:center;justify-content:space-between;gap:12px;
     padding:13px 0;border-bottom:1px solid var(--line)}
   .pushrow:last-child{border-bottom:none}
-  .pushrow .tx b{display:block;color:var(--ink);font-size:14px;font-weight:700}
-  .pushrow .tx span{font-size:12px;color:var(--ink-4)}
+  .pushrow .tx b{display:block;color:var(--ink);font-size:16px;font-weight:700}
+  .pushrow .tx span{font-size:14.5px;color:var(--ink-4)}
   .sw{width:44px;height:24px;border-radius:99px;background:var(--lv1);position:relative;
     cursor:pointer;flex:0 0 44px;transition:background .18s;border:none}
   .sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;
@@ -321,12 +321,12 @@
   .sw[aria-checked="true"]{background:var(--red)}
   .sw[aria-checked="true"]::after{left:23px;background:#fff}
   /* 기출 제시문 상자 — 조문 상자와 달리 줄글로 읽힌다 */
-  .quotebox{padding:16px 17px;font-size:15px;line-height:1.85;color:var(--ink);
+  .quotebox{padding:16px 17px;font-size:16px;line-height:1.85;color:var(--ink);
     background:var(--surface);border-radius:0 0 var(--r1) var(--r1)}
   .quotebox b{font-weight:700;color:var(--red-2)}
-  @media(max-width:520px){ .quotebox{font-size:14.5px;padding:14px} }
+  @media(max-width:520px){ .quotebox{font-size:15.5px;padding:14px} }
   /* 사례의 출처를 늘 밝힌다 — 실재 결정과 연습 사례를 섞으면 안 된다 */
-  .srcbadge{margin-left:10px;font-size:11px;font-weight:700;border-radius:99px;
+  .srcbadge{margin-left:10px;font-size:14.5px;font-weight:700;border-radius:99px;
     padding:3px 10px;letter-spacing:.02em;vertical-align:middle}
   .srcbadge.real{background:var(--mint-soft);color:var(--mint-2)}
   .srcbadge.drill{background:var(--surface-3);color:var(--ink-4)}
@@ -336,7 +336,7 @@
 <div class="page">
   <div class="phead">
     <div>
-      <span class="kicker"><i></i>킬러 · 준킬러</span>
+      <span class="kicker"><i></i>킬러, 준킬러</span>
       <div><h1 id="ktitle">다들 여기서 <em>막힙니다</em></h1>
       <p class="sub" id="kdesc"></p></div>
     </div>
@@ -393,9 +393,12 @@
 <script src="js/justice.js?v=4843e05f"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/cards.js?v=1a50b0db"></script>
-<script src="js/store.js?v=4d4a9000"></script>
-<script src="js/coach.js?v=365e93e4"></script>
-<script src="js/notify.js?v=9f8c340a"></script>
+<script src="js/store.js?v=0fb25aff"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supa.config.js?v=e1d10860"></script>
+<script src="js/auth.js?v=72d8dbed"></script>
+<script src="js/coach.js?v=a47134ba"></script>
+<script src="js/notify.js?v=a6c06818"></script>
 <script>
 (function(){
   var T=TERRA, A=ATLAS;
@@ -415,7 +418,7 @@
     }
     var 안=MODES.filter(function(m){ return !범위밖(m); }).length;
     host.innerHTML='<div class="scopebar">이번 시험 범위 <b>'+T.scopeName()+'</b>'+
-      ' · 여기에 걸리는 훈련 <b>'+안+'</b>개'+
+      ', 여기에 걸리는 훈련 <b>'+안+'</b>개'+
       '<a href="settings.html">범위 고치기 →</a></div>';
   }
   if(!MODES.some(function(m){return m.id===mode;})) mode="climate";
@@ -452,7 +455,7 @@
   function def(){ return MODES.filter(function(m){return m.id===mode;})[0]; }
   function head(){
     var m=def();
-    document.getElementById("kdesc").textContent=m.desc+"  ·  "+m.area;
+    document.getElementById("kdesc").textContent=m.desc;   /* 단원 알파벳은 학생에게 안 보인다(2026-09-16) */
     document.getElementById("basis").innerHTML="<b>"+m.name+"</b><br>"+m.basis+
       "<br><br>문제는 미리 만들어 둔 것이 아니라 매번 새로 뽑힙니다.";
   }
@@ -776,12 +779,12 @@
       '<div style="margin-top:12px;display:flex;gap:9px;flex-wrap:wrap;align-items:center">'+
       (q.city.hit
         ? '<span class="hits">이 도시 기후 지도에 '+q.city.hit+'번 출제</span>'
-        : '<span class="chip">기출 지도에는 아직 · 교과서 사례</span>')+
+        : '<span class="chip">기출 지도에는 아직, 교과서 사례</span>')+
       '<span class="hits">이 기후형 기출 '+hits+'문항</span>'+
       (leaf?'<span style="font-size:12.5px;color:var(--ink-4)">'+leaf.name+'</span>':'')+'</div>'+
       (q.city.quote
         ? '<div class="ev"><div class="evhd">'+q.city.src+
-          (q.city.label?' · '+q.city.label:'')+'</div>'+
+          (q.city.label?', '+q.city.label:'')+'</div>'+
           '<p>'+q.city.quote+'</p></div>'
         : '')+
       (q.city.gnote
@@ -791,7 +794,7 @@
         ? '<div class="amb"><b>'+(q.city.g==="F"?"판독을 바로잡았습니다.":"분류가 갈리는 곳입니다.")+
           '</b> '+q.city.note+'</div>'
         : '')+
-      '<span class="src">국경선 Natural Earth 1:110m · 정답은 출제기관 해설을 따른다 · '+
+      '<span class="src">국경선 Natural Earth 1:110m, 정답은 출제기관 해설을 따른다, '+
       '기후형 기출 수는 개념트리 '+q.city.leaf+' 리프 실측</span></div>'+
       '';
     document.getElementById("next").onclick=function(){
@@ -861,7 +864,7 @@
       review=
         '<div class="review"><div class="rvhd"><span class="eyebrow">이 세트가 나온 기출</span>'+
         '<h3>'+an.src+'</h3><p>'+(an.label||"")+
-        (an.ans?' · 정답 '+an.ans:'')+'</p></div>'+
+        (an.ans?', 정답 '+an.ans:'')+'</p></div>'+
         anchorMap(inQ)+
         '<div class="rvcity">'+inQ.map(function(n){
           var c=byName[n];
@@ -1057,7 +1060,7 @@
       (last?"그래서 어떻게 되나 보기":"다음 단계")+'</button>'+
       '<span class="gohint">'+(eset.i+1)+' / '+eset.steps.length+' 단계</span></div>'+
       '<div class="why"><b>'+(ok?"맞았습니다.":"틀렸습니다.")+'</b> '+st.why+
-      '<span class="src">숫자는 매번 새로 생성 · 개념트리 H4.1 절대우위와 비교우위</span></div>';
+      '<span class="src">숫자는 매번 새로 생성, 개념트리 H4.1 절대우위와 비교우위</span></div>';
     document.getElementById("next").onclick=function(){
       if(last){ econEnd(); return; }
       eset.i++;
@@ -1091,11 +1094,11 @@
       '<b>'+Y+' '+(gainY>0?'+'+gainY:gainY)+'개</b>가 더 생깁니다.</p>'+
       '<div class="ecomp">'+
         '<div class="ecol"><span class="cap3">각자 절반씩 만들면</span>'+
-        '<div class="big2">'+X+' '+selfX+' · '+Y+' '+selfY+'</div>'+
+        '<div class="big2">'+X+' '+selfX+', '+Y+' '+selfY+'</div>'+
         '<div class="sub3">두 나라가 각각 두 가지를 다 만드는 경우</div></div>'+
         '<div class="earrow">→</div>'+
         '<div class="ecol win"><span class="cap3">나눠 맡고 바꾸면</span>'+
-        '<div class="big2">'+X+' '+xMax+' · '+Y+' '+yMax+'</div>'+
+        '<div class="big2">'+X+' '+xMax+', '+Y+' '+yMax+'</div>'+
         '<div class="sub3">'+NEUN(xN)+' '+X+'만, '+NEUN(yN)+' '+Y+'만 만든 뒤 교환</div></div>'+
       '</div>'+
       '<p class="lead" style="margin-top:18px;font-size:13.5px">'+
@@ -1152,7 +1155,7 @@
       '<span class="gohint">'+(pset.i+1)+' / '+c.steps.length+' 단계</span></div>'+
       '<div class="why"><b>'+(ok?"맞았습니다.":"틀렸습니다.")+'</b> '+st.why+
       (last&&c.trap?'<div class="trapline">'+c.trap+'</div>':'')+
-      '<span class="src">'+esc(c.art)+' 원문 · 국가법령정보센터</span></div>';
+      '<span class="src">'+esc(c.art)+' 원문, 국가법령정보센터</span></div>';
     document.getElementById("next").onclick=function(){
       pset.i++;
       if(pset.i>=c.steps.length) pset=null;
@@ -1218,7 +1221,7 @@
     var 실재=(c.kind==="real");
     return '<h4 class="casetitle">'+esc(c.title)+
       '<span class="srcbadge '+(실재?"real":"drill")+'">'+
-      (실재?(c.court?"실재 · "+esc(c.court):"실재 헌재 결정")
+      (실재?(c.court?"실재, "+esc(c.court):"실재 헌재 결정")
            :"연습 사례")+'</span></h4>'+
       '<div class="sitbox">'+c.facts+'</div>'+
       '<div class="arti"><div class="ah">근거 <b>헌법 제37조 제2항</b>'+
@@ -1332,7 +1335,7 @@
     document.getElementById("qmeta").textContent=t.it.ln;
     var p=TK.people[t.right]||{};
     return '<div class="passage">'+t.it.t+
-      '<span class="src">기출 제시문 · 뒤에서 출처를 밝힙니다</span></div>'+
+      '<span class="src">기출 제시문, 뒤에서 출처를 밝힙니다</span></div>'+
       '<div class="hintrow"><span class="lab">막히면</span>'+
       '<button class="hint" data-h="ori">어느 쪽 사람인가</button>'+
       '<button class="hint" data-h="era">언제 사람인가</button>'+
@@ -1371,7 +1374,7 @@
     document.getElementById("v").innerHTML=
       '<div class="gorow"><button class="btn big" id="next">다음 문제</button>'+
       '<span class="gohint">'+(ok?"맞았습니다":"다시 봅시다")+
-      (t.hints?' · 힌트 '+t.hints+'개':'')+'</span></div>'+
+      (t.hints?', 힌트 '+t.hints+'개':'')+'</span></div>'+
       '<div class="why">'+
       '<div class="whocard"><span class="av">'+t.right.charAt(0)+'</span>'+
       '<span class="tx"><b>'+t.right+'</b> — '+ORI[me.ori]+' '+me.era+
@@ -1382,8 +1385,8 @@
       '<div style="margin-top:14px;display:flex;gap:9px;flex-wrap:wrap;align-items:center">'+
       '<span class="hits">'+it.ln+'</span>'+
       '<span class="hits">이 갈래 기출 '+(T.BY[it.leaf]?T.BY[it.leaf].n:0)+'문항</span></div>'+
-      '<span class="src">'+it.g+' '+it.d+' '+it.n+'번'+(it.lb?' · '+it.lb:'')+
-      ' · 제시문은 원문 그대로, 사상가는 출제기관 해설에서 특정</span></div>';
+      '<span class="src">'+it.g+' '+it.d+' '+it.n+'번'+(it.lb?', '+it.lb:'')+
+      ', 제시문은 원문 그대로, 사상가는 출제기관 해설에서 특정</span></div>';
     bindNext();
   }
 
@@ -1423,7 +1426,7 @@
     document.getElementById("qtext").textContent=st.q;
     document.getElementById("qmeta").textContent="단계 "+(S2.i+1)+" / "+S2.steps.length;
     return '<div class="caseflag '+(S2.real?"real":"prac")+'">'+
-      (S2.real?"실재 결정 · "+c.court:"연습 사례 · 실제 결정이 아닙니다")+'</div>'+
+      (S2.real?"실재 결정, "+c.court:"연습 사례, 실제 결정이 아닙니다")+'</div>'+
       '<h4 class="casetitle">'+c.title+'</h4>'+
       '<div class="passage">'+c.facts+'</div>'+
       '<div class="opts c2" style="margin-top:16px">'+st.o.map(function(o,i){
@@ -1499,9 +1502,9 @@
           세미콜론을 자동으로 넣어(ASI) `return;` 이 되고 지면이 통째로 빈다.
           문법 검사는 이걸 못 잡는다. */
     return '<div class="lcflag '+(c.real?'realcase':'praccase')+'">'+
-      (c.real ? '실재 결정 · '+esc(c.real.court)
-              : (L.practice===false ? '연습 사례 · 실제 결정이 아닙니다'
-                                    : '상황 판단 · 근거는 법령 원문'))+'</div>'+
+      (c.real ? '실재 결정, '+esc(c.real.court)
+              : (L.practice===false ? '연습 사례, 실제 결정이 아닙니다'
+                                    : '상황 판단, 근거는 법령 원문'))+'</div>'+
       '<div class="passage">'+c.facts+'</div>'+
       '<ul class="lcitems">'+S2.items.map(function(it,k){
         return '<li data-k="'+k+'"><span class="m">'+L.MARKS[k]+'</span>'+
@@ -1536,7 +1539,7 @@
     document.getElementById("v").innerHTML=
       '<div class="gorow"><button class="btn big" id="next">다음 사례</button>'+
       '<span class="gohint">'+(ok?"맞았습니다":"정답은 "+"①②③④⑤".charAt(S2.a))+
-      (c.trap?' · 함정 — '+esc(c.trap):(c.answerNote?' · '+esc(c.answerNote):''))+'</span></div>'+
+      (c.trap?', 함정 — '+esc(c.trap):(c.answerNote?', '+esc(c.answerNote):''))+'</span></div>'+
       /* 실재 결정은 채점 뒤에 사건명과 결과를 밝힌다 — 풀기 전에는 감춘다 */
       (c.real ? '<div class="lcresult">'+esc(c.real.name)+' — <b>'+
                 esc(c.real.result)+'</b></div>' : '')+
@@ -1616,7 +1619,7 @@
     var L=lset, st=L.steps[L.i];
     document.getElementById("qtext").textContent=st.q;
     document.getElementById("qmeta").textContent="단계 "+(L.i+1)+" / "+L.steps.length;
-    return '<div class="caseflag prac">연습 사례 · 숫자는 매번 새로 생성</div>'+
+    return '<div class="caseflag prac">연습 사례, 숫자는 매번 새로 생성</div>'+
       '<div class="passage">'+
       '<b>'+L.nm+'</b>(만 '+L.age+'세, 고등학생)은(는) '+L.job+'에서 아르바이트를 한다. '+
       '주 '+L.days+'일, 하루 '+L.day+'시간씩 일하고 시급은 '+L.wage.toLocaleString()+'원이다.'+
@@ -1679,11 +1682,11 @@
     st.push({k:"table", q:"총부양비가 가장 높은 지역은?",
       o:shuffle(R.map(function(x){ return x.n; })), a:top.n, byName:true,
       why:"총부양비 = (유소년 + 노년) ÷ 생산 연령 × 100. "+
-          R.map(function(x){ return x.n+" "+x.td; }).join(" · ")+
+          R.map(function(x){ return x.n+" "+x.td; }).join(", ")+
           " 이므로 <b>"+top.n+"</b> 입니다."});
     st.push({k:"table", q:"노령화지수가 가장 높은 지역은?",
       o:shuffle(R.map(function(x){ return x.n; })), a:topAi.n, byName:true,
-      why:R.map(function(x){ return x.n+" "+x.ai; }).join(" · ")+
+      why:R.map(function(x){ return x.n+" "+x.ai; }).join(", ")+
           " 이므로 <b>"+topAi.n+"</b> 입니다."+
           (top.n!==topAi.n
             ? " 총부양비가 가장 높은 곳("+top.n+")과 <b>다릅니다</b> — 분모가 다르기 때문입니다."
@@ -1706,7 +1709,7 @@
     var D=dset, st=D.steps[D.i];
     document.getElementById("qtext").textContent=st.q;
     document.getElementById("qmeta").textContent="단계 "+(D.i+1)+" / "+D.steps.length;
-    return '<div class="caseflag prac">연습 자료 · 숫자는 매번 새로 생성</div>'+
+    return '<div class="caseflag prac">연습 자료, 숫자는 매번 새로 생성</div>'+
       demoTable(D.R)+
       '<div class="opts c2" style="margin-top:16px">'+st.o.map(function(o,i){
         return '<button class="opt" data-v="'+i+'">'+o+'</button>';
@@ -1727,7 +1730,7 @@
       (last?"새 자료":"다음 단계")+'</button>'+
       '<span class="gohint">'+(D.i+1)+' / '+D.steps.length+' 단계</span></div>'+
       '<div class="why">'+(ok?"<b>맞았습니다.</b> ":"<b>다시 봅시다.</b> ")+st.why+
-      '<span class="src">부양비 = 피부양 인구 ÷ 생산 연령 인구 × 100 · 노령화지수만 분모가 유소년</span></div>';
+      '<span class="src">부양비 = 피부양 인구 ÷ 생산 연령 인구 × 100, 노령화지수만 분모가 유소년</span></div>';
     document.getElementById("next").onclick=function(){
       D.i++; if(last){ dset=null; } next();
     };
@@ -1814,13 +1817,13 @@
      누른 뒤에 3초를 세고, 그 3초 동안 지도가 대륙으로 들어간다. */
   var RULE={
     climate:["5문항 한 세트","한 문항 10초","틀린 것만 다시 가능"],
-    econ:["한 자료 · 여러 단계","시간 제한 없음","단계마다 둘 중 하나"],
+    econ:["한 자료, 여러 단계","시간 제한 없음","단계마다 둘 중 하나"],
     thinker:["제시문만 보고 판별","둘 중 하나","힌트 3개"],
     consti:["실재 판례 + 연습 사례","5단계 판단","단계마다 둘 중 하나"],
     labor:["사례는 매번 새로","만 18세가 갈림길","조문은 원문 그대로"],
     laborcase:["실제 있을 법한 상황","ㄱㄴㄷㄹ 중 둘이 옳다","근거 조문 원문 제공"],
     econcase:["숫자는 매번 새로","ㄱㄴㄷㄹ 중 둘이 옳다","다섯 갈래가 번갈아"],
-    consticase:["연습 사례 · 조문은 원문","ㄱㄴㄷㄹ 중 둘이 옳다","헌법 조문 원문 제공"],
+    consticase:["연습 사례, 조문은 원문","ㄱㄴㄷㄹ 중 둘이 옳다","헌법 조문 원문 제공"],
     demo:["세 지역 자료","부양비·노령화지수","단계마다 계산"]
   };
   function showStart(){
@@ -1828,7 +1831,7 @@
     var m=def();
     var sb=document.getElementById("setbar"); sb.innerHTML=""; sb.className="";
     document.getElementById("qtext").textContent=m.name;
-    document.getElementById("qmeta").textContent=m.area;
+    document.getElementById("qmeta").textContent=String(m.area||"").replace(/^[A-Z] /,"").replace(/ · [A-Z] /g,", ");
     document.getElementById("stage").innerHTML=
       '<div class="startcard"><h3>'+m.name+'</h3><p>'+m.desc+'</p>'+
       '<div class="rule">'+(RULE[mode]||[]).map(function(x){

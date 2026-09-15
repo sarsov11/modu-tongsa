@@ -9,15 +9,15 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <meta name="theme-color" content="#08090B">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=2613afc7">
-<script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<link rel="stylesheet" href="css/base.css?v=7bcef92a">
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s===null)_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:820px;margin:0 auto;padding:0 var(--s3) var(--s6)}
 
   /* 학부모용이라 글씨를 키운다 — 학생 화면보다 한 단계 크게 */
   .pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);
     padding:var(--s4);margin-bottom:var(--s3)}
-  .pcard h3{font-size:15px;color:var(--ink-4);font-weight:600;margin:0 0 14px;
+  .pcard h3{font-size:16px;color:var(--ink-4);font-weight:600;margin:0 0 14px;
     letter-spacing:.02em}
   .big{font-size:30px;font-weight:800;color:var(--ink);letter-spacing:-.03em;
     line-height:1.25;margin:0 0 8px}
@@ -29,8 +29,8 @@
   .head1{background:linear-gradient(160deg,var(--surface),var(--card));
     border:1px solid var(--line-2);border-radius:var(--r2);
     padding:var(--s5) var(--s4);margin-bottom:var(--s3)}
-  .head1 .kick{font-family:var(--mono);font-size:12px;color:var(--ink-4);
-    letter-spacing:.14em;display:block;margin-bottom:12px}
+  .head1 .kick{font-family:var(--kr);font-weight:700;font-size:14.5px;color:var(--ink-4);
+    letter-spacing:-.01em;display:block;margin-bottom:12px}
   .head1 h2{font-size:26px;font-weight:800;letter-spacing:-.035em;color:var(--ink);
     line-height:1.4;margin:0 0 12px}
   .head1 p{font-size:16px;line-height:1.8;color:var(--ink-2);margin:0}
@@ -42,7 +42,7 @@
     padding:16px 18px}
   .num b{display:block;font-size:24px;font-weight:800;color:var(--ink);
     letter-spacing:-.02em;line-height:1.2}
-  .num span{font-size:13px;color:var(--ink-4);display:block;margin-top:5px}
+  .num span{font-size:15px;color:var(--ink-4);display:block;margin-top:5px}
   .num.warn b{color:var(--red-2)}
   .num.good b{color:var(--mint-2)}
 
@@ -50,7 +50,7 @@
   .week{display:flex;gap:8px;margin-top:6px}
   .week i{flex:1;height:42px;border-radius:8px;background:var(--surface-2);
     border:1px solid var(--line);display:grid;place-items:center;
-    font-family:var(--mono);font-size:11.5px;color:var(--ink-4);font-style:normal}
+    font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-style:normal;font-weight:800}
   .week i.on{background:var(--mint-soft);border-color:var(--mint);color:var(--ink)}
   .week i.today{outline:2px solid var(--red);outline-offset:1px}
 
@@ -60,33 +60,33 @@
     position:relative}
   .trend .b.now{background:var(--mint)}
   .trend .b em{position:absolute;top:-19px;left:50%;transform:translateX(-50%);
-    font-family:var(--mono);font-size:11px;color:var(--ink-3);font-style:normal}
+    font-family:var(--mono);font-size:14.5px;color:var(--ink-3);font-style:normal;font-weight:800}
   .trend .b span{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);
-    font-size:10.5px;color:var(--ink-4)}
+    font-size:14.5px;color:var(--ink-4)}
 
   /* 단원별 막대 */
   .bars{display:flex;flex-direction:column;gap:11px}
   .bar{display:grid;grid-template-columns:132px 1fr 52px;gap:12px;align-items:center}
-  .bar .nm{font-size:14px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;
+  .bar .nm{font-size:16px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;
     white-space:nowrap}
   .bar .tr{height:9px;background:var(--surface-3);border-radius:99px;overflow:hidden}
   .bar .tr i{display:block;height:100%;border-radius:99px;background:var(--mint)}
   .bar .tr i.low{background:var(--red)}
   .bar .tr i.mid{background:var(--amber,#E8A33D)}
-  .bar .pc{font-family:var(--mono);font-size:13px;color:var(--ink-3);text-align:right}
+  .bar .pc{font-family:var(--mono);font-size:15px;color:var(--ink-3);text-align:right;font-weight:800}
 
   /* 부모가 할 일 */
   .todo1{background:var(--red-soft);border:1px solid var(--red);border-radius:var(--r2);
     padding:var(--s4);margin-bottom:var(--s3)}
-  .todo1 .kick{font-family:var(--mono);font-size:11.5px;color:var(--red-2);
-    letter-spacing:.14em;display:block;margin-bottom:10px}
+  .todo1 .kick{font-family:var(--kr);font-weight:700;font-size:14.5px;color:var(--red-2);
+    letter-spacing:-.01em;display:block;margin-bottom:10px}
   .todo1 h3{font-size:19px;font-weight:700;color:var(--ink);margin:0 0 10px;
     letter-spacing:-.02em}
   .todo1 p{font-size:15.5px;line-height:1.8;color:var(--ink-2);margin:0}
 
-  .note{font-size:13.5px;color:var(--ink-4);line-height:1.75}
+  .note{font-size:15.5px;color:var(--ink-4);line-height:1.75}
   .foot{margin-top:var(--s5);padding-top:var(--s4);border-top:1px solid var(--line);
-    font-size:12.5px;color:var(--ink-4);line-height:1.8}
+    font-size:14.5px;color:var(--ink-4);line-height:1.8}
   .foot b{color:var(--ink-3)}
   .act{display:flex;gap:10px;flex-wrap:wrap;margin-top:var(--s4)}
   @media(max-width:560px){
@@ -118,7 +118,10 @@
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/store.js?v=4d4a9000"></script>
+<script src="js/store.js?v=0fb25aff"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supa.config.js?v=e1d10860"></script>
+<script src="js/auth.js?v=72d8dbed"></script>
 <script src="js/exam.js?v=154e7ceb"></script>
 <script src="js/parent.js?v=df3408f0"></script>
 <script>
@@ -282,7 +285,7 @@
       '</div>';
 
     document.getElementById("lede").textContent=
-      s.학년+" · "+(s.시험? (s.시험.name+" "+s.ddayLabel) : "시험일을 정하면 남은 날이 나옵니다");
+      s.학년+", "+(s.시험? (s.시험.name+" "+s.ddayLabel) : "시험일을 정하면 남은 날이 나옵니다");
     document.getElementById("headact").innerHTML=
       '<a class="btn ghost" href="settings.html">범위·시험일</a>';
   }

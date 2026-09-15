@@ -33,19 +33,19 @@
 .data .say .who{
   flex:0 0 auto; width:20px; height:20px; border-radius:50%;
   display:inline-flex; align-items:center; justify-content:center;
-  background:var(--line-2); color:var(--ink); font-size:12px; font-weight:700;
+  background:var(--line-2); color:var(--ink); font-size:14.5px; font-weight:700;
 }
 
 /* ── 보기 상자 ───────────────────────────── */
 .boki{
   border-radius:var(--r1); padding:15px 18px 15px; margin:0 0 14px;
   background:var(--surface-2); border:1px dashed var(--line-2);
-  font-size:15px; line-height:1.8; color:var(--ink-2);
+  font-size:16px; line-height:1.8; color:var(--ink-2);
   word-break:keep-all;
 }
 .boki:before{
   content:"보 기"; display:block; text-align:center;
-  font-family:var(--mono); font-size:11px; letter-spacing:.28em;
+  font-family:var(--kr);font-weight:700; font-size:14.5px; letter-spacing:-.01em;
   color:var(--ink-4); margin-bottom:10px;
   padding-bottom:8px; border-bottom:1px solid var(--line);
 }
@@ -56,7 +56,7 @@
 /* ── 표 ──────────────────────────────────── */
 .qtab{ overflow-x:auto; margin:0 0 14px; }
 .qtab table{
-  width:100%; border-collapse:collapse; font-size:14px;
+  width:100%; border-collapse:collapse; font-size:16px;
   background:var(--surface-2); border:1px solid var(--line-2);
   border-radius:var(--r1); overflow:hidden;
 }
@@ -80,9 +80,8 @@
 :root[data-skin="jelly"] .qfig,
 :root[data-skin="white"] .qfig{ background:#fff; }
 .qfig figcaption{
-  padding:7px 12px; font-family:var(--mono); font-size:11px;
-  color:var(--ink-4); background:var(--surface); border-top:1px solid var(--line);
-}
+  padding:7px 12px; font-family:var(--mono); font-size:14.5px;
+  color:var(--ink-4); background:var(--surface); border-top:1px solid var(--line);font-weight:800}
 
 /* ── 선지 — 읽기만 할 때 ──────────────────── */
 .opts5{ list-style:none; margin:0; padding:0; }
@@ -90,7 +89,7 @@
   display:flex; gap:9px; align-items:baseline; padding:7px 2px;
   font-size:15.5px; line-height:1.68; color:var(--ink-2); word-break:keep-all;
 }
-.opts5 .n{ flex:0 0 auto; font-size:15px; color:var(--ink-3); font-weight:600; }
+.opts5 .n{ flex:0 0 auto; font-size:16px; color:var(--ink-3); font-weight:600; }
 
 /* ── 선지 — 고를 때 ───────────────────────── */
 .picks{ display:flex; flex-direction:column; gap:8px; }
@@ -120,7 +119,7 @@
 
 @media(max-width:560px){
   .stem{ font-size:16px; }
-  .data,.boki{ font-size:14.5px; padding:14px 15px; }
-  .opts5 li,.picks .pick{ font-size:14.5px; }
+  .data,.boki{ font-size:15.5px; padding:14px 15px; }
+  .opts5 li,.picks .pick{ font-size:15.5px; }
   .picks.row .pick{ font-size:16px; padding:11px 4px; }
 }

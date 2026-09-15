@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>스킬트리</title>
+<title>개념트리</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
@@ -14,22 +14,22 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=2613afc7">
-<link rel="stylesheet" href="css/coach.css?v=6f83040b">
-<script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<link rel="stylesheet" href="css/base.css?v=7bcef92a">
+<link rel="stylesheet" href="css/coach.css?v=208a602f">
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s===null)_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:1360px;margin:0 auto;padding:0 var(--s3) var(--s6)}
   /* ── 범위 띠 — 지도가 줄어든 까닭을 적는다 ── */
   #scopeband{display:flex;align-items:center;gap:13px;flex-wrap:wrap;
     margin:var(--s2) 0 0;padding:12px 16px;border-radius:var(--r2);
-    border:1px solid var(--line-2);background:var(--surface);font-size:14px}
+    border:1px solid var(--line-2);background:var(--surface);font-size:16px}
   #scopeband .ic{flex:0 0 auto;width:24px;height:24px;border-radius:7px;display:grid;
-    place-items:center;font-size:12px;font-weight:800;background:var(--red);color:#fff}
+    place-items:center;font-size:14.5px;font-weight:800;background:var(--red);color:#fff}
   #scopeband .tx{flex:1;min-width:220px;color:var(--ink-2);line-height:1.6}
   #scopeband .tx b{color:var(--ink)}
-  #scopeband .tx em{font-style:normal;color:var(--ink-4);font-size:12.5px}
+  #scopeband .tx em{font-style:normal;color:var(--ink-4);font-size:14.5px}
   #scopeband .act{display:flex;gap:8px;flex:0 0 auto}
-  #scopeband .act a,#scopeband .act button{font-family:inherit;font-size:13px;
+  #scopeband .act a,#scopeband .act button{font-family:inherit;font-size:15px;
     font-weight:700;padding:8px 13px;border-radius:9px;border:1px solid var(--line-2);
     background:var(--surface-2);color:var(--ink-2);cursor:pointer;white-space:nowrap}
   #scopeband .act a:hover,#scopeband .act button:hover{color:var(--ink);
@@ -47,13 +47,13 @@
   .swapin{animation:swapin .5s cubic-bezier(.32,.72,0,1) both}
   @keyframes swapin{from{opacity:0;transform:translateY(.28em) scale(.94)}
                     to{opacity:1;transform:none}}
-  .phead .sub{max-width:66ch;font-size:15px;font-weight:600;color:var(--ink-2);
+  .phead .sub{max-width:66ch;font-size:16px;font-weight:600;color:var(--ink-2);
     letter-spacing:-.02em;line-height:1.6}
 
   /* ── 갈래 탭 ── */
   .segbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
   .seg{appearance:none;border:1px solid var(--line);background:var(--surface);cursor:pointer;
-    font-family:inherit;font-size:15px;font-weight:600;color:var(--ink-3);
+    font-family:inherit;font-size:16px;font-weight:600;color:var(--ink-3);
     padding:10px 18px;border-radius:var(--r1);transition:.18s;display:flex;
     align-items:center;gap:9px}
   .seg:hover{color:var(--ink);border-color:var(--line-3)}
@@ -75,7 +75,7 @@
   .board .plate{display:flex;align-items:baseline;justify-content:space-between;gap:18px;
     flex-wrap:wrap;padding:22px 28px 10px}
   .board .plate h2{font-size:27px;color:var(--stage-ink)}
-  .board .plate .sub{font-size:14.5px;color:var(--stage-ink-2);font-family:var(--kr);
+  .board .plate .sub{font-size:15.5px;color:var(--stage-ink-2);font-family:var(--kr);
     font-weight:600;letter-spacing:-.02em}
   .board .stage{position:relative;background:
     radial-gradient(ellipse 80% 60% at 50% 46%,var(--neb-1),transparent 66%),
@@ -114,12 +114,12 @@
         border:1px solid var(--line,#2a2e38);overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.5)}
   .vhead{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line,#2a2e38)}
   .vhead h3{margin:0;font-size:17px;flex:1}
-  .vhead .vsub{font-size:12px;color:var(--ink-4,#8b93a5)}
+  .vhead .vsub{font-size:14.5px;color:var(--ink-4,#8b93a5)}
   .vhead button{background:none;border:0;color:var(--ink-3,#aab2c2);font-size:22px;cursor:pointer;line-height:1}
   .vbox video{display:block;width:100%;background:#000;aspect-ratio:16/9}
-  .vmiss{padding:34px 26px;font-size:14px;line-height:1.85;color:var(--ink-2,#c9d0dd)}
+  .vmiss{padding:34px 26px;font-size:16px;line-height:1.85;color:var(--ink-2,#c9d0dd)}
   .vmiss b{color:var(--ink-1,#eef1f6)}
-  .vmiss code{background:rgba(255,255,255,.07);padding:2px 7px;border-radius:5px;font-size:13px}
+  .vmiss code{background:rgba(255,255,255,.07);padding:2px 7px;border-radius:5px;font-size:15px}
   .btn.play{background:var(--accent,#e6203a);color:#fff;border-color:transparent;font-weight:700}
   /* ── 강의 시트 ── */
   .sheet{position:fixed;inset:0;z-index:90;display:flex;align-items:center;
@@ -136,20 +136,20 @@
   .sheet.on .sheetcard{opacity:1;transform:none}
   .sh-top{position:sticky;top:0;z-index:2;background:var(--surface);
     padding:22px 26px 16px;border-bottom:1px solid var(--line)}
-  .sh-eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--ink-4)}
+  .sh-eyebrow{font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--ink-4)}
   .sh-top h3{font-size:26px;margin:8px 0 0;letter-spacing:-.04em;
     font-family:var(--title);font-weight:var(--tw)}
   .sh-x{position:absolute;right:18px;top:18px;width:34px;height:34px;border-radius:50%;
     border:1px solid var(--line-2);background:var(--surface-2);color:var(--ink-3);
-    cursor:pointer;font-size:15px;line-height:1;transition:.16s}
+    cursor:pointer;font-size:16px;line-height:1;transition:.16s}
   .sh-x:hover{color:var(--ink);border-color:var(--line-3)}
   .sh-facts{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}
-  .fact{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);
+  .fact{font-family:var(--mono);font-size:14.5px;color:var(--ink-3);
     border:1px solid var(--line);background:var(--surface-2);
-    padding:5px 10px;border-radius:7px}
+    padding:5px 10px;border-radius:7px;font-weight:800}
   .fact b{color:var(--ink);font-weight:600}
   .sh-body{padding:18px 26px 26px}
-  .sh-note{font-size:12.5px;color:var(--ink-4);line-height:1.72;margin-bottom:16px;
+  .sh-note{font-size:14.5px;color:var(--ink-4);line-height:1.72;margin-bottom:16px;
     border-left:2px solid var(--line-2);padding-left:12px}
   .sh-note b{color:var(--ink-3)}
 
@@ -157,20 +157,20 @@
     border:1px solid var(--line);background:var(--surface-2);margin-bottom:9px;transition:.16s}
   .lec:hover{border-color:var(--line-3)}
   .lec .no{flex:0 0 40px;height:40px;border-radius:12px;display:grid;place-items:center;
-    font-family:var(--mono);font-size:14px;font-weight:600;background:var(--surface-3);
+    font-family:var(--mono);font-size:16px;font-weight:800;background:var(--surface-3);
     color:var(--ink-3)}
   .lec .mid{flex:1;min-width:0}
   .lec h4{font-size:16px;margin:0 0 6px;letter-spacing:-.03em;color:var(--ink);
     font-family:var(--kr);font-weight:700}
-  .lec .meta{font-family:var(--mono);font-size:11.5px;color:var(--ink-4);
-    display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+  .lec .meta{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);
+    display:flex;gap:9px;flex-wrap:wrap;align-items:center;font-weight:800}
   .lec .meta .g{color:var(--deep)}
   .lec .meta .g.core{color:var(--core)}
   .lec .chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
-  .lec .chips span{font-size:11.5px;padding:3px 9px;border-radius:6px;
+  .lec .chips span{font-size:14.5px;padding:3px 9px;border-radius:6px;
     background:var(--surface-3);color:var(--ink-3)}
   .lec .go{flex:0 0 auto;display:flex;flex-direction:column;gap:6px;align-items:stretch}
-  .lec .go .btn{font-size:13px;padding:9px 14px;white-space:nowrap}
+  .lec .go .btn{font-size:15px;padding:9px 14px;white-space:nowrap}
   .lec .bar{height:4px;border-radius:2px;background:var(--line);margin-top:10px;overflow:hidden}
   .lec .bar i{display:block;height:100%;border-radius:2px}
   .btn.soon{opacity:.45;pointer-events:none}
@@ -180,14 +180,14 @@
   }
 
   /* ── 범례 ── */
-  .legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:13px;
-    color:var(--ink-4);margin-top:16px;font-family:var(--mono)}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:15px;
+    color:var(--ink-4);margin-top:16px;font-family:var(--mono);font-weight:800}
   .legend .k{display:flex;align-items:center;gap:7px}
   .legend .dot{width:13px;height:13px;border-radius:50%;display:inline-block}
   .legend .sz{display:flex;align-items:center;gap:6px;padding-left:16px;
     border-left:1px solid var(--line-2)}
   .legend .sz i{display:inline-block;border-radius:50%;background:var(--ink-4);opacity:.55}
-  .note{font-size:13px;color:var(--ink-4);border-left:2px solid var(--line-2);
+  .note{font-size:15px;color:var(--ink-4);border-left:2px solid var(--line-2);
     padding-left:14px;margin-top:14px;line-height:1.75;max-width:92ch}
   .note b{color:var(--ink-3)}
 
@@ -197,16 +197,16 @@
     margin-bottom:12px;background:var(--surface)}
   .grp .gh{display:flex;align-items:center;gap:10px;padding:14px 16px;
     border-bottom:1px solid var(--line);background:var(--surface-2)}
-  .grp .gh .cd{font-family:var(--mono);font-size:13px;font-weight:700}
+  .grp .gh .cd{font-family:var(--mono);font-size:15px;font-weight:800}
   .grp .gh h3{font-size:16px;flex:1;min-width:0}
-  .grp .gh .n{font-family:var(--mono);font-size:11.5px;color:var(--ink-4)}
+  .grp .gh .n{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-weight:800}
   .mrow{display:flex;align-items:center;gap:11px;padding:13px 16px;cursor:pointer;
     border-bottom:1px solid var(--line);background:var(--surface)}
   .mrow:last-child{border-bottom:0}
   .mrow .bul{width:13px;height:13px;border-radius:50%;flex:0 0 13px}
-  .mrow .nm{flex:1;min-width:0;font-size:15px;font-weight:700;color:var(--ink-2);
+  .mrow .nm{flex:1;min-width:0;font-size:16px;font-weight:700;color:var(--ink-2);
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .mrow .pc{font-family:var(--mono);font-size:12px;color:var(--ink-4);flex:0 0 auto}
+  .mrow .pc{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);flex:0 0 auto;font-weight:800}
   @media(max-width:760px){
     .treelist{display:block;margin-top:var(--s3)}
     .board .plate{padding:16px 18px 8px}
@@ -226,27 +226,27 @@
   .peek.on{opacity:1;transform:none}
   .peek[hidden]{display:none}
   .pk-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .pk-eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;
+  .pk-eyebrow{font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;
     color:var(--stage-ink-2)}
-  .pk-tier{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--stage);
-    padding:3px 10px;border-radius:6px;letter-spacing:.06em}
+  .pk-tier{font-family:var(--kr);font-size:14.5px;font-weight:700;color:var(--stage);
+    padding:3px 10px;border-radius:6px;letter-spacing:-.01em;}
   .pk-title{font-size:21px;color:var(--stage-ink);margin:9px 0 0;line-height:1.3}
-  .pk-q{font-size:13.5px;line-height:1.6;color:var(--stage-ink-2);margin-top:9px;
+  .pk-q{font-size:15.5px;line-height:1.6;color:var(--stage-ink-2);margin-top:9px;
     padding-left:11px;border-left:2px solid var(--stage-line)}
   .pk-sep{height:1px;background:var(--stage-line);margin:13px 0 11px}
   .pk-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-  .pk-stats b{display:block;font-family:var(--mono);font-size:21px;font-weight:600;
+  .pk-stats b{display:block;font-family:var(--mono);font-size:21px;font-weight:800;
     color:var(--stage-ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-  .pk-stats span{font-size:11.5px;color:var(--stage-ink-2)}
+  .pk-stats span{font-size:14.5px;color:var(--stage-ink-2)}
   .pk-bars{margin-top:12px;display:flex;align-items:flex-end;gap:4px;height:44px}
   .pk-bars .sp{flex:1;display:flex;flex-direction:column;align-items:center;
     justify-content:flex-end;height:100%}
   .pk-bars .sp i{display:block;width:100%;border-radius:3px 3px 1px 1px}
-  .pk-cap{font-size:11px;color:var(--stage-ink-2);margin-top:8px;font-family:var(--mono)}
+  .pk-cap{font-size:14.5px;color:var(--stage-ink-2);margin-top:8px;font-family:var(--mono);font-weight:800}
   .pk-keys{display:flex;flex-wrap:wrap;gap:5px;margin-top:11px}
-  .pk-key{font-size:12.5px;padding:4px 10px;border-radius:7px;background:var(--surface-2);
+  .pk-key{font-size:14.5px;padding:4px 10px;border-radius:7px;background:var(--surface-2);
     color:var(--ink-2);border:1px solid var(--line-2)}
-  .pk-foot{margin-top:11px;font-size:11.5px;color:var(--stage-ink-2);font-family:var(--mono)}
+  .pk-foot{margin-top:11px;font-size:14.5px;color:var(--stage-ink-2);font-family:var(--mono);font-weight:800}
 
   /* ── 오늘 추천 띠 ── */
   .pick{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;
@@ -254,15 +254,15 @@
     padding:14px 16px;margin-bottom:var(--s3);position:relative;overflow:hidden}
   .pick::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red)}
   .pick .dot2{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
-    background:var(--red);color:#fff;font-family:var(--mono);font-size:13px;font-weight:700}
+    background:var(--red);color:#fff;font-family:var(--mono);font-size:15px;font-weight:800}
   .pick .tx2{min-width:0}
-  .pick .lbl{font-size:11.5px;font-family:var(--mono);color:var(--red-2);letter-spacing:.03em}
+  .pick .lbl{font-size:14.5px;font-family:var(--mono);color:var(--red-2);letter-spacing:.03em;font-weight:800}
   .pick h3{font-size:16.5px;font-weight:800;letter-spacing:-.015em;margin-top:2px;
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .pick p{font-size:12.5px;color:var(--ink-3);margin-top:3px;line-height:1.5}
+  .pick p{font-size:14.5px;color:var(--ink-3);margin-top:3px;line-height:1.5}
   .pick .act{display:flex;flex-direction:column;gap:5px;align-items:flex-end}
   .pick .act .btn{white-space:nowrap}
-  .pick .skip{font-size:11.5px;color:var(--ink-4);background:none;border:0;cursor:pointer;
+  .pick .skip{font-size:14.5px;color:var(--ink-4);background:none;border:0;cursor:pointer;
     text-decoration:underline;text-underline-offset:2px}
   .pick.done{opacity:.72}
   .pick.done::before{background:var(--mint)}
@@ -273,15 +273,15 @@
   }
   .lec.today{border-color:var(--red);background:color-mix(in srgb,var(--red) 7%,transparent)}
   .lec.today .no{background:var(--red);color:#fff}
-  .todaytag{display:inline-block;font-size:10.5px;font-family:var(--mono);color:#fff;
-    background:var(--red);border-radius:5px;padding:2px 6px;margin-left:7px;vertical-align:2px}
+  .todaytag{display:inline-block;font-size:14.5px;font-family:var(--mono);color:#fff;
+    background:var(--red);border-radius:5px;padding:2px 6px;margin-left:7px;vertical-align:2px;font-weight:800}
 </style>
 </head>
 <body>
 <div class="wrapx">
   <div class="phead">
     <div>
-      <span class="kicker"><i></i>스킬트리</span>
+      <span class="kicker"><i></i>개념트리</span>
       <h1><span class="crumb" id="crumb"></span></h1>
       <p class="sub" id="lede"></p>
     </div>
@@ -301,7 +301,7 @@
       <p class="sub" id="plateSub"></p>
     </div>
     <div class="stage"><svg id="orbit" viewBox="0 0 1280 880" role="img"
-      aria-label="스킬트리"></svg></div>
+      aria-label="개념트리"></svg></div>
   </section>
 
   <div class="treelist" id="treelist"></div>
@@ -350,8 +350,11 @@
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/cards.js?v=1a50b0db"></script>
-<script src="js/store.js?v=4d4a9000"></script>
-<script src="js/coach.js?v=365e93e4"></script>
+<script src="js/store.js?v=0fb25aff"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supa.config.js?v=e1d10860"></script>
+<script src="js/auth.js?v=72d8dbed"></script>
+<script src="js/coach.js?v=a47134ba"></script>
 <script>
 (function(){
   var T=TERRA, L=window.LECT||{};
@@ -381,8 +384,8 @@
       keys:["통합사회1","통합사회2","횡단"],
       label:{"통합사회1":"통합사회 1","통합사회2":"통합사회 2","횡단":"사상가"},
       key:{"통합사회1":"--fam-geo","통합사회2":"--fam-soc","횡단":"--fam-eth"},
-      sub:{"통합사회1":"통합적 관점 · 행복 · 자연환경 · 문화 · 생활공간",
-           "통합사회2":"인권과 헌법 · 정의 · 시장경제 · 세계화 · 미래",
+      sub:{"통합사회1":"통합적 관점, 행복, 자연환경, 문화, 생활공간",
+           "통합사회2":"인권과 헌법, 정의, 시장경제, 세계화, 미래",
            "횡단":"교과서 단원을 가로지르는 사상가 — 수능에서 크게 나옵니다"},
       of:function(r){ return r.book||"횡단"; }
     },
@@ -421,7 +424,7 @@
       label[r.code]=(r.unit? r.unit+"단원" : r.name);
       key[r.code]=색[i%3];
       sub[r.code]=r.name+" — "+(r.mids||[]).map(function(m){return m.name;})
-                                            .slice(0,4).join(" · ");
+                                            .slice(0,4).join(", ");
     });
     AX={ name:"시험 범위", say:"이번 시험에 나오는 단원만",
          keys:keys, label:label, key:key, sub:sub,
@@ -491,14 +494,14 @@
     if(st.achieve<30) return "이제 막 시작했어요";
     if(st.achieve<60) return "절반쯤 왔어요";
     if(st.achieve<80) return "감이 잡히고 있어요";
-    return "여기는 든든해요";
+    return "여기는 탄탄해요";
   }
   function bat(w){ w=String(w||""); var c=w.charCodeAt(w.length-1);
     return (c>=0xAC00&&c<=0xD7A3)?((c-0xAC00)%28)!==0:/[013678lmnr]$/i.test(w); }
   function nudge(n){
     if(!n.st.solved) return n.name+(bat(n.name)?"은":"는")+" 아직 시작 전이에요";
     if(n.st.achieve<40) return n.name+"부터 보면 어때요?";
-    return n.name+(bat(n.name)?"을":"를")+" 한 번 더 다져 볼까요?";
+    return n.name+(bat(n.name)?"을":"를")+" 한 번 더 풀어요.";
   }
 
   /* ══════ 모델 ══════ */
@@ -511,10 +514,10 @@
     var g=(T.state().student||{}).grade||"고1";
     if(g!=="고3"){
       var mine=nd.mine||0;
-      return mine ? ("지금 "+mine+"문항 · "+nd.lec.length+"강")
-                  : ("아직 안 배운 곳 · "+nd.lec.length+"강");
+      return mine ? ("지금 "+mine+"문항, "+nd.lec.length+"강")
+                  : ("아직 안 배운 곳, "+nd.lec.length+"강");
     }
-    return nd.lec.length+"강 · "+(lock?"시작 전":nd.st.achieve+"%");
+    return nd.lec.length+"강, "+(lock?"시작 전":nd.st.achieve+"%");
   }
 
   var MODEL={};
@@ -615,7 +618,7 @@
         opacity:((paper()?(p?.2:.1):(p?.28:.14))*glowK()).toFixed(3),
         filter:"url(#soft)","pointer-events":"none"},g);
     el("circle",{class:"nb",cx:x,cy:y,r:r,fill:SBG2,"fill-opacity":1},g);
-    if(p>0){
+    if(p>=0.12){   /* 12% 미만은 물이 얇은 띠로만 보여 겹침처럼 읽힌다(2026-09-16 대표님) — 글로만 알린다 */
       var id="fill"+(++uid);
       var cp=el("clipPath",{id:id},g);
       el("rect",{x:x-r,y:y+r-2*r*p,width:2*r,height:2*r*p},cp);
@@ -726,20 +729,20 @@
         ? Math.round(M.items.reduce(function(s,x2){ return s+x2.st.achieve; },0)/M.items.length)
         : 0;
       var gp=orb(nodes,x,y,rr,hue,av,{bold:true});
-      gp.setAttribute("aria-label",f+" 갈래 열기 · 평균 성취도 "+av+"퍼센트");
+      gp.setAttribute("aria-label",f+" 갈래 열기, 평균 성취도 "+av+"퍼센트");
       var shown=FAM[f].label||f;
       txt(gp,shown,{x:x,y:y+L.fName*.42,"text-anchor":"middle",fill:SINK,
         "font-size":Math.round(L.fName*(shown.length>4?1.05:1.35)),"font-weight":900,
         "font-family":cv("--title")||"Noto Sans KR","pointer-events":"none"});
       /* ★ 위쪽 갈래는 이름표를 **원 위에** 단다 — 밑에 달면 가운데 원에 가려진다
-         (2026-09-13 신청서 스크린샷에서 「21강 · 예상 8시간」이 반쯤 묻혔다). */
+         (2026-09-13 신청서 스크린샷에서 「21강, 예상 8시간」이 반쯤 묻혔다). */
       var 위 = Math.sin(rad(a)) < -0.5;
       var y1 = 위 ? y-rr-(L.fSub+1)-18 : y+rr+L.fName+8;
       var y2 = 위 ? y-rr-8 : y+rr+L.fName*2+13;
-      var l1=txt(labs,M.lec+"강 · 예상 "+Math.round(M.mins/60)+"시간",
+      var l1=txt(labs,M.lec+"강, 예상 "+Math.round(M.mins/60)+"시간",
         {x:x,y:y1,"text-anchor":"middle",fill:SINK,
          "font-size":L.fName,"font-weight":700,"font-family":cv("--kr")});
-      var l2=txt(labs,"기출 "+M.n.toLocaleString()+"문항 · 성취도 "+av+"%",
+      var l2=txt(labs,"기출 "+M.n.toLocaleString()+"문항, 성취도 "+av+"%",
         {x:x,y:y2,"text-anchor":"middle",fill:SINK2,
          "font-size":L.fSub+1,"font-weight":600,"font-family":cv("--kr")});
       [l1,l2].forEach(function(e){ e.classList.add("lbl"); });
@@ -771,7 +774,7 @@
       gp.addEventListener("keydown",function(e){
         if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(); } });
     });
-    coreOrb(g,CORE,"통합사회",ALL.n.toLocaleString()+"문항 · "+ALL.lec+"강",null);
+    coreOrb(g,CORE,"통합사회",ALL.n.toLocaleString()+"문항, "+ALL.lec+"강",null);
   }
 
   /* ══════ 층 1 — 갈래
@@ -799,15 +802,15 @@
         : 0;
       var rr=Math.round((26+16*Math.sqrt(wt/maxWt))*L.k+10);
       var gp=orb(nodes,x,y,rr,hue,av,{bold:true});
-      gp.setAttribute("aria-label",gr.name+" 열기 · 성취도 "+av+"퍼센트");
+      gp.setAttribute("aria-label",gr.name+" 열기, 성취도 "+av+"퍼센트");
       var lec=gr.items.reduce(function(s2,y){ return s2+y.lec.length; },0);
       var l1=txt(labs,gr.name,{x:x,y:y+rr+L.fName+7,"text-anchor":"middle",
         fill:SINK,"font-size":L.fName+1,"font-weight":700,"font-family":cv("--kr")});
       var 학년2=(T.state().student||{}).grade||"고1";
       var 몫=gr.items.reduce(function(s2,y){ return s2+(y.mine||0); },0);
       var 꼬리=(학년2!=="고3")
-        ? (몫 ? "지금 "+몫+"문항 · "+lec+"강" : "아직 안 배운 곳 · "+lec+"강")
-        : lec+"강 · 성취도 "+av+"%";
+        ? (몫 ? "지금 "+몫+"문항, "+lec+"강" : "아직 안 배운 곳, "+lec+"강")
+        : lec+"강, 성취도 "+av+"%";
       var l2=txt(labs,꼬리,
         {x:x,y:y+rr+L.fName*2+12,"text-anchor":"middle",
          fill:SINK2,"font-size":L.fSub,"font-weight":600,"font-family":cv("--kr")});
@@ -822,7 +825,7 @@
     var avAll=M.items.length
       ? Math.round(M.items.reduce(function(s2,x){ return s2+x.st.achieve; },0)/M.items.length)
       : 0;
-    coreOrb(g,hue,FAM[f].label||f,M.lec+"강 · 성취도 "+avAll+"%",function(){ if(!busy) goAll(); });
+    coreOrb(g,hue,FAM[f].label||f,M.lec+"강, 성취도 "+avAll+"%",function(){ if(!busy) goAll(); });
     var back=txt(g,"↑ 눌러서 전체로",{x:L.CX,y:L.CY+L.rCore+22,"text-anchor":"middle",
       fill:SINK2,"font-size":Math.round(L.fSub+1),"font-weight":600,
       "font-family":cv("--kr"),opacity:".85"});
@@ -876,7 +879,7 @@
       ? Math.round(gr.items.reduce(function(s2,x){ return s2+x.st.achieve; },0)/gr.items.length)
       : 0;
     var lec=gr.items.reduce(function(s2,x){ return s2+x.lec.length; },0);
-    coreOrb(g,hue,gr.name,lec+"강 · 성취도 "+av+"%",function(){ if(!busy) goFam(f,L.CX,L.CY); });
+    coreOrb(g,hue,gr.name,lec+"강, 성취도 "+av+"%",function(){ if(!busy) goFam(f,L.CX,L.CY); });
     var back=txt(g,"↑ 눌러서 "+(FAM[f].label||f)+" 로",{x:L.CX,y:L.CY+L.rCore+22,"text-anchor":"middle",
       fill:SINK2,"font-size":Math.round(L.fSub+1),"font-weight":600,
       "font-family":cv("--kr"),opacity:".85"});
@@ -935,7 +938,7 @@
         var rr=Math.round((13+Math.sqrt(n.wt/maxWt)*15)*L.k+7);
         var gp=orb(nodes,n._x,n._y,rr,col,n.st.achieve,{});
         gp.setAttribute("aria-label",
-          n.name+" · 성취도 "+n.st.achieve+"퍼센트 · 강의 "+n.lec.length+"개 열기");
+          n.name+", 성취도 "+n.st.achieve+"퍼센트, 강의 "+n.lec.length+"개 열기");
         var ca=Math.cos(rad(n._a)), sa=Math.sin(rad(n._a)), off=rr+13;
         var anc=ca>.3?"start":ca<-.3?"end":"middle";
         var up=(anc==="middle"&&sa<0);
@@ -960,7 +963,7 @@
     var av=M.items.length
       ? Math.round(M.items.reduce(function(s,x){ return s+x.st.achieve; },0)/M.items.length)
       : 0;
-    coreOrb(g,hue,FAM[f].label||f,M.lec+"강 · 성취도 "+av+"%",function(){ if(!busy) goAll(); });
+    coreOrb(g,hue,FAM[f].label||f,M.lec+"강, 성취도 "+av+"%",function(){ if(!busy) goAll(); });
     var back=txt(g,"↑ 눌러서 전체로",{x:L.CX,y:L.CY+L.rCore+22,"text-anchor":"middle",
       fill:SINK2,"font-size":Math.round(L.fSub+1),"font-weight":600,
       "font-family":cv("--kr"),opacity:".85"});
@@ -1072,7 +1075,7 @@
       c.innerHTML='<span class="swapin">통합사회</span>';
       document.getElementById("lede").textContent=
         (AX.name==="시험 범위" ? "이번 시험에 나오는 단원만 모았어요." : AX.name+(bat(AX.name)?"으로":"로")+" 묶었어요 — "+AX.say+".")+
-        " 기출 "+ALL.n.toLocaleString()+"문항 · 강의 "+ALL.lec+"강 · 약 "+Math.round(ALL.mins/60)+"시간";
+        " 기출 "+ALL.n.toLocaleString()+"문항, 강의 "+ALL.lec+"강, 약 "+Math.round(ALL.mins/60)+"시간";
       document.getElementById("plateTitle").textContent="통합사회";
       document.getElementById("plateSub").textContent=AX.name;
     }else if(level===2&&grp){
@@ -1086,7 +1089,7 @@
         if(!busy) goFam(fam,LAY.CX,LAY.CY); };
       var lec2=grp.items.reduce(function(s2,x){ return s2+x.lec.length; },0);
       document.getElementById("lede").textContent=
-        "단원 "+grp.items.length+"개 · 강의 "+lec2+"개. 하나 눌러 보세요.";
+        "단원 "+grp.items.length+"개, 강의 "+lec2+"개. 하나 눌러 보세요.";
       document.getElementById("plateTitle").textContent=grp.name;
       document.getElementById("plateSub").textContent="중영역 "+grp.items.length;
     }else{
@@ -1096,8 +1099,8 @@
         '<em class="swapin" style="font-style:normal;color:var(--red-2)">'+(FAM[fam].label||fam)+'</em>';
       document.getElementById("upbtn").onclick=function(){ if(!busy) goAll(); };
       document.getElementById("lede").textContent=
-        FAM[fam].sub+" — 대영역 "+M.groups.length+" · 중영역 "+M.items.length+
-        " · "+M.lec+"강 · 기출 "+M.n.toLocaleString()+"문항";
+        FAM[fam].sub+" — 대영역 "+M.groups.length+", 중영역 "+M.items.length+
+        ", "+M.lec+"강, 기출 "+M.n.toLocaleString()+"문항";
       document.getElementById("plateTitle").textContent=FAM[fam].label||fam;
       var weak=M.items.filter(function(x){ return x.st.play>0; })
         .sort(function(a2,b2){ return a2.st.achieve-b2.st.achieve; })[0];
@@ -1213,7 +1216,7 @@
 
   function openSheet(n){
     var t=TIER[n.tier];
-    document.getElementById("shEyebrow").textContent=n.fam+" · "+n.root.code+" "+n.root.name;
+    document.getElementById("shEyebrow").textContent=n.fam+", "+n.root.code+" "+n.root.name;
     document.getElementById("shTitle").textContent=n.full;
     var 학년=(T.state().student||{}).grade||"고1";
     var 지금 = 학년!=="고3"
@@ -1228,7 +1231,7 @@
       '<span class="fact">여기서만 <b>'+n.own+'</b>문항</span>'+
       '<span class="fact">학습 무게 <b>'+n.wt+'</b></span>'+
       '<span class="fact" style="color:'+(n.tier==="S"?GOLD:tone(n.fam,n.tier,paper()?14:0))+
-      '">'+howFar(n.st)+(n.st.solved?" · "+n.st.achieve+"%":"")+'</span>';
+      '">'+howFar(n.st)+(n.st.solved?", "+n.st.achieve+"%":"")+'</span>';
     document.getElementById("shNote").innerHTML=
       '<b>학습 무게</b>는 기출 수가 아닙니다. 한 문항이 여러 개념에 걸쳐 나오기 때문에, '+
       '<b>여기서만 나오는 문항</b>은 온전히 세고 여러 곳에 걸친 문항은 나눠 셌습니다. '+
@@ -1285,13 +1288,13 @@
     var V=(window.VIDEO||{})[code]; if(!V) return;
     document.getElementById("vtitle").textContent=V.title;
     document.getElementById("vsub").textContent=
-      V.min+"분"+(V.parts>1?" · 이 강 포함 "+V.parts+"강":"");
+      V.min+"분"+(V.parts>1?", 이 강 포함 "+V.parts+"강":"");
     var body=document.getElementById("vbody");
     var src=V.web||V.local;
     body.innerHTML='<video controls preload="metadata" src="'+src+'"></video>';
     var vd=body.querySelector("video");
     vd.onerror=function(){
-      body.innerHTML='<div class="vmiss"><b>'+V.title+'</b> ('+V.min+'분 · '+V.mb+'MB)<br><br>'+
+      body.innerHTML='<div class="vmiss"><b>'+V.title+'</b> ('+V.min+'분, '+V.mb+'MB)<br><br>'+
         V.sum+'<br><br>이 화면에서는 영상 파일을 못 찾았습니다. '+
         'USB 사본에서는 바로 재생됩니다 — <code>영상</code> 폴더가 같이 있어야 합니다.</div>';
     };
@@ -1353,7 +1356,7 @@
     tc.style.color=(n.tier==="C"||n.tier==="L")?SBG2:SBG;
     document.getElementById("pkTitle").textContent=n.full;
     document.getElementById("pkQ").textContent=
-      n.lec.length+"강 · 예상 "+n.mins+"분 · 지금 풀 수 있는 기출 "+st.play+"문항";
+      n.lec.length+"강, 예상 "+n.mins+"분, 지금 풀 수 있는 기출 "+st.play+"문항";
     var ls=n.ref.leaves.map(function(l){ return T.leafStat(l.code); });
     var bars=ls.length?('<div class="pk-bars">'+ls.slice(0,10).map(function(s){
       var tk=tierOf(s.achieve,s.solved>0);
@@ -1385,7 +1388,7 @@
         var M=MODEL[f];
         return '<div class="grp"><div class="gh">'+
           '<span class="cd" style="color:'+FAM[f].hex+'">'+FAM[f].no+'</span>'+
-          '<h3>'+f+'</h3><span class="n">'+M.lec+'강 · 기출 '+M.n.toLocaleString()+'</span></div>'+
+          '<h3>'+f+'</h3><span class="n">'+M.lec+'강, 기출 '+M.n.toLocaleString()+'</span></div>'+
           M.groups.map(function(g){
             return '<div class="mrow" data-gofam="'+f+'">'+
               '<span class="bul" style="background:'+FAM[f].hex+';opacity:.7"></span>'+
@@ -1410,7 +1413,7 @@
             '<span class="bul" style="background:'+col+';opacity:'+
             (x.tier==="L"?.55:1)+'"></span>'+
             '<span class="nm">'+x.name+'</span>'+
-            '<span class="pc">'+x.lec.length+'강 · '+
+            '<span class="pc">'+x.lec.length+'강, '+
             (x.tier==="L"?"미착수":x.st.achieve+"%")+'</span></div>';
         }).join("")+'</div>';
     }).join("");
@@ -1467,7 +1470,7 @@
     if(안.length===전체.length){ host.hidden=true; return; }   // 줄지 않았다
     var b = (T.기본범위지금 && T.기본범위지금()) || null;
     var 자동 = T.범위자동인가 && T.범위자동인가();
-    var 이름 = 안.map(function(r){ return r.name; }).join(" · ");
+    var 이름 = 안.map(function(r){ return r.name; }).join(", ");
     var 꼬리 = "";
     if(자동 && b){
       꼬리 = " <em>— " + (b.학교||"") + " " + (b.name||"") + " 기준으로 자동으로 잡았어요"
@@ -1476,7 +1479,7 @@
     }
     host.hidden=false;
     host.innerHTML =
-            '<span class="tx"><b>' + (b&&b.name ? b.name : "시험") + ' 범위</b> · ' +
+            '<span class="tx"><b>' + (b&&b.name ? b.name : "시험") + ' 범위</b>, ' +
         이름 + ' (' + 전체.length + '단원 중 ' + 안.length + '단원)' + 꼬리 + '</span>' +
       '<span class="act">' +
         (범위풀기
@@ -1491,7 +1494,7 @@
       var bq=(T.기본범위지금&&T.기본범위지금())||null;
       document.getElementById("note").innerHTML =
         '<b>이번 시험 범위 단원만 그렸습니다</b> — ' +
-        FAMS.map(function(f){ return FAM[f].label; }).join(" · ") +
+        FAMS.map(function(f){ return FAM[f].label; }).join(", ") +
         '. 단원을 누르면 그 단원의 목차가 펼쳐집니다.' +
         (bq&&bq.근거==="추정"
           ? ' <b>1학기 범위는 추정</b>이라 학교와 다를 수 있습니다 — 설정에서 고쳐 주세요.'
@@ -1518,7 +1521,7 @@
       '<b>원 크기는 기출 수가 아니라 학습 무게</b>입니다. 한 문항이 여러 개념에 걸쳐 나오기 때문에'+
       '(두 곳 이상에 걸친 문항 850개) 기출 수로만 재면 빌려온 문항까지 자기 몫이 됩니다. '+
       '여기서만 나오는 문항은 온전히, 여러 곳에 걸친 문항은 나눠 세고 안에서 몇 갈래로 갈리는지를 곱했습니다 '+
-      '— 그래서 준법·시민 참여(기출 92 · 여기서만 5)보다 노동권(기출 119 · 여기서만 17)이 크게 나옵니다. '+
+      '— 그래서 준법·시민 참여(기출 92, 여기서만 5)보다 노동권(기출 119, 여기서만 17)이 크게 나옵니다. '+
       '성취도는 이 브라우저에 쌓인 학습 기록이고, 강의 길이는 아직 녹화 전이라 예상입니다.';
   }
 

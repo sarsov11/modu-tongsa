@@ -14,16 +14,17 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=2613afc7">
-<link rel="stylesheet" href="css/coach.css?v=6f83040b">
-<script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<link rel="stylesheet" href="css/login.css?v=bcda8ea1">
+<link rel="stylesheet" href="css/base.css?v=7bcef92a">
+<link rel="stylesheet" href="css/coach.css?v=208a602f">
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s===null)_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:1080px;margin:0 auto;padding:0 var(--s3) var(--s6)}
   h1,h2,h3{font-family:var(--title);font-weight:var(--tw);letter-spacing:var(--tls)}
   .sec{margin-top:var(--s5)}
   .sechd{display:flex;align-items:baseline;gap:12px;margin-bottom:var(--s2);flex-wrap:wrap}
   .sechd h2{font-size:22px}
-  .sechd .cap{font-size:13.5px;color:var(--ink-4)}
+  .sechd .cap{font-size:15.5px;color:var(--ink-4)}
 
   /* 학년 */
   .grades{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
@@ -32,11 +33,11 @@
     position:relative;display:block;width:100%}
   .gr:hover{border-color:var(--line-3)}
   .gr[aria-pressed="true"]{border-color:var(--red);box-shadow:0 0 0 1px var(--red) inset}
-  .gr .g{font-family:var(--mono);font-size:12px;color:var(--ink-4);letter-spacing:.1em}
+  .gr .g{font-family:var(--kr);font-weight:700;font-size:14.5px;color:var(--ink-4);letter-spacing:-.01em;}
   .gr h3{font-size:19px;margin:8px 0 6px}
-  .gr p{font-size:13.5px;color:var(--ink-3);line-height:1.62}
-  .gr .tag{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:11px;
-    border:1px solid var(--line-2);color:var(--ink-3);padding:4px 10px;border-radius:6px}
+  .gr p{font-size:15.5px;color:var(--ink-3);line-height:1.62}
+  .gr .tag{display:inline-block;margin-top:12px;font-family:var(--mono);font-size:14.5px;
+    border:1px solid var(--line-2);color:var(--ink-3);padding:4px 10px;border-radius:6px;font-weight:800}
   .gr[aria-pressed="true"] .tag{border-color:var(--red-line);color:var(--red-2);
     background:var(--red-soft)}
 
@@ -51,8 +52,8 @@
   .keepcode{width:100%;min-height:76px;margin-top:10px;padding:10px 12px;
     border:1px solid var(--line-2);border-radius:var(--r1);
     background:var(--surface-2);color:var(--ink-3);font-family:var(--mono);
-    font-size:11.5px;line-height:1.5;resize:vertical}
-  .keepsay{margin-top:8px;font-size:13px;color:var(--ink-3)}
+    font-size:14.5px;line-height:1.5;resize:vertical;font-weight:800}
+  .keepsay{margin-top:8px;font-size:15px;color:var(--ink-3)}
   .keepsay.ok{color:var(--mint)}
   .keepsay.no{color:var(--accent)}
   .skins{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px}
@@ -65,30 +66,30 @@
     justify-content:center;gap:9px}
   .sk .prev i{display:block;border-radius:50%;border-width:2px;border-style:solid}
   .sk .nm{padding:12px 15px;border-top:1px solid var(--line);display:flex;
-    align-items:center;gap:8px;font-size:14.5px;font-weight:700;color:var(--ink)}
-  .sk .nm em{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:11px;
-    color:var(--ink-4)}
+    align-items:center;gap:8px;font-size:15.5px;font-weight:700;color:var(--ink)}
+  .sk .nm em{margin-left:auto;font-style:normal;font-family:var(--mono);font-size:14.5px;
+    color:var(--ink-4);font-weight:800}
   .sk[aria-pressed="true"] .nm em{color:var(--red-2)}
 
   /* 목표일 */
   .exams{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
   .ex{border:1px solid var(--line);border-radius:var(--r2);background:var(--surface);
     padding:18px 20px}
-  .ex .k{font-size:13.5px;font-weight:700;color:var(--ink-2)}
-  .ex .d{font-family:var(--mono);font-size:34px;font-weight:600;color:var(--ink);
+  .ex .k{font-size:15.5px;font-weight:700;color:var(--ink-2)}
+  .ex .d{font-family:var(--mono);font-size:34px;font-weight:800;color:var(--ink);
     letter-spacing:-.045em;margin:8px 0 4px;line-height:1}
   .ex .d.soon{color:var(--red-2)}
   .ex input{width:100%;margin-top:9px;background:var(--surface-2);color:var(--ink-2);
     border:1px solid var(--line);border-radius:var(--r1);padding:9px 11px;
-    font-family:var(--mono);font-size:13px}
-  .ex .note{font-size:12px;color:var(--ink-4);margin-top:8px;line-height:1.55}
+    font-family:var(--mono);font-size:15px;font-weight:800}
+  .ex .note{font-size:14.5px;color:var(--ink-4);margin-top:8px;line-height:1.55}
 
   /* 구독·확장팩 */
   .plan{border:1px solid var(--line);border-radius:var(--r2);background:var(--surface);
     padding:22px 24px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
   .plan .tx{flex:1;min-width:240px}
   .plan h3{font-size:18px;margin-bottom:7px}
-  .plan p{font-size:13.5px;color:var(--ink-3);line-height:1.65}
+  .plan p{font-size:15.5px;color:var(--ink-3);line-height:1.65}
   .sw{appearance:none;width:52px;height:30px;border-radius:999px;border:1px solid var(--line-2);
     background:var(--surface-3);position:relative;cursor:pointer;transition:.2s;flex:0 0 auto}
   .sw:after{content:"";position:absolute;left:3px;top:2.5px;width:23px;height:23px;
@@ -96,8 +97,8 @@
   .sw[aria-checked="true"]{background:var(--red);border-color:var(--red)}
   .sw[aria-checked="true"]:after{left:26px;background:#fff}
 
-  .pk .pkn{display:block;margin-top:3px;font-size:11.5px;color:var(--ink-4);
-    font-family:var(--mono)}
+  .pk .pkn{display:block;margin-top:3px;font-size:14.5px;color:var(--ink-4);
+    font-family:var(--mono);font-weight:800}
   .pk .pkn.dim{opacity:.6}
   .pk.off{opacity:.55;cursor:default}
   .pk.off:hover{border-color:var(--line-2)}
@@ -108,13 +109,13 @@
   .pk:hover{border-color:var(--line-3)}
   .pk[aria-pressed="true"]{border-color:var(--red-line);background:var(--red-soft)}
   .pk .bx{width:19px;height:19px;border-radius:6px;border:1.5px solid var(--line-3);
-    flex:0 0 19px;display:grid;place-items:center;font-size:12px;color:transparent}
+    flex:0 0 19px;display:grid;place-items:center;font-size:14.5px;color:transparent}
   .pk[aria-pressed="true"] .bx{background:var(--red);border-color:var(--red);color:#fff}
   .pk .nm{flex:1;min-width:0}
-  .pk .nm b{display:block;font-size:14px;color:var(--ink-2);font-weight:700}
-  .pk .nm span{font-size:11.5px;color:var(--ink-4);font-family:var(--mono)}
-  .pk .st{font-family:var(--mono);font-size:10.5px;color:var(--ink-4);
-    border:1px solid var(--line);padding:3px 8px;border-radius:5px}
+  .pk .nm b{display:block;font-size:16px;color:var(--ink-2);font-weight:700}
+  .pk .nm span{font-size:14.5px;color:var(--ink-4);font-family:var(--mono);font-weight:800}
+  .pk .st{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);
+    border:1px solid var(--line);padding:3px 8px;border-radius:5px;font-weight:800}
 
   /* 교재 */
   .books{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
@@ -126,11 +127,11 @@
   .bk .cv b{font-size:19px;color:var(--ink);letter-spacing:-.04em;
     font-family:var(--title);font-weight:var(--tw)}
   .bk .bd{padding:16px 18px;flex:1;display:flex;flex-direction:column;gap:10px}
-  .bk p{font-size:13.5px;color:var(--ink-3);line-height:1.65;flex:1}
+  .bk p{font-size:15.5px;color:var(--ink-3);line-height:1.65;flex:1}
   .bk .go{display:flex;align-items:center;gap:9px}
-  .bk .go .btn{font-size:13.5px;padding:10px 16px}
+  .bk .go .btn{font-size:15.5px;padding:10px 16px}
 
-  .note{font-size:12.5px;color:var(--ink-4);border-left:2px solid var(--line-2);
+  .note{font-size:14.5px;color:var(--ink-4);border-left:2px solid var(--line-2);
     padding-left:13px;margin-top:16px;line-height:1.8;max-width:88ch}
   .note b{color:var(--ink-3)}
   @media(max-width:520px){.wrapx{padding:0 14px var(--s5)}}
@@ -141,46 +142,47 @@
   .mins{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
   .mins button{appearance:none;border:1px solid var(--line-2);background:var(--surface);
     color:var(--ink-2);border-radius:var(--r1);padding:13px 6px;cursor:pointer;
-    font-family:var(--mono);font-size:15px;transition:.15s;text-align:center}
-  .mins button b{display:block;font-size:21px;color:var(--ink);font-weight:600}
-  .mins button small{display:block;font-size:11px;color:var(--ink-4);margin-top:3px;
+    font-family:var(--kr);font-size:16px;transition:.15s;text-align:center}
+  .mins button b{display:block;font-size:32px;line-height:1;color:var(--ink);font-weight:900;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+  .mins button b .u{display:inline;font-size:15px;font-weight:800;color:var(--ink-3);margin-left:2px;letter-spacing:0}
+  .mins button small{display:block;font-size:14.5px;font-weight:700;color:var(--ink-3);margin-top:6px;
     font-family:var(--sans)}
   .mins button:hover{border-color:var(--ink-3)}
-  .mins button[aria-pressed="true"]{border-color:var(--red);background:var(--red-soft)}
-  .mins button[aria-pressed="true"] b{color:var(--red-2)}
+  .mins button[aria-pressed="true"]{border-color:var(--cta);background:var(--cta-soft)}
+  .mins button[aria-pressed="true"] b{color:var(--cta-2)}
   .rt-what{margin-top:14px;padding-top:13px;border-top:1px solid var(--line);
     display:grid;gap:7px}
-  .rt-what .r{display:flex;gap:10px;align-items:baseline;font-size:13.5px;color:var(--ink-2)}
+  .rt-what .r{display:flex;gap:10px;align-items:baseline;font-size:16px;font-weight:600;color:var(--ink-2)}
   .rt-what .r i{width:6px;height:6px;border-radius:50%;background:var(--red);
     flex:0 0 auto;position:relative;top:-2px}
-  .rt-what .r .m2{margin-left:auto;font-family:var(--mono);font-size:12.5px;color:var(--ink-4)}
+  .rt-what .r .m2{margin-left:auto;font-family:var(--kr);font-size:16px;font-weight:800;color:var(--ink-3);font-variant-numeric:tabular-nums}
   .nrow{display:flex;align-items:center;justify-content:space-between;gap:12px;
     margin-top:16px;padding-top:14px;border-top:1px solid var(--line);flex-wrap:wrap}
-  .nrow .tx b{display:block;font-size:14px;color:var(--ink);font-weight:700}
-  .nrow .tx span{font-size:12px;color:var(--ink-4)}
+  .nrow .tx b{display:block;font-size:16px;color:var(--ink);font-weight:700}
+  .nrow .tx span{font-size:14.5px;color:var(--ink-4)}
   .nrow .ct{display:flex;gap:9px;align-items:center}
-  .nrow input[type=time]{font-family:var(--mono);font-size:14px;padding:7px 10px;
-    border-radius:9px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink)}
+  .nrow input[type=time]{font-family:var(--mono);font-size:16px;padding:7px 10px;
+    border-radius:9px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink);font-weight:800}
   /* ── 시험 범위 ── */
   .scope{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);
     padding:var(--s4)}
   .sc-quick{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
   .sc-quick button{appearance:none;border:1px solid var(--line-2);background:var(--surface);
-    color:var(--ink-2);border-radius:99px;padding:7px 13px;font-size:12.5px;cursor:pointer}
+    color:var(--ink-2);border-radius:99px;padding:7px 13px;font-size:14.5px;cursor:pointer}
   .sc-quick button:hover{border-color:var(--red);color:var(--ink)}
   .sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .sc-grid button{appearance:none;text-align:left;border:1px solid var(--line-2);
     background:var(--surface);color:var(--ink-2);border-radius:var(--r1);
-    padding:12px 13px;cursor:pointer;transition:.15s;font-size:13.5px;line-height:1.45}
-  .sc-grid button b{display:block;color:var(--ink);font-size:14px;font-weight:700}
-  .sc-grid button small{color:var(--ink-4);font-size:11.5px;font-family:var(--mono)}
+    padding:12px 13px;cursor:pointer;transition:.15s;font-size:15.5px;line-height:1.45}
+  .sc-grid button b{display:block;color:var(--ink);font-size:16px;font-weight:700}
+  .sc-grid button small{color:var(--ink-4);font-size:14.5px;font-family:var(--mono);font-weight:800}
   .sc-grid button:hover{border-color:var(--ink-3)}
   .sc-grid button[aria-pressed="true"]{border-color:var(--red);background:var(--red-soft)}
   .sc-grid button[aria-pressed="true"] b{color:var(--red-2)}
-  .sc-book{grid-column:1/-1;font-family:var(--mono);font-size:11px;color:var(--ink-4);
-    letter-spacing:.12em;margin-top:8px}
+  .sc-book{grid-column:1/-1;font-family:var(--kr);font-weight:700;font-size:14.5px;color:var(--ink-4);
+    letter-spacing:-.01em;margin-top:8px}
   .sc-sum{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);
-    font-size:13.5px;color:var(--ink-2);line-height:1.7}
+    font-size:15.5px;color:var(--ink-2);line-height:1.7}
   .sc-sum b{color:var(--ink)}
   @media(max-width:520px){ .sc-grid{grid-template-columns:1fr} }
 </style>
@@ -219,7 +221,7 @@
   </section>
 
   <section class="sec">
-    <div class="sechd"><h2>스킬트리를 묶는 축</h2>
+    <div class="sechd"><h2>개념트리를 묶는 축</h2>
       <span class="cap">통합사회는 통합 과목이라 한 가지로 안 갈립니다</span></div>
     <div class="grades" id="axes"></div>
     <p class="note" id="axnote"></p>
@@ -247,7 +249,7 @@
       <span class="cap">듣는 선택과목만 골라 붙입니다</span></div>
     <div class="packs" id="packs"></div>
     <p class="note">확장팩은 <b>선택과목 하나 단위</b>로 붙입니다. 통합사회 본품과 같은
-      스킬트리·문제풀이·트레이닝을 그 과목 범위로 쓰게 됩니다.<br>
+      개념트리·문제풀이·Killer Drill을 그 과목 범위로 쓰게 됩니다.<br>
       <b>문항은 대부분 고3 기출(수능·모평·학력평가)입니다.</b>
       고2 학력평가만으로는 한 과목에 100~300문항밖에 안 되어 범위를 채우지 못합니다 —
       그래서 <b>범위에 맞는 고3 기출</b>로 채웁니다. 각 과목의 문항 수와 출처는 위에 적혀 있습니다.<br>
@@ -258,6 +260,14 @@
   <section class="sec">
     <div class="sechd"><h2>교재</h2><span class="cap" id="bkcap"></span></div>
     <div class="books" id="books"></div>
+  </section>
+
+  <section class="sec" id="savesec">
+    <div class="sechd"><h2>저장</h2>
+      <span class="cap">로그인하면 기록이 다른 폰에서도 이어져요</span></div>
+    <div id="saveplan"></div>
+    <p class="note">지금은 기록이 이 폰에만 있어요. 구글이나 카카오로 로그인하면 기록을 저장하고,
+      정한 시각에 알림이 와요.</p>
   </section>
 
   <section class="sec">
@@ -291,9 +301,13 @@
 <script src="js/packs.js?v=c8178b32"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/cards.js?v=1a50b0db"></script>
-<script src="js/store.js?v=4d4a9000"></script>
-<script src="js/coach.js?v=365e93e4"></script>
-<script src="js/notify.js?v=9f8c340a"></script>
+<script src="js/store.js?v=0fb25aff"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supa.config.js?v=e1d10860"></script>
+<script src="js/auth.js?v=72d8dbed"></script>
+<script src="js/loginui.js?v=4c82af4a"></script>
+<script src="js/coach.js?v=a47134ba"></script>
+<script src="js/notify.js?v=a6c06818"></script>
 <script>
 (function(){
   var T=TERRA;
@@ -322,7 +336,7 @@
     ["s1mid","s1fin","s2mid","s2fin"].forEach(function(k){
       var b = B[k];
       if(!b) return;
-      목록.push({ name: b.name + " · " + b.단원, codes: b.roots.slice(),
+      목록.push({ name: b.name + ", " + b.단원, codes: b.roots.slice(),
                  과목: b.과목, 근거: b.근거, key: k });
     });
     목록.push({name:"통합사회 1 전체", codes:["A","B","C","D","E"]});
@@ -351,7 +365,7 @@
       '<div class="sc-grid">'+칸+'</div>'+
       '<div class="sc-sum">'+(sc.length
         ? '이번 시험 범위 <b>'+T.scopeName()+'</b>. '+
-          '킬러 훈련과 오늘 할 일이 이 범위 안에서만 나옵니다.'
+          'Killer Drill과 오늘 할 일이 이 범위 안에서만 나옵니다.'
         : '아직 안 정했습니다 — <b>전 범위</b>로 나옵니다. '+
           '범위를 정하면 시험에 안 나올 단원이 빠져 시간을 아낍니다.')+'</div>';
     document.querySelectorAll("[data-sc]").forEach(function(b){
@@ -377,7 +391,7 @@
     document.getElementById("rtset").innerHTML=
       '<div class="mins">'+MINS.map(function(v){
         return '<button data-min="'+v+'" aria-pressed="'+(v===goal)+'">'+
-          '<b>'+v+'</b>분<small>'+
+          '<b>'+v+'<small class="u">분</small></b><small>'+
           (v<=10?"딱 한 가지":v<=15?"권해요":v<=20?"넉넉히":"작정하고")+
           '</small></button>'; }).join("")+'</div>'+
       '<div class="rt-what">'+R.items.map(function(it){
@@ -423,7 +437,7 @@
       var G=T.GRADES[g];
       return '<button class="gr" data-g="'+g+'" aria-pressed="'+(g===now)+'">'+
         '<span class="g">'+g+'</span><h3>'+(G.re?'<span class="re">'+G.re+'</span> ':'')+G.subject+'</h3>'+
-        '<p>'+G.say+'</p><span class="tag">'+G.ddayName+' 대비 · '+G.pool+'</span></button>';
+        '<p>'+G.say+'</p><span class="tag">'+G.ddayName+' 대비, '+G.pool+'</span></button>';
     }).join("");
     document.querySelectorAll("[data-g]").forEach(function(b){
       b.onclick=function(){ T.setGrade(b.dataset.g); paintAll(); };
@@ -452,10 +466,10 @@
   var AXINFO={
     "교과서":{name:"교과서 차례",
       say:"통합사회 1·2 의 대단원 순서 그대로 — 학교 진도와 1:1 로 맞습니다. 내신에 바로 씁니다.",
-      tag:"통합사회 1 · 통합사회 2 · 사상가"},
+      tag:"통합사회 1, 통합사회 2, 사상가"},
     "수능":{name:"수능 선택과목",
       say:"이 내용을 세계지리·정치와법·생활과윤리 가운데 어디서 다시 만나는지로 묶습니다.",
-      tag:"지리 · 일반사회 · 윤리"}
+      tag:"지리, 일반사회, 윤리"}
   };
   function axisNow(){
     var v="";
@@ -486,7 +500,7 @@
       };
     });
     document.getElementById("axnote").innerHTML=
-      '지금 스킬트리는 <b>'+AXINFO[eff].name+'</b>로 묶여 있습니다. '+
+      '지금 개념트리는 <b>'+AXINFO[eff].name+'</b>로 묶여 있습니다. '+
       '지리·일반사회·윤리라는 구분은 교과서에 있는 것이 아니라, 그 단원 문항이 '+
       '어느 수능 선택과목 기출에서 왔는지로 저희가 가른 것입니다. '+
       '실측해 보면 <b>사회 정의와 불평등</b>은 일반사회 55%·윤리 43%로 반씩이고, '+
@@ -551,7 +565,7 @@
       '<p>'+(p.sub
         ? "모든 단원의 문제풀이와 트레이닝, 리포트를 제한 없이 씁니다."+
           (p.since?" "+p.since+" 부터.":"")
-        : "지금도 스킬트리와 리포트, 트레이닝을 쓸 수 있습니다. "+
+        : "지금도 개념트리와 리포트, Killer Drill을 쓸 수 있습니다. "+
           "구독하면 문제풀이 분량과 확장팩 제한이 풀립니다.")+
       ' <b style="color:var(--ink-3)">값은 아직 정하지 않았습니다.</b></p></span>'+
       '<button class="sw" id="subsw" role="switch" aria-checked="'+(!!p.sub)+'"></button>';
@@ -572,8 +586,8 @@
          옛 **세계지리** 기출이다. 알아야 범위를 스스로 가늠한다. */
       var 밑 = k.n
         ? ('<span class="pkn">' + k.n.toLocaleString() + '문항' +
-           (k.g3 ? ' · 고3 ' + k.g3 : '') + (k.g2 ? ' · 고2 ' + k.g2 : '') +
-           (k.was && k.was !== k.name ? ' · 옛 ' + k.was : '') + '</span>')
+           (k.g3 ? ', 고3 ' + k.g3 : '') + (k.g2 ? ', 고2 ' + k.g2 : '') +
+           (k.was && k.was !== k.name ? ', 옛 ' + k.was : '') + '</span>')
         : '<span class="pkn dim">문항 준비 중</span>';
       return '<button class="pk'+(k.state==="soon"?" off":"")+
         '" data-pk="'+k.id+'" aria-pressed="'+k.on+'"'+
@@ -617,9 +631,9 @@
   function 사람말(요약){
     var 조각=[];
     if(요약.문항) 조각.push("문항 "+요약.문항+"개");
-    if(요약.훈련) 조각.push("훈련 "+요약.훈련+"번");
+    if(요약.훈련) 조각.push("Killer Drill "+요약.훈련+"번");
     if(요약.시험) 조각.push("모의고사 "+요약.시험+"회");
-    return 조각.length?조각.join(" · "):"기록 없음";
+    return 조각.length?조각.join(", "):"기록 없음";
   }
 
   /* 덮기 전에 묻는다 — 무엇을 잃고 무엇을 얻는지 적어서 */
@@ -713,6 +727,14 @@
   addEventListener("load", function () {
     navigator.serviceWorker.register("sw.js").catch(function () {});
   });
+})();
+</script>
+<script>
+/* 저장(로그인) — 단추는 loginui.js 가 일반 앱 로그인 꼴로 그린다 */
+(function(){
+  var host=document.getElementById("saveplan"); if(!host||!window.LOGINUI) return;
+  function 그리기(){ LOGINUI.draw(host, {naver:true}); }
+  그리기(); window.addEventListener("terra:synced", 그리기);
 })();
 </script>
 </body>

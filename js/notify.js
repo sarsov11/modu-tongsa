@@ -61,29 +61,29 @@
         알림 한 줄에서 드러나야 학생이 연다. */
   function line() {
     var T = window.TERRA;
-    if (!T || !T.routine) return { t: "오늘 15분", b: "짧게 한 번 하고 갈까요?" };
+    if (!T || !T.routine) return { t: "오늘 15분", b: "오늘 몫을 시작해요." };
     var r = T.routine();
     var 시 = 다가온시험();
     /* 실전 모드는 알림도 달라야 한다 — "오늘 몇 분" 이 아니라 "오늘 시험" 이다 */
     if (r.examMode === "real" && !r.done) {
       var 첫 = r.items[0] || {};
       return {
-        t: (r.exam ? r.exam.name + " " + r.ddayLabel + " · " : "") +
+        t: (r.exam ? r.exam.name + " " + r.ddayLabel + ", " : "") +
            (첫.kind === "exam" ? "오늘의 모의고사" : "오늘 시험에서 틀린 것"),
         b: 첫.kind === "exam"
-             ? "25문항 45분. 지금 앉으면 한 번에 끝나요."
-             : (첫.n || "") + "문항 다시 보기 — 덮으면 남는 게 없어요."
+             ? "25문항 45분이에요."
+             : (첫.n || "") + "문항을 다시 풀어요."
       };
     }
     /* 머리말 — 시험이 2주 안이면 시험 이름과 남은 날을 앞에 둔다 */
     var 앞 = (시 && 시.d.days <= 시험알림일수)
-      ? (시.e.name + " " + 시.d.label + " · ") : "";
+      ? (시.e.name + " " + 시.d.label + ", ") : "";
 
     if (r.done) {
-      return { t: 앞 + "오늘 몫 끝냈어요",
+      return { t: 앞 + "오늘 몫을 끝냈어요",
                b: 시 && 시.d.days <= 시험알림일수
-                    ? "시험까지 " + 시.d.days + "일. 더 해 두면 그날이 가벼워져요."
-                    : "더 해 두면 내일이 가벼워져요." };
+                    ? "시험까지 " + 시.d.days + "일 남았어요."
+                    : "더 풀 수 있어요." };
     }
     var left = Math.max(1, r.goal - r.spent);
     var it = r.items[0];
@@ -93,7 +93,7 @@
       t = String(t || "");
       /* 리프 이름의 부제만 뗀다 — 뒤에 붙은 "…에서 틀렸던 N문항" 은 남겨야
          무엇을 할지가 보인다. 부제를 통째로 자르면 할 일이 사라진다. */
-      t = t.replace(/ — [^ ]+(?=에서)/, "").replace(/ — /, " · ");
+      t = t.replace(/ — [^ ]+(?=에서)/, "").replace(/ — /, " ");
       return t.length > 칸 ? t.slice(0, 칸 - 1) + "…" : t;
     }
     /* 범위는 이름을 다 적지 않는다 — 몇 단원인지만.
@@ -102,8 +102,8 @@
     var 범위 = "";   // 「시험 범위 3단원 안에서」 는 알림에서 뺀다 (2026-09-13) — 앱 띠에 늘 적혀 있다
     return {
       t: 앞 + "오늘 " + left + "분",
-      b: (it ? (짧게(it.title, 12) + " · " + 짧게(it.sayShort || it.say, 34))
-             : "지금 시작하면 금방이에요.") + 범위
+      b: (it ? (짧게(it.title, 12) + ". " + 짧게(it.sayShort || it.say, 34))
+             : "지금 시작해요.") + 범위
     };
   }
 
@@ -113,7 +113,7 @@
     var m = line();
     var body = m.b;
     try {
-      var n = new Notification("모두의 통사 · " + m.t, {
+      var n = new Notification("모두의 통사, " + m.t, {
         body: body, icon: "icons/icon-192.png", badge: "icons/icon-192.png",
         tag: "terra-daily", renotify: false
       });
@@ -122,7 +122,7 @@
       /* 안드로이드 크롬은 SW 를 거쳐야 뜬다 */
       if (navigator.serviceWorker && navigator.serviceWorker.ready) {
         navigator.serviceWorker.ready.then(function (reg) {
-          reg.showNotification("모두의 통사 · " + m.t, {
+          reg.showNotification("모두의 통사, " + m.t, {
             body: body, icon: "icons/icon-192.png", badge: "icons/icon-192.png",
             tag: "terra-daily", data: { url: "index.html?go=1" }
           });
@@ -184,7 +184,7 @@
       background: !!(navigator.serviceWorker && "periodicSync" in
         (window.ServiceWorkerRegistration ? ServiceWorkerRegistration.prototype : {})),
       say: !supported() ? "이 브라우저는 알림을 지원하지 않아요."
-        : !granted() ? "알림을 켜면 정한 시각에 알려 드려요."
+        : !granted() ? "알림을 켜면 정한 시각에 알려요."
         : ios ? "아이폰은 앱을 켤 때 알려 드려요. (사파리 제한)"
         : installed ? "폰에 설치돼 있어서 앱을 닫아도 알림이 갑니다."
         : "지금은 앱을 켜 두거나 다시 열 때 알림이 갑니다. 홈 화면에 추가하면 닫아도 갑니다."

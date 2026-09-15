@@ -3,10 +3,10 @@
 
 .kwq{border:1px solid var(--line-2);border-radius:var(--r2);background:var(--surface);
   padding:22px 22px 20px;margin-bottom:var(--s3)}
-.kwtag{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--ink-3);
+.kwtag{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:14.5px;color:var(--ink-3);
   margin-bottom:12px}
 .kwtag b{color:var(--mint);font-weight:700}
-.kwtag .kwsrc{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--ink-4);
+.kwtag .kwsrc{margin-left:auto;font-family:var(--mono);font-size:14.5px;color:var(--ink-4);
   border:1px solid var(--line-2);border-radius:99px;padding:2px 8px}
 
 .kwd{font-size:18px;line-height:1.75;font-weight:600;letter-spacing:-.02em;color:var(--ink);
@@ -14,7 +14,7 @@
 .kwblank{display:inline-block;text-align:center;margin:0 3px;padding:0 6px;line-height:1.45;
   border:1.5px dashed var(--mint);border-radius:7px;color:var(--mint);
   background:var(--mint-soft);font-weight:800;vertical-align:baseline}
-.kwhint{font-size:12.5px;color:var(--ink-3);margin:0 0 14px}
+.kwhint{font-size:14.5px;color:var(--ink-3);margin:0 0 14px}
 
 .kwbox{scroll-margin:90px 0 120px}
 .kwin{display:block;width:100%;box-sizing:border-box;font:inherit;font-size:19px;font-weight:700;
@@ -25,37 +25,37 @@
 .kwin:focus{border-color:var(--mint);box-shadow:0 0 0 3px var(--mint-soft)}
 .kwin:disabled{opacity:.75}
 
-.kwlab{font-size:12.5px;color:var(--ink-3);margin:10px 2px 7px}
+.kwlab{font-size:14.5px;color:var(--ink-3);margin:10px 2px 7px}
 .kwlab.pulse{animation:kwpulse .9s ease 2;color:var(--ink)}
 @keyframes kwpulse{50%{color:var(--mint)}}
 .kwconf{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .kwconf button{appearance:none;border:1.5px solid var(--line-2);background:var(--surface-2);
-  color:var(--ink-2);border-radius:var(--r1);padding:11px 6px;font:inherit;font-size:14px;
+  color:var(--ink-2);border-radius:var(--r1);padding:11px 6px;font:inherit;font-size:16px;
   font-weight:700;cursor:pointer;touch-action:manipulation;transition:.12s}
 .kwconf button .em{display:block;font-size:18px;margin-bottom:2px}
 @media(hover:hover){.kwconf button:hover:not(:disabled){border-color:var(--mint);color:var(--ink)}}  /* 폰은 누른 뒤 hover 가 남는다 */
 .kwconf button:disabled{opacity:.4;cursor:default}
 .kwconf button.pick{opacity:1;border-color:var(--mint);background:var(--mint-soft);color:var(--mint)}
 .kwskip{display:block;margin:10px auto 0;appearance:none;border:0;background:transparent;
-  color:var(--ink-3);font:inherit;font-size:13px;text-decoration:underline;text-underline-offset:3px;
+  color:var(--ink-3);font:inherit;font-size:15px;text-decoration:underline;text-underline-offset:3px;
   cursor:pointer;padding:6px}
 .kwskip:disabled{opacity:.4}
 
 /* 판정 — 화면마다 .verdict 가 이미 있다. 여기서는 개념어 몫만 */
-.kwv .kwans{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin:10px 0 0;font-size:15px}
-.kwv .kwans span{font-size:12px;color:var(--ink-3);font-family:var(--mono)}
+.kwv .kwans{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin:10px 0 0;font-size:16px}
+.kwv .kwans span{font-size:14.5px;color:var(--ink-3);font-family:var(--mono)}
 .kwv .kwans b{font-size:19px;color:var(--ink);letter-spacing:-.02em}
-.kwv .kwans em{font-style:normal;font-size:12.5px;color:var(--ink-3)}
-.kwv .kwmine{margin:4px 0 0;font-size:13.5px;color:var(--ink-3)}
-.kwv .kwnote{margin:6px 0 0;font-size:13.5px;color:var(--ink-2)}
+.kwv .kwans em{font-style:normal;font-size:14.5px;color:var(--ink-3)}
+.kwv .kwmine{margin:4px 0 0;font-size:15.5px;color:var(--ink-3)}
+.kwv .kwnote{margin:6px 0 0;font-size:15.5px;color:var(--ink-2)}
 .kwv .why{margin-top:11px;padding-top:11px;border-top:1px solid var(--line-2);
-  font-size:13.5px;line-height:1.66;color:var(--ink-3)}
+  font-size:15.5px;line-height:1.66;color:var(--ink-3)}
 .kwv .why b{color:var(--ink-2)}
 .kwv .why mark{background:var(--mint-soft);color:var(--ink);border-radius:4px;padding:0 2px}
-.kwv .why .src{display:block;margin-top:6px;font-size:11px;font-family:var(--mono);color:var(--ink-4)}
+.kwv .why .src{display:block;margin-top:6px;font-size:14.5px;font-family:var(--mono);color:var(--ink-4)}
 .kwnext{margin-top:14px;display:flex;justify-content:flex-end}
 .kwgo{appearance:none;border:1px solid var(--mint);background:var(--mint);color:var(--bg);
-  border-radius:var(--r1);padding:12px 20px;font:inherit;font-size:15px;font-weight:800;cursor:pointer}
+  border-radius:var(--r1);padding:12px 20px;font:inherit;font-size:16px;font-weight:800;cursor:pointer}
 
 /* ★ 문제를 푸는 동안은 선생님 띠를 숨긴다 — 띠 문구에 리프 이름(=정답)이 들어갈 수 있다 */
 body.kw-open .nextbar.coach{visibility:hidden}

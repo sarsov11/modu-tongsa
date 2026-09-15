@@ -11,9 +11,9 @@
 <meta name="theme-color" content="#08090B">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=2613afc7">
-<link rel="stylesheet" href="css/question.css?v=d65c13a7">
-<script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<link rel="stylesheet" href="css/base.css?v=7bcef92a">
+<link rel="stylesheet" href="css/question.css?v=354698c6">
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s===null)_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   /* ── 처음 오는 학생을 위한 화면 — 한 화면에 질문 하나, 단추 하나 ──
      (2026-09-06 대표님: "처음 들어가면 세팅창부터 정갈하게. 헤이링의 첫 UX")
@@ -30,15 +30,15 @@
   .prog{flex:1;display:flex;gap:4px}
   .prog i{flex:1;height:4px;border-radius:99px;background:var(--line-2)}
   .prog i.on{background:var(--red)}
-  .obtop .skip{margin-left:auto;font-size:13px;color:var(--ink-4);background:none;border:0;
+  .obtop .skip{margin-left:auto;font-size:15px;color:var(--ink-4);background:none;border:0;
     font-family:inherit;cursor:pointer;padding:6px 0}
   .obtop .skip:hover{color:var(--ink-2)}
 
   .stage{flex:1;display:flex;flex-direction:column;padding:18px 0 110px}
-  .stage .eb{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--ink-4);text-transform:uppercase}
+  .stage .eb{font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--ink-4);}
   .stage h1{font-size:clamp(24px,6vw,30px);letter-spacing:-.04em;margin:10px 0 8px;line-height:1.3;color:var(--ink)}
   .stage h1 em{font-style:normal;color:var(--red-2)}
-  .stage .lede{font-size:15px;color:var(--ink-3);line-height:1.65;margin:0 0 22px}
+  .stage .lede{font-size:16px;color:var(--ink-3);line-height:1.65;margin:0 0 22px}
 
   .tiles{display:grid;gap:10px}
   .tile{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1.5px solid var(--line-2);
@@ -47,36 +47,36 @@
   .tile:hover{border-color:var(--line-3)}
   .tile[aria-pressed="true"]{border-color:var(--red);background:linear-gradient(180deg,var(--red-soft),transparent 80%),var(--surface)}
   .tile .ic{flex:0 0 auto;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
-    background:var(--surface-3);font-family:var(--mono);font-size:13px;font-weight:700;color:var(--ink-2)}
+    background:var(--surface-3);font-family:var(--mono);font-size:15px;font-weight:800;color:var(--ink-2)}
   .tile[aria-pressed="true"] .ic{background:var(--red);color:#fff}
   .tile b{display:block;font-size:16.5px;letter-spacing:-.02em}
-  .tile span{display:block;font-size:13px;color:var(--ink-3);margin-top:2px}
-  .tile .tag{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--red-2);font-weight:700;flex:0 0 auto}
+  .tile span{display:block;font-size:15px;color:var(--ink-3);margin-top:2px}
+  .tile .tag{margin-left:auto;font-family:var(--mono);font-size:14.5px;color:var(--red-2);font-weight:800;flex:0 0 auto}
   .tiles.two{grid-template-columns:1fr 1fr}
   .tiles.two .tile{flex-direction:column;align-items:flex-start;gap:6px;padding:16px}
-  .tiles.two .tile b{font-size:22px;font-family:var(--mono);font-weight:600}
+  .tiles.two .tile b{font-size:22px;font-family:var(--mono);font-weight:800}
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
-  .chips button{font:inherit;font-size:13px;padding:8px 13px;border-radius:99px;border:1px solid var(--line-2);
+  .chips button{font:inherit;font-size:15px;padding:8px 13px;border-radius:99px;border:1px solid var(--line-2);
     background:var(--surface);color:var(--ink-2);cursor:pointer}
   .chips button[aria-pressed="true"]{border-color:var(--red);color:var(--ink);background:var(--red-soft)}
   .units{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .units .bk{grid-column:1/-1;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--ink-4);margin-top:8px}
+  .units .bk{grid-column:1/-1;font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--ink-4);margin-top:8px}
   .units .u{padding:12px 13px;border:1.5px solid var(--line-2);border-radius:var(--r1);background:var(--surface);
-    font:inherit;font-size:13.5px;text-align:left;color:var(--ink-2);cursor:pointer;line-height:1.35}
-  .units .u b{font-family:var(--mono);font-size:11px;color:var(--ink-4);display:block;margin-bottom:2px}
+    font:inherit;font-size:15.5px;text-align:left;color:var(--ink-2);cursor:pointer;line-height:1.35}
+  .units .u b{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);display:block;margin-bottom:2px;font-weight:800}
   .units .u[aria-pressed="true"]{border-color:var(--red);color:var(--ink);background:var(--red-soft)}
 
   .field{display:flex;flex-direction:column;gap:8px}
   .field input{font:inherit;font-size:20px;padding:16px 18px;border-radius:var(--r2);border:1.5px solid var(--line-2);
     background:var(--surface);color:var(--ink);width:100%;letter-spacing:-.01em}
   .field input:focus{outline:none;border-color:var(--red)}
-  .field input[type=date],.field input[type=time]{font-family:var(--mono);font-size:22px}
-  .note{font-size:13px;color:var(--ink-4);line-height:1.6;margin-top:14px}
+  .field input[type=date],.field input[type=time]{font-family:var(--mono);font-size:22px;font-weight:800}
+  .note{font-size:15px;color:var(--ink-4);line-height:1.6;margin-top:14px}
   .note b{color:var(--ink-3)}
   .toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;
     border:1.5px solid var(--line-2);border-radius:var(--r2);background:var(--surface);margin-top:12px}
-  .toggle b{font-size:15px;color:var(--ink)}
-  .toggle span{display:block;font-size:12.5px;color:var(--ink-3);margin-top:2px}
+  .toggle b{font-size:16px;color:var(--ink)}
+  .toggle span{display:block;font-size:14.5px;color:var(--ink-3);margin-top:2px}
   .sw{appearance:none;width:52px;height:30px;border-radius:99px;background:var(--line-2);position:relative;
     border:0;cursor:pointer;flex:0 0 auto;transition:background .15s}
   .sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .15s}
@@ -85,37 +85,37 @@
 
   /* 세 문항 */
   .qwrap{border:1px solid var(--line-2);border-radius:var(--r2);background:var(--surface);padding:18px 18px 16px}
-  .qwrap .qn{font-family:var(--mono);font-size:11.5px;color:var(--ink-4);letter-spacing:.1em;margin-bottom:8px}
+  .qwrap .qn{font-family:var(--kr);font-weight:700;font-size:14.5px;color:var(--ink-4);letter-spacing:-.01em;margin-bottom:8px}
   .qwrap .qbody{font-size:15.5px;line-height:1.7;color:var(--ink)}
   .opts{display:flex;flex-direction:column;gap:8px;margin-top:14px}
   .opt{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:var(--r1);
     border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2);cursor:pointer;
-    font-family:inherit;font-size:14.5px;line-height:1.55;text-align:left;transition:.14s}
+    font-family:inherit;font-size:15.5px;line-height:1.55;text-align:left;transition:.14s}
   .opt .k{flex:0 0 23px;height:23px;border-radius:7px;background:var(--surface-3);display:grid;place-items:center;
-    font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ink-3)}
+    font-family:var(--mono);font-size:14.5px;font-weight:800;color:var(--ink-3)}
   .opt[data-s="ok"]{border-color:var(--mint);background:rgba(47,224,206,.10);color:var(--ink)}
   .opt[data-s="ok"] .k{background:var(--mint);color:#06110F}
   .opt[data-s="no"]{border-color:var(--red);background:var(--red-soft)}
   .opt[data-s="no"] .k{background:var(--red);color:#fff}
   .opt[disabled]{cursor:default}
-  .qsay{margin-top:12px;font-size:14px;color:var(--ink-2);line-height:1.6}
+  .qsay{margin-top:12px;font-size:16px;color:var(--ink-2);line-height:1.6}
   .qsay.good{color:var(--mint)}
   .pips{display:flex;gap:5px;margin-bottom:12px}
   .pips i{flex:1;height:4px;border-radius:99px;background:var(--line-2)}
   .pips i.ok{background:var(--mint)} .pips i.no{background:var(--red)} .pips i.now{background:var(--ink-3)}
 
   /* 끝 — 오늘 할 것 하나 */
-  .done .big{font-family:var(--mono);font-size:44px;font-weight:600;color:var(--ink);letter-spacing:-.05em;line-height:1;margin:6px 0 10px}
+  .done .big{font-family:var(--mono);font-size:44px;font-weight:800;color:var(--ink);letter-spacing:-.05em;line-height:1;margin:6px 0 10px}
   .todayone{display:block;text-decoration:none;color:inherit;margin-top:18px;padding:18px;border:1px solid var(--red-line);border-radius:var(--r2);
     background:linear-gradient(180deg,var(--red-soft),transparent 70%),var(--surface)}
-  .todayone .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--red-2);text-transform:uppercase}
+  .todayone .lbl{font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--red-2);}
   .todayone h3{font-size:19px;margin:6px 0 4px;letter-spacing:-.03em;color:var(--ink)}
-  .todayone p{font-size:14px;color:var(--ink-3);line-height:1.55;margin:0}
-  .todayone .why{font-size:12.5px;color:var(--ink-4);margin-top:6px}
+  .todayone p{font-size:16px;color:var(--ink-3);line-height:1.55;margin:0}
+  .todayone .why{font-size:14.5px;color:var(--ink-4);margin-top:6px}
   .summ{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
   .summ div{padding:11px 13px;border:1px solid var(--line);border-radius:var(--r1);background:var(--surface)}
-  .summ b{display:block;font-size:14px;color:var(--ink)}
-  .summ span{font-size:12px;color:var(--ink-4)}
+  .summ b{display:block;font-size:16px;color:var(--ink)}
+  .summ span{font-size:14.5px;color:var(--ink-4)}
 
   /* 아래 단추 하나 */
   .obfoot{position:fixed;left:0;right:0;bottom:0;padding:12px 20px calc(14px + env(safe-area-inset-bottom,0));
@@ -127,6 +127,8 @@
   .stage.in{animation:obin .32s cubic-bezier(.32,.72,0,1)}
   @keyframes obin{0%{opacity:0;transform:translateX(14px)}100%{opacity:1;transform:none}}
   @media (prefers-reduced-motion: reduce){.stage.in{animation:none}}
+  .tile b{font-size:34px;font-weight:900;letter-spacing:-.04em;line-height:1;font-family:var(--kr);font-variant-numeric:tabular-nums}
+  .tile b .u{display:inline;font-size:15px;font-weight:800;color:var(--ink-3);margin-left:2px;letter-spacing:0}
 </style>
 </head>
 <body>
@@ -150,8 +152,11 @@
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/cards.js?v=1a50b0db"></script>
-<script src="js/store.js?v=4d4a9000"></script>
-<script src="js/notify.js?v=9f8c340a"></script>
+<script src="js/store.js?v=0fb25aff"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supa.config.js?v=e1d10860"></script>
+<script src="js/auth.js?v=72d8dbed"></script>
+<script src="js/notify.js?v=a6c06818"></script>
 <script>
 (function(){
   var T=window.TERRA, Q=window.QBANK||{}, N=window.TERRA_NOTIFY;
@@ -163,15 +168,15 @@
 
   /* 화면에 나가는 말 — 전부 여기. 존댓말, 판단 없음 */
   var MSG={
-    introH:"매일 <em>15분</em>,<br>오늘 할 것 하나만 알려 드려요.",
-    introP:"몇 가지만 정하면 바로 시작해요. 1분이면 돼요.",
+    introH:"매일 <em>15분</em>,<br>오늘 할 것 하나만 알려요.",
+    introP:"몇 가지만 정하면 바로 시작해요.",
     nameH:"뭐라고 부를까요?", nameP:"화면에서 이 이름으로 불러요.",
     gradeH:"지금 몇 학년이에요?", gradeP:"학년에 따라 배우는 과목과 겨누는 시험이 달라요.",
     examH:"다음 시험은 언제예요?", examP:"날짜를 넣으면 열흘 전부터는 매일 모의고사로 바뀌어요.",
     scopeH:"이번 시험 범위를 골라 주세요.", scopeP:"학교마다 달라서 직접 골라요. 나중에 설정에서 바꿀 수 있어요.",
-    goalH:"하루에 얼마나 할까요?", goalP:"끝이 보이는 만큼만 정해요. 매일 하는 게 제일 중요해요.",
-    alarmH:"몇 시에 알려 드릴까요?", alarmP:"정한 시각에 오늘 할 것을 먼저 알려 드려요.",
-    checkH:"지금 어디쯤인지<br>세 문항으로 볼게요.", checkP:"틀려도 괜찮아요. 어디서 시작할지 정하는 데만 써요.",
+    goalH:"하루에 얼마나 할까요?", goalP:"매일 할 수 있는 만큼만 정해요.",
+    alarmH:"몇 시에 알릴까요?", alarmP:"정한 시각에 오늘 할 것을 알려요.",
+    checkH:"지금 어디쯤인지<br>세 문항으로 확인해요.", checkP:"어디서 시작할지 정하는 데만 써요.",
     doneH:"준비됐어요.", doneP:"오늘 할 것은 이거예요. 누르면 바로 시작해요."
   };
 
@@ -251,7 +256,7 @@
         '<div class="field"><input id="dt" type="date" value="'+esc(A.examDate)+'"></div>'+
         '<p class="note" id="dnote"></p>';
       function note(){ var d=A.examDate?T.dday(A.examDate):null;
-        el("dnote").innerHTML=d?'<b>'+esc(cur.name)+'</b> '+esc(d.label)+' — '+(d.days<=10?"열흘 안이라 매일 모의고사부터 해요.":"그전까지는 하루 15분씩 약한 곳을 메워요."):"날짜를 모르면 건너뛰어도 돼요."; }
+        el("dnote").innerHTML=d?'<b>'+esc(cur.name)+'</b> '+esc(d.label)+' — '+(d.days<=10?"열흘 안이라 매일 모의고사부터 해요.":"그전까지는 하루 15분씩 약한 곳을 채워요."):"날짜를 모르면 건너뛰어도 돼요."; }
       note();
       st.querySelectorAll(".chips button").forEach(function(b){ b.onclick=function(){
         A.examId=b.dataset.ex; cur=list.filter(function(e){return e.id===A.examId;})[0]; A.examDate=cur.date||""; el("dt").value=A.examDate;
@@ -269,11 +274,11 @@
       function same(a,b){ return a.slice().sort().join()===b.slice().sort().join(); }
       st.innerHTML=머리("4 / 7",esc(MSG.scopeH),esc(MSG.scopeP))+
         '<div class="chips">'+presets.map(function(k){ var b=B[k];
-          return '<button data-p="'+k+'" aria-pressed="'+same(A.scope,b.roots)+'">'+esc(b.name+" · "+b.단원)+'</button>'; }).join("")+'</div>'+
+          return '<button data-p="'+k+'" aria-pressed="'+same(A.scope,b.roots)+'">'+esc(b.name+", "+b.단원)+'</button>'; }).join("")+'</div>'+
         '<div class="units">'+["통합사회 1","통합사회 2"].map(function(bk,z){
           return '<span class="bk">'+bk+'</span>'+roots.filter(function(r){ return z===0?/^[A-E]$/.test(r.code):/^[F-J]$/.test(r.code); }).map(function(r,k){
             return '<button class="u" data-r="'+r.code+'" aria-pressed="'+(A.scope.indexOf(r.code)>=0)+'"><b>'+(k+1)+'단원</b>'+esc(r.name)+'</button>'; }).join(""); }).join("")+'</div>'+
-        '<p class="note">'+(A.grade==="고2"?'고2 REWIND 는 통합사회 전 범위를 되감아요. 빼고 싶은 단원만 눌러 끄세요.':(B.학교?esc(B.학교)+' 기준이 미리 눌려 있어요. 우리 학교와 다르면 고쳐 주세요.':''))+'</p>';
+        '<p class="note">'+(A.grade==="고2"?'고2 REWIND 는 통합사회 전 범위를 다시 봐요. 빼고 싶은 단원만 눌러 끄세요.':(B.학교?esc(B.학교)+' 기준이 미리 눌려 있어요. 우리 학교와 다르면 고쳐 주세요.':''))+'</p>';
       function paint(){ 눌림(st,".units .u",function(b){return A.scope.indexOf(b.dataset.r)>=0;});
         눌림(st,".chips button",function(b){return same(A.scope,B[b.dataset.p].roots);}); el("next").disabled=!A.scope.length; }
       st.querySelectorAll(".chips button").forEach(function(b){ b.onclick=function(){ A.scope=B[b.dataset.p].roots.slice(); paint(); }; });
@@ -286,8 +291,8 @@
       var opts=[[10,"딱 한 가지"],[15,"권해요"],[20,"넉넉히"],[30,"작정하고"]];
       st.innerHTML=머리("5 / 7",esc(MSG.goalH),esc(MSG.goalP))+
         '<div class="tiles two">'+opts.map(function(o){
-          return '<button class="tile" data-m="'+o[0]+'" aria-pressed="'+(A.goal===o[0])+'"><b>'+o[0]+'<small style="font-size:14px;color:var(--ink-4)">분</small></b><span>'+o[1]+'</span></button>'; }).join("")+'</div>'+
-        '<p class="note">되돌리기·강의·개념 확인·훈련을 이 시간 안에 나눠 드려요. 문항 하나에 50초로 잡았어요.</p>';
+          return '<button class="tile" data-m="'+o[0]+'" aria-pressed="'+(A.goal===o[0])+'"><b>'+o[0]+'<small class="u">분</small></b><span>'+o[1]+'</span></button>'; }).join("")+'</div>'+
+        '<p class="note">되돌리기·강의·개념 확인·Killer Drill을 이 시간 안에 나눠 드려요. 문항 하나에 50초로 잡았어요.</p>';
       st.querySelectorAll(".tile").forEach(function(b){ b.onclick=function(){ A.goal=+b.dataset.m; 눌림(st,".tile",function(x){return +x.dataset.m===A.goal;}); }; });
       단추("다음");
     },
@@ -316,7 +321,7 @@
         if(k>=qs.length){ el("qhost").innerHTML=''; el("next").disabled=false; return 다음(); }
         var q=qs[k], d=Q[q.id];
         var 몸=window.QRENDER?QRENDER.html(d,q,{}):esc(d.q);
-        el("qhost").innerHTML='<div class="qwrap"><div class="qn">'+(k+1)+' / '+qs.length+' · '+esc(T.BY[q.leaf]?T.BY[q.leaf].name:"")+'</div>'+
+        el("qhost").innerHTML='<div class="qwrap"><div class="qn">'+(k+1)+' / '+qs.length+', '+esc(T.BY[q.leaf]?T.BY[q.leaf].name:"")+'</div>'+
           '<div class="qbody">'+몸.replace(/<ol class="opts5">[\s\S]*?<\/ol>/,'')+'</div>'+
           '<div class="opts">'+d.o.map(function(o,z){ return '<button class="opt" data-v="'+z+'"><span class="k">'+"①②③④⑤".charAt(z)+'</span><span>'+(window.QRENDER?QRENDER.body(o):esc(o))+'</span></button>'; }).join("")+'</div>'+
           '<div id="qsay"></div></div>';
@@ -341,12 +346,12 @@
         (first?'<a class="todayone" href="'+first.href+'"><span class="lbl">오늘 할 것</span><h3>'+esc(first.title)+'</h3><p>'+esc(first.say)+'</p>'+
           (first.why?'<p class="why">'+esc(first.why)+'</p>':'')+'</a>':'')+
         '<div class="summ">'+
-          '<div><b>'+esc(A.grade)+' · '+esc(G.subject||"")+'</b><span>학년</span></div>'+
+          '<div><b>'+esc(A.grade)+', '+esc(G.subject||"")+'</b><span>학년</span></div>'+
           '<div><b>'+(nx?esc(nx.exam.name)+" "+esc(nx.label):"시험 날짜 없음")+'</b><span>다음 시험</span></div>'+
           '<div><b>하루 '+(T.goalMin?T.goalMin():A.goal)+'분</b><span>목표</span></div>'+
           '<div><b>'+(A.alarmOn?A.alarm+" 알림":"알림 끔")+'</b><span>'+(A.alarmOn?"매일 이 시각에":"설정에서 켤 수 있어요")+'</span></div>'+
         '</div></div>';
-      el("foot").innerHTML='<a class="btn" href="'+(first?first.href:"index.html")+'">'+(first?esc(first.cta)+' · '+first.min+'분 →':'홈으로 →')+'</a>';
+      el("foot").innerHTML='<a class="btn" href="'+(first?first.href:"index.html")+'">'+(first?esc(first.cta)+', '+first.min+'분 →':'홈으로 →')+'</a>';
       el("back").classList.remove("on"); el("skip").style.visibility="hidden";
     }
   };

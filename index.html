@@ -14,17 +14,17 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=2613afc7">
-<link rel="stylesheet" href="css/coach.css?v=6f83040b">
-<link rel="stylesheet" href="css/question.css?v=d65c13a7">
-<script>try{var _s=localStorage.getItem("terra.skin");if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<link rel="stylesheet" href="css/base.css?v=7bcef92a">
+<link rel="stylesheet" href="css/coach.css?v=208a602f">
+<link rel="stylesheet" href="css/question.css?v=354698c6">
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s===null)_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:1240px;margin:0 auto;padding:0 var(--s3) var(--s6)}
   h1,h2,h3{font-family:var(--title);font-weight:var(--tw);letter-spacing:var(--tls)}
   .sec{margin-top:var(--s5)}
   .sechd{display:flex;align-items:baseline;gap:12px;margin-bottom:var(--s2);flex-wrap:wrap}
   .sechd h2{font-size:23px}
-  .sechd .cap{font-size:13.5px;color:var(--ink-4)}
+  .sechd .cap{font-size:15.5px;color:var(--ink-4)}
   .sechd .cap b{color:var(--ink-3);font-weight:600}
 
   /* ── 오늘 할 일 — 화면을 열면 이게 먼저 보인다 ── */
@@ -36,30 +36,30 @@
   .today .ring svg{display:block;transform:rotate(-90deg)}
   .today .ring .mid{position:absolute;inset:0;display:grid;place-items:center;
     text-align:center;line-height:1.1}
-  .today .ring .mid b{font-family:var(--mono);font-size:26px;font-weight:600;color:var(--ink);
+  .today .ring .mid b{font-family:var(--mono);font-size:26px;font-weight:800;color:var(--ink);
     letter-spacing:-.04em}
-  .today .ring .mid span{display:block;font-size:11px;color:var(--ink-4);margin-top:2px}
+  .today .ring .mid span{display:block;font-size:14.5px;color:var(--ink-4);margin-top:2px}
   .today .tx{flex:1;min-width:220px}
   .today .tx h2{font-size:26px;letter-spacing:-.045em}
-  .today .tx p{font-size:14.5px;color:var(--ink-3);margin-top:8px;line-height:1.65;
+  .today .tx p{font-size:15.5px;color:var(--ink-3);margin-top:8px;line-height:1.65;
     max-width:56ch}
   .today .tx p b{color:var(--ink-2)}
   .today .cta{flex:0 0 auto;display:flex;flex-direction:column;gap:8px;align-items:stretch}
   .today .cta .btn{font-size:16px;padding:15px 28px}
-  .today .cta .sub{font-size:12px;color:var(--ink-4);text-align:center}
+  .today .cta .sub{font-size:14.5px;color:var(--ink-4);text-align:center}
 
   .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;
     background:var(--line);border-top:1px solid var(--line)}
   .stp{background:var(--surface);padding:16px 18px;display:block;transition:.16s}
   .stp:hover{background:var(--surface-2)}
-  .stp .k{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;
-    letter-spacing:.1em;color:var(--ink-4)}
+  .stp .k{display:flex;align-items:center;gap:7px;font-family:var(--kr);font-weight:700;font-size:14.5px;
+    letter-spacing:-.01em;color:var(--ink-4)}
   .stp .k i{width:7px;height:7px;border-radius:50%;background:var(--ink-4)}
   .stp.due .k i{background:var(--red)} .stp.due .k{color:var(--red-2)}
-  .stp h4{font-size:15px;margin:8px 0 6px;color:var(--ink);letter-spacing:-.03em;
+  .stp h4{font-size:16px;margin:8px 0 6px;color:var(--ink);letter-spacing:-.03em;
     font-family:var(--kr);font-weight:700}
-  .stp p{font-size:12.5px;color:var(--ink-3);line-height:1.6}
-  .stp .go{display:inline-block;margin-top:10px;font-size:12.5px;color:var(--red-2);
+  .stp p{font-size:14.5px;color:var(--ink-3);line-height:1.6}
+  .stp .go{display:inline-block;margin-top:10px;font-size:14.5px;color:var(--red-2);
     font-weight:700}
   @media(max-width:640px){
     .today .hd{padding:20px 18px 16px;gap:14px}
@@ -75,13 +75,13 @@
   .dd:hover{border-color:var(--line-3)}
   .dd.hot{border-color:var(--red-line);background:
     linear-gradient(180deg,var(--red-soft),transparent 70%),var(--surface)}
-  .dd .k{font-size:12.5px;color:var(--ink-4);font-weight:600}
+  .dd .k{font-size:14.5px;color:var(--ink-4);font-weight:600}
   .dd .v{display:block;margin-top:6px;font-family:var(--mono);font-size:33px;
-    font-weight:600;letter-spacing:-.05em;color:var(--ink);line-height:1}
+    font-weight:800;letter-spacing:-.05em;color:var(--ink);line-height:1}
   .dd.hot .v{color:var(--red-2)}
-  .dd .s{display:block;margin-top:7px;font-size:12px;color:var(--ink-3)}
+  .dd .s{display:block;margin-top:7px;font-size:14.5px;color:var(--ink-3)}
   .dd.add{display:flex;align-items:center;justify-content:center;
-    border-style:dashed;color:var(--ink-4);font-size:13.5px}
+    border-style:dashed;color:var(--ink-4);font-size:15.5px}
 
   /* ── 교재·확장팩 ── */
   .shop{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px}
@@ -90,34 +90,34 @@
   .sh .cv{padding:20px 22px 16px;
     background:linear-gradient(135deg,var(--red-soft),transparent 72%),var(--surface-2);
     border-bottom:1px solid var(--line)}
-  .sh .cv .eb{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--ink-4)}
+  .sh .cv .eb{font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--ink-4)}
   .sh .cv b{display:block;margin-top:7px;font-size:20px;color:var(--ink);
     letter-spacing:-.04em;font-family:var(--title);font-weight:var(--tw)}
   .sh .bd{padding:16px 20px 18px;flex:1;display:flex;flex-direction:column;gap:12px}
-  .sh p{font-size:13.5px;color:var(--ink-3);line-height:1.65;flex:1}
+  .sh p{font-size:15.5px;color:var(--ink-3);line-height:1.65;flex:1}
   .sh .go{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
-  .sh .go .btn{font-size:13.5px;padding:10px 16px}
-  .sh .go .st{font-size:12px;color:var(--ink-4)}
+  .sh .go .btn{font-size:15.5px;padding:10px 16px}
+  .sh .go .st{font-size:14.5px;color:var(--ink-4)}
 
   /* ── 요약 밴드 ── */
   /* 시험 범위가 기본값(서문여고)일 때 알리는 띠 */
   .scopenote{border:1px solid var(--amber);border-radius:var(--r2);
     background:rgba(232,163,61,.09);padding:15px 18px;margin-bottom:var(--s3)}
-  .scopenote b{display:block;font-size:15px;margin-bottom:5px;color:var(--ink)}
-  .scopenote span{display:block;font-size:13px;color:var(--ink-3);line-height:1.6}
-  .scopenote a{display:inline-block;margin-top:10px;font-size:13.5px;font-weight:600;
+  .scopenote b{display:block;font-size:16px;margin-bottom:5px;color:var(--ink)}
+  .scopenote span{display:block;font-size:15px;color:var(--ink-3);line-height:1.6}
+  .scopenote a{display:inline-block;margin-top:10px;font-size:15.5px;font-weight:600;
     color:var(--amber);text-decoration:none}
   .scopenote a:hover{text-decoration:underline}
   .band{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;
     background:var(--line);border:1px solid var(--line);border-radius:var(--r2);
     overflow:hidden;margin-top:var(--s3)}
   .band > div{background:var(--surface);padding:20px 22px}
-  .band .k{font-size:12.5px;color:var(--ink-4);font-weight:600}
+  .band .k{font-size:14.5px;color:var(--ink-4);font-weight:600}
   .band .v{display:block;margin-top:7px;font-family:var(--mono);font-size:38px;
-    font-weight:600;color:var(--ink);letter-spacing:-.045em;line-height:1;
+    font-weight:800;color:var(--ink);letter-spacing:-.045em;line-height:1;
     font-variant-numeric:tabular-nums}
   .band .v small{font-size:16px;color:var(--ink-3);margin-left:3px;font-weight:500}
-  .band .s{display:block;margin-top:9px;font-size:12.5px;color:var(--ink-3);line-height:1.55}
+  .band .s{display:block;margin-top:9px;font-size:14.5px;color:var(--ink-3);line-height:1.55}
   .band .hot .v{color:var(--red-2)}
 
   /* ── 갈래 카드 ── */
@@ -128,12 +128,12 @@
   .fam:hover{border-color:var(--line-3);transform:translateY(-2px)}
   .fam:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px}
   .fam h3{font-size:19px;display:flex;align-items:center;gap:9px}
-  .fam .say{font-size:13.5px;color:var(--ink-3);margin-top:8px;line-height:1.6}
+  .fam .say{font-size:15.5px;color:var(--ink-3);margin-top:8px;line-height:1.6}
   .fam .nums{display:flex;gap:18px;margin-top:16px}
   .fam .nums div{flex:1}
-  .fam .nums b{display:block;font-family:var(--mono);font-size:21px;font-weight:600;
+  .fam .nums b{display:block;font-family:var(--mono);font-size:21px;font-weight:800;
     color:var(--ink);letter-spacing:-.02em}
-  .fam .nums span{font-size:11.5px;color:var(--ink-4)}
+  .fam .nums span{font-size:14.5px;color:var(--ink-4)}
   .fam .track{margin-top:14px}
 
   /* ── 강·약 ── */
@@ -144,28 +144,28 @@
   .lst .hd{padding:15px 20px;border-bottom:1px solid var(--line);display:flex;
     align-items:center;gap:9px;background:var(--surface-2)}
   .lst .hd h3{font-size:16.5px}
-  .lst .hd .tag{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--ink-4)}
+  .lst .hd .tag{margin-left:auto;font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-weight:800}
   .row{display:flex;align-items:center;gap:12px;padding:13px 20px;
     border-bottom:1px solid var(--line);cursor:pointer;transition:background .14s}
   .row:last-child{border-bottom:0}
   .row:hover{background:var(--surface-2)}
   .row .dot{width:10px;height:10px;border-radius:50%;flex:0 0 10px}
   .row .nm{flex:1;min-width:0}
-  .row .nm b{display:block;font-size:14.5px;color:var(--ink-2);font-weight:700;
+  .row .nm b{display:block;font-size:15.5px;color:var(--ink-2);font-weight:700;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .row .nm span{font-size:12px;color:var(--ink-4)}
-  .row .pc{font-family:var(--mono);font-size:15px;color:var(--ink-3);flex:0 0 auto}
+  .row .nm span{font-size:14.5px;color:var(--ink-4)}
+  .row .pc{font-family:var(--mono);font-size:16px;color:var(--ink-3);flex:0 0 auto;font-weight:800}
 
   /* ── 확인해볼까요 ── */
   .check{border:1px solid var(--red-line);border-radius:var(--r2);
     background:linear-gradient(180deg,var(--red-soft),transparent 62%),var(--surface);
     padding:24px 26px}
   .check h2{font-size:22px}
-  .check .lead{font-size:15px;color:var(--ink-2);margin-top:10px;line-height:1.7;
+  .check .lead{font-size:16px;color:var(--ink-2);margin-top:10px;line-height:1.7;
     max-width:62ch}
   .check .lead b{color:var(--ink)}
   .check .acts{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;align-items:center}
-  .check .hint{font-size:12.5px;color:var(--ink-4)}
+  .check .hint{font-size:14.5px;color:var(--ink-4)}
 
   .quiz{margin-top:20px;border:1px solid var(--line);border-radius:var(--r1);
     background:var(--surface-2);overflow:hidden}
@@ -175,26 +175,26 @@
   .quiz .qh .pips i{width:22px;height:5px;border-radius:3px;background:var(--line-2)}
   .quiz .qh .pips i.ok{background:var(--mint)} .quiz .qh .pips i.no{background:var(--red)}
   .quiz .qh .pips i.now{background:var(--ink-3)}
-  .quiz .qh .who{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--ink-4)}
+  .quiz .qh .who{margin-left:auto;font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-weight:800}
   .quiz .qb{padding:20px 20px 22px}
   .quiz .stem{font-size:16.5px;font-weight:700;color:var(--ink);line-height:1.62;
     margin-bottom:14px}
   .quiz .data{border-radius:var(--r1);padding:16px 18px;margin-bottom:14px;
     background:var(--surface);border:1px solid var(--line);
-    border-left:3px solid var(--mint);font-size:15px;line-height:1.9;color:var(--ink-2)}
+    border-left:3px solid var(--mint);font-size:16px;line-height:1.9;color:var(--ink-2)}
   .quiz .fig{border-radius:var(--r1);overflow:hidden;border:1px solid var(--line-2);
     margin-bottom:12px;background:var(--crop);padding:9px 9px 0}
   .quiz .fig img{display:block;width:100%;border-radius:6px;mix-blend-mode:multiply}
-  .quiz .figcap{font-size:12px;color:var(--ink-4);margin:0 0 10px;font-family:var(--mono)}
+  .quiz .figcap{font-size:14.5px;color:var(--ink-4);margin:0 0 10px;font-family:var(--mono);font-weight:800}
   .quiz .opts{display:flex;flex-direction:column;gap:8px}
   .quiz .opts.nums{flex-direction:row;flex-wrap:wrap}
   .quiz .opts.nums .opt{flex:1;min-width:72px;justify-content:center;padding:15px 8px}
   .opt{display:flex;gap:12px;align-items:flex-start;padding:13px 15px;border-radius:var(--r1);
     border:1px solid var(--line);background:var(--surface);color:var(--ink-2);cursor:pointer;
-    font-family:inherit;font-size:15px;line-height:1.6;text-align:left;transition:.14s}
+    font-family:inherit;font-size:16px;line-height:1.6;text-align:left;transition:.14s}
   .opt:hover:not([disabled]){border-color:var(--line-3);color:var(--ink)}
   .opt .k{flex:0 0 23px;height:23px;border-radius:7px;background:var(--surface-3);
-    display:grid;place-items:center;font-family:var(--mono);font-size:12px;font-weight:700;
+    display:grid;place-items:center;font-family:var(--mono);font-size:14.5px;font-weight:800;
     color:var(--ink-3)}
   .opt[data-s="ok"]{border-color:var(--mint);background:rgba(47,224,206,.10);color:var(--ink)}
   .opt[data-s="ok"] .k{background:var(--mint);color:#06110F}
@@ -202,17 +202,17 @@
   .opt[data-s="no"] .k{background:var(--red);color:#fff}
   .opt[disabled]{cursor:default}
   .why{margin-top:14px;border-radius:var(--r1);border:1px solid var(--line);
-    background:var(--surface);padding:15px 17px;font-size:14px;line-height:1.75;
+    background:var(--surface);padding:15px 17px;font-size:16px;line-height:1.75;
     color:var(--ink-2)}
   /* ── 왜 틀렸나 ──
      정답만 알려 주면 학생은 제 답이 왜 아닌지를 스스로 찾아 읽어야 한다.
      고른 선지의 설명을 맨 앞에 둔다. */
   .whyrow{display:flex;gap:10px;align-items:flex-start;padding:13px 15px;
-    border-radius:var(--r1);margin-bottom:9px;font-size:14px;line-height:1.7}
+    border-radius:var(--r1);margin-bottom:9px;font-size:16px;line-height:1.7}
   .whyrow .no{flex:0 0 24px;height:24px;border-radius:7px;display:grid;place-items:center;
-    font-family:var(--mono);font-size:12.5px;font-weight:700}
+    font-family:var(--mono);font-size:14.5px;font-weight:800}
   .whyrow .tt{flex:1;min-width:0}
-  .whyrow .tt b{display:block;font-size:12px;margin-bottom:3px;letter-spacing:.02em}
+  .whyrow .tt b{display:block;font-size:14.5px;margin-bottom:3px;letter-spacing:.02em}
   .whyrow.mine{background:var(--red-soft);border:1px solid var(--red-line)}
   .whyrow.mine .no{background:var(--red);color:#fff}
   .whyrow.mine .tt b{color:var(--red-2)}
@@ -221,18 +221,18 @@
   .whyrow.right .tt b{color:var(--mint)}
   .whyrow .tt span{color:var(--ink-2)}
   .whymore{margin-top:4px}
-  .whymore summary{cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--ink-4);
-    padding:7px 0;list-style:none;display:flex;align-items:center;gap:7px}
-  .whymore summary:before{content:"+";font-size:14px}
+  .whymore summary{cursor:pointer;font-family:var(--mono);font-size:14.5px;color:var(--ink-4);
+    padding:7px 0;list-style:none;display:flex;align-items:center;gap:7px;font-weight:800}
+  .whymore summary:before{content:"+";font-size:16px}
   .whymore[open] summary:before{content:"–"}
   .whymore summary:hover{color:var(--ink-3)}
   .whymore .whyrow{background:var(--surface-2);border:1px solid var(--line)}
   .whymore .whyrow .no{background:var(--surface-3);color:var(--ink-3)}
 
-  .why .src{display:block;margin-top:10px;font-family:var(--mono);font-size:11px;
-    color:var(--ink-4)}
+  .why .src{display:block;margin-top:10px;font-family:var(--mono);font-size:14.5px;
+    color:var(--ink-4);font-weight:800}
   .verdict{padding:30px 22px;text-align:center}
-  .verdict .big{font-family:var(--mono);font-size:52px;font-weight:600;color:var(--ink);
+  .verdict .big{font-family:var(--mono);font-size:52px;font-weight:800;color:var(--ink);
     letter-spacing:-.05em;line-height:1}
   .verdict .big small{font-size:26px;color:var(--ink-4)}
   .verdict p{margin-top:12px;font-size:15.5px;color:var(--ink-2);line-height:1.7;
@@ -244,10 +244,10 @@
   .td{border:1px solid var(--line);border-radius:var(--r2);padding:17px 19px;
     background:var(--surface);display:block;transition:.16s}
   .td:hover{border-color:var(--line-3);transform:translateY(-2px)}
-  .td .n{font-family:var(--mono);font-size:11px;color:var(--ink-4);letter-spacing:.1em}
+  .td .n{font-family:var(--kr);font-weight:700;font-size:14.5px;color:var(--ink-4);letter-spacing:-.01em;}
   .td h4{font-size:15.5px;margin:8px 0 7px;color:var(--ink);letter-spacing:-.03em;
     font-family:var(--kr);font-weight:700}
-  .td p{font-size:13px;color:var(--ink-3);line-height:1.6}
+  .td p{font-size:15px;color:var(--ink-3);line-height:1.6}
 
   /* ── 주간 ── */
   .week{display:flex;align-items:flex-end;gap:8px;height:120px;padding:0 4px}
@@ -256,7 +256,7 @@
   .week .d i{display:block;width:100%;border-radius:5px 5px 2px 2px;background:var(--lv2);
     min-height:3px}
   .week .d.today i{background:var(--red)}
-  .week .d span{font-size:11.5px;color:var(--ink-4);font-family:var(--mono)}
+  .week .d span{font-size:14.5px;color:var(--ink-4);font-family:var(--mono);font-weight:800}
 
   @media(max-width:520px){
     .wrapx{padding:0 14px var(--s5)}
@@ -269,7 +269,7 @@
     padding:var(--s4);margin-bottom:var(--s4)}
   .rt .top{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
   .rt .top h2{font-family:var(--title);font-size:23px;font-weight:900;letter-spacing:-.02em}
-  .rt .top .num{margin-left:auto;font-family:var(--mono);font-size:14px;color:var(--ink-3)}
+  .rt .top .num{margin-left:auto;font-family:var(--mono);font-size:16px;color:var(--ink-3);font-weight:800}
   .rt .top .num b{font-size:22px;color:var(--ink-1)}
   .rt.ok .top .num b{color:var(--mint)}
   .bar{height:10px;border-radius:99px;background:var(--line-2);overflow:hidden;position:relative}
@@ -277,7 +277,7 @@
     transition:width .7s cubic-bezier(.32,.72,0,1)}
   .rt.ok .bar i{background:var(--mint)}
   .bar .tick{position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--line-3);opacity:.7}
-  .rt .said{margin:11px 2px 0;font-size:14px;color:var(--ink-3);line-height:1.65}
+  .rt .said{margin:11px 2px 0;font-size:16px;color:var(--ink-3);line-height:1.65}
   .rt .said b{color:var(--ink-1)}
 
   .steps2{margin-top:14px;display:grid;gap:8px}
@@ -287,7 +287,7 @@
     transition:border-color .16s,transform .16s,background .16s}
   .stp2:hover{border-color:var(--red);transform:translateX(2px)}
   .stp2 .no{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
-    font-family:var(--mono);font-size:12px;font-weight:700;
+    font-family:var(--mono);font-size:14.5px;font-weight:800;
     background:var(--line-2);color:var(--ink-2)}
   .stp2.due .no{background:var(--red);color:#fff}
   /* 새 주기 항목 — 성격이 달라 묻히면 안 된다 */
@@ -298,7 +298,7 @@
   .stp2.vacation .no{background:var(--amber);color:#1A1206}
   .stp2.note{border-style:dashed}
   .stp2.note .no{background:var(--surface-3);color:var(--ink-3)}
-  .stp2 .badge{display:inline-block;margin-left:7px;font-size:10.5px;font-weight:700;
+  .stp2 .badge{display:inline-block;margin-left:7px;font-size:14.5px;font-weight:700;
     padding:1px 6px;border-radius:99px;vertical-align:2px}
   .stp2.after .badge{background:var(--red);color:#fff}
   .stp2.weekly .badge{background:var(--mint-soft);color:var(--mint)}
@@ -308,32 +308,32 @@
   /* 개념 체크 — 확신도를 함께 묻는 자리라 문제풀이와 달라 보여야 한다 */
   .stp2.oxstep{border-color:var(--mint-2)}
   .stp2.oxstep .no{background:var(--mint-2);color:#04150E}
-  .stp2.oxstep .badge{background:var(--mint-soft);color:var(--mint-2);font-family:var(--mono)}
+  .stp2.oxstep .badge{background:var(--mint-soft);color:var(--mint-2);font-family:var(--mono);font-weight:800}
   .stp2.done{opacity:.5}
   .stp2.done .no{background:var(--mint);color:#04150E}
-  .stp2 .tx h4{font-size:14.5px;font-weight:800;letter-spacing:-.01em}
-  .stp2 .tx p{font-size:13px;color:var(--ink-3);margin-top:2px;line-height:1.5}
-  .stp2 .tx .rz{font-size:12px;color:var(--ink-4);margin-top:3px;background:none;
+  .stp2 .tx h4{font-size:15.5px;font-weight:800;letter-spacing:-.01em}
+  .stp2 .tx p{font-size:15px;color:var(--ink-3);margin-top:2px;line-height:1.5}
+  .stp2 .tx .rz{font-size:14.5px;color:var(--ink-4);margin-top:3px;background:none;
     border:0;padding:0}
   .stp2 .rt2{text-align:right;display:grid;gap:4px;justify-items:end}
-  .stp2 .min{font-family:var(--mono);font-size:12.5px;color:var(--ink-3);white-space:nowrap}
+  .stp2 .min{font-family:var(--mono);font-size:14.5px;color:var(--ink-3);white-space:nowrap;font-weight:800}
   .stp2 .min b{font-size:16px;color:var(--ink-1)}
-  .stp2 .go2{font-size:12px;font-weight:700;color:var(--red)}
+  .stp2 .go2{font-size:14.5px;font-weight:700;color:var(--red)}
 
   /* ── 달력 ── */
   .cal{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);
     padding:var(--s4)}
   .cal .chd{display:flex;align-items:baseline;gap:8px;margin-bottom:12px}
   .cal .chd h3{font-family:var(--title);font-size:17px;font-weight:900}
-  .cal .chd .cap2{margin-left:auto;font-size:12px;color:var(--ink-4)}
+  .cal .chd .cap2{margin-left:auto;font-size:14.5px;color:var(--ink-4)}
   .cgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;
     grid-auto-rows:min-content}
-  .cgrid .dw{text-align:center;font-size:11px;color:var(--ink-4);padding-bottom:2px;
-    font-family:var(--mono)}
+  .cgrid .dw{text-align:center;font-size:14.5px;color:var(--ink-4);padding-bottom:2px;
+    font-family:var(--mono);font-weight:800}
   .cgrid .dw.sun{color:var(--red-2)}
   .cd{height:34px;border-radius:8px;display:grid;place-items:center;position:relative;
-    font-family:var(--mono);font-size:12px;color:var(--ink-4);line-height:1;
-    background:var(--line-2);border:1px solid transparent}
+    font-family:var(--mono);font-size:14.5px;color:var(--ink-4);line-height:1;
+    background:var(--line-2);border:1px solid transparent;font-weight:800}
   .cd.l1{background:color-mix(in srgb,var(--red) 26%,var(--line-2));color:var(--ink-2)}
   .cd.l2{background:var(--red);color:#fff;font-weight:700}
   .cd.future{background:transparent;border:1px dashed var(--line);color:var(--ink-4);opacity:.55}
@@ -342,20 +342,20 @@
   .cd .m{font-size:8.5px;opacity:.8;font-style:normal}
   .cd.pad{background:none;border:none;height:34px}
   .caltot{display:flex;gap:16px;margin-top:12px;padding-top:11px;
-    border-top:1px solid var(--line);font-size:13px;color:var(--ink-3)}
-  .caltot b{font-family:var(--mono);font-size:17px;color:var(--ink-1);margin-right:3px}
+    border-top:1px solid var(--line);font-size:15px;color:var(--ink-3)}
+  .caltot b{font-family:var(--mono);font-size:17px;color:var(--ink-1);margin-right:3px;font-weight:800}
   .caltot .fire b{color:var(--red)}
   @media(max-width:520px){ .stp2{grid-template-columns:22px 1fr auto;gap:9px}
-    .stp2 .tx h4{font-size:13.5px} .stp2 .tx p{font-size:12px} }
+    .stp2 .tx h4{font-size:15.5px} .stp2 .tx p{font-size:14.5px} }
 
   .foot{margin-top:var(--s5);padding-top:var(--s3);border-top:1px solid var(--line);
-    font-size:12.5px;color:var(--ink-4);line-height:1.8}
+    font-size:14.5px;color:var(--ink-4);line-height:1.8}
 
   /* ── 폰 기준 한 줄 구성(2026-09-05 대표님: "애들은 다 폰이나 패드로 공부, 화면 구성이 단순해야") ──
      머리는 두 줄, 그 밑에 지금 할 것 하나가 크게, 나머지는 접힌다. */
   .phead{padding:30px 0 18px;gap:var(--s2)}
   .phead h1{font-size:clamp(26px,4vw,38px);margin-top:8px}
-  .phead .sub{margin-top:9px;font-size:15px}
+  .phead .sub{margin-top:9px;font-size:16px}
   .pheadact:empty{display:none}
   .sec.tight{margin-top:var(--s3)}
   .sec.tight .sechd{margin-bottom:12px}
@@ -368,21 +368,21 @@
     padding:18px 18px 16px;border:1px solid var(--red-line);border-radius:var(--r2);
     background:linear-gradient(180deg,var(--red-soft),transparent 70%),var(--card-2);
     text-decoration:none;color:inherit}
-  .hero .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--red-2);text-transform:uppercase}
+  .hero .lbl{font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--red-2);}
   .hero h3{font-size:20px;margin:6px 0 4px;letter-spacing:-.03em;color:var(--ink);font-family:var(--kr);font-weight:800}
-  .hero p{font-size:14px;color:var(--ink-3);line-height:1.55;margin:0}
-  .hero .why{font-size:12.5px;color:var(--ink-4);margin-top:6px}
+  .hero p{font-size:16px;color:var(--ink-3);line-height:1.55;margin:0}
+  .hero .why{font-size:14.5px;color:var(--ink-4);margin-top:6px}
   .hero .btn{font-size:15.5px;padding:14px 22px;white-space:nowrap}
   .hero.ok{border-color:var(--mint);background:linear-gradient(180deg,var(--mint-soft),transparent 70%),var(--card-2)}
   .hero.ok .lbl{color:var(--mint)}
   .rest{margin-top:10px;display:grid;gap:6px}
   .rest:empty{display:none}
   .rest .stp2{padding:9px 11px;grid-template-columns:22px 1fr auto;gap:9px}
-  .rest .stp2 .tx h4{font-size:13.5px;font-weight:700}
+  .rest .stp2 .tx h4{font-size:15.5px;font-weight:700}
   .rest .stp2 .tx p{display:none}
   .rest .stp2 .rt2{gap:0}
   .rest .stp2 .go2{display:none}
-  .rest .stp2 .min b{font-size:14px}
+  .rest .stp2 .min b{font-size:16px}
   @media(max-width:640px){
     .rt{padding:16px 14px 14px}
     .hero{grid-template-columns:1fr;padding:15px 14px 14px}
@@ -394,27 +394,27 @@
   .dday{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
   .dd{display:inline-flex;align-items:baseline;gap:8px;padding:9px 13px}
   .dd .v{margin:0;font-size:18px}
-  .dd .s{margin:0;font-size:11.5px}
-  .dd .k{font-size:12.5px}
-  .dd.add{padding:9px 13px;font-size:12.5px}
+  .dd .s{margin:0;font-size:14.5px}
+  .dd .k{font-size:14.5px}
+  .dd.add{padding:9px 13px;font-size:14.5px}
   .band{display:none}   /* 전체 진도·등급 네 칸은 접힌 '단원별' 안으로 옮긴다 — 아래 JS */
   #more-stat .band{display:grid;margin:12px 0 var(--s3)}
 
   /* 접힘 */
   .more{margin-top:10px;border:1px solid var(--line);border-radius:var(--r2);background:var(--surface)}
   .more summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;
-    padding:15px 18px;font-size:15px;font-weight:700;color:var(--ink-2);letter-spacing:-.01em}
+    padding:15px 18px;font-size:16px;font-weight:700;color:var(--ink-2);letter-spacing:-.01em}
   .more summary::-webkit-details-marker{display:none}
   .more summary i{margin-left:auto;width:9px;height:9px;border-right:2px solid var(--ink-4);
     border-bottom:2px solid var(--ink-4);transform:rotate(45deg);transition:transform .2s;flex:0 0 auto}
   .more[open] summary i{transform:rotate(-135deg)}
-  .more summary em{font-style:normal;font-size:12.5px;color:var(--ink-4);font-weight:500}
+  .more summary em{font-style:normal;font-size:14.5px;color:var(--ink-4);font-weight:500}
   .more summary:hover{color:var(--ink)}
   .more .mbody{padding:4px 18px 20px;border-top:1px solid var(--line)}
   .more .mbody .cal{border:0;padding:12px 0 0;background:none}
   .more .mbody .sechd{margin-top:12px}
   @media(max-width:520px){
-    .more summary{padding:13px 14px;font-size:14px}
+    .more summary{padding:13px 14px;font-size:16px}
     .more .mbody{padding:4px 12px 16px}
   }
 </style>
@@ -441,7 +441,7 @@
 
   <!-- ③ 오늘의 개념 카드 — 눌러야 열린다 -->
   <section class="sec tight" id="cardsec">
-    <div class="sechd"><h2>오늘의 개념 카드</h2><span class="cap">하루 한 장 · 눌러서 열기</span></div>
+    <div class="sechd"><h2>오늘 개념</h2><span class="cap">눌러서 열기</span></div>
     <div id="tcard"></div>
   </section>
 
@@ -452,15 +452,15 @@
   </details>
 
   <details class="more" id="more-stat">
-    <summary><span>단원별로 어디가 든든하고 어디가 얇은지</span><i></i></summary>
+    <summary><span>단원별로 어디가 탄탄하고 어디가 약한지</span><i></i></summary>
     <div class="mbody">
       <div class="sechd"><h2>갈래별로 보면</h2>
-        <span class="cap">눌러서 그 갈래의 스킬트리로</span></div>
+        <span class="cap">눌러서 그 갈래의 개념트리로</span></div>
       <div class="fams" id="fams"></div>
       <div class="two" style="margin-top:var(--s3)">
-        <div class="lst"><div class="hd"><h3>든든한 곳</h3>
+        <div class="lst"><div class="hd"><h3>탄탄한 곳</h3>
           <span class="tag" id="goodTag"></span></div><div id="good"></div></div>
-        <div class="lst"><div class="hd"><h3>아직 얇은 곳</h3>
+        <div class="lst"><div class="hd"><h3>아직 약한 곳</h3>
           <span class="tag" id="badTag"></span></div><div id="bad"></div></div>
       </div>
       <div class="check" id="check" style="margin-top:var(--s3)"></div>
@@ -501,9 +501,12 @@
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/cards.js?v=1a50b0db"></script>
-<script src="js/store.js?v=4d4a9000"></script>
-<script src="js/coach.js?v=365e93e4"></script>
-<script src="js/notify.js?v=9f8c340a"></script>
+<script src="js/store.js?v=0fb25aff"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/supa.config.js?v=e1d10860"></script>
+<script src="js/auth.js?v=72d8dbed"></script>
+<script src="js/coach.js?v=a47134ba"></script>
+<script src="js/notify.js?v=a6c06818"></script>
 <script>
 (function(){
   var T=TERRA, Q=window.QBANK||{};
@@ -523,7 +526,7 @@
     if(st.achieve<30) return "이제 막 시작했어요";
     if(st.achieve<60) return "절반쯤 왔어요";
     if(st.achieve<80) return "감이 잡히고 있어요";
-    return "여기는 든든해요";
+    return "여기는 탄탄해요";
   }
   /* 개념 이름이 데이터에서 오므로 조사도 받침을 보고 골라야 한다 */
   function bat(w){ w=String(w||""); var c=w.charCodeAt(w.length-1);
@@ -577,19 +580,19 @@
 
   /* ── 머리 ── */
   document.getElementById("today").textContent=
-    (d.getMonth()+1)+"월 "+d.getDate()+"일"+(r.streak?" · "+r.streak+"일 연속":"");
+    (d.getMonth()+1)+"월 "+d.getDate()+"일"+(r.streak?", "+r.streak+"일째":"");
   var name=(S.student&&S.student.name)||"학생";
   document.getElementById("hi").innerHTML=name+" 학생의 <em>오늘</em>";
   /* 학년 공부 방식 — REMIND · REWIND · REWIRE */
   (function(){ var gi=T.gradeInfo(); if(!gi.re) return;
-    document.getElementById("remode").innerHTML='<span class="re">'+gi.re+'</span> · '+esc(gi.reKo)+' · '+esc(gi.reSay); })();
+    document.getElementById("remode").innerHTML='<span class="re">'+gi.re+'</span> '+esc(gi.reKo)+' '+esc(gi.reSay); })();
   var todayAll=r.answers+r.drills;
   /* ★ 인사는 선생님 층이 만든다 — 어제 몇 문항 맞혔는지, 오늘은 무엇부터인지.
      "오늘 할 것만 골라 뒀어요" 는 누구에게나 같은 말이라 아무 말도 아니었다. */
   document.getElementById("lede").textContent=
     (window.COACH ? COACH.greeting()
-      : ((S.student&&S.student.grade)||"고1")+" · "+T.gradeInfo().subject+
-        " — 오늘 할 것만 골라 뒀어요. 위에서부터 눌러 주세요.");
+      : ((S.student&&S.student.grade)||"고1")+" "+T.gradeInfo().subject+
+        ". 오늘 할 것을 골라 뒀어요. 위에서부터 누르면 돼요.");
   if(window.COACH){
     COACH.mountToday(document.getElementById("tstat"));
     COACH.mountCard(document.getElementById("tcard"));
@@ -608,13 +611,13 @@
     var bits=[];
     if(sp.q) bits.push("문제 "+sp.q+"개");
     if(sp.lec) bits.push("강의 "+sp.lec+"분");
-    if(sp.drill) bits.push("훈련 "+sp.drill+"문항");
+    if(sp.drill) bits.push("Killer Drill "+sp.drill+"문항");
 
     var said = R.done
-      ? "오늘 몫을 채웠어요"+(bits.length?" — "+bits.join(" · ")+".":".")+
-        " 여기서 멈춰도 괜찮고, 더 하면 내일이 가벼워져요."
+      ? "오늘 몫을 채웠어요"+(bits.length?". "+bits.join(", ")+".":".")+
+        " 더 풀 수 있어요."
       : R.spent
-        ? "지금까지 <b>"+R.spent+"분</b>"+(bits.length?" ("+bits.join(" · ")+")":"")+
+        ? "지금까지 <b>"+R.spent+"분</b>"+(bits.length?" ("+bits.join(", ")+")":"")+
           ". <b>"+Math.max(1,R.goal-R.spent)+"분</b>만 더 하면 끝나요."
         : "<b>"+R.goal+"분</b>이면 끝나요. 위에서부터 차례로 누르세요.";
 
@@ -634,9 +637,9 @@
         '<span class="lbl">지금 할 것</span>'+
         '<h3>'+esc(heroIt.title)+'</h3><p>'+esc(heroIt.say)+'</p>'+
         (heroIt.why?'<p class="why">'+esc(heroIt.why)+'</p>':'')+'</span>'+
-        '<span class="btn">'+esc(heroIt.cta)+' · '+heroIt.min+'분 →</span></a>'
+        '<span class="btn">'+esc(heroIt.cta)+' '+heroIt.min+'분 →</span></a>'
       : '<div class="hero ok"><span class="tx"><span class="lbl">오늘 몫 끝</span>'+
-        '<h3>오늘 할 것을 다 했어요</h3><p>여기서 멈춰도 괜찮아요. 더 하면 내일이 가벼워져요.</p></span>'+
+        '<h3>오늘 할 것을 다 했어요</h3><p>더 풀 수 있어요.</p></span>'+
         '<a class="btn" href="study.html">더 풀기 →</a></div>';
     var steps=R.items.map(function(it,k){
       var before=acc; acc+=it.min;
@@ -669,7 +672,7 @@
     });
 
     host.innerHTML=
-      '<div class="top"><h2>'+(R.done?"오늘 몫 끝":"오늘 할 것 · "+R.goal+"분")+'</h2>'+
+      '<div class="top"><h2>'+(R.done?"오늘 몫 끝":"오늘 할 것 "+R.goal+"분")+'</h2>'+
       '<span class="num"><b>'+R.spent+'</b> / '+R.goal+'분</span></div>'+
       '<div class="bar"><i style="width:'+(R.pct*100).toFixed(1)+'%"></i>'+ticks+'</div>'+
       '<p class="said">'+said+'</p>'+
@@ -684,7 +687,7 @@
     var cells=C.cells.map(function(c){
       if(!c) return '<span class="cd pad"></span>';
       return '<span class="cd l'+c.lv+(c.today?" today":"")+(c.future?" future":"")+
-        '" title="'+c.key+(c.min?" · "+c.min+"분":"")+'">'+c.day+
+        '" title="'+c.key+(c.min?", "+c.min+"분":"")+'">'+c.day+
         (c.min?'<i class="m">'+c.min+'</i>':'')+'</span>';
     }).join("");
     document.getElementById("cal").innerHTML=
@@ -736,7 +739,7 @@
     host.insertAdjacentHTML("beforebegin",
       '<div class="scopenote">'+
         '<b>시험 범위가 '+esc(b.학교)+' 기준으로 잡혀 있어요</b>'+
-        '<span>'+esc(b.name)+' · '+esc(b.단원)+' — 우리 학교 범위와 다르면 꼭 고쳐 주세요. '+
+        '<span>'+esc(b.name)+', '+esc(b.단원)+' — 우리 학교 범위와 다르면 꼭 고쳐 주세요. '+
         '범위가 다르면 안 배운 데를 풀게 됩니다.</span>'+
         '<a href="settings.html#scope">내 학교 범위로 고치기 →</a>'+
       '</div>');
@@ -781,7 +784,7 @@
       st.col+'"></i></span></a>';
   }).join("");
 
-  /* ── 든든한 곳 · 얇은 곳 ── */
+  /* ── 탄탄한 곳 · 약한 곳 ── */
   var mids=[];
   T.ROOTS.forEach(function(rt){ rt.mids.forEach(function(m){
     var st=T.midStat(m.code);
@@ -790,7 +793,7 @@
   var solvedMids=mids.filter(function(x){ return x.st.solved>=3; });
   var good=solvedMids.slice().sort(function(a,b){ return b.st.achieve-a.st.achieve; }).slice(0,4);
   var thin=solvedMids.slice().sort(function(a,b){ return a.st.achieve-b.st.achieve; }).slice(0,4);
-  // 아직 아무것도 안 푼 곳도 얇은 쪽에 함께 보인다
+  // 아직 아무것도 안 푼 곳도 약한 쪽에 함께 보인다
   var untouched=mids.filter(function(x){ return x.st.play>0 && x.st.solved===0; })
     .sort(function(a,b){ return b.st.play-a.st.play; }).slice(0,2);
   thin=thin.concat(untouched).slice(0,5);
@@ -803,7 +806,7 @@
     var col=FAMSTAT[x.fam]?FAMSTAT[x.fam].col:"var(--lv2)";
     return '<div class="row" data-area="'+x.root.code+'">'+
       '<span class="dot" style="background:'+col+';opacity:'+(x.st.solved?1:.4)+'"></span>'+
-      '<span class="nm"><b>'+esc(x.m.name)+'</b><span>'+x.root.name+' · '+howFar(x.st)+'</span></span>'+
+      '<span class="nm"><b>'+esc(x.m.name)+'</b><span>'+x.root.name+', '+howFar(x.st)+'</span></span>'+
       '<span class="pc">'+(x.st.solved?x.st.achieve+"%":"—")+'</span></div>';
   }
   function empty(t){ return '<div class="row"><span class="nm"><b>'+t+'</b></span></div>'; }
@@ -816,7 +819,7 @@
      그래서 바로 세 문항을 내고, 결과로 진단을 고쳐 쓴다. */
   var target=null, quiz=null;
   function pickTarget(){
-    // 얇다고 본 곳 가운데 지금 풀 수 있는 문항이 있는 리프를 고른다
+    // 약하다고 본 곳 가운데 지금 풀 수 있는 문항이 있는 리프를 고른다
     for(var i=0;i<thin.length;i++){
       var leaves=thin[i].m.leaves.filter(function(l){ return playable(l).length>=3; });
       if(leaves.length) return {mid:thin[i], leaf:leaves.sort(function(a,b){
@@ -832,7 +835,7 @@
     target=pickTarget();
     var host=document.getElementById("check");
     if(!target){
-      host.innerHTML='<h2>확인해볼까요?</h2>'+
+      host.innerHTML='<h2>세 문항으로 확인해요</h2>'+
         '<p class="lead">지금은 바로 낼 수 있는 문항이 모자랍니다. '+
         '문제풀이에서 한 단원을 골라 보세요.</p>'+
         '<div class="acts"><a class="btn" href="study.html">문제 풀러 가기</a></div>';
@@ -841,15 +844,15 @@
     var st=T.midStat(target.mid.m.code);
     var say = st.solved
       ? '지금까지 푼 것만 보면 <b>'+esc(target.mid.m.name)+'</b>'+
-        (bat(target.mid.m.name)?"이":"가")+' 아직 얇아 보여요.'
+        (bat(target.mid.m.name)?"이":"가")+' 아직 약해 보여요.'
       : '<b>'+esc(target.mid.m.name)+'</b>'+
         (bat(target.mid.m.name)?"은":"는")+' 아직 손대지 않으셨네요.';
-    host.innerHTML='<h2>정말 그런지 확인해볼까요?</h2>'+
+    host.innerHTML='<h2>세 문항으로 확인해요</h2>'+
       '<p class="lead">'+say+' 말로만 하면 서로 모르니까요 — '+
       '<b>세 문항</b>이면 바로 알 수 있어요. 결과는 그대로 리포트에 반영됩니다.</p>'+
       '<div class="acts"><button class="btn" id="go3">세 문항으로 확인</button>'+
       '<a class="btn ghost" href="study.html?leaf='+target.leaf.code+'">이 단원 제대로 풀기</a>'+
-      '<span class="hint">'+esc(target.leaf.name)+' · 지금 풀 수 있는 '+
+      '<span class="hint">'+esc(target.leaf.name)+', 지금 풀 수 있는 '+
       playable(target.leaf).length+'문항</span></div><div id="quizhost"></div>';
     document.getElementById("go3").onclick=startQuiz;
   }
@@ -873,10 +876,10 @@
     /* 문항은 **텍스트로 조판**한다(js/qrender.js).
        지면을 통째로 베낀 크롭을 붙이지 않는다 — 글꼴이 제각각이고
        확대·복사가 안 되며 답이 그림 속에 숨는다.
-       study.html · exam.html 과 **같은 조판기**를 써야 같은 문항이 같게 보인다. */
+       study.html, exam.html 과 **같은 조판기**를 써야 같은 문항이 같게 보인다. */
     var 몸 = window.QRENDER ? QRENDER.html(b, q, {}) : '';
     host.innerHTML='<div class="quiz"><div class="qh"><span class="pips">'+pips.join("")+
-      '</span><span class="who">'+esc(target.leaf.name)+' · '+(quiz.i+1)+' / '+
+      '</span><span class="who">'+esc(target.leaf.name)+', '+(quiz.i+1)+' / '+
       quiz.list.length+'</span></div><div class="qb">'+
       /* 조판기가 그린 읽기용 선지 목록은 걷어내고 **누를 수 있는 단추**로 */
       몸.replace(/<ol class="opts5">[\s\S]*?<\/ol>/, '')+
@@ -938,9 +941,9 @@
     });
     document.getElementById("qv").innerHTML=
       '<div class="why"><b style="display:block;margin-bottom:10px">'+
-      (ok?"맞았어요.":"다시 볼까요.")+'</b>'+
+      (ok?"맞았어요.":"틀렸어요.")+'</b>'+
       whyHtml(b,pick,ok)+
-      '<span class="src">'+esc(q.g||"")+' '+esc(q.d||"")+' '+(q.n||"")+'번 · '+
+      '<span class="src">'+esc(q.g||"")+' '+esc(q.d||"")+' '+(q.n||"")+'번, '+
       esc(q.lb||"")+'</span></div>'+
       '<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">'+
       '<button class="btn" id="qnext">'+
@@ -951,10 +954,10 @@
     var got=quiz.marks.filter(Boolean).length, n=quiz.list.length;
     var st=T.midStat(target.mid.m.code);
     var say = got===n
-      ? "생각보다 잘 아시네요. 저희 판단이 틀렸습니다 — 리포트를 고쳐 두었어요."
+      ? "세 문항 다 맞았어요. 리포트를 고쳤어요."
       : got===0
-        ? "여기는 아직 얇은 게 맞아 보여요. 이 단원부터 가면 오르는 게 빨라요."
-        : "반쯤 알고 계시네요. 헷갈리는 자리가 남아 있어요.";
+        ? "이 단원은 아직 약해요. 여기부터 해요."
+        : "절반쯤 알고 있어요. 헷갈리는 자리가 남았어요.";
     document.getElementById("quizhost").innerHTML=
       '<div class="quiz"><div class="verdict"><div class="big">'+got+
       '<small> / '+n+'</small></div><p>'+say+'</p>'+
@@ -994,7 +997,7 @@
     }
     function 꼬리표(base, leafCode){
       if(!T.scopeOn()) return base;
-      return 범위안(leafCode) ? base+" · 시험 범위" : base+" · 범위 밖";
+      return 범위안(leafCode) ? base+", 시험 범위" : base+", 범위 밖";
     }
 
     /* 틀린 것이 가장 많은 곳 — 범위 안에서 고른다 */
@@ -1006,7 +1009,7 @@
     var 고른=틀린것.filter(function(x){ return 후보.indexOf(x.l)>=0; })
       .sort(function(a,b){ return b.bad-a.bad; })[0];
     if(고른) todo.push({t:꼬리표("틀린 것만 다시",고른.l.code),
-      h:고른.l.name, p:"여기서 "+고른.bad+"문항을 놓쳤어요. 다시 풀면 성취도가 가장 크게 움직여요.",
+      h:고른.l.name, p:"여기서 "+고른.bad+"문항을 틀렸어요. 다시 풀면 이해도가 가장 많이 올라요.",
       href:"study.html?leaf="+고른.l.code+"&mode=wrong"});
 
     /* 이어서 — 마지막으로 보던 곳이 범위 밖이면 밀지 않는다 */
@@ -1032,7 +1035,7 @@
         h: XM.untilReal===0 ? "내일부터 모의고사예요"
                             : XM.untilReal+"일 뒤부터 매일 모의고사",
         p:(XM.exam?XM.exam.name+" ":"")+"열흘 전부터는 25문항 45분을 매일 한 회씩 풉니다. "+
-          "그때까지는 약한 곳을 메워 둡시다.",
+          "그때까지는 약한 곳을 채워요.",
         href:"settings.html"});
     })();
 
@@ -1048,9 +1051,9 @@
       }catch(e){}
       todo.unshift(끝냄
         ? {t:XM.exam.name+" "+XM.label, h:"오늘 회차는 끝냈어요",
-           p:"틀린 것만 다시 보면 오늘 몫이 끝납니다.", href:"exam.html"}
+           p:"틀린 것만 다시 풀면 오늘 몫이 끝나요.", href:"exam.html"}
         : {t:XM.exam.name+" "+XM.label, h:"오늘의 모의고사",
-           p:"25문항 45분. 실전처럼 한 번에 풀어 보세요.", href:"exam.html"});
+           p:"25문항 45분이에요.", href:"exam.html"});
     })();
 
     /* 트레이닝 — 시험 범위를 정해 뒀으면 그 범위에서 아직 안 한 것을 집어 준다.
@@ -1063,14 +1066,14 @@
       if(T.scopeOn() && 안.length){
         var 못한=안.filter(function(d){ return T.drillStat(d.id).n===0; });
         var 하나=(못한.length?못한:안)[0];
-        todo.push({t:"이번 시험 범위",h:하나.name+" 훈련",
+        todo.push({t:"이번 시험 범위",h:하나.name+" Killer Drill",
           p:하나.desc,href:"drill.html?type="+하나.id});
         if(범위썼나) todo.push({t:"알림",h:"시험 범위 안은 여기까지예요",
           p:"위쪽 몇 줄은 범위 밖입니다. 범위 안에서 더 풀 것이 없어 채웠어요.",
           href:"settings.html"});
       }else{
-        todo.push({t:"훈련",h:"킬러 / 준킬러",
-          p:D.map(function(d){ return d.name; }).join(" · ")+" — 오늘 바로 됩니다.",
+        todo.push({t:"Killer Drill",h:"킬러 / 준킬러",
+          p:D.map(function(d){ return d.name; }).join(", ")+" — 오늘 바로 됩니다.",
           href:"drill.html"});
       }
     })();
@@ -1093,9 +1096,9 @@
       var got=T.packs();
       cards.push({eb:"확장팩",name:"선택과목 확장팩",
         p:"고2 는 통합사회를 듣지 않습니다. 세계시민과 지리·사회와 문화 같은 "+
-          "선택과목을 하나 단위로 붙여, 같은 스킬트리와 문제풀이를 그 과목 범위로 씁니다."+
+          "선택과목을 하나 단위로 붙여, 같은 개념트리와 문제풀이를 그 과목 범위로 씁니다."+
           (got.length?" 지금 "+got.length+"과목을 골라 두셨어요.":""),
-        btn:"과목 고르기",href:"settings.html",st:"값 미정 · 준비 중"});
+        btn:"과목 고르기",href:"settings.html",st:"값 미정, 준비 중"});
     }else{
       var bk=T.BOOKS.filter(function(b){ return b.grade===grade; })[0];
       if(bk) cards.push({eb:grade+" 전용",name:bk.name,p:bk.say,
@@ -1104,8 +1107,8 @@
     var base=T.BOOKS.filter(function(b){ return b.grade==="*"; })[0];
     if(base) cards.push({eb:"기본서",name:base.name,p:base.say,
       btn:"준비 중",href:"settings.html",st:"값·출간일 미정",dim:true});
-    cards.push({eb:"지금 되는 것",name:"킬러 / 준킬러 훈련",
-      p:(window.DRILLS||[]).map(function(d){ return d.name; }).join(" · ")+
+    cards.push({eb:"지금 되는 것",name:"Killer Drill",
+      p:(window.DRILLS||[]).map(function(d){ return d.name; }).join(", ")+
         ". 오늘 바로 쓸 수 있습니다.",
       btn:"들어가기",href:"drill.html",st:"무료"});
     document.getElementById("shop").innerHTML=cards.map(function(c){
@@ -1124,7 +1127,7 @@
   document.getElementById("week").innerHTML=ws.map(function(x,i){
     var h=Math.round(x.ans/mx*100);
     return '<span class="d'+(i===ws.length-1?" today":"")+'" title="'+x.d+
-      ' · '+x.ans+'문항">'+
+      ', '+x.ans+'문항">'+
       '<i style="height:'+Math.max(3,h)+'%"></i>'+
       '<span>'+x.label+'</span></span>';
   }).join("");

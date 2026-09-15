@@ -41,7 +41,7 @@
   }
 
   /* ── 고르기 ─────────────────────────────────────
-     한 리프에서 몇 개 — 안 푼 것 · 틀렸던 것 먼저, 방금 읽은 카드에 정답 낱말이 있으면 앞으로.
+     한 리프에서 몇 개 — 안 푼 것, 틀렸던 것 먼저, 방금 읽은 카드에 정답 낱말이 있으면 앞으로.
      같은 날 같은 순서(날짜 씨앗)라 새로고침해도 문항이 바뀌지 않는다. */
   function 씨(s) {
     var h = 2166136261;
@@ -112,9 +112,9 @@
       '<div class="kwq" id="kwq">' +
         '<div class="kwtag"><b>핵심 개념어 쓰기</b>' +
           (opt.total ? '<span>· ' + (opt.idx || 1) + ' / ' + opt.total + '</span>' : '') +
-          '<span class="kwsrc">' + esc(x.how === "개념 카드" ? "카드 문장" : "교과서") + '</span></div>' +
+          '<span class="kwsrc">' + esc(x.how === "개념 카드" ? "개념 문장" : "교과서") + '</span></div>' +
         '<p class="kwd">' + 설명그리기(x) + '</p>' +
-        '<p class="kwhint">빈칸에 들어갈 개념어를 쓰세요 · ' + (x.n || "") + '글자 · 띄어쓰기는 안 봐요</p>' +
+        '<p class="kwhint">빈칸에 들어갈 개념어를 쓰세요, ' + (x.n || "") + '글자, 띄어쓰기는 안 봐요</p>' +
         '<div class="kwbox" id="kwbox">' +
           '<input class="kwin" id="kwin" type="text" inputmode="text" autocomplete="off" autocorrect="off" ' +
             'autocapitalize="off" spellcheck="false" enterkeyhint="done" maxlength="40" ' +
@@ -225,7 +225,7 @@
           '<span class="kind">' + esc(v.kind) + '</span></div>' +
         (v.say ? '<p class="say">' + esc(v.say) + '</p>' : '') +
         '<p class="kwans"><span>정답</span><b>' + esc(x.a) + '</b>' +
-          (x.alt && x.alt.length ? '<em>' + esc(x.alt.join(" · ")) + '도 맞아요</em>' : '') + '</p>' +
+          (x.alt && x.alt.length ? '<em>' + esc(x.alt.join(", ")) + '도 맞아요</em>' : '') + '</p>' +
         (!g.ok && 입력.trim() ? '<p class="kwmine">쓴 답 — ' + esc(입력.trim()) + '</p>' : '') +
         (덧말 ? '<p class="kwnote">' + 덧말 + '</p>' : '') +
         '<div class="why"><b>근거</b> — ' + 원문 + '<span class="src">' + esc(x.src) + '</span></div>' +
