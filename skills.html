@@ -123,7 +123,7 @@
 <script src="js/trend.js?v=53fd8a90"></script>
 <script src="js/store.js?v=0fb25aff"></script>
 <script src="js/qrender.js?v=a26db44e"></script>
-<script src="js/skills.js?v=7326c7ac"></script>
+<script src="js/skills.js?v=e0e1f48e"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -135,8 +135,10 @@
   var host=document.getElementById("host");
   var M="①②③④⑤";
   function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-  function item(id){ return T.QOF ? T.QOF[id] : null; }
-  function usable(id){ var q=item(id), d=Q[id]; return !!(q && d && (!window.QRENDER || QRENDER.ok(d,q))); }
+  var X=window.SKILL_ITEMS||{};                 /* 은행에 없는 기출은 skills.js 가 든다 */
+  function item(id){ return X[id] ? X[id].q : (T.QOF ? T.QOF[id] : null); }
+  function bank(id){ return X[id] ? X[id].d : Q[id]; }
+  function usable(id){ var q=item(id), d=bank(id); return !!(q && d && (X[id] || !window.QRENDER || QRENDER.ok(d,q))); }
 
   /* 진행 — 기술마다 푼 연습 문항 (기록 자체는 T.answer 가 남긴다) */
   var KEY="terra.skills";
@@ -170,6 +172,8 @@
   function qHtml(q,d,opts){
     var 몸=window.QRENDER?QRENDER.html(d,q,{}):('<p>'+esc(d.q)+'</p>');
     if(opts.strip) 몸=몸.replace(/<ol class="opts5">[\s\S]*?<\/ol>/,'');
+    /* 스킬트리가 직접 든 문항(SKILL_ITEMS)은 글과 그림이 둘 다 필요하다 — 조판기는 글이 충분하면 그림을 빼므로 여기서 붙인다 */
+    if(X[q.id] && q.fig && 몸.indexOf('assets/qfig/')<0) 몸+='<figure class="qfig"><img src="assets/qfig/'+esc(String(q.fig).replace(/\.png$/,'.webp'))+'" alt="문항 자료" loading="lazy"><figcaption>자료 원본</figcaption></figure>';
     /* 순서도 문항은 (나) 그림의 낱말이 글로 흩어져 들어온다 — 그림은 아래에 다시 그리므로 그 줄은 뺀다 */
     if(opts.flowText) 몸=몸.replace(esc(opts.flowText),'');
     return '<div class="qcard"><div class="qtop">'+
@@ -180,7 +184,7 @@
 
   function detail(s){
     var p=prog()[s.id]||{};
-    var dq=item(s.demo), dd=Q[s.demo];
+    var dq=item(s.demo), dd=bank(s.demo);
     var demo='';
     if(dq&&dd){
       demo=qHtml(dq,dd,{label:"따라 하기",strip:true,flowText:s.flow?(dd.d||"").slice((dd.d||"").indexOf("(나)")+3).trim():null,extra:
@@ -198,7 +202,7 @@
       '<div class="sec"><h2>같은 기술로 풀기</h2><p class="sub">'+pr.length+'문항입니다. 하나씩 눌러 풉니다.</p>'+
       '<div class="plist">'+pr.map(function(id,i){
         var q=item(id), st=p[id]==null?"":(p[id]?"ok":"no");
-        return '<button class="pi '+st+'" data-q="'+id+'"><span class="k">'+(i+1)+'</span><span class="t">'+esc(q.lb||Q[id].q.slice(0,40))+'</span><small>'+src(q)+'</small></button>';
+        return '<button class="pi '+st+'" data-q="'+id+'"><span class="k">'+(i+1)+'</span><span class="t">'+esc(q.lb||bank(id).q.slice(0,40))+'</span><small>'+src(q)+'</small></button>';
       }).join("")+'</div><div id="pstage"></div></div>'+
       '<p class="basis">'+esc(s.basis)+'</p>';
     document.getElementById("back").onclick=function(){ location.hash=""; };
@@ -208,7 +212,7 @@
   }
 
   function solve(s,id){
-    var q=item(id), d=Q[id];
+    var q=item(id), d=bank(id);
     var st=document.getElementById("pstage");
     st.innerHTML=qHtml(q,d,{label:"풀기",strip:true,extra:
       '<div class="opts'+(q.ff?' nums':'')+'">'+(q.ff?[0,1,2,3,4]:d.o.map(function(_,i){return i;})).map(function(k){
