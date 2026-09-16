@@ -87,16 +87,26 @@
   .pi small{font-size:13.5px;color:var(--ink-3);font-weight:600}
   .basis{margin-top:22px;font-size:14px;color:var(--ink-3);font-weight:500;line-height:1.6}
 
-  /* 순서도(원 문항 (나) 그림의 구조를 옮겨 그린다) */
-  .flow{display:grid;grid-template-columns:1fr 1fr;gap:0 18px;justify-items:center;margin:14px 0 4px;font-weight:700;color:var(--ink)}
-  .flow .box{border:1.5px solid var(--ink);padding:8px 14px;border-radius:4px;background:var(--surface);font-size:14.5px;text-align:center}
-  .flow .dia{width:120px;height:52px;display:grid;place-items:center;position:relative;font-weight:900;font-size:17px}
-  .flow .dia::before{content:"";position:absolute;inset:0;border:1.5px solid var(--ink);transform:scaleX(1.15) rotate(45deg) scale(.68);background:var(--surface);z-index:-1;border-radius:3px}
-  .flow .end{border:1.5px solid var(--ink);padding:10px 22px;border-radius:4px 4px 12px 12px;background:var(--surface);font-size:15px}
-  .flow .ar{font-size:13px;color:var(--ink-3);font-weight:700;line-height:1.1;display:grid;justify-items:center}
-  .flow .ar::after{content:"↓";font-size:18px;color:var(--ink)}
-  .flow .ar.side::after{content:"→";}
-  .flow .col{display:grid;justify-items:center;gap:2px;align-content:start}
+  /* 순서도 — 시험지 그림과 같은 SVG. 글자색·선색은 본문색 */
+  .flow{margin:14px 0 6px;padding:10px 6px;border:1px solid var(--line);border-radius:var(--r1);background:#fff;color:#111}
+  .flow .flowsvg{display:block;width:100%;max-width:760px;height:auto;margin:0 auto;font-family:var(--kr)}
+  /* 문제 위 표시 — 형광펜·그림 상자·선지 표시 */
+  mark.hl{background:rgba(255,216,77,.75);color:inherit;padding:0 2px;border-radius:3px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  .figwrap{position:relative;display:block}
+  .hlbox{position:absolute;border:2.5px solid var(--cta);border-radius:8px;background:rgba(255,216,77,.22);box-shadow:0 0 0 3px rgba(255,255,255,.7);pointer-events:none}
+  .hlbox i{position:absolute;left:-10px;top:-12px;min-width:22px;height:22px;padding:0 6px;border-radius:99px;background:var(--cta);color:#fff;font-style:normal;font-weight:900;font-size:13px;display:grid;place-items:center;white-space:nowrap}
+  .exopts{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:6px}
+  .exopt{display:flex;gap:10px;align-items:flex-start;font-size:16px;line-height:1.55;color:var(--ink);padding:6px 8px;border-radius:8px}
+  .exopt b{flex:0 0 auto;font-weight:900}
+  .exopt.hl,.opts5 li.hl{background:rgba(255,216,77,.5);outline:2px solid var(--cta)}
+  .flowsvg .on{stroke:var(--cta);stroke-width:4;fill:rgba(255,216,77,.45)}
+  .walkbar{position:sticky;bottom:calc(var(--nav-h,62px) + 76px);z-index:5;margin-top:12px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r2);background:var(--surface);box-shadow:0 8px 24px -12px rgba(0,0,0,.25)}
+  .wsteps{display:flex;gap:6px;margin-bottom:10px}
+  .wdot{width:34px;height:34px;border-radius:10px;border:1px solid var(--line-2);background:var(--surface-2);color:var(--ink-2);font-family:var(--kr);font-weight:900;font-size:15px;cursor:pointer}
+  .wdot[aria-pressed="true"]{background:var(--cta);border-color:var(--cta);color:#fff}
+  .wtext{margin:0 0 12px;font-size:16px;line-height:1.65;color:var(--ink);font-weight:600}
+  .wnav{display:flex;gap:8px;align-items:center}
+  .wans{margin-left:auto;font-size:16px;font-weight:900;color:var(--cta)}
   @media (max-width:520px){ .skc{grid-template-columns:auto 1fr} .skc .st{grid-column:2} }
 </style>
 </head>
@@ -123,7 +133,7 @@
 <script src="js/trend.js?v=53fd8a90"></script>
 <script src="js/store.js?v=1a533f71"></script>
 <script src="js/qrender.js?v=a26db44e"></script>
-<script src="js/skills.js?v=691c0181"></script>
+<script src="js/skills.js?v=977fed69"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -159,14 +169,47 @@
     host.querySelectorAll(".skc").forEach(function(b){ b.onclick=function(){ location.hash=b.dataset.id; }; });
   }
 
+  /* 순서도 — 실제 시험지 (나) 그림과 같은 배치로 SVG 로 그린다(2026-09-16 대표님 "실제 시험지랑 똑같이").
+     출발 상자 → 마름모 A →(예) 마름모 B →(예) 갑의 입장 / B →(아니요, 점선) 마름모 C →(예) 을의 입장, 오른쪽 위 범례 */
   function flowHtml(f){
-    return '<div class="flow">'+
-      '<div class="col" style="grid-column:1"><div class="box">'+esc(f.start)+'</div><div class="ar"></div>'+
-      '<div class="dia">'+f.a+'</div><div class="ar">'+f.yes+'</div>'+
-      '<div class="dia">'+f.b+'</div><div class="ar">'+f.yes+'</div><div class="end">'+esc(f.endL)+'</div></div>'+
-      '<div class="col" style="grid-column:2;padding-top:118px"><div class="ar side">'+f.no+'</div>'+
-      '<div class="dia">'+f.c+'</div><div class="ar">'+f.yes+'</div><div class="end">'+esc(f.endR)+'</div></div>'+
-      '</div>';
+    var S='<svg class="flowsvg" viewBox="0 0 1000 600" role="img" aria-label="순서도">'+
+      '<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>'+
+      '<g fill="none" stroke="currentColor" stroke-width="2">'+
+      /* 출발 상자 */
+      '<rect x="150" y="30" width="270" height="86"/>'+
+      /* 마름모 A · B · C */
+      '<path class="fa" d="M285 150 L400 190 L285 230 L170 190 Z"/>'+
+      '<path class="fb" d="M285 260 L400 300 L285 340 L170 300 Z"/>'+
+      '<path class="fc" d="M640 340 L755 380 L640 420 L525 380 Z"/>'+
+      /* 화살표(예: 실선) */
+      '<line x1="285" y1="116" x2="285" y2="147" marker-end="url(#ah)"/>'+
+      '<line x1="285" y1="230" x2="285" y2="257" marker-end="url(#ah)"/>'+
+      '<line x1="285" y1="340" x2="285" y2="447" marker-end="url(#ah)"/>'+
+      '<line x1="640" y1="420" x2="640" y2="447" marker-end="url(#ah)"/>'+
+      /* 아니요: 점선 — B 오른쪽에서 꺾여 C 위로 */
+      '<path d="M400 300 L640 300 L640 337" stroke-dasharray="7 6" marker-end="url(#ah)"/>'+
+      /* 사상가의 입장 — 물결 바닥 상자 */
+      '<path class="fendL" d="M180 450 H390 V520 Q337 500 285 520 Q232 540 180 520 Z"/>'+
+      '<path class="fendR" d="M535 450 H745 V520 Q692 500 640 520 Q587 540 535 520 Z"/>'+
+      /* 범례 상자 */
+      '<rect x="700" y="40" width="270" height="130"/>'+
+      '<rect x="716" y="62" width="36" height="16"/>'+
+      '<path d="M734 86 L756 96 L734 106 L712 96 Z"/>'+
+      '<line x1="712" y1="122" x2="752" y2="122" marker-end="url(#ah)"/>'+
+      '<path d="M716 138 H752 V152 Q743 148 734 152 Q725 156 716 152 Z"/>'+
+      '</g>'+
+      '<g fill="currentColor" font-size="19" font-weight="700" text-anchor="middle">'+
+      '<text x="285" y="66">'+esc(f.start.split(" ").slice(0,3).join(" "))+'</text><text x="285" y="94">'+esc(f.start.split(" ").slice(3).join(" "))+'</text>'+
+      '<text x="285" y="197">'+f.a+'</text><text x="285" y="307">'+f.b+'</text><text x="640" y="387">'+f.c+'</text>'+
+      '<text x="285" y="497">'+esc(f.endL)+'</text><text x="640" y="497">'+esc(f.endR)+'</text>'+
+      '</g>'+
+      '<g fill="currentColor" font-size="16" font-weight="600">'+
+      '<text x="296" y="140">'+f.yes+'</text><text x="296" y="250">'+f.yes+'</text><text x="296" y="380">'+f.yes+'</text><text x="651" y="440">'+f.yes+'</text>'+
+      '<text x="500" y="291" text-anchor="middle">'+f.no+'</text>'+
+      '<text x="835" y="34" text-anchor="middle" font-size="15">〈범 례〉</text>'+
+      '<text x="762" y="76">: 출발 조건</text><text x="762" y="102">: 판단 내용</text><text x="762" y="128">: 판단 방향</text><text x="762" y="153">: 사상가의 입장</text>'+
+      '</g></svg>';
+    return '<div class="flow">'+S+'</div>';
   }
 
   function qHtml(q,d,opts){
@@ -182,23 +225,67 @@
       '<div class="qbody">'+몸+(opts.extra||"")+'</div></div>';
   }
 
+  /* 형광펜 — 문제 글 안의 문장에 <mark> 를 씌운다(글이 태그를 넘나들면 못 찾고 조용히 넘어간다) */
+  function paintText(root, strs){
+    root.querySelectorAll("mark.hl").forEach(function(m){ m.replaceWith(document.createTextNode(m.textContent)); });
+    root.normalize();
+    (strs||[]).forEach(function(str){
+      var walker=document.createTreeWalker(root, NodeFilter.SHOW_TEXT), n;
+      while((n=walker.nextNode())){
+        var k=n.nodeValue.indexOf(str); if(k<0) continue;
+        var after=n.splitText(k); after.splitText(str.length);
+        var m=document.createElement("mark"); m.className="hl"; m.textContent=after.nodeValue; after.replaceWith(m); break;
+      }
+    });
+  }
+  /* 그림 위 상자 — 그림의 가로·세로 %로 위치를 준다 */
+  function paintFig(root, boxes){
+    root.querySelectorAll(".hlbox").forEach(function(e){ e.remove(); });
+    var img=root.querySelector(".qfig img"); if(!img) return;
+    var wrap=img.parentElement;
+    if(!wrap.classList.contains("figwrap")){ var w=document.createElement("div"); w.className="figwrap"; img.replaceWith(w); w.appendChild(img); wrap=w; }
+    (boxes||[]).forEach(function(b){
+      var d=document.createElement("div"); d.className="hlbox";
+      d.style.left=b.x+"%"; d.style.top=b.y+"%"; d.style.width=b.w+"%"; d.style.height=b.h+"%";
+      d.innerHTML='<i>'+esc(b.n==null?"":b.n)+'</i>'; wrap.appendChild(d);
+    });
+  }
+  function paintOpt(root, i){
+    root.querySelectorAll(".opts5 li.hl, .exopt.hl").forEach(function(e){ e.classList.remove("hl"); });
+    if(i==null) return;
+    var li=root.querySelectorAll(".opts5 li")[i] || root.querySelectorAll(".exopt")[i];
+    if(li) li.classList.add("hl");
+  }
+  function paintSvg(root, keys){
+    root.querySelectorAll(".flowsvg .on").forEach(function(e){ e.classList.remove("on"); });
+    (keys||[]).forEach(function(k){ var e=root.querySelector(".flowsvg .f"+k); if(e) e.classList.add("on"); });
+  }
+
   function detail(s){
     var p=prog()[s.id]||{};
     var dq=item(s.demo), dd=bank(s.demo);
+    var pr=s.practice.filter(usable);
+    var walk=(s.walk||[]).map(function(w){ return typeof w==="string"?{t:w}:w; });
     var demo='';
     if(dq&&dd){
-      demo=qHtml(dq,dd,{label:"따라 하기",strip:true,flowText:s.flow?(dd.d||"").slice((dd.d||"").indexOf("(나)")+3).trim():null,extra:
-        (s.flow?flowHtml(s.flow):'')+
-        '<div class="walk">'+s.walk.map(function(w,i){ return '<div class="w"><i>'+(i+1)+'</i><span>'+esc(w)+'</span></div>'; }).join("")+'</div>'+
-        '<div class="ans">정답 <b>'+M.charAt(dd.a)+'</b> '+esc(dd.o[dd.a]||"")+'</div>'});
+      /* 문제는 시험지처럼 통째로 — 발문·자료·보기·선지. 순서도 문항은 그림 자리에 SVG */
+      var 몸=qHtml(dq,dd,{label:"기출 문항",strip:!!s.flow,flowText:s.flow?(dd.d||"").slice((dd.d||"").indexOf("(나)")+3).trim():null,
+        extra:(s.flow?flowHtml(s.flow):'')+
+              (s.flow?'<ol class="exopts">'+dd.o.map(function(o,i){ return '<li class="exopt"><b>'+M.charAt(i)+'</b><span>'+(window.QRENDER?QRENDER.body(o):esc(o))+'</span></li>'; }).join("")+'</ol>':'')});
+      demo='<div id="demo">'+몸+'</div>'+
+        '<div class="walkbar" id="walkbar">'+
+          '<div class="wsteps">'+walk.map(function(_,i){ return '<button class="wdot" data-i="'+i+'" aria-pressed="'+(i===0)+'">'+(i+1)+'</button>'; }).join("")+'</div>'+
+          '<p class="wtext" id="wtext"></p>'+
+          '<div class="wnav"><button class="btn ghost sm" id="wprev">이전</button><button class="btn sm" id="wnext">다음</button>'+
+          '<span class="wans" id="wans"></span></div>'+
+        '</div>';
     }
-    var pr=s.practice.filter(usable);
     host.innerHTML=
       '<button class="back" id="back">← 기술 목록</button>'+
       '<div class="hd" style="padding-top:0"><span class="kicker"><i></i>'+esc(s.tag)+'</span><h1>'+esc(s.name)+'</h1><p>'+esc(s.one)+'</p></div>'+
-      '<div class="sec"><h2>보는 순서</h2><p class="sub">이 차례로 봅니다.</p>'+
+      '<div class="sec"><h2>기출 문항</h2><p class="sub">먼저 문제를 봅니다. 아래 단계를 누르면 문제 위에 표시가 붙습니다.</p>'+demo+'</div>'+
+      '<div class="sec"><h2>보는 순서</h2><p class="sub">어느 문항에서든 이 차례로 봅니다.</p>'+
       '<div class="steps">'+s.steps.map(function(t){ return '<div class="step"><i></i><p>'+esc(t)+'</p></div>'; }).join("")+'</div></div>'+
-      '<div class="sec"><h2>기출로 따라 하기</h2><p class="sub">실제 기출 한 문항에서 단계마다 무엇을 봤는지 그대로 적었습니다.</p>'+demo+'</div>'+
       '<div class="sec"><h2>같은 기술로 풀기</h2><p class="sub">'+pr.length+'문항입니다. 하나씩 눌러 풉니다.</p>'+
       '<div class="plist">'+pr.map(function(id,i){
         var q=item(id), st=p[id]==null?"":(p[id]?"ok":"no");
@@ -208,6 +295,26 @@
     document.getElementById("back").onclick=function(){ location.hash=""; };
     host.querySelectorAll(".pi").forEach(function(b){ b.onclick=function(){ solve(s,b.dataset.q); }; });
     if(window.webpFallback) webpFallback(document);
+
+    /* 단계 넘기기 */
+    var demoEl=document.getElementById("demo"), cur=0;
+    function show(i){
+      cur=Math.max(0,Math.min(walk.length-1,i)); var w=walk[cur];
+      paintText(demoEl, w.hl); paintFig(demoEl, w.fig); paintOpt(demoEl, w.opt); paintSvg(demoEl, w.svg);
+      document.getElementById("wtext").textContent=w.t;
+      host.querySelectorAll(".wdot").forEach(function(b,k){ b.setAttribute("aria-pressed", k===cur); });
+      document.getElementById("wprev").disabled=(cur===0);
+      document.getElementById("wnext").textContent=(cur===walk.length-1?"처음으로":"다음");
+      document.getElementById("wans").textContent=(cur===walk.length-1&&dd)?("정답 "+M.charAt(dd.a)):"";
+      var tgt=demoEl.querySelector("mark.hl, .hlbox, .exopt.hl, .opts5 li.hl, .flowsvg .on");
+      if(tgt&&tgt.scrollIntoView&&cur>0) tgt.scrollIntoView({behavior:"smooth",block:"center"});
+    }
+    if(demoEl&&walk.length){
+      host.querySelectorAll(".wdot").forEach(function(b){ b.onclick=function(){ show(+b.dataset.i); }; });
+      document.getElementById("wprev").onclick=function(){ show(cur-1); };
+      document.getElementById("wnext").onclick=function(){ show(cur===walk.length-1?0:cur+1); };
+      show(0);
+    }
     window.scrollTo({top:0,behavior:"smooth"});
   }
 
