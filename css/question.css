@@ -71,14 +71,12 @@
    발문·선지는 그림에 넣지 않는다. 답이 그림 속에 숨기 때문이다. */
 .qfig{ margin:0 0 14px; background:var(--surface-2); border-radius:var(--r1);
   overflow:hidden; border:1px solid var(--line); }
-.qfig img{ display:block; width:100%; height:auto;
-  filter:invert(1) contrast(1.06) brightness(.97); }
-:root[data-skin="note"] .qfig img,
-:root[data-skin="jelly"] .qfig img,
-:root[data-skin="white"] .qfig img{ filter:none; }
-:root[data-skin="note"] .qfig,
-:root[data-skin="jelly"] .qfig,
-:root[data-skin="white"] .qfig{ background:#fff; }
+.qfig img{ display:block; width:100%; height:auto; }
+/* 밤(어두운) 스킨에서만 그림을 뒤집는다. 밝은 스킨(종이·노트·젤리·화이트)은 원본 그대로 흰 바탕에.
+   (2026-09-16 종이 스킨에서 삼각그래프가 검게 뒤집혀 보였다 — 반전 규칙이 기본이었던 탓) */
+:root:not([data-skin]) .qfig img{ filter:invert(1) contrast(1.06) brightness(.97); }
+.qfig{ background:#fff; }
+:root:not([data-skin]) .qfig{ background:var(--surface-2); }
 .qfig figcaption{
   padding:7px 12px; font-family:var(--mono); font-size:14.5px;
   color:var(--ink-4); background:var(--surface); border-top:1px solid var(--line);font-weight:800}

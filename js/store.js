@@ -881,7 +881,7 @@
   function skin() {
     try {
       var v = localStorage.getItem("terra.skin");
-      if (v === null) v = "paper";            // 아무것도 안 골랐으면 종이(기본)
+      if (v === null || v === "") v = "paper";   // 아무것도 안 골랐거나 옛 빈 값이면 종이(기본)
       if (v === "night") v = "";              // 밤을 직접 고른 학생은 "night" 로 남겨 둔다
       if (v === "diary") { v = "jelly"; localStorage.setItem("terra.skin", v); }  // 옛 값 이사
       if (v && !SKINS.some(function (k) { return k.id === v; })) v = "";
