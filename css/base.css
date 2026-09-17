@@ -62,6 +62,8 @@
   --bg-1:#0A0D13;
   /* 주 단추·지금 여기 표시 — 기본 스킨은 빨강. 종이 스킨은 파랑(오답 빨강과 갈라 둔다) */
   --cta:var(--red); --cta-2:var(--red-2); --cta-3:var(--red-3); --cta-soft:var(--red-soft); --cta-line:var(--red-line);
+  /* 기후 판정 그래프(drill.html) 축·도시 점 — 스킨마다 drill.html 이 덮어쓴다 */
+  --citydim:#20313C; --axis:#333C47; --axis-ink:#545B64;
   --sans:"Noto Sans KR",system-ui,-apple-system,"Malgun Gothic",sans-serif;
 
 
@@ -225,6 +227,7 @@
   --red-soft:rgba(194,65,12,.10); --red-line:rgba(194,65,12,.38);
   /* 주 단추는 파랑 */
   --cta:#2F5BEA; --cta-2:#2448C9; --cta-3:#1B3AA8; --cta-soft:#E8EEFF; --cta-line:rgba(47,91,234,.38);
+  --citydim:#B9C4D0; --axis:#C9C3B5; --axis-ink:#8A8F9C;
 
   --lv3:#2F5BEA; --lv2:#8FA5E8; --lv1:#E0DCD0;
   --core:#C2410C; --deep:#5B6170; --ref:#8A8F9C;

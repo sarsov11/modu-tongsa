@@ -322,7 +322,7 @@
       var 못함 = st.pct === null ? 0 : (1 - st.pct / 100);
       var 안댐 = st.solved === 0 ? 1.1 : 0;
       var 묵음 = st.lastAt ? Math.min(0.35, (이제 - st.lastAt) / 86400000 / 30 * 0.35) : 0.2;
-      var 범위 = (!scopeOn() || inScope(l.mid.root.code)) ? 1 : 0.25;
+      var 범위 = (!scopeOn() || inScopeLeaf(l.code)) ? 1 : 0.25;
       var 잡힘 = u >= 85 ? 0.15 : (u >= 60 ? 0.6 : 1);
       var 양 = Math.min(1, l.play.length / 40);
       var 점수 = (못함 * 2.2 + 안댐 + 묵음) * 범위 * 잡힘 * (0.6 + 0.4 * 양);
@@ -683,7 +683,9 @@
     학교: "서문여고",
     /* ★ 2학기(통합사회 2) 는 서문여고 **실측**이다 — 대표님이 알려 주신 값. */
     s2mid: { name: "2학기 중간고사", 과목: "통합사회 2", 단원: "1·2·4단원",
-             roots: ["F", "G", "I"], 근거: "실측" },
+             roots: ["F", "G", "I"], 근거: "실측",
+             /* ★ 1단원은 권력분립(F3)까지 — 준법·시민 참여(F4)·노동권(F5)·국내외 인권(F6)은 이번 범위 밖(2026-09-17 대표님) */
+             mids: ["F1", "F2", "F3", "G", "I"] },
     s2fin: { name: "2학기 기말고사", 과목: "통합사회 2", 단원: "3·5단원",
              roots: ["H", "J"], 근거: "실측" },
     /* ★ 1학기(통합사회 1) 는 **추정**이다. 서문여고에서 확인된 것은 통사2 뿐이라,
@@ -700,7 +702,7 @@
     var b = 기본범위[id];
     if (!b) return null;
     return { key: id, name: b.name, 과목: b.과목, 단원: b.단원,
-             roots: b.roots.slice(), 근거: b.근거, 학교: 기본범위.학교 };
+             roots: b.roots.slice(), mids: (b.mids || b.roots).slice(), 근거: b.근거, 학교: 기본범위.학교 };
   }
 
   /* 지금 다가온 시험에 맞는 기본 범위를 돌려준다 */
@@ -717,6 +719,15 @@
      ★ 학생이 고른 값은 절대 덮지 않는다 — `scopeAt` 이 있으면 손대지 않는다. */
   function 범위기본값채우기() {
     if (S.scopeAt) return null;                 // 이미 정한 적이 있다
+    /* ★ 자동으로 넣어 둔 옛 값(대영역 통째)이면 새 기본값(중단원까지)으로 바꿔 준다 — 학생이 정한 값은 안 건드린다 */
+    if (scopeOn() && S.scopeAuto) {
+      var b0 = 기본범위지금();
+      if (b0 && b0.mids && JSON.stringify(scope().slice().sort()) === JSON.stringify(b0.roots.slice().sort()) &&
+          JSON.stringify(b0.mids.slice().sort()) !== JSON.stringify(b0.roots.slice().sort())) {
+        try { localStorage.setItem("terra.scope", JSON.stringify(b0.mids)); } catch (e) {}
+        return b0;
+      }
+    }
     if (scopeOn()) return null;                 // 어떤 이유로든 이미 켜져 있다
     var g = (S.student && S.student.grade) || "고1";
     if (g !== "고1") return null;               // 고1 기준이다
@@ -725,7 +736,7 @@
        S.scope 에 넣으면 값이 들어가도 scopeOn() 이 false 다.
        ★ setScope() 를 부르면 안 된다 — 그 함수는 scopeAt 을 남겨
          "학생이 직접 정했다" 로 기록한다. 자동 기본값은 그 표시를 남기지 않는다. */
-    try { localStorage.setItem("terra.scope", JSON.stringify(b.roots)); } catch (e) {}
+    try { localStorage.setItem("terra.scope", JSON.stringify(b.mids || b.roots)); } catch (e) {}
     S.scopeAuto = true;                          // ★ 자동으로 넣은 값이라는 표시
     save();
     return b;
@@ -1178,7 +1189,7 @@
 
     /* ★ 이번 시험 범위 안인가. 리프 코드는 "C1.1" 처럼 대영역 글자로 시작한다.
        범위를 안 정했으면 inScope 가 늘 참이라 아래는 그대로 지나간다. */
-    function 범위안(code) { return inScope(String(code || "").charAt(0)); }
+    function 범위안(code) { return inScopeLeaf(code); }
     function 범위로걸러(목록, 코드꺼내기) {
       if (!scopeOn()) return 목록;
       var 안 = 목록.filter(function (x) { return 범위안(코드꺼내기(x)); });
@@ -1404,7 +1415,7 @@
       var 몇개 = (function () {
         if (window.OXBANK && window.OXBANK.length) {
           return window.OXBANK.filter(function (z) {
-            return !scopeOn() || inScope(z.sroot || z.root);
+            return !scopeOn() || inScopeItem(z);
           }).length;
         }
         var IX = window.OXINDEX;
@@ -1438,6 +1449,8 @@
          같은 것이 나갔다(2026-09-03 대표님 지적). */
       var 골라 = 훈련추천(true);
       var 하나 = 골라 ? 골라.pick : null;
+      /* 고1은 범위가 정해지면 유형 훈련 대신 **내신 킬러드릴**(범위 안 3점 자리)로 간다 (2026-09-17 대표님) */
+      var 내신킬러 = scopeOn() && ((S.student && S.student.grade) || "고1") === "고1";
       if (하나) {
         var st9 = 골라.stat || drillStat(하나.id);
         /* ★ **왜 이것이 나왔는지** 말해 준다. 수준과 약점으로 골랐으므로
@@ -1448,11 +1461,11 @@
               ? "지난번 정답률이 " + st9.pct + "%였어요. 여기가 지금 제일 약합니다."
               : "해 둔 지 좀 됐어요. 잊기 전에 한 번 돌립니다.");
         items.push({ kind: "drill", min: DRILL_MIN, drill: 하나.id,
-          title: scopeOn() ? "시험 범위 Killer Drill"
+          title: scopeOn() ? (내신킬러 ? "내신 킬러드릴" : "시험 범위 Killer Drill")
                            : (골라.level === "기초" ? "준킬러부터" : "오늘의 킬러"),
-          say: 하나.name + " 한 세트",
-          why: (하나.tier ? "준킬러예요. " : "킬러예요. ") + 까닭,
-          href: "drill.html?type=" + 하나.id, cta: "Killer Drill" });
+          say: 내신킬러 ? "시험 범위에서 어렵게 나오는 자리" : 하나.name + " 한 세트",
+          why: 내신킬러 ? "실제 기출에서 3점으로 나온 자리부터 풀어요." : (하나.tier ? "준킬러예요. " : "킬러예요. ") + 까닭,
+          href: 내신킬러 ? "naeshin.html" : "drill.html?type=" + 하나.id, cta: "Killer Drill" });
       } else {
         items.push({ kind: "drill", min: DRILL_MIN,
           title: "마무리 한 세트", say: "킬러 유형 5문항",
@@ -1644,23 +1657,64 @@
     try { localStorage.setItem("terra.scope", JSON.stringify(list || [])); } catch (e) {}
   }
   function scopeOn() { return scope().length > 0; }
-  /* 그 대영역이 이번 시험 범위인가 */
+  /* ★ 범위는 대영역("F")과 중영역("F1")을 섞어 담는다(2026-09-17 대표님: 서문여고는 1단원에서 권력분립까지).
+     심화(★) 리프는 중영역마다 넣고 뺄 수 있다 — terra.deep {"F3": false}. 학교마다 다르다. */
+  function scopeMids() {
+    var out = {};
+    scope().forEach(function (c) {
+      var x = BY[c]; if (!x) return;
+      if (x.mids) x.mids.forEach(function (m) { out[m.code] = 1; });
+      else if (x.leaves) out[c] = 1;
+    });
+    return out;
+  }
+  function deepMap() { try { return JSON.parse(localStorage.getItem("terra.deep") || "{}") || {}; } catch (e) { return {}; } }
+  function deepOn(mid) { return deepMap()[mid] !== false; }
+  function setDeep(mid, on) {
+    var d = deepMap(); if (on) delete d[mid]; else d[mid] = false;
+    try { localStorage.setItem("terra.deep", JSON.stringify(d)); } catch (e) {}
+  }
+  /* 그 대영역이 이번 시험 범위인가(일부라도) */
   function inScope(rootCode) {
     var sc = scope();
     if (!sc.length) return true;                 // 안 정했으면 전 범위
     if (sc.indexOf(rootCode) >= 0) return true;
+    if (sc.some(function (c) { return c.charAt(0) === rootCode && BY[c] && BY[c].leaves; })) return true;
     // 사상가는 정의·행복이 범위면 따라 든다
-    if (rootCode === "K") return sc.some(function (c) { return 사상가딸림[c]; });
+    if (rootCode === "K") return sc.some(function (c) { return 사상가딸림[c.charAt(0)]; });
     return false;
+  }
+  function inScopeMid(midCode) {
+    if (!scope().length) return true;
+    if (scopeMids()[midCode]) return true;
+    if (String(midCode).charAt(0) === "K") return inScope("K");
+    return false;
+  }
+  /* 리프 하나가 범위 안인가 — 중영역이 범위 안이고, 심화(★) 리프면 그 중영역의 심화가 켜져 있어야 한다 */
+  function inScopeLeaf(leafCode) {
+    if (!scope().length) return true;
+    var l = BY[leafCode];
+    if (!l || !l.mid) return inScope(String(leafCode || "").charAt(0));
+    if (!inScopeMid(l.mid.code)) return false;
+    if (l.grade === "심화" && !deepOn(l.mid.code)) return false;
+    return true;
+  }
+  /* 문항·OX·개념어처럼 leaf 를 아는 것은 리프로, 모르면 대영역으로 */
+  function inScopeItem(x) {
+    if (x && x.leaf && BY[x.leaf]) return inScopeLeaf(x.leaf);
+    return inScope((x && (x.sroot || x.root)) || "");
   }
   function scopeName() {
     var sc = scope();
     if (!sc.length) return "";
-    var nm = sc.map(function (c) {
-      var r = BY[c];
-      return r ? r.name : c;
-    });
-    return nm.join(", ");
+    var 전체 = scopeMids(), roots = [], seen = {};
+    sc.forEach(function (c) { var r = c.charAt(0); if (!seen[r]) { seen[r] = 1; roots.push(r); } });
+    return roots.map(function (r) {
+      var R = BY[r]; if (!R || !R.mids) return r;
+      var 든 = R.mids.filter(function (m) { return 전체[m.code]; });
+      if (든.length === R.mids.length) return R.name;
+      return R.name + "(" + 든.map(function (m) { return m.name; }).join("·") + ")";
+    }).join(", ");
   }
 
   function nav(active) {
@@ -1681,7 +1735,7 @@
       }).join("") + '</div>' +
       '<div class="navact">' +
       '<span class="chip mono hide-sm" id="navgrade"></span>' +
-      '<span class="srcflag hide-sm" id="srcflag">시연 데이터</span>' +
+      (S.seeded ? '<span class="srcflag hide-sm" id="srcflag">시연 데이터</span>' : '') +
       '<span class="chip mono" id="navstreak"></span></div></div></nav>';
   }
   /* 지금 화면에서 할 만한 다음 것을 골라 아래에 띄운다.
@@ -1880,7 +1934,7 @@
   window.TERRA = {
     T: T, ROOTS: ROOTS, MIDS: MIDS, LEAVES: LEAVES, BY: BY, QOF: QOF,
     state: function () { return S; }, save: save, flush: flush, seedDemo: seedDemo,
-    reset: function () { S = blank(); seedDemo(true); },
+    reset: function () { S = blank(); if (시연켜짐()) seedDemo(true); },
     answer: answer, drill: drill, drillStat: drillStat,
     /* 판정 엔진에 넘길 거리 — 확신도·시간·시도·숙련도·연속오답 */
     판정거리: 판정거리, 연속오답: 연속오답,
@@ -1903,7 +1957,8 @@
     보이는대영역: 보이는대영역, 스킬트리대영역: 스킬트리대영역,
     기본범위: 기본범위, 기본범위지금: 기본범위지금, 범위_시험별: 범위_시험별,
     범위기본값채우기: 범위기본값채우기, 범위자동인가: 범위자동인가,
-    inScope: inScope, scopeName: scopeName,
+    inScope: inScope, inScopeMid: inScopeMid, inScopeLeaf: inScopeLeaf, inScopeItem: inScopeItem,
+    scopeMids: scopeMids, deepOn: deepOn, setDeep: setDeep, scopeName: scopeName,
     routine: routine, calendar: calendar, goalMin: goalMin, setGoalMin: setGoalMin,
     examMode: examMode, nextExam: 다가온시험,
     watch: watch, watched: watched, spentOn: spentOn,
@@ -1918,5 +1973,18 @@
     옮기기코드: 옮기기코드, 코드읽기: 코드읽기, 코드로되돌리기: 코드로되돌리기,
     파일로내보내기: 파일로내보내기
   };
-  seedDemo();
+  /* ★ 시연 표본은 **명시 플래그**가 있을 때만 (2026-09-17 감사: 새 학생이 "14일 연속·24문항 맞힘" 가짜 기록을 봤다).
+     ?demo 로 열면 이 브라우저에 켜지고(terra.demo=1), ?nodemo 로 끈다. 검사기(webdriver·HeadlessChrome)는 그대로 시연을 본다. */
+  function 시연켜짐() {
+    try {
+      if (/[?&]nodemo\b/.test(location.search)) { localStorage.removeItem("terra.demo"); return false; }
+      if (/[?&]demo\b/.test(location.search)) { localStorage.setItem("terra.demo", "1"); return true; }
+      if (localStorage.getItem("terra.demo") === "1") return true;
+      if (navigator.webdriver || /HeadlessChrome|node|jsdom/i.test(navigator.userAgent || "")) return true;   /* 검사기(헤드리스·node) */
+    } catch (e) {}
+    return false;
+  }
+  if (시연켜짐()) seedDemo();
+  else if (S.seeded) { S = blank(); save(); }   /* 예전에 심긴 시연 기록은 걷어낸다 */
+  window.TERRA.시연켜짐 = 시연켜짐;
 })();

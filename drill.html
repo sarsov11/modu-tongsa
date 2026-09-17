@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=7bcef92a">
+<link rel="stylesheet" href="css/base.css?v=8f6afdbf">
 <link rel="stylesheet" href="css/coach.css?v=208a602f">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -40,11 +40,29 @@
     border:1px solid var(--line)}
   .mapwrap svg{display:block;width:100%;height:auto}
   .land{fill:#151D27;stroke:#31445A;stroke-width:.4;vector-effect:non-scaling-stroke}
-  .city{fill:#2FE0CE}
+  .city{fill:var(--mint)}
   .city.dim{fill:#20313C}
-  .pulse{fill:none;stroke:#2FE0CE;stroke-width:.9;vector-effect:non-scaling-stroke}
+  .pulse{fill:none;stroke:var(--mint);stroke-width:.9;vector-effect:non-scaling-stroke}
   .clab{font-family:"Noto Sans KR",sans-serif;font-weight:700;fill:#EAF6F8;paint-order:stroke;
     stroke:#05070A;stroke-width:3.5;stroke-linejoin:round}
+
+  :root{--citydim:#20313C;--axis:#333C47;--axis-ink:#545B64}
+  .clabt{fill:#EAF6F8}
+  :root[data-skin="paper"]{--citydim:#B9C4D0;--axis:#C9C3B5;--axis-ink:#8A8F9C}
+  :root[data-skin="paper"] .clabt{fill:#1F2430}
+  :root[data-skin="paper"] .passage:before{color:#C9C3B5}
+  .mapbg{fill:#05070A}
+  .city.off{fill:#18222C}
+  /* ── 종이 스킨: 어두운 판을 밝게 (2026-09-16) ── */
+  :root[data-skin="paper"] .mapwrap{background:#EDF1F5}
+  :root[data-skin="paper"] .mapbg{fill:#EDF1F5}
+  :root[data-skin="paper"] .land{fill:#D7DEE6;stroke:#B5C0CC}
+  :root[data-skin="paper"] .city.dim{fill:#B9C4D0}
+  :root[data-skin="paper"] .city.off{fill:#C9D2DB}
+  :root[data-skin="paper"] .clab{fill:#1F2430;stroke:#EDF1F5}
+  :root[data-skin="paper"] .passage{background:var(--surface-2);border-color:var(--line-2);color:var(--ink)}
+  :root[data-skin="paper"] .qimg{background:var(--surface-2)}
+  :root[data-skin="paper"] .ppc{background:var(--surface-2)}
   .maplegend{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;font-size:14.5px;color:var(--ink-4)}
   .maplegend i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:5px;
     vertical-align:-1px}
@@ -57,7 +75,7 @@
     color:var(--ink);letter-spacing:-.06em;line-height:1;
     animation:cpop .92s cubic-bezier(.16,.84,.3,1) both}
   .count .cap{font-size:16px;color:var(--ink-3);letter-spacing:.02em}
-  .count .rg{font-family:var(--kr);font-weight:700;font-size:14.5px;color:#2FE0CE;letter-spacing:-.01em;}
+  .count .rg{font-family:var(--kr);font-weight:700;font-size:14.5px;color:var(--mint);letter-spacing:-.01em;}
   @keyframes cpop{0%{opacity:0;transform:scale(1.5)}42%{opacity:1;transform:scale(1)}
     100%{opacity:.25;transform:scale(.94)}}
   .opts.wait{opacity:.4;pointer-events:none}
@@ -90,7 +108,7 @@
     display:flex;align-items:center;justify-content:center;font-family:var(--mono);
     font-size:14.5px;font-weight:800;color:var(--ink-4)}
   .opt b{color:var(--ink);font-weight:700}
-  .opt[data-s="ok"]{border-color:#2FE0CE;background:rgba(47,224,206,.10);color:var(--ink)}
+  .opt[data-s="ok"]{border-color:var(--mint);background:var(--mint-soft);color:var(--ink)}
   .opt[data-s="no"]{border-color:var(--red);background:var(--red-soft)}
   .opts.c2 .opt{justify-content:center;font-size:17px;font-weight:800;padding:20px}
 
@@ -145,7 +163,7 @@
     .earrow{text-align:center;transform:rotate(90deg)} }
   .verdict-line{display:inline-block;font-family:var(--kr);font-size:14.5px;font-weight:700;
     letter-spacing:-.01em;padding:4px 9px;border-radius:6px;margin-right:8px}
-  .verdict-line.ok{color:#2FE0CE;background:rgba(47,224,206,.12);border:1px solid rgba(47,224,206,.4)}
+  .verdict-line.ok{color:var(--mint);background:rgba(47,224,206,.12);border:1px solid rgba(47,224,206,.4)}
   .verdict-line.no{color:var(--red-2);background:var(--red-soft);border:1px solid var(--red-line)}
 
   /* ── 노동 사례 판단 (조합형) ── */
@@ -293,22 +311,22 @@
   .grow .n{flex:0 0 62px;color:var(--ink-3)}
   .grow .bwrap{flex:1;height:12px;background:var(--surface-2);border-radius:3px;overflow:hidden}
   .grow .bwrap i{display:block;height:100%;border-radius:3px;transition:width .18s}
-  .grow .bwrap i.up{background:#2FE0CE}
+  .grow .bwrap i.up{background:var(--mint)}
   .grow .bwrap i.dn{background:var(--red)}
   .grow .v{flex:0 0 56px;text-align:right}
   .grow .u{flex:0 0 92px;text-align:right;color:var(--ink-4);font-size:14.5px}
-  .grow .v.up{color:#2FE0CE}
+  .grow .v.up{color:var(--mint)}
   .grow .v.dn{color:var(--red-2)}
   .vpill{font-family:var(--mono);font-size:14.5px;padding:7px 12px;border-radius:7px;
     border:1px solid var(--line-2);color:var(--ink-3);font-weight:800}
-  .vpill.good{border-color:#2FE0CE;color:#2FE0CE;background:rgba(47,224,206,.09)}
+  .vpill.good{border-color:var(--mint);color:var(--mint);background:rgba(47,224,206,.09)}
   .vpill.bad{border-color:var(--red-line);color:var(--red-2);background:var(--red-soft)}
 
   /* ── 옆 패널 ── */
   .side{display:flex;flex-direction:column;gap:var(--s3)}
   .streak{display:flex;gap:4px;flex-wrap:wrap}
   .streak i{width:15px;height:15px;border-radius:4px;background:var(--lv1);display:block}
-  .streak i.ok{background:#2FE0CE} .streak i.no{background:var(--red)}
+  .streak i.ok{background:var(--mint)} .streak i.no{background:var(--red)}
   .pushrow{display:flex;align-items:center;justify-content:space-between;gap:12px;
     padding:13px 0;border-bottom:1px solid var(--line)}
   .pushrow:last-child{border-bottom:none}
@@ -330,6 +348,10 @@
     padding:3px 10px;letter-spacing:.02em;vertical-align:middle}
   .srcbadge.real{background:var(--mint-soft);color:var(--mint-2)}
   .srcbadge.drill{background:var(--surface-3);color:var(--ink-4)}
+  @media (max-width:640px){ #modes{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;padding-bottom:6px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    #modes::-webkit-scrollbar{display:none} #modes button,#modes .mgrp{flex:0 0 auto;white-space:nowrap} }
+  .naeshin{display:flex;align-items:center;gap:14px;margin:0 0 18px;padding:16px 18px;border:1.5px solid var(--cta);border-radius:var(--r2);background:var(--cta-soft);color:var(--ink);text-decoration:none}
+  .naeshin b{font-size:17px;font-weight:900;white-space:nowrap} .naeshin span{flex:1;font-size:14.5px;font-weight:600;color:var(--ink-2)} .naeshin i{font-style:normal;font-weight:900;color:var(--cta)}
 </style>
 </head>
 <body>
@@ -366,10 +388,7 @@
           </div>
         </div>
       </div>
-      <div class="card">
-        <div class="hd"><h3>알림</h3></div>
-        <div class="bd" id="push"></div>
-      </div>
+      <!-- 알림 설정은 설정 화면 하나에만 둔다(2026-09-17 감사: 중복) -->
       <div class="card">
         <div class="hd"><h3>근거</h3></div>
         <div class="bd" style="font-size:13px;line-height:1.75;color:var(--ink-3)" id="basis"></div>
@@ -392,12 +411,12 @@
 <script src="js/peace.js?v=d2be76da"></script>
 <script src="js/justice.js?v=4843e05f"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
-<script src="js/cards.js?v=1a50b0db"></script>
-<script src="js/store.js?v=1a533f71"></script>
+<script src="js/cards.js?v=5f7c4002"></script>
+<script src="js/store.js?v=09e3cd63"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/coach.js?v=a47134ba"></script>
+<script src="js/coach.js?v=cd7ef204"></script>
 <script src="js/notify.js?v=a6c06818"></script>
 <script>
 (function(){
@@ -439,6 +458,10 @@
     if(안.length) mode=안[0].id;
   })();
 
+  (function(){ var g=(T.state().student||{}).grade||"고1"; if(g!=="고1"||!T.scopeOn()) return;
+    var ph=document.querySelector(".phead"); if(!ph) return;
+    ph.insertAdjacentHTML("afterend",'<a class="naeshin" href="naeshin.html"><b>내신 킬러드릴</b><span>이번 시험 범위에서 3점으로 나온 자리만 모았어요. 유형 훈련보다 먼저 여기부터.</span><i>→</i></a>');
+  })();
   document.getElementById("modes").innerHTML=
     '<span class="mgrp">킬러</span>'+
     MODES.filter(function(m){ return !m.tier; }).map(단추).join("")+
@@ -636,7 +659,7 @@
               '<text class="clab" data-fs="6.6" data-cy="'+(-q.city.y)+'" data-dy="-4.6"'+
               ' x="'+q.city.x+'" y="'+(-q.city.y-4.6/k*big)+
               '" text-anchor="middle" font-size="'+(6.6/k*big)+'" stroke-width="'+(3.5/k*big)+
-              '" fill="#EAF6F8">'+q.city.n+'</text>');
+              '" class="clabt">'+q.city.n+'</text>');
           }
           var op=document.querySelector(".opts");
           if(op) op.classList.remove("wait");
@@ -705,7 +728,7 @@
     var dots=A.cities.map(function(c,i){
       var isT=(target && c.n===target.n);
       var kin=false;   // 같은 기후형 도시 이름은 띄우지 않는다 — 화면만 어지럽다
-      var col=reveal? A.koppen[c.k].color : (isT? "#2FE0CE" : "#20313C");
+      var col=reveal? A.koppen[c.k].color : (isT? "var(--mint)" : "var(--citydim)");
       var r=(isT?2.8:(reveal?1.8:1.5))/k;
       var lab="";
       if(isT&&reveal){
@@ -728,7 +751,7 @@
       '<defs><filter id="glow" x="-300%" y="-300%" width="700%" height="700%">'+
       '<feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/>'+
       '<feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'+
-      '<rect x="-189" y="-84" width="378" height="146" fill="#05070A"/>'+paths+dots+'</svg></div>';
+      '<rect class="mapbg" x="-189" y="-84" width="378" height="146"/>'+paths+dots+'</svg></div>';
   }
   function renderClimate(q){
     document.getElementById("qtext").textContent="이 도시의 기후는?";
@@ -829,7 +852,7 @@
     var paths=A.paths.map(function(d){return '<path class="land" d="'+d+'"/>';}).join("");
     var lit=0;
     var dots=A.cities.map(function(c){
-      if(!on[c.n]) return '<circle cx="'+c.x+'" cy="'+(-c.y)+'" r="1.1" fill="#18222C"/>';
+      if(!on[c.n]) return '<circle cx="'+c.x+'" cy="'+(-c.y)+'" r="1.1" class="city off"/>';
       var col=A.koppen[c.k].color, up=(lit++%2===0);
       return '<g><circle cx="'+c.x+'" cy="'+(-c.y)+'" r="3" fill="'+col+'" filter="url(#glow2)"/>'+
         '<circle class="pulse" cx="'+c.x+'" cy="'+(-c.y)+'" r="5" stroke="'+col+'">'+
@@ -842,7 +865,7 @@
       '<defs><filter id="glow2" x="-300%" y="-300%" width="700%" height="700%">'+
       '<feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/>'+
       '<feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'+
-      '<rect x="-189" y="-84" width="378" height="146" fill="#05070A"/>'+paths+dots+'</svg></div>';
+      '<rect class="mapbg" x="-189" y="-84" width="378" height="146"/>'+paths+dots+'</svg></div>';
   }
   function showResult(){
     stopTimer();
@@ -989,15 +1012,15 @@
     if(showTerm && term!=null){
       var x=sx(term), inb=(term>q.lo&&term<q.hi);
       now='<polygon points="'+x+','+(y-18)+' '+(x-7)+','+(y-30)+' '+(x+7)+','+(y-30)+'" fill="'+
-        (inb?"#2FE0CE":"#E5484D")+'"/>'+
-        '<text x="'+x+'" y="'+(y-34)+'" text-anchor="middle" fill="'+(inb?"#2FE0CE":"#FF6369")+
+        (inb?"var(--mint)":"#E5484D")+'"/>'+
+        '<text x="'+x+'" y="'+(y-34)+'" text-anchor="middle" fill="'+(inb?"var(--mint)":"#FF6369")+
         '" font-size="11.5" font-family="IBM Plex Mono">'+r2(term)+'</text>';
     }
     return '<div class="ppc"><svg viewBox="0 0 '+W+' '+H+'">'+
-      '<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="#333C47" stroke-width="1.5"/>'+
+      '<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="var(--axis)" stroke-width="1.5"/>'+
       band+now+mark(q.oa,"#E5484D",q.C[0]+" "+r2(q.oa),true)+
       mark(q.ob,"#8A929C",q.C[1]+" "+r2(q.ob),false)+
-      '<text x="'+PL+'" y="'+(H-6)+'" fill="#545B64" font-size="11" font-family="IBM Plex Mono">'+
+      '<text x="'+PL+'" y="'+(H-6)+'" fill="var(--axis-ink)" font-size="11" font-family="IBM Plex Mono">'+
       q.G[0]+' 1개의 기회비용 ('+q.G[1]+') →</text></svg></div>';
   }
   function gainSvg(q,term){
@@ -1856,6 +1879,7 @@
     if(!S.push) S.push={climate:true,econ:false,thinker:false};
     var N=window.TERRA_NOTIFY;
     var host=document.getElementById("push");
+    if(!host) return;                       /* 알림 설정은 설정 화면에만(2026-09-17) */
     if(!N){ host.innerHTML='<p style="font-size:12.5px;color:var(--ink-4)">'+
       '알림을 쓸 수 없는 브라우저예요.</p>'; return; }
     var st=N.status();

@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=7bcef92a">
+<link rel="stylesheet" href="css/base.css?v=8f6afdbf">
 <link rel="stylesheet" href="css/coach.css?v=208a602f">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -275,6 +275,8 @@
   .lec.today .no{background:var(--red);color:#fff}
   .todaytag{display:inline-block;font-size:14.5px;font-family:var(--mono);color:#fff;
     background:var(--red);border-radius:5px;padding:2px 6px;margin-left:7px;vertical-align:2px;font-weight:800}
+  .mrow.out{opacity:.42}
+  .mrow.out .nm::after{content:" (이번 범위 밖)";font-size:12.5px;color:var(--ink-3);font-weight:600}
 </style>
 </head>
 <body>
@@ -349,12 +351,12 @@
 <script src="js/video.js?v=b02e3de6"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
-<script src="js/cards.js?v=1a50b0db"></script>
-<script src="js/store.js?v=1a533f71"></script>
+<script src="js/cards.js?v=5f7c4002"></script>
+<script src="js/store.js?v=09e3cd63"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/coach.js?v=a47134ba"></script>
+<script src="js/coach.js?v=cd7ef204"></script>
 <script>
 (function(){
   var T=TERRA, L=window.LECT||{};
@@ -463,6 +465,10 @@
     });
     GOLD=cv("--fam-soc")||"#FFD86B"; STAR=cv("--star")||"#CFE0FF";
     CORE=cv("--core-glow")||"#4E7BD6";
+    /* 영상이 한 편도 없으면 강의 수·시간을 말하지 않는다(2026-09-17 감사: 0편인데 '21강, 다 들었어요'). */
+    HASV=Object.keys(window.VIDEO||{}).length>0;
+    /* 영상이 한 편도 없으면 강의 수·시간을 말하지 않는다(2026-09-17 감사: 0편인데 '21강, 다 들었어요'). */
+    HASV=Object.keys(window.VIDEO||{}).length>0;
     SLINE=cv("--stage-line")||"#2B3D5C"; SINK=cv("--stage-ink")||"#DEE8F8";
     SINK2=cv("--stage-ink-2")||"#A9BEDF"; SBG=cv("--stage")||"#070B14";
     SBG2=cv("--stage-2")||"#0C1424"; ACC=cv("--red")||"#E5484D";
@@ -514,10 +520,10 @@
     var g=(T.state().student||{}).grade||"고1";
     if(g!=="고3"){
       var mine=nd.mine||0;
-      return mine ? ("지금 "+mine+"문항, "+nd.lec.length+"강")
-                  : ("아직 안 배운 곳, "+nd.lec.length+"강");
+      return mine ? ("지금 "+mine+"문항"+(HASV?", "+nd.lec.length+"강":""))
+                  : ("아직 안 배운 곳"+(HASV?", "+nd.lec.length+"강":""));
     }
-    return nd.lec.length+"강, "+(lock?"시작 전":nd.st.achieve+"%");
+    return (HASV?nd.lec.length+"강, ":"")+(lock?"시작 전":"성취도 "+nd.st.achieve+"%");
   }
 
   var MODEL={};
@@ -739,10 +745,10 @@
       var 위 = Math.sin(rad(a)) < -0.5;
       var y1 = 위 ? y-rr-(L.fSub+1)-18 : y+rr+L.fName+8;
       var y2 = 위 ? y-rr-8 : y+rr+L.fName*2+13;
-      var l1=txt(labs,M.lec+"강, 예상 "+Math.round(M.mins/60)+"시간",
+      var l1=txt(labs,HASV?(M.lec+"강, 예상 "+Math.round(M.mins/60)+"시간"):("기출 "+M.n.toLocaleString()+"문항"),
         {x:x,y:y1,"text-anchor":"middle",fill:SINK,
          "font-size":L.fName,"font-weight":700,"font-family":cv("--kr")});
-      var l2=txt(labs,"기출 "+M.n.toLocaleString()+"문항, 성취도 "+av+"%",
+      var l2=txt(labs,(HASV?"기출 "+M.n.toLocaleString()+"문항, ":"")+"성취도 "+av+"%",
         {x:x,y:y2,"text-anchor":"middle",fill:SINK2,
          "font-size":L.fSub+1,"font-weight":600,"font-family":cv("--kr")});
       [l1,l2].forEach(function(e){ e.classList.add("lbl"); });
@@ -774,7 +780,7 @@
       gp.addEventListener("keydown",function(e){
         if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(); } });
     });
-    coreOrb(g,CORE,"통합사회",ALL.n.toLocaleString()+"문항, "+ALL.lec+"강",null);
+    coreOrb(g,CORE,"통합사회",ALL.n.toLocaleString()+"문항"+(HASV?", "+ALL.lec+"강":""),null);
   }
 
   /* ══════ 층 1 — 갈래
@@ -809,8 +815,8 @@
       var 학년2=(T.state().student||{}).grade||"고1";
       var 몫=gr.items.reduce(function(s2,y){ return s2+(y.mine||0); },0);
       var 꼬리=(학년2!=="고3")
-        ? (몫 ? "지금 "+몫+"문항, "+lec+"강" : "아직 안 배운 곳, "+lec+"강")
-        : lec+"강, 성취도 "+av+"%";
+        ? (몫 ? "지금 "+몫+"문항"+(HASV?", "+lec+"강":"") : "아직 안 배운 곳"+(HASV?", "+lec+"강":""))
+        : (HASV?lec+"강, ":"")+"성취도 "+av+"%";
       var l2=txt(labs,꼬리,
         {x:x,y:y+rr+L.fName*2+12,"text-anchor":"middle",
          fill:SINK2,"font-size":L.fSub,"font-weight":600,"font-family":cv("--kr")});
@@ -825,7 +831,7 @@
     var avAll=M.items.length
       ? Math.round(M.items.reduce(function(s2,x){ return s2+x.st.achieve; },0)/M.items.length)
       : 0;
-    coreOrb(g,hue,FAM[f].label||f,M.lec+"강, 성취도 "+avAll+"%",function(){ if(!busy) goAll(); });
+    coreOrb(g,hue,FAM[f].label||f,(HASV?M.lec+"강, ":"")+"성취도 "+avAll+"%",function(){ if(!busy) goAll(); });
     var back=txt(g,"↑ 눌러서 전체로",{x:L.CX,y:L.CY+L.rCore+22,"text-anchor":"middle",
       fill:SINK2,"font-size":Math.round(L.fSub+1),"font-weight":600,
       "font-family":cv("--kr"),opacity:".85"});
@@ -854,7 +860,7 @@
         "stroke-dasharray":lock?"3 5":"none"},link);
       var rr=Math.round((17+Math.sqrt(nd.wt/maxWt)*13)*L.k+8);
       var gp=orb(nodes,x,y,rr,tone(f,nd.tier),nd.st.achieve,{});
-      gp.setAttribute("aria-label",nd.name+" 강의 "+nd.lec.length+"개 열기");
+      gp.setAttribute("aria-label",nd.name+(HASV?" 강의 "+nd.lec.length+"개":"")+" 열기");
       var ca=Math.cos(rad(a)), sa=Math.sin(rad(a)), off=rr+13;
       var anc=ca>.3?"start":ca<-.3?"end":"middle";
       var up=(anc==="middle"&&sa<0);
@@ -879,7 +885,7 @@
       ? Math.round(gr.items.reduce(function(s2,x){ return s2+x.st.achieve; },0)/gr.items.length)
       : 0;
     var lec=gr.items.reduce(function(s2,x){ return s2+x.lec.length; },0);
-    coreOrb(g,hue,gr.name,lec+"강, 성취도 "+av+"%",function(){ if(!busy) goFam(f,L.CX,L.CY); });
+    coreOrb(g,hue,gr.name,(HASV?lec+"강, ":"")+"성취도 "+av+"%",function(){ if(!busy) goFam(f,L.CX,L.CY); });
     var back=txt(g,"↑ 눌러서 "+(FAM[f].label||f)+" 로",{x:L.CX,y:L.CY+L.rCore+22,"text-anchor":"middle",
       fill:SINK2,"font-size":Math.round(L.fSub+1),"font-weight":600,
       "font-family":cv("--kr"),opacity:".85"});
@@ -963,7 +969,7 @@
     var av=M.items.length
       ? Math.round(M.items.reduce(function(s,x){ return s+x.st.achieve; },0)/M.items.length)
       : 0;
-    coreOrb(g,hue,FAM[f].label||f,M.lec+"강, 성취도 "+av+"%",function(){ if(!busy) goAll(); });
+    coreOrb(g,hue,FAM[f].label||f,(HASV?M.lec+"강, ":"")+"성취도 "+av+"%",function(){ if(!busy) goAll(); });
     var back=txt(g,"↑ 눌러서 전체로",{x:L.CX,y:L.CY+L.rCore+22,"text-anchor":"middle",
       fill:SINK2,"font-size":Math.round(L.fSub+1),"font-weight":600,
       "font-family":cv("--kr"),opacity:".85"});
@@ -1075,7 +1081,7 @@
       c.innerHTML='<span class="swapin">통합사회</span>';
       document.getElementById("lede").textContent=
         (AX.name==="시험 범위" ? "이번 시험에 나오는 단원만 모았어요." : AX.name+(bat(AX.name)?"으로":"로")+" 묶었어요 — "+AX.say+".")+
-        " 기출 "+ALL.n.toLocaleString()+"문항, 강의 "+ALL.lec+"강, 약 "+Math.round(ALL.mins/60)+"시간";
+        " 기출 "+ALL.n.toLocaleString()+"문항"+(HASV?", 강의 "+ALL.lec+"강, 약 "+Math.round(ALL.mins/60)+"시간":"");
       document.getElementById("plateTitle").textContent="통합사회";
       document.getElementById("plateSub").textContent=AX.name;
     }else if(level===2&&grp){
@@ -1163,11 +1169,10 @@
     var it=todayLec(), host=document.getElementById("pickhost");
     if(!host) return;
     if(!it){
-      /* 들을 게 없다 = 편성된 강의를 다 봤다 */
+      /* 들을 게 없다 — 영상이 아예 없으면 '다 들었다'고 하지 않는다 */
       host.innerHTML='<div class="pick done"><span class="dot2">✓</span>'+
         '<span class="tx2"><span class="lbl">오늘</span>'+
-        '<h3>이번 범위 강의를 다 들었어요</h3>'+
-        '<p>이제 문제로 다질 차례예요.</p></span>'+
+        (HASV?'<h3>이번 범위 강의를 다 들었어요</h3><p>이제 문제로 다질 차례예요.</p>':'<h3>오늘은 문제로 다져요</h3><p>이 범위의 기출을 풀어요.</p>')+'</span>'+
         '<span class="act"><a class="btn" href="study.html">문제 풀기</a></span></div>';
       return;
     }
@@ -1388,7 +1393,7 @@
         var M=MODEL[f];
         return '<div class="grp"><div class="gh">'+
           '<span class="cd" style="color:'+FAM[f].hex+'">'+FAM[f].no+'</span>'+
-          '<h3>'+f+'</h3><span class="n">'+M.lec+'강, 기출 '+M.n.toLocaleString()+'</span></div>'+
+          '<h3>'+esc(FAM[f].label||f)+'</h3><span class="n">'+(HASV?M.lec+'강, ':'')+'기출 '+M.n.toLocaleString()+'</span></div>'+
           M.groups.map(function(g){
             return '<div class="mrow" data-gofam="'+f+'">'+
               '<span class="bul" style="background:'+FAM[f].hex+';opacity:.7"></span>'+
@@ -1405,11 +1410,10 @@
     var groups=(level===2&&grp)?[grp]:M.groups;
     host.innerHTML=groups.map(function(g){
       return '<div class="grp"><div class="gh">'+
-        '<span class="cd" style="color:'+FAM[fam].hex+'">'+g.code+'</span>'+
         '<h3>'+g.name+'</h3><span class="n">중영역 '+g.items.length+'</span></div>'+
         g.items.map(function(x){
           var col=x.tier==="S"?GOLD:tone(fam,x.tier,paper()?14:0);
-          return '<div class="mrow" data-mid="'+x.code+'">'+
+          return '<div class="mrow'+((T.inScopeMid&&!T.inScopeMid(x.code))?' out':'')+'" data-mid="'+x.code+'">'+
             '<span class="bul" style="background:'+col+';opacity:'+
             (x.tier==="L"?.55:1)+'"></span>'+
             '<span class="nm">'+x.name+'</span>'+
@@ -1444,7 +1448,7 @@
         }).join("")
       : FAMS.map(function(x){
           return '<span class="k"><i class="dot" style="background:'+FAM[x].hex+'"></i>'+
-            x+' — '+MODEL[x].lec+'강</span>';
+            esc(FAM[x].label||x)+(HASV?', '+MODEL[x].lec+'강':'')+'</span>';
         }).join(""))+size;
   }
   /* ★ 범위 띠 — 지도가 시험 범위로 줄었을 때 그 까닭을 적는다.

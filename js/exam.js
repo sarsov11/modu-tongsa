@@ -176,6 +176,8 @@
       (r.mids || []).forEach(function (m) {
         (m.leaves || []).forEach(function (l) {
           if (l.grade === "제외") return;
+          /* 중단원·심화 단위 범위(2026-09-17) */
+          if (T && T.inScopeLeaf && !T.inScopeLeaf(l.code)) return;
           var kill = 킬러인가(l);
           (l.play || []).forEach(function (q) {
             /* ★ 어떤 과목이 본 문항인지는 store.js 가 정한다 —

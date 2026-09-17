@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=7bcef92a">
+<link rel="stylesheet" href="css/base.css?v=8f6afdbf">
 <link rel="stylesheet" href="css/coach.css?v=208a602f">
 <link rel="stylesheet" href="css/question.css?v=c82fc9f8">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
@@ -493,19 +493,19 @@
 
 <script src="js/trend.js?v=53fd8a90"></script>
 <script src="js/tree.js?v=c7593fc6"></script>
-<script src="js/qbank.js?v=6fddd77e"></script>
+<script src="js/qbank.js?v=f6d1a6a6"></script>
 <script src="js/lecture.js?v=207a14bb"></script>
 <script src="js/video.js?v=b02e3de6"></script>
 <script src="js/qrender.js?v=a26db44e"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/cards.js?v=1a50b0db"></script>
-<script src="js/store.js?v=1a533f71"></script>
+<script src="js/cards.js?v=5f7c4002"></script>
+<script src="js/store.js?v=09e3cd63"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/coach.js?v=a47134ba"></script>
+<script src="js/coach.js?v=cd7ef204"></script>
 <script src="js/notify.js?v=a6c06818"></script>
 <script>
 (function(){
@@ -985,7 +985,7 @@
        범위를 정해 놓고도 범위 밖을 먼저 밀면 앱이 있으나 마나다.
        리프 코드는 "C1.1" 처럼 대영역 글자로 시작한다. */
     function 범위안(leafCode){
-      return T.inScope(String(leafCode||"").charAt(0));
+      return T.inScopeLeaf ? T.inScopeLeaf(leafCode) : T.inScope(String(leafCode||"").charAt(0));
     }
     var 범위썼나=false;      /* 범위 안에서 못 찾아 범위 밖으로 넘어갔는가 */
     function 골라내기(목록){
@@ -1138,7 +1138,7 @@
   document.getElementById("foot").innerHTML=
     "문항은 통합사회 개념트리 매핑(2026-08-29)에서 왔고, 글로 풀 수 있는 "+
     Object.keys(Q).length.toLocaleString()+"문항을 씁니다. "+
-    "성취도·정답률은 이 브라우저에만 쌓이며, 처음 열면 최근 14일 시연 표본이 깔립니다. "+
+    "성취도·정답률은 이 브라우저에만 쌓이며, "+
     "등급은 내신 5등급 기준 <b>가늠</b>이에요 — 실제 등급은 그 학교 응시자 분포로 갈리므로 우리가 알 수 없습니다.";
 
   window.addEventListener("terra:skin",function(){ location.reload(); });

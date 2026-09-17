@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=7bcef92a">
+<link rel="stylesheet" href="css/base.css?v=8f6afdbf">
 <link rel="stylesheet" href="css/coach.css?v=208a602f">
 <link rel="stylesheet" href="css/keyword.css?v=e00f83be">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
@@ -105,6 +105,23 @@
   .ask .fall{font-size:14.5px;color:var(--ink-3);margin-top:10px}
   .hot{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;font-size:.45em;vertical-align:middle;
     background:var(--red,#e5484d);color:#fff;font-weight:700;letter-spacing:0}
+  /* 카드 2판 블록 */
+  .card .csub{margin:-4px 0 12px;font-size:15.5px;font-weight:700;color:var(--ink-3)}
+  .card .cp{margin:0 0 12px;font-size:16.5px;line-height:1.75;color:var(--ink);font-weight:500}
+  .card .cp b{font-weight:900;color:var(--ink)}
+  .card .ctt{font-size:14.5px;font-weight:800;color:var(--ink-3);margin:14px 0 6px}
+  .card .ctab{overflow-x:auto} .card .ctab table{width:100%;border-collapse:collapse;font-size:14.5px;line-height:1.5}
+  .card .ctab th,.card .ctab td{border:1px solid var(--line-2);padding:8px 9px;text-align:left;vertical-align:top;color:var(--ink)}
+  .card .ctab th{background:var(--surface-2);font-weight:800;white-space:nowrap}
+  .card .ctree .root{padding:10px 14px;border:1.5px solid var(--cta);border-radius:10px;background:var(--cta-soft);font-weight:800;font-size:15px}
+  .card .ctree ul{list-style:none;margin:8px 0 0 14px;padding:0;border-left:2px solid var(--line-2)}
+  .card .ctree li{padding:6px 0 6px 14px;font-size:15px;line-height:1.55} .card .ctree li b{display:block;font-weight:900}
+  .card .cflow ol{margin:0;padding:0;list-style:none;counter-reset:f}
+  .card .cflow li{counter-increment:f;position:relative;padding:9px 12px 9px 40px;margin-bottom:6px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);font-size:15px;line-height:1.5}
+  .card .cflow li::before{content:counter(f);position:absolute;left:10px;top:9px;width:22px;height:22px;border-radius:7px;background:var(--ink);color:var(--bg);font-weight:900;font-size:13px;display:grid;place-items:center}
+  .card .ctrap{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--red-soft);border:1px solid var(--red-line)}
+  .card .ctrap .ctt{margin:0 0 6px;color:var(--red-2)} .card .ctrap ul{margin:0;padding-left:18px} .card .ctrap li{font-size:15px;line-height:1.6;color:var(--ink);margin-bottom:4px}
+  .card .cnote{font-size:14.5px;color:var(--ink-3);margin:8px 0 0}
 </style>
 </head>
 <body>
@@ -120,22 +137,23 @@
 </div>
 
 <script src="js/tree.js?v=c7593fc6"></script>
-<script src="js/qbank.js?v=6fddd77e"></script>
+<script src="js/qbank.js?v=f6d1a6a6"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
+<script src="js/cardox.js?v=558cd07e"></script>
 <script src="js/conceptq.js?v=fc0c09eb"></script>
-<script src="js/cards.js?v=1a50b0db"></script>
+<script src="js/cards.js?v=5f7c4002"></script>
 <script src="js/keyword.js?v=9ead7c20"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/judge.js?v=43f690d4"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/store.js?v=1a533f71"></script>
+<script src="js/store.js?v=09e3cd63"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/coach.js?v=a47134ba"></script>
-<script src="js/kwask.js?v=50e0f53f"></script>
+<script src="js/coach.js?v=cd7ef204"></script>
+<script src="js/kwask.js?v=37cf1b37"></script>
 <script>
 (function(){
   var T=window.TERRA, J=window.JUDGE;
@@ -173,12 +191,12 @@
     return;
   }
 
-  var 장들 = 묶음.cards.slice(0,5);
+  var 장들 = 묶음.cards.slice(0,8);   /* 원고 카드는 5~7장 */
   var i=0, 결과=[];
   /* ── 카드 → **핵심 개념어 쓰기** 1~2문항 → 기출 (2026-09-13) ─────────
      방금 읽은 카드의 개념어를 직접 써 본다. 문항은 교과서 정의·카드 문장에서만(개념어만들기.py).
      푸는 동안 카드와 리프 이름을 **화면에서 치운다** — 둘 다 답을 알려 준다. */
-  var 카드글 = 장들.map(function(c){ return (c.lines||[]).join(" "); }).join(" ");
+  var 카드글 = 장들.map(function(c){ return (c.lines||[]).concat((c.blocks||[]).map(블록글)).join(" "); }).join(" ");
   var 개념어 = (window.KWASK ? KWASK.리프에서(T, leaf, 2, 카드글) : []);
   var k=0, 개념어결과=[];
   if(window.COACH) COACH.begin({kind:"card"});   // 리프를 안 넘긴다 — 카드는 이해도를 안 움직인다
@@ -197,18 +215,33 @@
     }).join("");
   }
 
+  /* ── 카드 2판(개념 원고) 블록 — p 문단 · table · tree · flow · trap · note ── */
+  function 굵게(t){ return esc(t).replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>'); }
+  function 블록글(b){ if(!b) return ""; if(b.t==="p") return b.text||""; if(b.t==="table") return (b.head||[]).concat.apply([], (b.rows||[])).join(" "); if(b.t==="tree") return [b.root].concat((b.branches||[]).map(function(x){return x.join(" ");})).join(" "); if(b.t==="flow") return (b.steps||[]).join(" "); if(b.t==="trap") return (b.items||[]).join(" "); return b.text||""; }
+  function 블록HTML(b){
+    if(b.t==="p") return '<p class="cp">'+굵게(b.text)+'</p>';
+    if(b.t==="table") return '<div class="ctab">'+(b.title?'<div class="ctt">'+굵게(b.title)+'</div>':'')+'<table>'+(b.head&&b.head.length?'<thead><tr>'+b.head.map(function(h){return '<th>'+굵게(h)+'</th>';}).join("")+'</tr></thead>':'')+
+      '<tbody>'+(b.rows||[]).map(function(r){ return '<tr>'+r.map(function(x){return '<td>'+굵게(x)+'</td>';}).join("")+'</tr>'; }).join("")+'</tbody></table></div>';
+    if(b.t==="tree") return '<div class="ctree">'+(b.title?'<div class="ctt">'+굵게(b.title)+'</div>':'')+'<div class="root">'+굵게(b.root)+'</div><ul>'+(b.branches||[]).map(function(x){ return '<li><b>'+굵게(x[0])+'</b><span>'+굵게(x[1]||"")+'</span></li>'; }).join("")+'</ul></div>';
+    if(b.t==="flow") return '<div class="cflow">'+(b.title?'<div class="ctt">'+굵게(b.title)+'</div>':'')+'<ol>'+(b.steps||[]).map(function(x){ return '<li>'+굵게(x)+'</li>'; }).join("")+'</ol></div>';
+    if(b.t==="trap") return '<div class="ctrap"><div class="ctt">시험이 비트는 자리</div><ul>'+(b.items||[]).map(function(x){ return '<li>'+굵게(x)+'</li>'; }).join("")+'</ul></div>';
+    if(b.t==="note") return '<p class="cnote">'+(b.title?'<b>'+굵게(b.title)+'</b> ':'')+굵게(b.text)+'</p>';
+    return '';
+  }
   function 카드그리기(){
     진행();
     if(i>=장들.length) return 개념어로();
     var c=장들[i];
+    var 몸 = c.blocks
+      ? (c.sub?'<p class="csub">'+굵게(c.sub)+'</p>':'')+c.blocks.map(블록HTML).join("")
+      : '<ul>'+(c.lines||[]).map(function(t){ return '<li><i></i><span>'+esc(t)+'</span></li>'; }).join("")+'</ul>';
     el("stage").innerHTML =
       '<div class="card" data-k="'+esc(c.k)+'">'+
         '<span class="badge">'+esc(c.k)+'</span>'+
         '<h2>'+esc(c.title)+'</h2>'+
-        '<ul>'+c.lines.map(function(t){
-          return '<li><i></i><span>'+esc(t)+'</span></li>'; }).join("")+'</ul>'+
+        몸+
         (c.src?'<p class="src">'+esc(c.src)+'</p>':'')+
-        '<div class="act"><button class="btn" id="ok">읽었어요 — 확인 →</button>'+
+        '<div class="act"><button class="btn" id="ok">읽었어요, 확인 →</button>'+
           (i>0?'<button class="btn ghost" id="back">앞 개념</button>':'')+
         '</div>'+
       '</div>';

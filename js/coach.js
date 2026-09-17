@@ -490,7 +490,7 @@
     }
     function face(c) {
       return '<div class="face back">' +
-        '<span class="eb">' + esc(c.set.root + " " + c.set.mid) + '</span>' +
+        '<span class="eb">' + esc((T.BY[c.set.root] ? T.BY[c.set.root].name + ", " : "") + c.set.mid) + '</span>' +   /* 단원 알파벳 대신 단원 이름 */
         '<h3>' + esc(c.card.title) + '</h3>' +
         '<ul>' + c.card.lines.slice(0, 3).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join("") + '</ul>' +
         '<p class="cap">' + esc(MSG.cardOpened) + '</p>' +

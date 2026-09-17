@@ -73,7 +73,7 @@
     뺄 = 뺄 || {};
     var 후보 = K.items.filter(function (x) {
       if (뺄[x.id]) return false;
-      if (T.scopeOn && T.scopeOn() && T.inScope && !T.inScope(x.sroot || x.root)) return false;
+      if (T.scopeOn && T.scopeOn() && T.inScope && !(T.inScopeItem ? T.inScopeItem(x) : T.inScope(x.sroot || x.root))) return false;
       return true;
     });
     function 약점(x) {
@@ -105,7 +105,6 @@
     opt = opt || {};
     var T = window.TERRA, J = window.JUDGE;
     var 확신단계 = (J && J.확신단계) || [{ v: "sure", name: "확실해요" }, { v: "half", name: "반반" }, { v: "guess", name: "찍었어요" }];
-    var 이모지 = { sure: "🎯", half: "🤔", guess: "🎲" };
     var 시작 = Date.now(), 끝남 = false, 조합중 = false;
 
     host.innerHTML =
@@ -122,8 +121,7 @@
           '<p class="kwlab" id="kwlab">얼마나 확신하나요? 누르면 채점해요</p>' +
           '<div class="kwconf" id="kwconf">' +
             확신단계.map(function (c) {
-              return '<button type="button" data-c="' + c.v + '"><span class="em">' + (이모지[c.v] || "") +
-                '</span>' + esc(c.name) + '</button>';
+              return '<button type="button" data-c="' + c.v + '">' + esc(c.name) + '</button>';
             }).join("") +
           '</div>' +
           '<button type="button" class="kwskip" id="kwskip">모르겠어요 — 정답 보기</button>' +

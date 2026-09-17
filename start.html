@@ -11,7 +11,7 @@
 <meta name="theme-color" content="#08090B">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=7bcef92a">
+<link rel="stylesheet" href="css/base.css?v=8f6afdbf">
 <link rel="stylesheet" href="css/question.css?v=c82fc9f8">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -29,7 +29,7 @@
   .obtop .back.on{visibility:visible}
   .prog{flex:1;display:flex;gap:4px}
   .prog i{flex:1;height:4px;border-radius:99px;background:var(--line-2)}
-  .prog i.on{background:var(--red)}
+  .prog i.on{background:var(--cta)}
   .obtop .skip{margin-left:auto;font-size:15px;color:var(--ink-4);background:none;border:0;
     font-family:inherit;cursor:pointer;padding:6px 0}
   .obtop .skip:hover{color:var(--ink-2)}
@@ -37,7 +37,7 @@
   .stage{flex:1;display:flex;flex-direction:column;padding:18px 0 110px}
   .stage .eb{font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--ink-4);}
   .stage h1{font-size:clamp(24px,6vw,30px);letter-spacing:-.04em;margin:10px 0 8px;line-height:1.3;color:var(--ink)}
-  .stage h1 em{font-style:normal;color:var(--red-2)}
+  .stage h1 em{font-style:normal;color:var(--cta-2)}
   .stage .lede{font-size:16px;color:var(--ink-3);line-height:1.65;margin:0 0 22px}
 
   .tiles{display:grid;gap:10px}
@@ -45,31 +45,31 @@
     border-radius:var(--r2);background:var(--surface);color:var(--ink);font:inherit;text-align:left;
     cursor:pointer;transition:border-color .15s,transform .15s}
   .tile:hover{border-color:var(--line-3)}
-  .tile[aria-pressed="true"]{border-color:var(--red);background:linear-gradient(180deg,var(--red-soft),transparent 80%),var(--surface)}
+  .tile[aria-pressed="true"]{border-color:var(--cta);background:linear-gradient(180deg,var(--cta-soft),transparent 80%),var(--surface)}
   .tile .ic{flex:0 0 auto;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
     background:var(--surface-3);font-family:var(--mono);font-size:15px;font-weight:800;color:var(--ink-2)}
-  .tile[aria-pressed="true"] .ic{background:var(--red);color:#fff}
+  .tile[aria-pressed="true"] .ic{background:var(--cta);color:#fff}
   .tile b{display:block;font-size:16.5px;letter-spacing:-.02em}
   .tile span{display:block;font-size:15px;color:var(--ink-3);margin-top:2px}
-  .tile .tag{margin-left:auto;font-family:var(--mono);font-size:14.5px;color:var(--red-2);font-weight:800;flex:0 0 auto}
+  .tile .tag{margin-left:auto;font-family:var(--mono);font-size:14.5px;color:var(--cta-2);font-weight:800;flex:0 0 auto}
   .tiles.two{grid-template-columns:1fr 1fr}
   .tiles.two .tile{flex-direction:column;align-items:flex-start;gap:6px;padding:16px}
   .tiles.two .tile b{font-size:22px;font-family:var(--mono);font-weight:800}
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
   .chips button{font:inherit;font-size:15px;padding:8px 13px;border-radius:99px;border:1px solid var(--line-2);
     background:var(--surface);color:var(--ink-2);cursor:pointer}
-  .chips button[aria-pressed="true"]{border-color:var(--red);color:var(--ink);background:var(--red-soft)}
+  .chips button[aria-pressed="true"]{border-color:var(--cta);color:var(--ink);background:var(--cta-soft)}
   .units{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .units .bk{grid-column:1/-1;font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--ink-4);margin-top:8px}
   .units .u{padding:12px 13px;border:1.5px solid var(--line-2);border-radius:var(--r1);background:var(--surface);
     font:inherit;font-size:15.5px;text-align:left;color:var(--ink-2);cursor:pointer;line-height:1.35}
   .units .u b{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);display:block;margin-bottom:2px;font-weight:800}
-  .units .u[aria-pressed="true"]{border-color:var(--red);color:var(--ink);background:var(--red-soft)}
+  .units .u[aria-pressed="true"]{border-color:var(--cta);color:var(--ink);background:var(--cta-soft)}
 
   .field{display:flex;flex-direction:column;gap:8px}
   .field input{font:inherit;font-size:20px;padding:16px 18px;border-radius:var(--r2);border:1.5px solid var(--line-2);
     background:var(--surface);color:var(--ink);width:100%;letter-spacing:-.01em}
-  .field input:focus{outline:none;border-color:var(--red)}
+  .field input:focus{outline:none;border-color:var(--cta)}
   .field input[type=date],.field input[type=time]{font-family:var(--mono);font-size:22px;font-weight:800}
   .note{font-size:15px;color:var(--ink-4);line-height:1.6;margin-top:14px}
   .note b{color:var(--ink-3)}
@@ -106,9 +106,9 @@
 
   /* 끝 — 오늘 할 것 하나 */
   .done .big{font-family:var(--mono);font-size:44px;font-weight:800;color:var(--ink);letter-spacing:-.05em;line-height:1;margin:6px 0 10px}
-  .todayone{display:block;text-decoration:none;color:inherit;margin-top:18px;padding:18px;border:1px solid var(--red-line);border-radius:var(--r2);
-    background:linear-gradient(180deg,var(--red-soft),transparent 70%),var(--surface)}
-  .todayone .lbl{font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--red-2);}
+  .todayone{display:block;text-decoration:none;color:inherit;margin-top:18px;padding:18px;border:1px solid var(--cta-line);border-radius:var(--r2);
+    background:linear-gradient(180deg,var(--cta-soft),transparent 70%),var(--surface)}
+  .todayone .lbl{font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--cta-2);}
   .todayone h3{font-size:19px;margin:6px 0 4px;letter-spacing:-.03em;color:var(--ink)}
   .todayone p{font-size:16px;color:var(--ink-3);line-height:1.55;margin:0}
   .todayone .why{font-size:14.5px;color:var(--ink-4);margin-top:6px}
@@ -129,6 +129,12 @@
   @media (prefers-reduced-motion: reduce){.stage.in{animation:none}}
   .tile b{font-size:34px;font-weight:900;letter-spacing:-.04em;line-height:1;font-family:var(--kr);font-variant-numeric:tabular-nums}
   .tile b .u{display:inline;font-size:15px;font-weight:800;color:var(--ink-3);margin-left:2px;letter-spacing:0}
+  .unitstoggle{margin:12px 0 6px;height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--line-2);background:var(--surface);
+    color:var(--ink-2);font-family:var(--kr);font-size:15px;font-weight:700;cursor:pointer}
+  .unitstoggle[aria-expanded="true"]{border-color:var(--cta);color:var(--cta)}
+  .unitstoggle{margin:12px 0 6px;height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--line-2);background:var(--surface);
+    color:var(--ink-2);font-family:var(--kr);font-size:15px;font-weight:700;cursor:pointer}
+  .unitstoggle[aria-expanded="true"]{border-color:var(--cta);color:var(--cta)}
 </style>
 </head>
 <body>
@@ -144,15 +150,15 @@
 
 <script src="js/trend.js?v=53fd8a90"></script>
 <script src="js/tree.js?v=c7593fc6"></script>
-<script src="js/qbank.js?v=6fddd77e"></script>
+<script src="js/qbank.js?v=f6d1a6a6"></script>
 <script src="js/lecture.js?v=207a14bb"></script>
 <script src="js/video.js?v=b02e3de6"></script>
 <script src="js/qrender.js?v=a26db44e"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/cards.js?v=1a50b0db"></script>
-<script src="js/store.js?v=1a533f71"></script>
+<script src="js/cards.js?v=5f7c4002"></script>
+<script src="js/store.js?v=09e3cd63"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -267,23 +273,35 @@
     scope:function(st){
       if(A.grade==="고3"){ i++; return 그리기(); }        // 고3은 범위가 없다 — 수능 전 범위
       var B=T.기본범위||{}, roots=T.ROOTS.filter(function(r){ return /^[A-J]$/.test(r.code); });
-      if(!A.scope){ var sc=T.scope?T.scope():null; A.scope=(sc&&sc.length)?sc.slice():(B.s2mid?B.s2mid.roots.slice():[]); }
+      if(!A.scope){ var sc=T.scope?T.scope():null; A.scope=(sc&&sc.length)?sc.slice():(B.s2mid?(B.s2mid.mids||B.s2mid.roots).slice():[]); }
       /* ★ 고2 REWIND 는 고1 통합사회 **전 범위**를 되감는다 — 내신 범위로 좁히지 않는다 */
       if(A.grade==="고2" && !A.scope고2){ A.scope=roots.map(function(r){return r.code;}); A.scope고2=1; }
       var presets=["s1mid","s1fin","s2mid","s2fin"].filter(function(k){return B[k];});
+      function rootIn(rc){ return A.scope.some(function(x){ return x.charAt(0)===rc; }); }   /* 대영역이든 그 중단원이든 들어 있으면 켜짐 */
       function same(a,b){ return a.slice().sort().join()===b.slice().sort().join(); }
       st.innerHTML=머리("4 / 7",esc(MSG.scopeH),esc(MSG.scopeP))+
         '<div class="chips">'+presets.map(function(k){ var b=B[k];
-          return '<button data-p="'+k+'" aria-pressed="'+same(A.scope,b.roots)+'">'+esc(b.name+", "+b.단원)+'</button>'; }).join("")+'</div>'+
-        '<div class="units">'+["통합사회 1","통합사회 2"].map(function(bk,z){
+          return '<button data-p="'+k+'" aria-pressed="'+same(A.scope,b.mids||b.roots)+'">'+esc(b.name+", "+b.단원)+'</button>'; }).join("")+'</div>'+
+        '<button type="button" class="unitstoggle" id="unitstoggle" aria-expanded="false">단원을 직접 고를게요</button>'+
+        '<div class="units" id="units" hidden>'+["통합사회 1","통합사회 2"].map(function(bk,z){
           return '<span class="bk">'+bk+'</span>'+roots.filter(function(r){ return z===0?/^[A-E]$/.test(r.code):/^[F-J]$/.test(r.code); }).map(function(r,k){
-            return '<button class="u" data-r="'+r.code+'" aria-pressed="'+(A.scope.indexOf(r.code)>=0)+'"><b>'+(k+1)+'단원</b>'+esc(r.name)+'</button>'; }).join(""); }).join("")+'</div>'+
-        '<p class="note">'+(A.grade==="고2"?'고2 REWIND 는 통합사회 전 범위를 다시 봐요. 빼고 싶은 단원만 눌러 끄세요.':(B.학교?esc(B.학교)+' 기준이 미리 눌려 있어요. 우리 학교와 다르면 고쳐 주세요.':''))+'</p>';
-      function paint(){ 눌림(st,".units .u",function(b){return A.scope.indexOf(b.dataset.r)>=0;});
-        눌림(st,".chips button",function(b){return same(A.scope,B[b.dataset.p].roots);}); el("next").disabled=!A.scope.length; }
-      st.querySelectorAll(".chips button").forEach(function(b){ b.onclick=function(){ A.scope=B[b.dataset.p].roots.slice(); paint(); }; });
-      st.querySelectorAll(".units .u").forEach(function(b){ b.onclick=function(){ var c=b.dataset.r, k=A.scope.indexOf(c);
-        if(k>=0) A.scope.splice(k,1); else A.scope.push(c); paint(); }; });
+            return '<button class="u" data-r="'+r.code+'" aria-pressed="'+rootIn(r.code)+'"><b>'+(k+1)+'단원</b>'+esc(r.name)+'</button>'; }).join(""); }).join("")+'</div>'+
+        '<p class="note">'+(A.grade==="고2"?'고2 REWIND 는 통합사회 전 범위를 다시 봐요. 빼고 싶은 단원만 눌러 끄세요.':(B.학교?'흔한 범위가 미리 눌려 있어요. 우리 학교와 다르면 고쳐 주세요.':''))+'</p>';
+      function paint(){ 눌림(st,".units .u",function(b){return rootIn(b.dataset.r);});
+        눌림(st,".chips button",function(b){return same(A.scope,B[b.dataset.p].mids||B[b.dataset.p].roots);}); el("next").disabled=!A.scope.length; }
+      st.querySelectorAll(".chips button").forEach(function(b){ b.onclick=function(){ A.scope=(B[b.dataset.p].mids||B[b.dataset.p].roots).slice(); paint(); }; });
+      (function(){ var tg=el("unitstoggle"), un=el("units"); if(!tg) return;
+        /* 프리셋과 다른 범위면 처음부터 펼쳐 둔다 */
+        var 프리셋인가=presets.some(function(k){ return same(A.scope,B[k].mids||B[k].roots); });
+        if(!프리셋인가 && A.scope.length){ un.hidden=false; tg.setAttribute("aria-expanded","true"); tg.textContent="단원 접기"; }
+        tg.onclick=function(){ var open=un.hidden; un.hidden=!open; tg.setAttribute("aria-expanded",open); tg.textContent=open?"단원 접기":"단원을 직접 고를게요"; }; })();
+      (function(){ var tg=el("unitstoggle"), un=el("units"); if(!tg) return;
+        /* 프리셋과 다른 범위면 처음부터 펼쳐 둔다 */
+        var 프리셋인가=presets.some(function(k){ return same(A.scope,B[k].mids||B[k].roots); });
+        if(!프리셋인가 && A.scope.length){ un.hidden=false; tg.setAttribute("aria-expanded","true"); tg.textContent="단원 접기"; }
+        tg.onclick=function(){ var open=un.hidden; un.hidden=!open; tg.setAttribute("aria-expanded",open); tg.textContent=open?"단원 접기":"단원을 직접 고를게요"; }; })();
+      st.querySelectorAll(".units .u").forEach(function(b){ b.onclick=function(){ var c=b.dataset.r;
+        if(rootIn(c)) A.scope=A.scope.filter(function(x){ return x.charAt(0)!==c; }); else A.scope.push(c); paint(); }; });
       단추("다음", A.scope.length>0);
     },
     goal:function(st){
@@ -292,7 +310,7 @@
       st.innerHTML=머리("5 / 7",esc(MSG.goalH),esc(MSG.goalP))+
         '<div class="tiles two">'+opts.map(function(o){
           return '<button class="tile" data-m="'+o[0]+'" aria-pressed="'+(A.goal===o[0])+'"><b>'+o[0]+'<small class="u">분</small></b><span>'+o[1]+'</span></button>'; }).join("")+'</div>'+
-        '<p class="note">되돌리기·강의·개념 확인·Killer Drill을 이 시간 안에 나눠 드려요. 문항 하나에 50초로 잡았어요.</p>';
+        '<p class="note">되돌리기·강의·개념 확인·Killer Drill을 이 시간 안에 나눠 드려요.</p>';
       st.querySelectorAll(".tile").forEach(function(b){ b.onclick=function(){ A.goal=+b.dataset.m; 눌림(st,".tile",function(x){return +x.dataset.m===A.goal;}); }; });
       단추("다음");
     },
@@ -301,7 +319,7 @@
       A.alarmOn=!!(N&&N.on&&N.on());
       st.innerHTML=머리("6 / 7",esc(MSG.alarmH),esc(MSG.alarmP))+
         '<div class="field"><input id="tm" type="time" value="'+esc(A.alarm)+'"></div>'+
-        '<div class="toggle"><div><b>알림 켜기</b><span>이 브라우저에서 그 시각에 알려요. 폰에 설치하면 앱이 닫혀 있어도 와요.</span></div>'+
+        '<div class="toggle"><div><b>알림 켜기</b><span>정한 시각에 이 앱에서 알려요.</span></div>'+
         '<button class="sw" id="sw" role="switch" aria-checked="'+A.alarmOn+'" aria-label="알림 켜기"></button></div>'+
         '<p class="note">'+esc(N&&N.status?(N.status().say||""):"")+'</p>';
       el("tm").onchange=function(){ A.alarm=el("tm").value||"21:00"; };
@@ -361,7 +379,7 @@
     var 후보=(T.오늘의리프?T.오늘의리프({전부:true}):[]), out=[], seen={};
     for(var z=0; z<후보.length && out.length<n; z++){
       var l=후보[z].leaf; if(seen[l.mid.root.code]) continue;
-      var qs=(l.play||[]).filter(function(q){ var d=Q[q.id]; return d && !d.g && !q.ff && d.o && d.o.length>=4 && (!window.QRENDER||QRENDER.ok(d,q)) && !S.ans[q.id]; });
+      var qs=(l.play||[]).filter(function(q){ var d=Q[q.id]; return d && q.id.charAt(0)==="T" && !d.g && !q.ff && d.o && d.o.length>=4 && (!window.QRENDER||QRENDER.ok(d,q)) && !S.ans[q.id]; });
       if(!qs.length) continue;
       var pick=qs[Math.floor(T.seed("ob"+T.dayKey()+l.code)*qs.length)%qs.length];
       out.push(pick); seen[l.mid.root.code]=1;

@@ -9,95 +9,100 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <meta name="theme-color" content="#08090B">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=7bcef92a">
+<link rel="stylesheet" href="css/base.css?v=8f6afdbf">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:820px;margin:0 auto;padding:0 var(--s3) var(--s6)}
+  /* 학부모 화면엔 학생용 선생님 띠·결산이 뜨지 않는다 */
+  .nextbar,.wrapov{display:none!important}
 
-  /* 학부모용이라 글씨를 키운다 — 학생 화면보다 한 단계 크게 */
   .pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);
-    padding:var(--s4);margin-bottom:var(--s3)}
-  .pcard h3{font-size:16px;color:var(--ink-4);font-weight:600;margin:0 0 14px;
-    letter-spacing:.02em}
-  .big{font-size:30px;font-weight:800;color:var(--ink);letter-spacing:-.03em;
-    line-height:1.25;margin:0 0 8px}
-  .big small{font-size:16px;color:var(--ink-4);font-weight:400;margin-left:6px}
-  .say{font-size:16px;line-height:1.85;color:var(--ink-2)}
+    padding:20px;margin-bottom:12px;box-shadow:var(--shadow)}
+  .pcard h3{font-size:13.5px;color:var(--ink-3);font-weight:700;margin:0 0 14px;letter-spacing:.02em}
+  .say{font-size:15.5px;line-height:1.8;color:var(--ink-2)}
   .say b{color:var(--ink)}
+  .note{font-size:13.5px;color:var(--ink-3);line-height:1.7;margin:12px 0 0}
 
-  /* 한 줄 요약 — 맨 위 */
-  .head1{background:linear-gradient(160deg,var(--surface),var(--card));
-    border:1px solid var(--line-2);border-radius:var(--r2);
-    padding:var(--s5) var(--s4);margin-bottom:var(--s3)}
-  .head1 .kick{font-family:var(--kr);font-weight:700;font-size:14.5px;color:var(--ink-4);
-    letter-spacing:-.01em;display:block;margin-bottom:12px}
-  .head1 h2{font-size:26px;font-weight:800;letter-spacing:-.035em;color:var(--ink);
-    line-height:1.4;margin:0 0 12px}
-  .head1 p{font-size:16px;line-height:1.8;color:var(--ink-2);margin:0}
+  /* ── 머리 카드: 누구·시험·D-day ── */
+  .hero{background:var(--card);border:1px solid var(--line);border-radius:var(--r3);
+    padding:22px 20px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
+  .hero .who{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .hero .nm{font-size:22px;font-weight:800;letter-spacing:-.03em;color:var(--ink);padding-top:4px}
+  .hero .nm small{font-size:14px;color:var(--ink-3);font-weight:600;margin-left:8px}
+  .hero .dd{font-size:34px;font-weight:800;letter-spacing:-.04em;color:var(--cta);line-height:1;text-align:right}
+  .hero .dd small{font-size:13px;color:var(--ink-3);font-weight:600;display:block;margin-top:5px;letter-spacing:0}
+  .hero .exam{font-size:14.5px;color:var(--ink-2);margin:12px 0 16px}
+  .hero .exam b{color:var(--ink)}
+  .track{position:relative;height:8px;border-radius:99px;background:var(--surface-3);margin:6px 8px 0}
+  .track i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:var(--cta)}
+  .track s{position:absolute;top:-4px;width:16px;height:16px;border-radius:50%;background:var(--card);
+    border:3px solid var(--cta);transform:translateX(-50%);text-decoration:none}
+  .track s.m{border-color:var(--amber);width:12px;height:12px;top:-2px}
+  .track s.e{border-color:var(--red)}
+  .marks{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-3);margin-top:10px}
+  .marks b{color:var(--ink-2);font-weight:700}
+  .oneline{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line-2)}
+  .oneline h2{font-size:20px;font-weight:800;letter-spacing:-.03em;color:var(--ink);margin:0 0 6px;line-height:1.35}
+  .oneline p{font-size:15px;line-height:1.75;color:var(--ink-2);margin:0}
+  .oneline p b{color:var(--ink)}
 
-  /* 넉 줄 숫자 */
-  .nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-    gap:12px;margin-bottom:var(--s3)}
-  .num{background:var(--surface);border:1px solid var(--line);border-radius:var(--r1);
-    padding:16px 18px}
-  .num b{display:block;font-size:24px;font-weight:800;color:var(--ink);
-    letter-spacing:-.02em;line-height:1.2}
-  .num span{font-size:15px;color:var(--ink-4);display:block;margin-top:5px}
-  .num.warn b{color:var(--red-2)}
-  .num.good b{color:var(--mint-2)}
+  /* ── 숫자 넷 ── */
+  .nums{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+  .num{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:14px 14px 12px;box-shadow:var(--shadow)}
+  .num b{display:block;font-size:26px;font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.1}
+  .num b small{font-size:14px;font-weight:700;margin-left:2px}
+  .num span{font-size:12.5px;color:var(--ink-3);display:block;margin-top:6px}
+  .num.good b{color:var(--mint-2)} .num.warn b{color:var(--red-2)}
+  @media(max-width:560px){.nums{grid-template-columns:1fr 1fr}}
 
-  /* 이레 달력 */
-  .week{display:flex;gap:8px;margin-top:6px}
-  .week i{flex:1;height:42px;border-radius:8px;background:var(--surface-2);
-    border:1px solid var(--line);display:grid;place-items:center;
-    font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-style:normal;font-weight:800}
-  .week i.on{background:var(--mint-soft);border-color:var(--mint);color:var(--ink)}
-  .week i.today{outline:2px solid var(--red);outline-offset:1px}
+  /* ── 최근 7일 ── */
+  .days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .day{text-align:center}
+  .day .dot{width:38px;height:38px;margin:0 auto;border-radius:50%;background:var(--surface-2);border:1px solid var(--line);
+    display:grid;place-items:center;font-size:15px;font-weight:800;color:var(--ink-4)}
+  .day.on .dot{background:var(--mint-2);border-color:var(--mint-2);color:#fff}
+  .day.today .dot{box-shadow:0 0 0 3px var(--cta-soft),0 0 0 5px var(--cta)}
+  .day .wd{font-size:12px;color:var(--ink-3);margin-top:7px;font-weight:600}
+  .day .n{font-size:12px;color:var(--ink-2);font-weight:700;margin-top:2px}
+  .day.on .n{color:var(--mint-2)}
 
-  /* 점수 추이 */
-  .trend{display:flex;align-items:flex-end;gap:8px;height:96px;margin-top:14px}
-  .trend .b{flex:1;background:var(--line-2);border-radius:4px 4px 0 0;min-height:4px;
-    position:relative}
-  .trend .b.now{background:var(--mint)}
-  .trend .b em{position:absolute;top:-19px;left:50%;transform:translateX(-50%);
-    font-family:var(--mono);font-size:14.5px;color:var(--ink-3);font-style:normal;font-weight:800}
-  .trend .b span{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);
-    font-size:14.5px;color:var(--ink-4)}
+  /* ── 성적 둘 ── */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .two .k{background:var(--surface-2);border-radius:var(--r1);padding:14px}
+  .two .k b{font-size:28px;font-weight:800;letter-spacing:-.03em;color:var(--ink);display:block;line-height:1.1}
+  .two .k b small{font-size:14px}
+  .two .k span{font-size:12.5px;color:var(--ink-3);display:block;margin-top:5px}
+  .two .k em{font-style:normal;font-size:13px;font-weight:800;margin-left:6px}
+  .two .k em.up{color:var(--mint-2)} .two .k em.dn{color:var(--red-2)}
+  .trend{display:flex;align-items:flex-end;gap:8px;height:90px;margin-top:22px}
+  .trend .b{flex:1;background:var(--lv2);border-radius:4px 4px 0 0;min-height:4px;position:relative}
+  .trend .b.now{background:var(--cta)}
+  .trend .b em{position:absolute;top:-19px;left:50%;transform:translateX(-50%);font-size:13px;color:var(--ink-2);font-style:normal;font-weight:800}
+  .trend .b span{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:12px;color:var(--ink-3)}
 
-  /* 단원별 막대 */
-  .bars{display:flex;flex-direction:column;gap:11px}
-  .bar{display:grid;grid-template-columns:132px 1fr 52px;gap:12px;align-items:center}
-  .bar .nm{font-size:16px;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;
-    white-space:nowrap}
-  .bar .tr{height:9px;background:var(--surface-3);border-radius:99px;overflow:hidden}
-  .bar .tr i{display:block;height:100%;border-radius:99px;background:var(--mint)}
-  .bar .tr i.low{background:var(--red)}
-  .bar .tr i.mid{background:var(--amber,#E8A33D)}
-  .bar .pc{font-family:var(--mono);font-size:15px;color:var(--ink-3);text-align:right;font-weight:800}
+  /* ── 단원별 ── */
+  .bars{display:flex;flex-direction:column;gap:13px}
+  .bar .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
+  .bar .nm{font-size:15px;font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bar .nm .tag{display:inline-block;font-size:11px;font-weight:800;padding:2px 7px;border-radius:99px;margin-left:8px;vertical-align:2px}
+  .bar .nm .tag.low{background:var(--red-soft);color:var(--red-2)}
+  .bar .nm .tag.mid{background:rgba(183,121,31,.12);color:var(--amber)}
+  .bar .pc{font-size:14px;font-weight:800;color:var(--ink-2);white-space:nowrap}
+  .bar .pc small{font-weight:600;color:var(--ink-3);margin-left:6px}
+  .bar .tr{height:10px;background:var(--surface-3);border-radius:99px;overflow:hidden}
+  .bar .tr i{display:block;height:100%;border-radius:99px;background:var(--mint-2)}
+  .bar .tr i.low{background:var(--red)} .bar .tr i.mid{background:var(--amber)}
 
-  /* 부모가 할 일 */
-  .todo1{background:var(--red-soft);border:1px solid var(--red);border-radius:var(--r2);
-    padding:var(--s4);margin-bottom:var(--s3)}
-  .todo1 .kick{font-family:var(--kr);font-weight:700;font-size:14.5px;color:var(--red-2);
-    letter-spacing:-.01em;display:block;margin-bottom:10px}
-  .todo1 h3{font-size:19px;font-weight:700;color:var(--ink);margin:0 0 10px;
-    letter-spacing:-.02em}
-  .todo1 p{font-size:15.5px;line-height:1.8;color:var(--ink-2);margin:0}
+  /* ── 부모가 할 일 ── */
+  .todo1{background:var(--cta-soft);border:1px solid var(--cta-line);border-radius:var(--r2);padding:20px;margin-bottom:12px}
+  .todo1 .kick{font-size:12.5px;font-weight:800;color:var(--cta-2);letter-spacing:.02em;display:block;margin-bottom:8px}
+  .todo1 h3{font-size:19px;font-weight:800;color:var(--ink);margin:0 0 8px;letter-spacing:-.03em;line-height:1.35}
+  .todo1 p{font-size:15px;line-height:1.75;color:var(--ink-2);margin:0}
 
-  .note{font-size:15.5px;color:var(--ink-4);line-height:1.75}
-  .foot{margin-top:var(--s5);padding-top:var(--s4);border-top:1px solid var(--line);
-    font-size:14.5px;color:var(--ink-4);line-height:1.8}
-  .foot b{color:var(--ink-3)}
-  .act{display:flex;gap:10px;flex-wrap:wrap;margin-top:var(--s4)}
-  @media(max-width:560px){
-    .head1 h2{font-size:21px}
-    .big{font-size:26px}
-    .bar{grid-template-columns:96px 1fr 46px;gap:9px}
-  }
-  @media print{
-    .act,.pnav{display:none}
-    body{background:#fff}
-  }
+  .foot{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink-3);line-height:1.8}
+  .foot b{color:var(--ink-2)}
+  .act{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  @media print{.act,.pnav{display:none} body{background:#fff}}
 </style>
 </head>
 <body>
@@ -114,15 +119,15 @@
 </div>
 
 <script src="js/tree.js?v=c7593fc6"></script>
-<script src="js/qbank.js?v=6fddd77e"></script>
+<script src="js/qbank.js?v=f6d1a6a6"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/store.js?v=1a533f71"></script>
+<script src="js/store.js?v=09e3cd63"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/exam.js?v=154e7ceb"></script>
+<script src="js/exam.js?v=def6b094"></script>
 <script src="js/parent.js?v=df3408f0"></script>
 <script>
 (function(){
@@ -130,47 +135,40 @@
   T.mountNav("parent.html");
   function esc(t){ return String(t==null?"":t)
     .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-
   var root=document.getElementById("root");
 
-  /* ── 사실을 모은다. 여기서 지어내는 값은 하나도 없다 ── */
+  /* ── 사실을 모은다. 여기서 지어내는 값은 하나도 없다 ──
+     ★ report() 는 오늘 하루만 센다. 기간마다 따로 받아 이름을 붙여 적는다. */
   function 모으기(){
-    /* ★ report() 는 **오늘 하루**만 센다. 누적과 섞으면 숫자가 어긋난다.
-       기간마다 따로 받아 이름을 붙여 적는다. */
     var 오늘=T.report();
     var 주간R=T.rangeReport("week");
-    /* 전체 누적은 대영역 통계를 합쳐 낸다 — 같은 원천이라야 단원별과 안 어긋난다 */
     var 누적={풀이:0, 맞음:0};
     T.ROOTS.forEach(function(r){
       var st=T.rootStat?T.rootStat(r.code):null;
       if(!st) return;
       누적.풀이+=st.solved||0; 누적.맞음+=st.correct||0;
     });
-    var W=T.weekSeries();                   // 최근 이레
+    var W=T.weekSeries();
     var 최근7=W.filter(function(d){ return d.ans>0; }).length;
-    /* 연속 며칠 — 오늘부터 거슬러 센다 */
     var 연속=0;
     for(var i=W.length-1;i>=0;i--){ if(W[i].ans>0) 연속++; else break; }
     var 시=T.nextExam?T.nextExam():null;
     var lg=(E&&E.log)?E.log():[];
-    var 회차평균=lg.length
-      ? lg.reduce(function(s,r){ return s+r.pct; },0)/lg.length : null;
+    var 회차평균=lg.length? lg.reduce(function(s,r){ return s+r.pct; },0)/lg.length : null;
+    var st=T.state().student||{};
     return {
+      이름:st.name||"", 학년:st.grade||"고1",
       오늘문항:오늘.answers||0,
       주간문항:주간R.answers||0,
       주간정답률:주간R.answers? (주간R.correct/주간R.answers*100):null,
       푼문항:누적.풀이, 정답률:누적.풀이? (누적.맞음/누적.풀이*100):null,
-      훈련:오늘.drills||0,
       주간:W, 최근7:최근7, 연속:연속,
       시험:시?시.exam:null, dday:시?시.days:null, ddayLabel:시?시.label:"",
       회차:lg, 회차평균:회차평균,
-      학년:(T.state().student&&T.state().student.grade)||"고1",
       범위:T.scopeOn()?T.scopeName():""
     };
   }
-
-  /* ── 단원별 성취 — 푼 것이 있는 곳만 ────────────
-     안 푼 단원을 0%로 그리면 부모가 "다 못한다" 로 읽는다. */
+  /* 단원별 성취 — 푼 것이 있는 곳만. 안 푼 단원을 0%로 그리면 부모가 "다 못한다"로 읽는다. */
   function 단원막대(){
     var out=[];
     T.ROOTS.forEach(function(r){
@@ -181,6 +179,7 @@
     out.sort(function(a,b){ return a.pc-b.pc; });
     return out;
   }
+  function 날짜말(k){ var d=new Date(String(k).slice(0,10)+"T12:00:00"); return isNaN(d)?"":(d.getMonth()+1)+"월 "+d.getDate()+"일"; }
 
   function 그리기(){
     var s=모으기();
@@ -189,107 +188,96 @@
     var 점수=P.scoreSay(s.푼문항, s.정답률, s.회차평균);
     var 막대=단원막대();
 
-    /* 한 줄 요약 — 부모가 이것만 봐도 되게 */
     var 한줄, 부연;
-    if(s.푼문항===0){
-      한줄="아직 시작 전입니다";
-      부연="문제를 풀기 시작하면 이 자리에 이번 주 상황이 나옵니다.";
-    } else if(s.dday!=null && s.dday<=10){
+    if(s.푼문항===0){ 한줄="아직 시작 전입니다"; 부연="문제를 풀기 시작하면 이 자리에 이번 주 상황이 나옵니다."; }
+    else if(s.dday!=null && s.dday<=10){
       한줄=(s.시험?s.시험.name:"시험")+"까지 "+s.dday+"일, 매일 모의고사를 보는 중입니다";
-      부연="지금은 새로 배우는 때가 아니라 <b>실전으로 굳히는 때</b>입니다. "+
-           "하루 한 회씩 25문항을 시간 재고 풉니다.";
-    } else {
-      한줄=꾸준.t;
-      부연=꾸준.d+" 하루 <b>15분</b>이면 그날 몫이 끝나도록 짜여 있습니다.";
+      부연="지금은 새로 배우는 때가 아니라 <b>실전으로 굳히는 때</b>입니다. 하루 한 회씩 25문항을 시간 재고 풉니다.";
+    } else { 한줄=꾸준.t; 부연=꾸준.d+" 하루 <b>15분</b>이면 그날 몫이 끝나도록 짜여 있습니다."; }
+
+    /* 시험까지의 길 — 30일 창. D-10부터 매일 모의고사 */
+    var 길="";
+    if(s.dday!=null && s.시험){
+      var 창=30, 남=Math.min(창,s.dday), 진행=Math.round((창-남)/창*100), 모의=Math.round((창-10)/창*100);
+      길='<div class="exam"><b>'+esc(s.시험.name)+'</b>'+(s.시험.date?(', '+esc(날짜말(s.시험.date))):'')+
+         (s.범위?', 범위 '+esc(s.범위):'')+'</div>'+
+         '<div class="track"><i style="width:'+진행+'%"></i><s style="left:'+진행+'%"></s>'+
+         (s.dday>10?'<s class="m" style="left:'+모의+'%"></s>':'')+'<s class="e" style="left:100%"></s></div>'+
+         '<div class="marks"><span><b>오늘</b></span>'+(s.dday>10?'<span><b>D-10</b>부터 매일 모의고사</span>':'')+'<span><b>시험일</b></span></div>';
     }
 
     var 이레=s.주간.map(function(d,i){
       var 오늘=(i===s.주간.length-1);
-      return '<i class="'+(d.ans>0?"on":"")+(오늘?" today":"")+'">'+
-             (d.d||"").slice(5).replace("-","/")+'</i>';
+      return '<div class="day'+(d.ans>0?" on":"")+(오늘?" today":"")+'">'+
+             '<div class="dot">'+(d.ans>0?"✓":"")+'</div>'+
+             '<div class="wd">'+esc(d.label)+'</div>'+
+             '<div class="n">'+(d.ans>0?(d.ans+"문항"):"—")+'</div></div>';
     }).join("");
 
-    var 추이="";
+    var 성적;
     if(s.회차.length){
       var 최근=s.회차.slice(-8);
-      추이='<div class="trend">'+최근.map(function(r,i,a){
-        var h=Math.max(4,Math.round(r.pct*0.85));
-        return '<div class="b'+(i===a.length-1?" now":"")+'" style="height:'+h+'%">'+
-               '<em>'+r.pct+'</em><span>'+(r.day||"").slice(5)+'</span></div>';
-      }).join("")+'</div>'+
-      '<p class="note" style="margin-top:28px">최근 '+최근.length+'회차 점수(100점 만점). '+
-      '한 번의 오르내림보다 <b>흐름</b>을 보시면 됩니다.</p>';
+      성적='<p class="say"><b>'+esc(점수.t)+'</b> — '+점수.d.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')+'</p>'+
+        '<div class="trend">'+최근.map(function(r,i,a){
+          var h=Math.max(4,Math.round(r.pct*0.85));
+          return '<div class="b'+(i===a.length-1?" now":"")+'" style="height:'+h+'%"><em>'+r.pct+'</em><span>'+(r.day||"").slice(5)+'</span></div>';
+        }).join("")+'</div><p class="note" style="margin-top:28px">최근 '+최근.length+'회차 점수(100점 만점). 한 번의 오르내림보다 <b>흐름</b>을 보시면 됩니다.</p>';
+    } else {
+      var 차=(s.주간정답률!=null&&s.정답률!=null)?Math.round(s.주간정답률-s.정답률):null;
+      성적='<div class="two">'+
+        '<div class="k"><b>'+(s.주간정답률!=null?Math.round(s.주간정답률)+'<small>%</small>':'—')+
+          (차!=null&&차!==0?'<em class="'+(차>0?"up":"dn")+'">'+(차>0?"▲":"▼")+Math.abs(차)+'</em>':'')+'</b><span>이번 주 정답률, '+s.주간문항+'문항</span></div>'+
+        '<div class="k"><b>'+(s.정답률!=null?Math.round(s.정답률)+'<small>%</small>':'—')+'</b><span>전체 정답률, '+s.푼문항+'문항</span></div>'+
+        '</div><p class="note">'+점수.d.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')+'</p>';
     }
 
     root.innerHTML=
-      '<div class="head1">'+
-        '<span class="kick">한 줄 요약</span>'+
-        '<h2>'+esc(한줄)+'</h2>'+
-        '<p>'+부연+'</p>'+
+      '<div class="hero">'+
+        '<div class="who"><div class="nm">'+esc(s.이름||"학생")+'<small>'+esc(s.학년)+'</small></div>'+
+        (s.dday!=null&&s.시험?'<div class="dd">D-'+s.dday+'<small>'+esc(s.시험.name)+'</small></div>':'')+'</div>'+
+        길+
+        '<div class="oneline"><h2>'+esc(한줄)+'</h2><p>'+부연+'</p></div>'+
       '</div>'+
 
       '<div class="nums">'+
-        '<div class="num'+(s.연속>=3?" good":"")+'"><b>'+s.연속+'일</b>'+
-          '<span>이어서 한 날</span></div>'+
-        '<div class="num"><b>'+s.최근7+' / 7</b><span>최근 이레 중 한 날</span></div>'+
+        '<div class="num'+(s.연속>=3?" good":"")+'"><b>'+s.연속+'<small>일</small></b><span>이어서 한 날</span></div>'+
+        '<div class="num"><b>'+s.최근7+'<small>/7</small></b><span>최근 7일 중 한 날</span></div>'+
         '<div class="num"><b>'+s.주간문항+'</b><span>이번 주에 푼 문항</span></div>'+
         (s.정답률!=null
-          ? '<div class="num'+(s.정답률<55?" warn":"")+'"><b>'+
-            Math.round(s.정답률)+'%</b><span>정답률 (전체 '+s.푼문항+'문항)</span></div>'
+          ? '<div class="num'+(s.정답률<55?" warn":"")+'"><b>'+Math.round(s.정답률)+'<small>%</small></b><span>전체 정답률</span></div>'
           : '<div class="num"><b>—</b><span>정답률 (아직)</span></div>')+
       '</div>'+
 
-      '<div class="todo1">'+
-        '<span class="kick">부모님이 해 주실 수 있는 한 가지</span>'+
-        '<h3>'+esc(할일.t)+'</h3>'+
-        '<p>'+할일.d+'</p>'+
-      '</div>'+
-
-      '<div class="pcard"><h3>최근 이레</h3>'+
-        '<div class="week">'+이레+'</div>'+
-        '<p class="note" style="margin-top:12px">'+
-        '색이 찬 날은 그날 몫(15분)을 채운 날입니다. 빨간 테두리가 오늘입니다.</p>'+
-      '</div>'+
-
-      '<div class="pcard"><h3>성적</h3>'+
-        '<p class="big">'+esc(점수.t)+'</p>'+
-        '<p class="say">'+점수.d.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')+'</p>'+
-        추이+
-      '</div>'+
+      '<div class="pcard"><h3>최근 7일</h3><div class="days">'+이레+'</div>'+
+        '<p class="note">색이 찬 날은 그날 몫(15분)을 채운 날입니다. 파란 테두리가 오늘입니다.</p></div>'+
 
       (막대.length
-        ? '<div class="pcard"><h3>단원별 — 낮은 곳부터</h3>'+
-          '<div class="bars">'+막대.map(function(x){
+        ? '<div class="pcard"><h3>단원별 정답률 — 낮은 곳부터</h3><div class="bars">'+막대.map(function(x,i){
             var cls=x.pc<55?"low":(x.pc<75?"mid":"");
-            return '<div class="bar"><span class="nm">'+esc(x.name)+'</span>'+
-              '<span class="tr"><i class="'+cls+'" style="width:'+x.pc+'%"></i></span>'+
-              '<span class="pc">'+x.pc+'%</span></div>';
+            var tag=cls==="low"?'<span class="tag low">보완 필요</span>':(cls==="mid"&&i<3?'<span class="tag mid">다시 볼 곳</span>':'');
+            return '<div class="bar"><div class="top"><span class="nm">'+esc(x.name)+tag+'</span>'+
+              '<span class="pc">'+x.pc+'%<small>'+x.n+'문항</small></span></div>'+
+              '<div class="tr"><i class="'+cls+'" style="width:'+x.pc+'%"></i></div></div>';
           }).join("")+'</div>'+
-          '<p class="note" style="margin-top:14px">'+
-          '푼 문항이 있는 단원만 보여 드립니다. 아직 손대지 않은 단원은 '+
-          '못하는 것이 아니라 <b>아직 안 한 것</b>이라 넣지 않았습니다.</p></div>'
-        : '<div class="pcard"><h3>단원별</h3>'+
-          '<p class="say">아직 단원별로 말씀드릴 만큼 풀지 않았습니다.</p></div>')+
+          '<p class="note">푼 문항이 있는 단원만 보여 드립니다. 아직 손대지 않은 단원은 못하는 것이 아니라 <b>아직 안 한 것</b>이라 넣지 않았습니다.</p></div>'
+        : '<div class="pcard"><h3>단원별</h3><p class="say">아직 단원별로 말씀드릴 만큼 풀지 않았습니다.</p></div>')+
 
-      '<div class="act">'+
-        '<button class="btn" onclick="window.print()">인쇄하기</button>'+
-        '<a class="btn ghost" href="index.html">학생 화면으로</a>'+
-      '</div>'+
+      '<div class="pcard"><h3>성적</h3>'+성적+'</div>'+
 
-      '<div class="foot">'+
-        '<b>이 리포트는 무엇으로 만들었나</b><br>'+
-        '학생이 이 기기에서 실제로 푼 기록만 씁니다. 추정하거나 지어낸 숫자는 없습니다. '+
-        '문항은 교육청·평가원 <b>기출</b>이고, 시험 범위는 '+
-        (s.범위?('<b>'+esc(s.범위)+'</b> 으로 설정돼 있습니다.'):'아직 설정하지 않았습니다.')+
-        '<br>기록은 이 기기에만 저장되며 밖으로 나가지 않습니다.'+
-      '</div>';
+      '<div class="todo1"><span class="kick">부모님이 해 주실 수 있는 한 가지</span>'+
+        '<h3>'+esc(할일.t)+'</h3><p>'+할일.d+'</p></div>'+
+
+      '<div class="act"><button class="btn" onclick="window.print()">인쇄하기</button>'+
+        '<a class="btn ghost" href="index.html">학생 화면으로</a></div>'+
+
+      '<div class="foot"><b>이 리포트는 무엇으로 만들었나</b><br>'+
+        '학생이 실제로 푼 기록만 씁니다. 추정하거나 지어낸 숫자는 없습니다. 문항은 교육청·평가원 <b>기출</b>이고, 시험 범위는 '+
+        (s.범위?('<b>'+esc(s.범위)+'</b> 으로 설정돼 있습니다.'):'아직 설정하지 않았습니다.')+'</div>';
 
     document.getElementById("lede").textContent=
       s.학년+", "+(s.시험? (s.시험.name+" "+s.ddayLabel) : "시험일을 정하면 남은 날이 나옵니다");
-    document.getElementById("headact").innerHTML=
-      '<a class="btn ghost" href="settings.html">범위·시험일</a>';
+    document.getElementById("headact").innerHTML='<a class="btn ghost" href="settings.html">범위·시험일</a>';
   }
-
   그리기();
 })();
 </script>

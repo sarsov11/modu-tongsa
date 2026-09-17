@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=7bcef92a">
+<link rel="stylesheet" href="css/base.css?v=8f6afdbf">
 <link rel="stylesheet" href="css/coach.css?v=208a602f">
 <link rel="stylesheet" href="css/keyword.css?v=e00f83be">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
@@ -146,22 +146,23 @@
 </div>
 
 <script src="js/tree.js?v=c7593fc6"></script>
-<script src="js/qbank.js?v=6fddd77e"></script>
+<script src="js/qbank.js?v=f6d1a6a6"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
+<script src="js/cardox.js?v=558cd07e"></script>
 <script src="js/judge.js?v=43f690d4"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
 <script src="js/conceptq.js?v=fc0c09eb"></script>
-<script src="js/cards.js?v=1a50b0db"></script>
+<script src="js/cards.js?v=5f7c4002"></script>
 <script src="js/keyword.js?v=9ead7c20"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
-<script src="js/store.js?v=1a533f71"></script>
+<script src="js/store.js?v=09e3cd63"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/coach.js?v=a47134ba"></script>
-<script src="js/kwask.js?v=50e0f53f"></script>
+<script src="js/coach.js?v=cd7ef204"></script>
+<script src="js/kwask.js?v=37cf1b37"></script>
 <script>
 (function(){
   var T=window.TERRA, J=window.JUDGE, BANK=window.OXBANK||[];
@@ -194,13 +195,32 @@
        들일 때 `sroot` 를 달아 두었다(OX들이기.py). 옛 자료에는 없으니 root 로 물러선다. */
   function 범위대영역(x){ return x.sroot || x.root; }
   /* ★ 기출 선지 판별 재료를 먼저 쓴다 — 없으면 옛 문장 O/X 로 물러선다 (대표님 2026-09-12) */
+  /* ★ 카드 글과 낱말이 2개 이상 겹치는 선지만 낸다 — 카드를 읽고 못 푸는 문장은 안 낸다(2026-09-17 대표님) */
+  function 낱말집합(t){ var o={}; String(t||"").replace(/\*\*/g,"").replace(/[가-힣A-Za-z0-9]{2,}/g,function(w){ o[w]=1; }); return o; }
+  function 카드낱말(leafCode){
+    var C=(window.CARDS||{})[leafCode]; if(!C) return null;
+    var o={};
+    (C.cards||[]).forEach(function(c){
+      (c.lines||[]).forEach(function(t){ Object.assign(o,낱말집합(t)); });
+      (c.blocks||[]).forEach(function(b){
+        [b.text,b.root].concat(b.steps||[],b.items||[],(b.rows||[]).map(function(r){return r.join(" ");}),(b.branches||[]).map(function(x){return x.join(" ");})).forEach(function(t){ if(t) Object.assign(o,낱말집합(t)); });
+      });
+    });
+    return o;
+  }
+  function 카드로풀리나(z){
+    var W=카드낱말(z.leaf); if(!W) return true;
+    var n=0, S=낱말집합(z.t); for(var w in S){ if(W[w]) n++; if(n>=2) return true; }
+    return false;
+  }
   function 기출고르기(){
     var 풀 = [];
-    if(리프표 && CQ[리프표]) 풀 = CQ[리프표].slice();
+    if(리프표 && CQ[리프표]) 풀 = CQ[리프표].filter(카드로풀리나);
     else {
       Object.keys(CQ).forEach(function(k){
         CQ[k].forEach(function(z){
-          if(T.scopeOn && T.scopeOn() && !T.inScope(z.sroot||z.root)) return;
+          if(T.scopeOn && T.scopeOn() && !(T.inScopeItem?T.inScopeItem(z):T.inScope(z.sroot||z.root))) return;
+          if(!카드로풀리나(z)) return;
           풀.push(z);
         });
       });
@@ -234,7 +254,7 @@
     var 기 = 기출고르기();
     if(기) return 기;
     var 범위 = BANK.filter(function(x){
-      return !T.scopeOn || !T.scopeOn() || T.inScope(범위대영역(x));
+      return !T.scopeOn || !T.scopeOn() || (T.inScopeItem?T.inScopeItem(x):T.inScope(범위대영역(x)));
     });
     if(!범위.length) 범위 = BANK.slice();
 
@@ -309,7 +329,7 @@
     var 머리 = x.q
       ? '<div class="qwrap">'+
           '<div class="qtag"><b>'+이름꼴(x.leafName||x.leaf)+'</b>'+
-          '<span>· '+(i+1)+' / '+세트.length+'</span>'+
+          '<span>'+(i+1)+' / '+세트.length+'</span>'+
           (x.dt?'<span class="src">'+esc(출처꼴(x))+'</span>':'')+
           '</div>'+
           '<p class="qstem">'+esc(x.stem||"")+'</p>'+
@@ -320,7 +340,7 @@
         '</div>'
       : '<div class="card">'+
           '<div class="tag"><b>'+이름꼴(x.leafName||x.leaf)+'</b>'+
-          '<span>· '+(i+1)+' / '+세트.length+'</span></div>'+
+          '<span>'+(i+1)+' / '+세트.length+'</span></div>'+
           (기출판?'':'<p class="qfall">이 범위는 기출 재료가 모자라 개념 문장으로 확인해요.</p>')+
           '<p class="sent">'+esc(x.t)+'</p>'+
         '</div>';
@@ -330,9 +350,7 @@
         '<h3>얼마나 확신하나요?</h3>'+
         '<div class="conf" id="conf">'+
           J.확신단계.map(function(c,k){
-            var em=["🎯","🤔","🎲"][k];
-            return '<button type="button" data-c="'+c.v+'" aria-pressed="false">'+
-              '<span class="em">'+em+'</span>'+esc(c.name)+'</button>';
+            return '<button type="button" data-c="'+c.v+'" aria-pressed="false">'+esc(c.name)+'</button>';
           }).join("")+
         '</div>'+
         '<div class="ox" id="ox">'+
@@ -432,7 +450,7 @@
 
     var 후보 = BANK.filter(function(z){
       if(이미[z.id]) return false;
-      if(T.scopeOn && T.scopeOn() && !T.inScope(범위대영역(z))) return false;
+      if(T.scopeOn && T.scopeOn() && !(T.inScopeItem?T.inScopeItem(z):T.inScope(범위대영역(z)))) return false;
       if(next==="easier")
         return 범위대영역(z)===범위대영역(방금) && z.leaf!==방금.leaf;
       if(next==="similar") return z.leaf===방금.leaf && z.a!==방금.a;
