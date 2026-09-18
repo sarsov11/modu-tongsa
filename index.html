@@ -581,10 +581,18 @@
   document.getElementById("today").textContent=
     (d.getMonth()+1)+"월 "+d.getDate()+"일"+(r.streak?", "+r.streak+"일째":"");
   var name=(S.student&&S.student.name)||"학생";
-  document.getElementById("hi").innerHTML=name+" 학생의 <em>오늘</em>";
-  /* 학년 공부 방식 — REMIND · REWIND · REWIRE */
-  (function(){ var gi=T.gradeInfo(); if(!gi.re) return;
-    document.getElementById("remode").innerHTML='<span class="re">'+gi.re+'</span> '+esc(gi.reKo)+' '+esc(gi.reSay); })();
+  /* ★ 머리는 **다가온 시험과 남은 날** — 「김서준 학생의 오늘」「REMIND 내신 대비형 학교에서 배운 개념을 시험 전에 다시 떠올려요」 는
+       뜻도 없고 꼬리표와 설명이 한 줄에 붙어 구분도 안 됐다(2026-09-19 대표님). 시험 날짜가 없으면 이름만. */
+  (function(){
+    var 다음=null;
+    try{ (T.exams()||[]).filter(function(e){ return e.date; }).forEach(function(e){
+      var dd=T.dday(e.date); if(dd.days<0) return; if(!다음||dd.days<다음.d.days) 다음={e:e,d:dd}; }); }catch(_e){}
+    document.getElementById("hi").innerHTML = 다음
+      ? esc(다음.e.name)+' <em>'+esc(다음.d.label)+'</em>'
+      : esc(name);
+    if(다음) document.getElementById("today").textContent += ", "+name;
+    document.getElementById("remode").hidden=true;
+  })();
   var todayAll=r.answers+r.drills;
   /* ★ 인사는 선생님 층이 만든다 — 어제 몇 문항 맞혔는지, 오늘은 무엇부터인지.
      "오늘 할 것만 골라 뒀어요" 는 누구에게나 같은 말이라 아무 말도 아니었다. */
