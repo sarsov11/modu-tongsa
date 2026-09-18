@@ -1,7 +1,7 @@
 /* 모두의 통사 — 오프라인 캐시.
    틀(HTML·CSS)은 새것을 먼저 보고, 자료(js)는 캐시를 먼저 준 뒤 뒤에서 갱신한다.
    문항 그림은 미리 받지 않고 본 것만 남긴다(1,600장을 통째로 받으면 안 된다). */
-var VER = "terra-be7ce951";   // 종이 스킨(모두의 수학 이식)·Pretendard 가 들어가 캐시를 새로 판다   // 회원·저장·서버 푸시(auth.js·supa.config.js) 가 들어가 캐시를 새로 판다   // 핵심 개념어 쓰기(keyword·kwgrade·kwask·keyword.css)가 들어가 캐시를 새로 판다 //   // 첫 설정(start.html)·아래 탭이 들어가 캐시를 새로 판다 //   // 선생님 층(coach.js·coach.css·card·ox)이 들어가 캐시를 새로 판다   // 확장팩·루틴 주기·훈련 개인화가 들어가 캐시를 새로 판다   // 루틴·알림이 들어가 캐시를 새로 판다
+var VER = "terra-7e307dd7";   // 종이 스킨(모두의 수학 이식)·Pretendard 가 들어가 캐시를 새로 판다   // 회원·저장·서버 푸시(auth.js·supa.config.js) 가 들어가 캐시를 새로 판다   // 핵심 개념어 쓰기(keyword·kwgrade·kwask·keyword.css)가 들어가 캐시를 새로 판다 //   // 첫 설정(start.html)·아래 탭이 들어가 캐시를 새로 판다 //   // 선생님 층(coach.js·coach.css·card·ox)이 들어가 캐시를 새로 판다   // 확장팩·루틴 주기·훈련 개인화가 들어가 캐시를 새로 판다   // 루틴·알림이 들어가 캐시를 새로 판다
 var SHELL = [
   "./", "./index.html", "./skilltree.html", "./study.html",
   "./drill.html", "./settings.html", "./card.html", "./ox.html", "./exam.html", "./login.html", "./start.html", "./skills.html", "./js/skills.js", "./naeshin.html", "./js/naeshin.js", "./js/cardox.js", "./js/qrender.js",

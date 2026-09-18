@@ -1,10 +1,271 @@
 /* ★ 배포판 — local 영상 경로를 비웠다(GitHub Pages 에 2.5GB 를 못 올린다).
    web 이 채워진 편만 재생된다. 만든 도구: 배포꾸리기.py */
-/* 강의 영상 목록 — 영상데이터.py 가 만든다. 리프 코드 하나에 영상 하나.
- *
- * ★ 2026-09-06 대표님 결정: 드림3기 강의 영상은 **전부 폐기**(퀄리티 판정, 코덱스가 삭제).
- *   그래서 목록을 비운다. 루틴(store.js)과 스킬트리(skilltree.html)는
- *   「영상이 없으면 권하지 않는다」 로 짜여 있어, 비워 두면 빈 링크 대신 조용히 건너뛴다.
- *   폐기 전 목록은 js/_video_폐기전.js.bak 에 있다. 새 영상이 생기면 영상데이터.py 로 다시 만든다.
- */
-window.VIDEO={};
+/* 강의 영상 — 임팩트판\사이트영상.py 가 만든다. 리프 코드 하나에 영상 하나.
+ * 2026-09-18: 2학기 중간 범위 새 강의(임팩트판)를 유튜브 일부 공개로 올리고 잇는다. yt 가 있으면 skilltree 가 유튜브로 튼다.
+ * 올린 편 13개 · 리프 22개. 옛 목록은 js/_video_폐기전.js.bak */
+window.VIDEO={
+ "F2.1": {
+  "title": "기본권의 다섯 유형",
+  "min": 5.9,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/4dxqAhTGef0",
+  "yt": "4dxqAhTGef0",
+  "mb": 197,
+  "part": 1,
+  "parts": 1,
+  "ep": "F01"
+ },
+ "F2.3": {
+  "title": "기본권의 제한과 한계",
+  "min": 4.3,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/2-R3CHFFj0E",
+  "yt": "2-R3CHFFj0E",
+  "mb": 148,
+  "part": 1,
+  "parts": 1,
+  "ep": "F02"
+ },
+ "F1.1": {
+  "title": "인권의 의미와 특징 · 인권의 세대",
+  "min": 6.9,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/JqHd-Y7ZPk4",
+  "yt": "JqHd-Y7ZPk4",
+  "mb": 224,
+  "part": 1,
+  "parts": 1,
+  "ep": "F03"
+ },
+ "F1.3": {
+  "title": "인권의 의미와 특징 · 인권의 세대",
+  "min": 6.9,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/JqHd-Y7ZPk4",
+  "yt": "JqHd-Y7ZPk4",
+  "mb": 224,
+  "part": 1,
+  "parts": 1,
+  "ep": "F03"
+ },
+ "F1.2": {
+  "title": "인권 확장의 역사 · 현대의 새로운 인권",
+  "min": 7.8,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/3Z3d-zc5Q64",
+  "yt": "3Z3d-zc5Q64",
+  "mb": 273,
+  "part": 1,
+  "parts": 1,
+  "ep": "F04"
+ },
+ "F1.4": {
+  "title": "인권 확장의 역사 · 현대의 새로운 인권",
+  "min": 7.8,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/3Z3d-zc5Q64",
+  "yt": "3Z3d-zc5Q64",
+  "mb": 273,
+  "part": 1,
+  "parts": 1,
+  "ep": "F04"
+ },
+ "F2.4": {
+  "title": "인권 보장을 위한 헌법의 역할",
+  "min": 6.8,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/RmdclxPT5Fw",
+  "yt": "RmdclxPT5Fw",
+  "mb": 242,
+  "part": 1,
+  "parts": 1,
+  "ep": "F05"
+ },
+ "F3.1": {
+  "title": "권력 분립 · 국회와 대통령",
+  "min": 5.6,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/pyw245vkKOA",
+  "yt": "pyw245vkKOA",
+  "mb": 185,
+  "part": 1,
+  "parts": 1,
+  "ep": "F06"
+ },
+ "F3.2": {
+  "title": "권력 분립 · 국회와 대통령",
+  "min": 5.6,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/pyw245vkKOA",
+  "yt": "pyw245vkKOA",
+  "mb": 185,
+  "part": 1,
+  "parts": 1,
+  "ep": "F06"
+ },
+ "F3.3": {
+  "title": "권력 분립 · 국회와 대통령",
+  "min": 5.6,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/pyw245vkKOA",
+  "yt": "pyw245vkKOA",
+  "mb": 185,
+  "part": 1,
+  "parts": 1,
+  "ep": "F06"
+ },
+ "F3.4": {
+  "title": "법원과 사법권의 독립",
+  "min": 5.0,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/KnrjelvlgsA",
+  "yt": "KnrjelvlgsA",
+  "mb": 165,
+  "part": 1,
+  "parts": 1,
+  "ep": "F07"
+ },
+ "F3.5": {
+  "title": "헌법재판소 · 위헌 법률 심판과 헌법 소원",
+  "min": 5.6,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/jZrS46fthF4",
+  "yt": "jZrS46fthF4",
+  "mb": 187,
+  "part": 1,
+  "parts": 1,
+  "ep": "F08"
+ },
+ "F4.1": {
+  "title": "시민 참여와 시민 불복종",
+  "min": 7.8,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/eCdmDoPOXVQ",
+  "yt": "eCdmDoPOXVQ",
+  "mb": 260,
+  "part": 1,
+  "parts": 1,
+  "ep": "F09"
+ },
+ "F4.2": {
+  "title": "시민 참여와 시민 불복종",
+  "min": 7.8,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/eCdmDoPOXVQ",
+  "yt": "eCdmDoPOXVQ",
+  "mb": 260,
+  "part": 1,
+  "parts": 1,
+  "ep": "F09"
+ },
+ "F3.6": {
+  "title": "시민 참여와 시민 불복종",
+  "min": 7.8,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/eCdmDoPOXVQ",
+  "yt": "eCdmDoPOXVQ",
+  "mb": 260,
+  "part": 1,
+  "parts": 1,
+  "ep": "F09"
+ },
+ "G1.1": {
+  "title": "정의의 의미와 분배적 정의",
+  "min": 7.6,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/qq9tAZeivos",
+  "yt": "qq9tAZeivos",
+  "mb": 260,
+  "part": 1,
+  "parts": 1,
+  "ep": "G01"
+ },
+ "G1.2": {
+  "title": "정의의 의미와 분배적 정의",
+  "min": 7.6,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/qq9tAZeivos",
+  "yt": "qq9tAZeivos",
+  "mb": 260,
+  "part": 1,
+  "parts": 1,
+  "ep": "G01"
+ },
+ "G1.3": {
+  "title": "교정적 정의 · 응보주의와 예방주의",
+  "min": 7.5,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/fdmxLt3P0lE",
+  "yt": "fdmxLt3P0lE",
+  "mb": 265,
+  "part": 1,
+  "parts": 1,
+  "ep": "G02"
+ },
+ "G2.1": {
+  "title": "자유주의적 정의관과 공동체주의적 정의관",
+  "min": 7.8,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/oiGlmkRRsWc",
+  "yt": "oiGlmkRRsWc",
+  "mb": 278,
+  "part": 1,
+  "parts": 1,
+  "ep": "G03"
+ },
+ "G2.2": {
+  "title": "자유주의적 정의관과 공동체주의적 정의관",
+  "min": 7.8,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/oiGlmkRRsWc",
+  "yt": "oiGlmkRRsWc",
+  "mb": 278,
+  "part": 1,
+  "parts": 1,
+  "ep": "G03"
+ },
+ "G3.1": {
+  "title": "사회 계층의 양극화와 사회적 약자 차별",
+  "min": 5.1,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/N1e11c3Gc9g",
+  "yt": "N1e11c3Gc9g",
+  "mb": 179,
+  "part": 1,
+  "parts": 1,
+  "ep": "G04"
+ },
+ "G3.3": {
+  "title": "사회 계층의 양극화와 사회적 약자 차별",
+  "min": 5.1,
+  "sum": "",
+  "local": "",
+  "web": "https://youtu.be/N1e11c3Gc9g",
+  "yt": "N1e11c3Gc9g",
+  "mb": 179,
+  "part": 1,
+  "parts": 1,
+  "ep": "G04"
+ }
+};

@@ -117,6 +117,7 @@
   .vhead .vsub{font-size:14.5px;color:var(--ink-4,#8b93a5)}
   .vhead button{background:none;border:0;color:var(--ink-3,#aab2c2);font-size:22px;cursor:pointer;line-height:1}
   .vbox video{display:block;width:100%;background:#000;aspect-ratio:16/9}
+.vbox iframe.yt{display:block;width:100%;border:0;background:#000;aspect-ratio:16/9}
   .vmiss{padding:34px 26px;font-size:16px;line-height:1.85;color:var(--ink-2,#c9d0dd)}
   .vmiss b{color:var(--ink-1,#eef1f6)}
   .vmiss code{background:rgba(255,255,255,.07);padding:2px 7px;border-radius:5px;font-size:15px}
@@ -348,7 +349,7 @@
 <script src="js/trend.js?v=53fd8a90"></script>
 <script src="js/tree.js?v=c7593fc6"></script>
 <script src="js/lecture.js?v=207a14bb"></script>
-<script src="js/video.js?v=b02e3de6"></script>
+<script src="js/video.js?v=267bdcea"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/cards.js?v=afd2fbee"></script>
@@ -1302,6 +1303,14 @@
     document.getElementById("vsub").textContent=
       V.min+"분"+(V.parts>1?", 이 강 포함 "+V.parts+"강":"");
     var body=document.getElementById("vbody");
+    /* ★ 2026-09-18: 새 강의는 유튜브 일부 공개 — yt 가 있으면 nocookie 임베드로 튼다 */
+    if(V.yt){
+      body.innerHTML='<iframe class="yt" src="https://www.youtube-nocookie.com/embed/'+V.yt+
+        '?rel=0&modestbranding=1&playsinline=1" title="'+V.title+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+      vwrap.hidden=false; requestAnimationFrame(function(){ vwrap.classList.add("on"); });
+      document.body.style.overflow="hidden";
+      return;
+    }
     var src=V.web||V.local;
     body.innerHTML='<video controls preload="metadata" src="'+src+'"></video>';
     var vd=body.querySelector("video");
