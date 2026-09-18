@@ -26,6 +26,14 @@
   word-break:keep-all;
 }
 .data p{ margin:0 0 8px; }
+/* (가)(나)(다) 갈래 상자 · ◦ 항목 줄 */
+.data .dhead{ margin:0 0 10px; font-weight:700; }
+.data .gnd{ display:grid; gap:8px; }
+.data .gd{ display:grid; grid-template-columns:36px 1fr; gap:8px; align-items:start; padding:9px 11px; border:1px solid var(--line-2); border-radius:8px; background:var(--surface); }
+.data .glab{ font-weight:900; color:var(--red-2); font-size:15px; padding-top:1px; }
+.data .gbody p{ margin:0 0 6px; } .data .gbody p:last-child{ margin:0; }
+.data ul.bul{ margin:2px 0 0; padding-left:18px; } .data ul.bul li{ margin:3px 0; line-height:1.6; }
+.data .gbody ul.bul{ padding-left:16px; }
 .data p:last-child{ margin-bottom:0; }
 
 /* 갑·을 대화 — 누가 한 말인지 보여야 한다 */

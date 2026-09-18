@@ -104,6 +104,49 @@
   var _화자 = "갑|을|병|정|무|교사|학생|사회자|기자|진행자|사장|아버지|어머니";
   var _화자앞 = new RegExp("(?:^|\\s)(" + _화자 + ")\\s*[::]");
 
+  /* ── (가)(나)(다) 갈래 자료 · ◦ 항목 자료 (2026-09-18) ────────────────
+     시험지는 (가)·(나)·(다)를 줄을 바꿔 보여 준다. 글로 옮기며 한 줄로 이어진 것을 되돌린다.
+     조건: 갈래 표시가 둘 이상이고 갈래마다 글이 25자 이상(「(가) 시기와 비교한 (나) 시기」 같은 본문 속 참조는 손대지 않는다)
+           또는 ◦ 항목이 갈래 안에 있을 때. */
+  var _갈래머리 = /\((가|나|다|라|마|바)\)/g;
+  var _불릿 = /[◦•○▪■]/;
+  function 갈래나누기(t) {
+    var s = String(t || "");
+    var marks = s.match(_갈래머리) || [];
+    var 가짓수 = {}; marks.forEach(function (m) { 가짓수[m] = 1; });
+    if (Object.keys(가짓수).length < 2) return null;
+    var i0 = s.indexOf("(가)");
+    if (i0 < 0) return null;
+    var 머리 = s.slice(0, i0).trim();
+    var 조각 = s.slice(i0).split(/(?=\((?:가|나|다|라|마|바)\)\s)/).filter(function (x) { return x.trim(); });
+    if (조각.length < 2) return null;
+    var 항목있음 = _불릿.test(s);
+    var 짧은 = 조각.filter(function (x) { return x.trim().length < 25; }).length;
+    if (!항목있음 && 짧은 > 0) return null;
+    if (머리.length > 80) return null;
+    /* 지면이 두 단이라 (가)(나)(라)(다) 순으로 뽑힌 것을 가나다 순으로 되돌린다 */
+    var 차례 = "가나다라마바";
+    조각.sort(function (a, b) { return 차례.indexOf(a.trim().charAt(1)) - 차례.indexOf(b.trim().charAt(1)); });
+    return (머리 ? '<p class="dhead">' + 본문(머리) + '</p>' : '') +
+      '<div class="gnd">' + 조각.map(function (x) {
+        var m = x.trim().match(/^\((가|나|다|라|마|바)\)\s*([\s\S]*)$/);
+        var lab = m ? m[1] : "", body = m ? m[2] : x;
+        return '<div class="gd"><span class="glab">(' + lab + ')</span><div class="gbody">' + 항목나누기(body) + '</div></div>';
+      }).join("") + '</div>';
+  }
+  function 항목나누기(t) {
+    var s = String(t || "").trim();
+    var parts = s.split(/\s*(?=[◦•○▪■])/).filter(function (x) { return x.trim(); });
+    var bullets = parts.filter(function (x) { return /^[◦•○▪■]/.test(x); });
+    if (bullets.length >= 2) {
+      var lead = parts.filter(function (x) { return !/^[◦•○▪■]/.test(x); }).join(" ").trim();
+      return (lead ? '<p>' + 본문(lead) + '</p>' : '') +
+        '<ul class="bul">' + bullets.map(function (x) { return '<li>' + 본문(x.replace(/^[◦•○▪■]\s*/, "")) + '</li>'; }).join("") + '</ul>';
+    }
+    var 대화 = 화자나누기(s);
+    return 대화 || 본문(s);
+  }
+
   function 화자나누기(t) {
     var s = String(t || "");
     if (!_화자앞.test(s)) return null;
@@ -282,8 +325,10 @@
        그리기 전에 아이콘으로 잘못 들어온 한 글자를 걷어낸다("붯" 6회 실측). */
     if (자료 && !그림쓴다) {
       자료 = 아이콘글자빼기(자료);
-      var 대화 = 화자나누기(자료);
-      몸 += '<div class="data">' + (대화 || 본문(자료)) + '</div>';
+      /* (가)(나)(다) 갈래는 상자로, ◦ 항목은 줄로 — 한 문단으로 흘리면 무엇이 (가)인지 안 읽힌다(2026-09-18 대표님) */
+      var 갈래 = 갈래나누기(자료);
+      var 대화 = 갈래 ? null : 화자나누기(자료);
+      몸 += '<div class="data">' + (갈래 || 대화 || 항목나누기(자료)) + '</div>';
     }
     if (표.length) 몸 += 표그리기(표);
     if (보기) 몸 += 보기나누기(보기);
