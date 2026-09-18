@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=c9569ef6">
+<link rel="stylesheet" href="css/base.css?v=53e7b8e2">
 <link rel="stylesheet" href="css/coach.css?v=208a602f">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -352,7 +352,7 @@
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/cards.js?v=4e5efe41"></script>
-<script src="js/store.js?v=62205939"></script>
+<script src="js/store.js?v=982afaa9"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -949,13 +949,21 @@
         var anc=ca>.3?"start":ca<-.3?"end":"middle";
         var up=(anc==="middle"&&sa<0);
         var y0=n._y+sa*off+(anc==="middle"?(sa>0?L.fName+4:-4):L.fName*.34);
+        /* 대각선 자리에서는 x 오프셋(ca×off)이 원 반지름보다 짧아 글씨가 원 안으로 들어왔다(2026-09-18 대표님 "아직도 원이랑 글씨 겹친다").
+           글 두 줄이 차지하는 세로 띠에서 원 테두리까지의 가로 거리를 재서, 그만큼은 반드시 벗어나게 한다. */
+        var lx=n._x+ca*off;
+        if(anc!=="middle"){
+          var yTop=y0-L.fName, yBot=y0+L.fSub+6, dy=(n._y<yTop)?(yTop-n._y):(n._y>yBot)?(n._y-yBot):0;
+          var need=Math.sqrt(Math.max(0,(rr+9)*(rr+9)-dy*dy));
+          if(Math.abs(ca*off)<need) lx=n._x+(ca<0?-need:need);
+        }
         var lg=el("g",{class:"lblg"},labs);
         lg.dataset.cx=n._x; lg.dataset.cy=n._y; lg.dataset.r=rr;
-        var l1=txt(lg,n.name,{x:n._x+ca*off,y:up?y0-L.fSub-4:y0,"text-anchor":anc,
+        var l1=txt(lg,n.name,{x:lx,y:up?y0-L.fSub-4:y0,"text-anchor":anc,
           fill:lock?SINK2:SINK,"font-size":L.fName,"font-weight":700,
           "font-family":cv("--kr")});
         var l2=txt(lg,노드꼬리(n,lock),
-          {x:n._x+ca*off,y:up?y0:y0+L.fSub+4,"text-anchor":anc,
+          {x:lx,y:up?y0:y0+L.fSub+4,"text-anchor":anc,
            fill:SINK2,"font-size":L.fSub,"font-weight":600,"font-family":cv("--kr")});
         [l1,l2].forEach(function(e){ e.classList.add("lbl"); });
         liven(gp,[l1,l2],function(){ showPeek(n,gp); },hidePeek);
@@ -987,10 +995,10 @@
     var circles=gs.map(function(x){
       return {x:+x.dataset.cx, y:+x.dataset.cy, r:+x.dataset.r};
     });
-    function boxCircle(b,c){
+    function boxCircle(b,c,pad){
       var nx=Math.max(b.x,Math.min(c.x,b.x+b.width));
       var ny=Math.max(b.y,Math.min(c.y,b.y+b.height));
-      return Math.hypot(c.x-nx,c.y-ny) < c.r+2;
+      return Math.hypot(c.x-nx,c.y-ny) < c.r+2+(pad||0);
     }
     function box(x){ try{ return x.getBBox(); }catch(e){ return null; } }
     function hit(a,b,pad){
@@ -1014,8 +1022,7 @@
           if(hit(A.b, st[j].b, 2)){ push=true; break; }
         }
         if(!push) for(var c=0;c<circles.length;c++){
-          if(c===A.own) continue;                 // 제 원 옆에 붙는 건 당연하다
-          if(boxCircle(A.b, circles[c])){ push=true; break; }
+          if(boxCircle(A.b, circles[c], c===A.own ? -6 : 0)){ push=true; break; }   // 제 원은 테두리를 파고들 때만
         }
         if(push){
           var step=9;

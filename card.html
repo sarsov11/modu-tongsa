@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=c9569ef6">
+<link rel="stylesheet" href="css/base.css?v=53e7b8e2">
 <link rel="stylesheet" href="css/coach.css?v=208a602f">
 <link rel="stylesheet" href="css/keyword.css?v=e00f83be">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
@@ -148,7 +148,7 @@
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/store.js?v=62205939"></script>
+<script src="js/store.js?v=982afaa9"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -274,7 +274,7 @@
   function 답하기(고른){
     var x=지금문항, ok=(!!x.a===고른);
     var ms=Date.now()-시작시각;
-    document.querySelectorAll("#qz .ox button").forEach(function(b){ b.disabled=true; if(ok && (b.dataset.v==="1")===고른) b.classList.add("hit"); });
+    document.querySelectorAll("#qz .ox button").forEach(function(b){ b.disabled=true; if((b.dataset.v==="1")===!!x.a) b.dataset.s="ok"; else if((b.dataset.v==="1")===고른) b.dataset.s="no"; });
 
     /* 기록 — ★ 확인 문항은 OX 문장(id "B1.1_1")이지 문항은행 문항이 아니다.
        T.answer(x.id, …) 는 QOF 에 없어 **조용히 null 을 돌려주고 아무것도 안 남겼다**(2026-09-05 실측).

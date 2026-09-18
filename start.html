@@ -11,9 +11,10 @@
 <meta name="theme-color" content="#08090B">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=c9569ef6">
+<link rel="stylesheet" href="css/base.css?v=53e7b8e2">
 <link rel="stylesheet" href="css/question.css?v=326c7f60">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<link rel="stylesheet" href="css/keyword.css?v=e00f83be">
 <style>
   /* ── 처음 오는 학생을 위한 화면 — 한 화면에 질문 하나, 단추 하나 ──
      (2026-09-06 대표님: "처음 들어가면 세팅창부터 정갈하게. 헤이링의 첫 UX")
@@ -144,6 +145,25 @@
   .mrow2 .dp{flex:0 0 auto;padding:0 11px;border-radius:10px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink-3);font-family:var(--kr);font-size:13px;font-weight:800;cursor:pointer}
   .mrow2 .dp[aria-pressed="true"]{border-color:var(--amber);color:var(--amber)}
   .qsrc{font-size:14px;font-weight:700;color:var(--ink-3);margin:-4px 0 10px}
+  /* 배치 시험 진행·건너뛰기 */
+  .pt{margin:8px 0 14px}
+  .ptbar{height:6px;border-radius:99px;background:var(--surface-3);overflow:hidden} .ptbar i{display:block;height:100%;width:0;background:var(--cta);transition:width .3s}
+  .ptrow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px;font-size:14.5px;font-weight:700;color:var(--ink-3)}
+  .skipwrap{position:relative}
+  .skipbtn{height:36px;padding:0 12px;border-radius:9px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink-3);font-family:var(--kr);font-size:14px;font-weight:700;cursor:pointer}
+  .skipbtn.arm{border-color:var(--red-2);color:var(--red-2)}
+  .tip{position:absolute;right:0;bottom:calc(100% + 8px);width:min(300px,78vw);padding:10px 12px;border-radius:10px;background:var(--ink);color:var(--bg);font-size:14px;font-weight:600;line-height:1.5;
+    opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .15s,transform .15s;z-index:5;text-align:left}
+  .tip::after{content:"";position:absolute;right:18px;top:100%;border:6px solid transparent;border-top-color:var(--ink)}
+  .tip.on{opacity:1;visibility:visible;transform:none}
+  .oxq{padding:18px 18px 16px;border:1px solid var(--line);border-radius:var(--r2);background:var(--surface)}
+  .oxstem{font-size:17px;font-weight:700;line-height:1.65;color:var(--ink);margin:0 0 14px}
+  .oxq .ox{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .oxq .ox button{height:56px;border-radius:12px;border:1.5px solid var(--line-2);background:var(--surface-2);font-family:var(--kr);font-size:24px;font-weight:900;color:var(--ink-3);cursor:pointer;position:relative}
+  .tm{display:flex;align-items:center;gap:10px;margin:0 0 12px}
+  .tmbar{flex:1;height:8px;border-radius:99px;background:var(--surface-3);overflow:hidden} .tmbar i{display:block;height:100%;width:100%;background:var(--cta);transition:width .1s linear}
+  .tmbar i.low{background:var(--red)} .tm b{font-size:16px;font-weight:800;min-width:38px;text-align:right;color:var(--ink-2);font-variant-numeric:tabular-nums}
+  .oxq .ox button:disabled{cursor:default}
 </style>
 </head>
 <body>
@@ -166,8 +186,14 @@
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
+<script src="js/oxbank.js?v=1884002d"></script>
+<script src="js/cardox.js?v=ca4891ae"></script>
+<script src="js/keyword.js?v=9ead7c20"></script>
+<script src="js/kwgrade.js?v=dc3854d5"></script>
+<script src="js/judge.js?v=43f690d4"></script>
 <script src="js/cards.js?v=4e5efe41"></script>
-<script src="js/store.js?v=62205939"></script>
+<script src="js/store.js?v=982afaa9"></script>
+<script src="js/kwask.js?v=37cf1b37"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -191,7 +217,7 @@
     scopeH:"이번 시험 범위를 골라 주세요.", scopeP:"학교마다 달라서 직접 골라요. 나중에 설정에서 바꿀 수 있어요.",
     goalH:"하루에 얼마나 할까요?", goalP:"매일 할 수 있는 만큼만 정해요.",
     alarmH:"몇 시에 알릴까요?", alarmP:"정한 시각에 오늘 할 것을 알려요.",
-    checkH:"지금 어디쯤인지<br>세 문항으로 확인해요.", checkP:"어디서 시작할지 정하는 데만 써요.",
+    checkH:"지금 어디쯤인지<br>20문항으로 확인해요.", checkP:"O·X 열 개, 개념어 쓰기 네 개, 기출 여섯 개예요. O·X와 개념어는 10초, 기출은 35초 안에 답해요. 언제든 건너뛸 수 있어요.",
     doneH:"준비됐어요.", doneP:"오늘 할 것은 이거예요. 누르면 바로 시작해요."
   };
 
@@ -354,32 +380,170 @@
       단추("다음");
     },
     check:function(st){
-      var qs=고르기(3);
-      if(!qs.length){ i++; return 그리기(); }
-      var k=0; A.check=[];
-      st.innerHTML=머리("7 / 7",MSG.checkH,esc(MSG.checkP))+'<div class="pips" id="pips"></div><div id="qhost"></div>';
+      /* ── 배치 시험 20문항 — O·X 10, 객관식 6, 개념어 쓰기 4. 리프를 돌아가며 골고루(2026-09-18 대표님).
+         문항마다 초읽기: O·X·개념어 10초, 객관식 35초. 시간이 다 되면 틀린 것으로 적고 넘어간다. ── */
+      var 제한 = { ox:10, q:35, kw:10 };
+      var 차례 = ["ox","q","ox","kw","ox","q","ox","ox","kw","q","ox","ox","q","kw","ox","q","ox","kw","ox","q"];
+      var 리프들 = (T.오늘의리프?T.오늘의리프({전부:true}):[]).map(function(c){ return c.leaf; })
+        .filter(function(l){ return !T.scopeOn() || !T.inScopeLeaf || T.inScopeLeaf(l.code); });
+      리프들.sort(function(x,y){ return T.seed("ob"+T.dayKey()+x.code) - T.seed("ob"+T.dayKey()+y.code); });
+      var OXB = window.OXBANK||[], 본OX = {};
+      OXB.forEach(function(x){ (본OX[x.leaf] = 본OX[x.leaf] || []).push(x); });
+      var 쓴OX = {}, 쓴Q = {}, 쓴KW = {};
+      var 뽑기 = {
+        ox:function(l){
+          var 풀 = (본OX[l.code]||[]).filter(function(x){ return !쓴OX[x.id] && !(S.ox||{})[x.id] && x.t && x.t.length <= 90; });
+          if(!풀.length) return null;
+          풀.sort(function(x,y){ return (/_c\d+$/.test(y.id)?1:0) - (/_c\d+$/.test(x.id)?1:0) || T.seed("ob"+T.dayKey()+x.id) - T.seed("ob"+T.dayKey()+y.id); });
+          var x = 풀[0]; 쓴OX[x.id] = 1; return { kind:"ox", x:x, leaf:l };
+        },
+        q:function(l){
+          var qs=(l.play||[]).filter(function(q){ var d=Q[q.id]; return d && !쓴Q[q.id] && q.id.charAt(0)==="T" && !d.g && !q.ff && !q.fig && d.o && d.o.length>=4 && (!window.QRENDER||QRENDER.ok(d,q)) && !S.ans[q.id] && 깔끔한가(d); });
+          if(!qs.length) return null;
+          var q=qs[Math.floor(T.seed("ob"+T.dayKey()+l.code)*qs.length)%qs.length]; 쓴Q[q.id]=1; return { kind:"q", q:q, leaf:l };
+        },
+        kw:function(l){
+          if(!window.KWASK) return null;
+          var xs = KWASK.리프에서(T, l.code, 3, "").filter(function(x){ return !쓴KW[x.id]; });
+          if(!xs.length) return null; 쓴KW[xs[0].id]=1; return { kind:"kw", x:xs[0], leaf:l };
+        }
+      };
+      var 큐 = [], li = 0;
+      차례.forEach(function(kind){
+        for(var t=0; t<리프들.length; t++){ var l=리프들[(li++)%리프들.length]; var it=뽑기[kind](l); if(it){ 큐.push(it); return; } }
+      });
+      if(!큐.length){ i++; return 그리기(); }
+      var k=0; A.check=[]; A.checkSkipped=false;
+      st.innerHTML=머리("7 / 7",MSG.checkH,esc(MSG.checkP))+
+        '<div class="pt"><div class="ptbar"><i id="ptfill"></i></div><div class="ptrow"><span id="ptleft"></span>'+
+        '<span class="skipwrap"><button type="button" class="skipbtn" id="skipq" aria-describedby="skiptip">건너뛰기</button>'+
+        '<span class="tip" id="skiptip" role="tooltip">건너뛰면 어디가 약한지 몰라서 처음 며칠은 오늘 할 것이 덜 정확해요. 푼 만큼 추천이 빨라져요.</span></span></div></div>'+
+        '<div id="qhost"></div>';
       단추("다음", false);
-      function pips(){ el("pips").innerHTML=qs.map(function(_,z){ var r=A.check[z]; return '<i class="'+(r?(r.ok?"ok":"no"):(z===k?"now":""))+'"></i>'; }).join(""); }
+      function 진행판(){
+        el("ptfill").style.width=Math.round(k/큐.length*100)+"%";
+        el("ptleft").textContent=(k+1)+" / "+큐.length;
+      }
+      /* 건너뛰기 — 손을 대면(마우스·터치·포커스) 안내가 뜨고, 한 번 더 눌러야 실제로 건너뛴다 */
+      (function(){
+        var b=el("skipq"), tip=el("skiptip"), 준비=false, t;
+        function 보이기(){ tip.classList.add("on"); }
+        function 숨기기(){ if(!준비) tip.classList.remove("on"); }
+        b.addEventListener("mouseenter", 보이기); b.addEventListener("mouseleave", 숨기기);
+        b.addEventListener("focus", 보이기); b.addEventListener("blur", 숨기기);
+        b.addEventListener("touchstart", function(){ 보이기(); }, {passive:true});
+        b.onclick=function(){
+          if(!준비){ 준비=true; 보이기(); b.textContent="그래도 건너뛰기"; b.classList.add("arm");
+            clearTimeout(t); t=setTimeout(function(){ 준비=false; b.textContent="건너뛰기"; b.classList.remove("arm"); tip.classList.remove("on"); }, 6000); return; }
+          끝내기();
+        };
+      })();
+      /* ── 초읽기 ── */
+      var 시계=null;
+      function 초읽기(kind, 끝){
+        var 전체=제한[kind]*1000, 시작=Date.now(), bar=el("tbar"), sec=el("tsec");
+        function 그림(){
+          var 남=Math.max(0, 전체-(Date.now()-시작));
+          if(bar) bar.style.width=(남/전체*100)+"%";
+          if(sec) sec.textContent=Math.ceil(남/1000)+"초";
+          if(bar) bar.classList.toggle("low", 남<=전체*0.3);
+          if(남<=0){ 멈춤(); 끝(); }
+        }
+        시계=setInterval(그림, 100); 그림();
+        return { 걸림:function(){ return Date.now()-시작; } };
+      }
+      function 멈춤(){ if(시계){ clearInterval(시계); 시계=null; } }
+      function 시계칸(kind){ return '<div class="tm"><div class="tmbar"><i id="tbar"></i></div><b id="tsec">'+제한[kind]+'초</b></div>'; }
+      function 끝내기(){ 멈춤(); el("qhost").innerHTML=''; el("next").disabled=false; A.checkSkipped = k<큐.length; 다음(); }
+      function 다음문항(ms){ 멈춤(); setTimeout(function(){ k++; one(); }, ms); }
+      function 리프이름(l){ return esc(l.name.replace(/\s*★\s*$/,"")); }
+      function 머리줄(it, 표){ return '<div class="qn">'+표+', '+리프이름(it.leaf)+'</div>'; }
+      function 적기(it, ok, ms, 초과){
+        A.check.push({ ok:ok, kind:it.kind, leaf:it.leaf.code, ms:ms, band: 초과 ? "초과" : (T.반응대 ? T.반응대(it.kind, ms) : null) });
+      }
+
       function one(){
-        pips();
-        if(k>=qs.length){ el("qhost").innerHTML=''; el("next").disabled=false; return 다음(); }
-        var q=qs[k], d=Q[q.id];
+        진행판();
+        if(k>=큐.length) return 끝내기();
+        var it=큐[k];
+        if(it.kind==="q") return 기출(it);
+        if(it.kind==="ox") return 오엑스(it);
+        return 개념어(it);
+      }
+      function 기출(it){
+        var q=it.q, d=Q[q.id];
         var 몸=window.QRENDER?QRENDER.html(d,q,{}):esc(d.q);
-        el("qhost").innerHTML='<div class="qwrap"><div class="qn">'+(k+1)+' / '+qs.length+', '+esc(T.BY[q.leaf]?T.BY[q.leaf].name:"")+'</div>'+
+        el("qhost").innerHTML='<div class="qwrap">'+머리줄(it,"기출")+시계칸("q")+
           '<div class="qsrc">'+esc(window.QRENDER&&QRENDER.출처?QRENDER.출처(q):"")+'</div>'+
           '<div class="qbody">'+몸.replace(/<ol class="opts5">[\s\S]*?<\/ol>/,'')+'</div>'+
           '<div class="opts">'+d.o.map(function(o,z){ return '<button class="opt" data-v="'+z+'"><span class="k">'+"①②③④⑤".charAt(z)+'</span><span>'+(window.QRENDER?QRENDER.body(o):esc(o))+'</span></button>'; }).join("")+'</div>'+
           '<div id="qsay"></div></div>';
-        el("qhost").querySelectorAll(".opt").forEach(function(b){ b.onclick=function(){
-          var r=T.answer(q.id,+b.dataset.v), ok=r?r.ok:(+b.dataset.v===d.a);
-          A.check.push({ok:ok});
-          el("qhost").querySelectorAll(".opt").forEach(function(x,z){ x.disabled=true; if(z===d.a) x.dataset.s="ok"; else if(x===b) x.dataset.s="no"; });
-          el("qsay").innerHTML='<p class="qsay'+(ok?" good":"")+'">'+(ok?"맞았어요.":"정답은 "+"①②③④⑤".charAt(d.a)+"이에요. 이런 자리부터 같이 봐요.")+'</p>';
-          pips(); setTimeout(function(){ k++; one(); }, ok?700:1400);
-        }; });
+        var 끝남=false;
+        function 마감(b, 초과){
+          if(끝남) return; 끝남=true;
+          var ms=시계.걸림(), 고른=b?+b.dataset.v:-1;
+          var r=T.answer(q.id, 고른, {ms:ms, conf:"sure"}), ok=r?r.ok:(고른===d.a);
+          적기(it, ok, ms, 초과);
+          el("qhost").querySelectorAll(".opt").forEach(function(x,z){ x.disabled=true; if(z===d.a){ x.dataset.s="ok"; if(!ok) try{ x.scrollIntoView({block:"center",behavior:"smooth"}); }catch(e){} } else if(x===b) x.dataset.s="no"; });
+          el("qsay").innerHTML='<p class="qsay'+(ok?" good":"")+'">'+(ok?"정답이에요.":(초과?"시간이 다 됐어요. ":"")+"정답은 "+"①②③④⑤".charAt(d.a)+"이에요.")+'</p>';
+          다음문항(ok?700:1600);
+        }
+        var 시계=초읽기("q", function(){ 마감(null, true); });
+        el("qhost").querySelectorAll(".opt").forEach(function(b){ b.onclick=function(){ 마감(b, false); }; });
+        window.scrollTo({top:0,behavior:"smooth"});
+      }
+      function 오엑스(it){
+        var x=it.x;
+        el("qhost").innerHTML='<div class="qwrap">'+머리줄(it,"O·X")+시계칸("ox")+
+          '<div class="oxq"><p class="oxstem">'+esc(x.t)+'</p>'+
+          '<div class="ox"><button type="button" class="o" data-v="1">O</button><button type="button" class="x" data-v="0">X</button></div>'+
+          '<div id="qsay"></div></div></div>';
+        var 끝남=false;
+        function 마감(b, 초과){
+          if(끝남) return; 끝남=true;
+          var ms=시계.걸림(), 고른=b?(b.dataset.v==="1"):null, ok=(고른!==null && !!x.a===고른);
+          S.ox=S.ox||{}; S.ox[x.id]={ok:ok,c:초과?null:"sure",ms:ms,n:1,at:Date.now(),leaf:x.leaf,to:!!초과}; T.drill && T.drill("ox", ok); T.save && T.save();
+          적기(it, ok, ms, 초과);
+          el("qhost").querySelectorAll(".ox button").forEach(function(z){ z.disabled=true; if((z.dataset.v==="1")===!!x.a) z.dataset.s="ok"; else if(z===b) z.dataset.s="no"; });
+          el("qsay").innerHTML='<p class="qsay'+(ok?" good":"")+'">'+(ok?"정답이에요.":(초과?"시간이 다 됐어요. ":"")+(x.a?"맞는 문장이에요. ":"틀린 문장이에요. ")+esc(String(x.why||"").slice(0,90)))+'</p>';
+          다음문항(ok?600:1900);
+        }
+        var 시계=초읽기("ox", function(){ 마감(null, true); });
+        el("qhost").querySelectorAll(".ox button").forEach(function(b){ b.onclick=function(){ 마감(b, false); }; });
+        window.scrollTo({top:0,behavior:"smooth"});
+      }
+      function 개념어(it){
+        el("qhost").innerHTML='<div class="qwrap">'+머리줄(it,"개념어 쓰기")+시계칸("kw")+'<div id="kwhost"></div></div>';
+        var 초과=false, 끝남=false;
+        KWASK.render(el("kwhost"), it.x, { idx:k+1, total:큐.length, next:"다음 →",
+          onDone:function(res){ if(끝남) return; 끝남=true; 멈춤(); 적기(it, !!res.ok, res.ms, 초과); },
+          onNext:function(){ k++; one(); } });
+        초읽기("kw", function(){
+          if(끝남) return; 초과=true;
+          /* 시간이 다 되면 「찍었어요」로 낸다 — 빈 답도 그 단추로는 채점되고 기록이 남는다 */
+          var g=el("kwhost").querySelector('#kwconf button[data-c="guess"]');
+          if(g){ g.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true})); g.click(); }
+          var lab=el("kwhost").querySelector("#kwlab"); if(lab) lab.textContent="시간이 다 됐어요.";
+        });
+        var inp=el("kwhost").querySelector("#kwin"); if(inp) setTimeout(function(){ try{ inp.focus(); }catch(e){} }, 120);
         window.scrollTo({top:0,behavior:"smooth"});
       }
       one();
+    },
+    /* 배치 시험에서 틀린 리프를 세어 어디부터 잡을지 말한다 */
+    약한자리:function(){
+      /* 틀린 것 1, 느리게·시간 넘겨 맞힌 것 0.5 로 리프마다 셈 */
+      var 셈={}, 느림=0, 빠름=0;
+      A.check.forEach(function(r){
+        if(!r.ok) 셈[r.leaf]=(셈[r.leaf]||0)+1;
+        else if(r.band==="느림"){ 셈[r.leaf]=(셈[r.leaf]||0)+0.5; 느림++; }
+        else if(r.band==="빠름") 빠름++;
+      });
+      var 순=Object.keys(셈).sort(function(a,b){ return 셈[b]-셈[a]; }).slice(0,2).map(function(c){ return T.BY[c]?T.BY[c].name.replace(/\s*★\s*$/,""):c; });
+      var 말=(빠름?"빠르게 맞힌 것 "+빠름+"개":"")+(빠름&&느림?", ":"")+(느림?"느리게 맞힌 것 "+느림+"개":"");
+      if(말) 말+=". ";
+      if(A.checkSkipped && !순.length) return 말+"건너뛴 만큼은 풀면서 잡아 갈게요.";
+      return 말+(순.length ? "여기서부터 잡아 드려요. "+순.join(", ")+"." : "지금은 다 맞았어요. 오늘 할 것으로 더 넓게 봐요.");
     },
     done:function(st){
       try{ localStorage.setItem("terra.onboarded","1"); }catch(e){}
@@ -387,7 +551,7 @@
       var nm=A.name||(S.student&&S.student.name)||"";
       var G=T.GRADES[A.grade]||{}, nx=T.nextExam?T.nextExam():null;
       st.innerHTML='<div class="done">'+머리("",esc(MSG.doneH)+(nm?" "+esc(nm)+" 학생.":""),esc(MSG.doneP))+
-        (A.check.length?'<p class="note" style="margin:0 0 6px">세 문항 중 <b>'+맞+'개</b> 맞았어요. 여기서부터 잡아 드려요.</p>':'')+
+        (A.check.length?'<p class="note" style="margin:0 0 6px">'+A.check.length+'문항 중 <b>'+맞+'개</b> 맞았어요. '+화면.약한자리()+'</p>':'')+
         (first?'<a class="todayone" href="'+first.href+'"><span class="lbl">오늘 할 것</span><h3>'+esc(first.title)+'</h3><p>'+esc(first.say)+'</p>'+
           (first.why?'<p class="why">'+esc(first.why)+'</p>':'')+'</a>':'')+
         '<div class="summ">'+

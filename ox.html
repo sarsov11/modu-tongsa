@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=c9569ef6">
+<link rel="stylesheet" href="css/base.css?v=53e7b8e2">
 <link rel="stylesheet" href="css/coach.css?v=208a602f">
 <link rel="stylesheet" href="css/keyword.css?v=e00f83be">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
@@ -157,7 +157,7 @@
 <script src="js/cards.js?v=4e5efe41"></script>
 <script src="js/keyword.js?v=9ead7c20"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
-<script src="js/store.js?v=62205939"></script>
+<script src="js/store.js?v=982afaa9"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -381,7 +381,7 @@
 
     /* 누른 것을 남긴다 — 무엇을 골랐는지 보여야 납득한다 */
     document.querySelectorAll("#ox button").forEach(function(z){
-      z.disabled=true; if(z===단추){ z.classList.add("pick"); if(ok) z.classList.add("hit"); }
+      z.disabled=true; if((z.dataset.v==="1")===!!x.a) z.dataset.s="ok"; else if(z===단추) z.dataset.s="no";
     });
 
     /* ── 기록 ── */
@@ -389,7 +389,7 @@
     if(!S.ox) S.ox={};
     var 앞=S.ox[x.id];
     var 시도=(앞&&앞.n?앞.n:0)+1;
-    S.ox[x.id]={ok:ok,c:확신,ms:ms,n:시도,at:Date.now()};
+    S.ox[x.id]={ok:ok,c:확신,ms:ms,n:시도,at:Date.now(),leaf:x.leaf};
     /* 리프 통계에도 넣는다 — 개념 체크도 학습이다 */
     T.drill && T.drill("ox", ok);
     T.save && T.save();

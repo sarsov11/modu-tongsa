@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=c9569ef6">
+<link rel="stylesheet" href="css/base.css?v=53e7b8e2">
 <link rel="stylesheet" href="css/coach.css?v=208a602f">
 <link rel="stylesheet" href="css/question.css?v=326c7f60">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
@@ -90,7 +90,7 @@
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/store.js?v=62205939"></script>
+<script src="js/store.js?v=982afaa9"></script>
 <script src="js/qrender.js?v=7e690aff"></script>
 <script src="js/naeshin.js?v=98cce591"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -154,7 +154,7 @@
     }
     function judge(q,d,pick,btn){
       var r=T.answer?T.answer(q.id,pick):null, ok=r?r.ok:(pick===d.a); marks.push(ok);
-      host.querySelectorAll(".opt").forEach(function(b,k){ b.disabled=true; if(k===d.a){ b.dataset.s="ok"; if(ok) b.classList.add("hit"); } else if(b===btn) b.dataset.s="no"; });
+      host.querySelectorAll(".opt").forEach(function(b,k){ b.disabled=true; if(k===d.a){ b.dataset.s="ok"; } else if(b===btn) b.dataset.s="no"; });
       var why=d.x?'<p>'+esc(d.x)+'</p>':'<p>이 문항은 해설이 함께 오지 않았습니다.</p>';
       document.getElementById("v").innerHTML='<div class="verdict"><div class="vl"><span class="tag2 '+(ok?"ok":"no")+'">'+(ok?"정답":"오답")+'</span>'+
         '<span style="font-size:14.5px;font-weight:800;color:var(--ink-3)">정답 '+M.charAt(d.a)+(ok?'':', 내가 고른 것 '+M.charAt(pick))+'</span></div>'+why+
