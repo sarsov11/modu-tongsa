@@ -269,9 +269,9 @@
 </div>
 
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/tree.js?v=619e0fba"></script>
-<script src="js/qbank.js?v=5ed8cc17"></script>
-<script src="js/pool.js?v=ad608681"></script>
+<script src="js/tree.js?v=89fc11cd"></script>
+<script src="js/qbank.js?v=c550e1af"></script>
+<script src="js/pool.js?v=38ce6316"></script>
 <script src="js/drills.js?v=9d14bfc8"></script>
 <script src="js/qrender.js?v=23dd5e47"></script>
 <script src="js/cards.js?v=bc64661b"></script>
@@ -410,8 +410,7 @@
           '<button class="more" id="moreBtn">다른 단원이 더 필요해요<i>펼치기</i></button>'+
           '<div class="rep"><h3>지금 상태</h3><ul>'+
             줄.map(function(x){ return '<li class="'+x.k+'"><i></i><span>'+x.t+'</span></li>'; }).join("")+
-          '</ul><p class="note">글로 풀 수 있는 문항 '+총.toLocaleString()+'개 가운데서 골랐어요. '+
-            '정답률·안 푼 정도·시험 범위를 함께 봅니다.</p></div>'+
+          '</ul></div>'+
         '</aside>'+
       '</div>'+
       '<div id="morehost" hidden></div>';
@@ -479,19 +478,15 @@
     var S3=T.state(), g3=(S3.student&&S3.student.grade)||"고1";
     document.getElementById("lede").textContent=
       leaf.mid.root.name+", "+leaf.mid.name+
-      " — 글로 풀 수 있는 "+playable(leaf).length+"문항 가운데 "+list.length+"문항을 냅니다. "+
-      (wrongOnly?"지난번에 틀린 것만 모았습니다."
+      ". "+
+      (wrongOnly?"지난번에 틀린 것만 모았어요."
         : 붙임>0
           ? (g3==="고3"
-              ? "이 단원은 수능 기출이 " + (list.length-붙임) + "문항뿐이라, 통합사회 학평 "
-                + 붙임 + "문항을 함께 냈어요."
+              ? "통합사회 학평 문항도 함께 나와요."
               : ((list.length-붙임)===0
-                  ? "이 단원은 학교에서 아직 안 배웠을 수 있어요 — 통합사회 학평 문항이 없습니다. "
-                    + "수능에 나오는 " + 붙임 + "문항으로 미리 봐 두세요."
-                  : "통합사회 학평이 " + (list.length-붙임) + "문항이라, "
-                    + "수능에 나오는 심화 " + 붙임 + "문항을 함께 냈어요."))
-          : g3==="고3" ? "수능 선택과목 기출입니다."
-          : "학교에서 배우는 통합사회 학평 문항입니다.");
+                  ? "고2·고3 기출로 풀어봐요."
+                  : "고2·고3 기출도 함께 나와요."))
+          : "");
     document.getElementById("headact").innerHTML=
       '<a class="btn ghost sm" href="skilltree.html?area='+leaf.mid.root.code+'">개념트리</a>'+
       '<a class="btn ghost sm" href="study.html">다른 단원</a>';
@@ -500,8 +495,8 @@
       '<div class="prog" id="prog"></div><div id="stage"></div></div></div>'+
       '<aside class="side">'+
       '<div class="card"><div class="hd"><h3>이번 세션</h3></div><div class="bd" id="sess"></div></div>'+
-      '<div class="card"><div class="hd"><h3>같은 중영역</h3></div><div class="bd" id="sibs"></div></div>'+
-      '<div class="card"><div class="hd"><h3>근거</h3></div><div class="bd" id="basis"></div></div>'+
+      '<div class="card"><div class="hd"><h3>같은 단원</h3></div><div class="bd" id="sibs"></div></div>'+
+      '<div class="card" hidden><div class="hd"><h3>근거</h3></div><div class="bd" id="basis"></div></div>'+
       '</aside></div>';
     document.getElementById("basis").innerHTML=
       '<p style="font-size:12.5px;line-height:1.75;color:var(--ink-4)">'+
@@ -516,7 +511,7 @@
       var col=!s2.solved?"var(--lv1)":s2.achieve>=60?"var(--lv3)":"var(--lv2)";
       return '<div class="lf'+(l.code===leaf.code?" on":"")+'" data-sib="'+l.code+'">'+
         '<span class="dot" style="background:'+col+'"></span>'+
-        '<span class="nm">'+esc(l.name)+'</span><span class="n">'+n+'</span></div>';
+        '<span class="nm">'+esc(l.name)+'</span></div>';
     }).join("");
     document.querySelectorAll("[data-sib]").forEach(function(b){
       b.onclick=function(){ location.href="study.html?leaf="+b.dataset.sib; };

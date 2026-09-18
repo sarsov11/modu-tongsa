@@ -352,10 +352,10 @@
 </div>
 
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/tree.js?v=619e0fba"></script>
-<script src="js/lecture.js?v=b1f48c88"></script>
+<script src="js/tree.js?v=89fc11cd"></script>
+<script src="js/lecture.js?v=2b700d36"></script>
 <script src="js/video.js?v=267bdcea"></script>
-<script src="js/pool.js?v=ad608681"></script>
+<script src="js/pool.js?v=38ce6316"></script>
 <script src="js/drills.js?v=9d14bfc8"></script>
 <script src="js/cards.js?v=bc64661b"></script>
 <script src="js/store.js?v=4a13680b"></script>
@@ -1128,8 +1128,7 @@
         '<em class="swapin" style="font-style:normal;color:var(--red-2)">'+(FAM[fam].label||fam)+'</em>';
       document.getElementById("upbtn").onclick=function(){ if(!busy) goAll(); };
       document.getElementById("lede").textContent=
-        FAM[fam].sub+" — 대영역 "+M.groups.length+", 중영역 "+M.items.length+
-        ", "+M.lec+"강, 기출 "+M.n.toLocaleString()+"문항";
+        FAM[fam].sub;
       document.getElementById("plateTitle").textContent=FAM[fam].label||fam;
       var weak=M.items.filter(function(x){ return x.st.play>0; })
         .sort(function(a2,b2){ return a2.st.achieve-b2.st.achieve; })[0];
@@ -1409,12 +1408,12 @@
         var M=MODEL[f];
         return '<div class="grp"><div class="gh">'+
           '<span class="cd" style="color:'+FAM[f].hex+'">'+FAM[f].no+'</span>'+
-          '<h3>'+esc(FAM[f].label||f)+'</h3><span class="n">'+(HASV?M.lec+'강, ':'')+'기출 '+M.n.toLocaleString()+'</span></div>'+
+          '<h3>'+esc(FAM[f].label||f)+'</h3></div>'+
           M.groups.map(function(g){
             return '<div class="mrow" data-gofam="'+f+'">'+
               '<span class="bul" style="background:'+FAM[f].hex+';opacity:.7"></span>'+
               '<span class="nm">'+g.name+'</span>'+
-              '<span class="pc">중영역 '+g.items.length+'</span></div>';
+              '</div>';
           }).join("")+'</div>';
       }).join("");
       host.querySelectorAll("[data-gofam]").forEach(function(b){
@@ -1426,7 +1425,7 @@
     var groups=(level===2&&grp)?[grp]:M.groups;
     host.innerHTML=groups.map(function(g){
       return '<div class="grp"><div class="gh">'+
-        '<h3>'+g.name+'</h3><span class="n">중영역 '+g.items.length+'</span></div>'+
+        '<h3>'+g.name+'</h3></div>'+
         g.items.map(function(x){
           var col=x.tier==="S"?GOLD:tone(fam,x.tier,paper()?14:0);
           return '<div class="mrow'+((T.inScopeMid&&!T.inScopeMid(x.code))?' out':'')+'" data-mid="'+x.code+'">'+
@@ -1463,7 +1462,7 @@
         }).join("")
       : FAMS.map(function(x){
           return '<span class="k"><i class="dot" style="background:'+FAM[x].hex+'"></i>'+
-            esc(FAM[x].label||x)+(HASV?', '+MODEL[x].lec+'강':'')+'</span>';
+            esc(FAM[x].label||x)+'</span>';
         }).join(""))+size;
   }
   /* ★ 범위 띠 — 지도가 시험 범위로 줄었을 때 그 까닭을 적는다.
@@ -1499,7 +1498,7 @@
     host.hidden=false;
     host.innerHTML =
             '<span class="tx"><b>' + (b&&b.name ? b.name : "시험") + ' 범위</b>, ' +
-        이름 + ' (' + 전체.length + '단원 중 ' + 안.length + '단원)' + 꼬리 + '</span>' +
+        이름 + 꼬리 + '</span>' +
       '<span class="act">' +
         (범위풀기
           ? '<a href="skilltree.html">범위로 돌아가기</a>'
@@ -1512,9 +1511,7 @@
     if(AX.단원축){
       var bq=(T.기본범위지금&&T.기본범위지금())||null;
       document.getElementById("note").innerHTML =
-        '<b>이번 시험 범위 단원만 그렸습니다</b> — ' +
-        FAMS.map(function(f){ return FAM[f].label; }).join(", ") +
-        '. 단원을 누르면 그 단원의 목차가 펼쳐집니다.' +
+        '' +
         (bq&&bq.근거==="추정"
           ? ' <b>1학기 범위는 추정</b>이라 학교와 다를 수 있습니다 — 설정에서 고쳐 주세요.'
           : '') +
