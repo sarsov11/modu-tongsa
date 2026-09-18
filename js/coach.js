@@ -47,57 +47,57 @@
   /* ── 화면에 나가는 말 — 전부 여기 ─────────────────── */
   var MSG = {
     /* 띠 — 상황별. {n} 숫자, {개념} 리프 이름 자리 */
-    idleStart:    "오늘 몫은 {goal}분이에요. 첫 줄부터 시작합니다.",
-    idleMid:      "오늘 {spent}분 했어요. {left}분 남았어요.",
-    idleDone:     "오늘 몫을 채웠어요.",
+    idleStart:    "오늘 {goal}분만 해볼까요?",
+    idleMid:      "{spent}분 했어요. {left}분만 더 해볼까요?",
+    idleDone:     "오늘 할 것 다 했어요.",
     upToday:      "오늘 이해도가 오른 곳이 {n}군데예요.",
     streakDay:    "{n}일째 이어 오고 있어요.",
-    cardWait:     "오늘 개념을 아직 안 읽었어요.",
-    okOne:        "맞았어요. 오늘 {n}번째 정답이에요.",
-    okRun3:       "세 문항 연속 정답이에요.",
-    okRun5:       "다섯 문항 연속 정답이에요.",
-    okRun8:       "여덟 문항 연속 정답이에요.",
-    okAfterMiss:  "맞았어요. 방금 틀린 문항은 3일 뒤에 다시 나와요.",
-    missOne:      "틀렸어요. 3일 뒤에 다시 나와요.",
-    missSure:     "확실했는데 틀렸어요. {개념을} 다시 봐요.",
-    missGuess:    "찍은 문항이에요. 해설 한 줄만 읽어요.",
-    missRun3:     "세 문항 연속 틀렸어요. 개념부터 다시 읽어요.",
-    drillOk:      "Killer Drill 정답이에요. 오늘 Killer Drill {n}문항째예요.",
-    drillMiss:    "Killer Drill은 정답률에 들어가지 않아요. 한 번 더 해요.",
+    cardWait:     "오늘 개념부터 읽어볼까요?",
+    okOne:        "맞았어요. 오늘 {n}개째예요.",
+    okRun3:       "세 문제 연속으로 맞혔어요.",
+    okRun5:       "다섯 문제 연속으로 맞혔어요.",
+    okRun8:       "여덟 문제 연속으로 맞혔어요.",
+    okAfterMiss:  "맞았어요. 방금 틀린 문제는 3일 뒤에 다시 풀어봐요.",
+    missOne:      "틀렸어요. 3일 뒤에 다시 풀어봐요.",
+    missSure:     "확실하다고 했는데 틀렸어요. {개념을} 다시 볼까요?",
+    missGuess:    "찍었죠? 해설 한 줄만 읽고 가요.",
+    missRun3:     "세 문제 연속으로 틀렸어요. 개념부터 다시 읽어볼까요?",
+    drillOk:      "맞았어요. 오늘 Killer Drill {n}문제째예요.",
+    drillMiss:    "한 번 더 해볼까요? Killer Drill은 정답률에 안 들어가요.",
     oxOk:         "맞았어요. 오늘 O·X {n}문제째예요.",
-    oxMiss:       "O·X는 정답률에 들어가지 않아요. 근거만 읽어요.",
-    kwOk:         "맞았어요. 직접 쓴 개념어예요.",
-    kwMiss:       "개념어 쓰기는 정답률에 들어가지 않아요. 정답을 한 번 읽어요.",
-    watched:      "강의를 봤어요. 바로 O·X로 확인해요.",
-    skinNudge:    "화면 테마를 바꿀 수 있어요. 밤, 모눈 노트, 젤리, 화이트가 있어요.",
-    examSoon:     "{시험} D-{n}이에요. 오늘은 모의고사부터예요.",
+    oxMiss:       "근거만 읽고 넘어가요. O·X는 정답률에 안 들어가요.",
+    kwOk:         "맞았어요. 직접 써서 맞혔어요.",
+    kwMiss:       "정답을 한 번 읽어봐요. 개념어 쓰기는 정답률에 안 들어가요.",
+    watched:      "강의 다 봤네요. 바로 O·X로 확인해볼까요?",
+    skinNudge:    "화면 색이 마음에 안 들면 바꿔봐요.",
+    examSoon:     "{시험} D-{n}이에요. 오늘은 모의고사부터 풀어볼까요?",
     /* 결산 */
     wrapAll:      "전부 맞았어요.",
-    wrapMost:     "거의 다 맞았어요. 틀린 것만 다시 봐요.",
-    wrapHalf:     "절반 맞았어요. 틀린 것이 오늘 할 일이에요.",
-    wrapLow:      "이 단원은 처음이에요. 틀린 것부터 다시 봐요.",
+    wrapMost:     "거의 다 맞았어요. 틀린 것만 다시 볼까요?",
+    wrapHalf:     "절반 맞았어요. 틀린 것만 다시 풀어볼까요?",
+    wrapLow:      "처음 보는 단원이죠? 틀린 것부터 다시 봐요.",
     wrapUp:       "{개념} 이해도가 {before}에서 {after}로 올랐어요.",
     wrapSame:     "{개념} 이해도는 {after} 그대로예요.",
-    wrapDone:     "이걸로 오늘 몫이 끝났어요.",
-    wrapLeft:     "오늘 몫까지 {left}분 남았어요.",
+    wrapDone:     "오늘 할 것 다 했어요.",
+    wrapLeft:     "{left}분만 더 하면 오늘은 끝이에요.",
     wrapFirst:    "오늘 첫 세트예요.",
     wrapTree:     "개념트리에서 {개념이} {d} 올랐어요.",
     /* 인사 */
-    hiFirst:      "처음이에요. 오늘 할 것 하나를 골라 뒀어요.",
-    hiBack:       "{ago} {n}문항 중 {ok}개 맞혔어요. 오늘은 {next}부터예요.",
+    hiFirst:      "처음이죠? 오늘 할 것 하나만 골라 뒀어요.",
+    hiBack:       "{ago} {n}문제 중 {ok}개 맞혔어요. {next}부터 해볼까요?",
     hiBackLead:   "{ago} {n}문항 중 {ok}개 맞혔어요. 오늘은 {lead}.",
-    hiBackNoQLead: "{ago} 다녀갔어요. 오늘은 {lead}.",
+    hiBackNoQLead: "오늘은 {lead}.",
     hiTodayLead:  "오늘 {n}문항 중 {ok}개 맞혔어요. 이어서 {lead}.",
-    hiBackNoQ:    "{ago} 다녀갔어요. 오늘은 {next}부터예요.",
+    hiBackNoQ:    "{next}부터 해볼까요?",
     hiToday:      "오늘 {n}문항 중 {ok}개 맞혔어요. 다음은 {next}예요.",
-    hiTodayDone:  "오늘 {n}문항 중 {ok}개 맞혔어요. 오늘 몫은 끝났어요.",
+    hiTodayDone:  "오늘 {n}문항 중 {ok}개 맞혔어요. 오늘 할 것 다 했어요.",
     hiStreak:     "{n}일째예요.",
     /* 카드 */
     cardSealed:   "오늘 개념",
     cardTap:      "눌러서 열기",
-    cardOpened:   "오늘 개념이에요. 읽고 바로 확인해요.",
+    cardOpened:   "읽고 바로 확인해볼까요?",
     cardCount:    "읽은 개념 {n}개",
-    cardNone:     "이 범위에는 읽을 개념이 없어요. 문항으로 바로 가요."
+    cardNone:     "이 범위에는 읽을 개념이 없어요. 바로 문제로 가볼까요?"
   };
   function fmt(key, v) {
     var s = MSG[key] || "";
@@ -255,7 +255,7 @@
       chips(t) +
       '<span class="go">' +
       (opts.html ? opts.html : (step ? '<a class="btn" href="' + step.href + '">' +
-        esc(step.cta || "하기") + ' ' + step.min + '분</a>' : '')) +
+        esc(step.cta || "하기") + (step.kind === "card" ? '' : ' ' + step.min + '분') + '</a>' : '')) +
       '<button class="x" aria-label="닫기">✕</button></span></div>';
     bar.querySelector(".x").onclick = function () {
       bar.classList.remove("on");
@@ -491,15 +491,22 @@
     /* 카드 2판(blocks)은 부제 + 첫 문단들로 미리 보인다(2026-09-18 홈이 lines 를 가정해 죽었던 것) */
     function 미리보기(card) {
       if (card.lines) return card.lines;
-      var out = []; if (card.sub) out.push(card.sub);
-      (card.blocks || []).forEach(function (b) { if (b.t === "p" && b.text) out.push(String(b.text).replace(/\*\*/g, "").slice(0, 120)); });
+      /* ★ 글자 수로 자르지 않는다 — 「…사회권·청」 처럼 말이 끊겨 나갔다(2026-09-19 대표님).
+         문단의 **첫 문장만 통째로** 보인다. 문장이 길어도 자르지 않는다 */
+      var out = [];
+      (card.blocks || []).forEach(function (b) {
+        if (b.t !== "p" || !b.text) return;
+        var 글 = String(b.text).replace(/\*\*/g, "").trim();
+        var m = 글.match(/^.*?[.?!](?=\s|$)/);
+        out.push(m ? m[0] : 글);
+      });
       return out;
     }
     function face(c) {
       return '<div class="face back">' +
         '<span class="eb">' + esc((T.BY[c.set.root] ? T.BY[c.set.root].name + ", " : "") + c.set.mid) + '</span>' +   /* 단원 알파벳 대신 단원 이름 */
         '<h3>' + esc(c.card.title) + '</h3>' +
-        '<ul>' + 미리보기(c.card).slice(0, 3).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join("") + '</ul>' +
+        '<ul>' + 미리보기(c.card).slice(0, 2).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join("") + '</ul>' +
         '<p class="cap">' + esc(MSG.cardOpened) + '</p>' +
         '<div class="act"><a class="btn" href="card.html?leaf=' + c.leaf + '">바로 확인 →</a>' +
         '<span class="cnt">' + esc(fmt("cardCount", { n: cardCount() })) + '</span></div></div>';

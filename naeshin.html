@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>내신 킬러드릴 — 모두의 통사</title>
+<title>내신 Killer Drill — 모두의 통사</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;700;900&display=swap">
@@ -13,8 +13,8 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=838e6ebd">
-<link rel="stylesheet" href="css/coach.css?v=fec8b445">
+<link rel="stylesheet" href="css/base.css?v=873fa070">
+<link rel="stylesheet" href="css/coach.css?v=b5de5f32">
 <link rel="stylesheet" href="css/question.css?v=326c7f60">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -71,32 +71,32 @@
 <div class="page">
   <div class="hd">
     <span class="kicker"><i></i>Killer Drill</span>
-    <h1>내신 킬러드릴</h1>
-    <p>이번 시험 범위 안에서 어렵게 나오는 자리만 모았습니다. 실제 기출에서 3점으로 나온 문항과 심화 자리입니다.</p>
+    <h1>내신 Killer Drill</h1>
+    <p>이번 시험 범위에서 헷갈리는 문항만 집중 연습할 수 있어요.</p>
     <div class="scope" id="scope"></div>
   </div>
   <div id="host"></div>
 </div>
 
-<script src="js/tree.js?v=ecaf03f7"></script>
-<script src="js/qbank.js?v=f6d1a6a6"></script>
+<script src="js/tree.js?v=619e0fba"></script>
+<script src="js/qbank.js?v=5ed8cc17"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
-<script src="js/cardox.js?v=8f7a009d"></script>
-<script src="js/conceptq.js?v=fc0c09eb"></script>
+<script src="js/cardox.js?v=61ebd2a8"></script>
+<script src="js/conceptq.js?v=1b6b0e68"></script>
 <script src="js/cards.js?v=bc64661b"></script>
 <script src="js/keyword.js?v=e0836b75"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/judge.js?v=43f690d4"></script>
-<script src="js/pool.js?v=4a7d39b1"></script>
-<script src="js/drills.js?v=82b6c52c"></script>
+<script src="js/pool.js?v=ad608681"></script>
+<script src="js/drills.js?v=9d14bfc8"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/store.js?v=fd8d2eeb"></script>
+<script src="js/store.js?v=4a13680b"></script>
 <script src="js/qrender.js?v=23dd5e47"></script>
 <script src="js/naeshin.js?v=98cce591"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/coach.js?v=8dfc568e"></script>
+<script src="js/coach.js?v=41172bcc"></script>
 <script>
 (function(){
   var T=window.TERRA, Q=window.QBANK||{}, M="①②③④⑤";
@@ -108,26 +108,24 @@
   /* 머리 — 시험·범위 */
   (function(){
     var nx=T.nextExam?T.nextExam():null, el=document.getElementById("scope");
-    if(!T.scopeOn()){ el.innerHTML='범위를 아직 안 정했습니다. 전 범위에서 어려운 자리를 보여 줍니다.<a href="settings.html">범위 정하기</a>'; return; }
+    if(!T.scopeOn()){ el.innerHTML='시험 범위를 정하면 그 범위만 연습해요.<a href="settings.html">범위 정하기</a>'; return; }
     el.innerHTML=(nx?'<b>'+esc(nx.exam.name)+' '+esc(nx.label)+'</b>, ':'')+'범위 <b>'+esc(T.scopeName())+'</b><a href="settings.html">범위 고치기</a>';
   })();
 
   var P=window.NAESHIN?NAESHIN.포인트들():[];
   function list(){
-    if(!P.length){ host.innerHTML='<div class="empty">이 범위에서 3점으로 나온 기출이 아직 없습니다. 범위를 넓히거나 개념트리에서 문제를 풀어 주세요.</div>'; return; }
+    if(!P.length){ host.innerHTML='<div class="empty">이 범위에는 아직 연습할 문항이 없어요.</div>'; return; }
     var byMid={}, order=[];
     P.forEach(function(x){ var k=x.mid.code; if(!byMid[k]){ byMid[k]=[]; order.push(k); } byMid[k].push(x); });
     host.innerHTML=order.map(function(k){
       var xs=byMid[k], m=xs[0].mid, r=xs[0].root;
-      return '<div class="grp"><h2>'+esc(r.name)+', '+esc(m.name)+'</h2><p class="sub">어렵게 나온 순서입니다.</p>'+
+      return '<div class="grp"><h2>'+esc(r.name)+', '+esc(m.name)+'</h2>'+
         xs.map(function(x){
           var why='';
-          if(x.어려운.length) why+='<span class="hard">3점 문항 '+x.어려운.length+'개</span>';
-          if(x.leaf.grade==="심화") why+='<span class="deep">★ 심화</span>';
-          if(x.st.solved) why+='<span class="low">내 정답률 '+(x.st.pct==null?"—":x.st.pct+"%")+'</span>'; else why+='<span class="low">아직 안 풂</span>';
+          if(x.st.solved) why+='<span class="low">내 정답률 '+(x.st.pct==null?"—":x.st.pct+"%")+'</span>'; else why+='<span class="low">아직 안 풀었어요</span>';
           return '<div class="pt"><div><div class="nm">'+esc(x.leaf.name)+'</div><div class="why">'+why+'</div>'+
-            (x.자주.length?'<div class="ask">자주 묻는 것: '+x.자주.map(esc).join(", ")+'</div>':'')+'</div>'+
-            '<div><button class="btn" data-leaf="'+x.leaf.code+'">'+x.풀거리.length+'문항 풀기</button></div></div>';
+'</div>'+
+            '<div><button class="btn" data-leaf="'+x.leaf.code+'">'+x.풀거리.length+'문제 풀기</button></div></div>';
         }).join("")+'</div>';
     }).join("");
     host.querySelectorAll("[data-leaf]").forEach(function(b){ b.onclick=function(){ solve(b.dataset.leaf); }; });
@@ -141,9 +139,9 @@
       var q=list_[i], d=Q[q.id];
       var 몸=window.QRENDER?QRENDER.html(d,q,{}):('<p>'+esc(d.q)+'</p>');
       몸=몸.replace(/<ol class="opts5">[\s\S]*?<\/ol>/,'');
-      host.innerHTML='<button class="back" id="back">← 어려운 자리 목록</button>'+
-        '<div class="grp" style="margin-top:0"><h2>'+esc(x.leaf.name)+'</h2><p class="sub">'+(i+1)+' / '+list_.length+', 3점 문항부터 나옵니다.</p></div>'+
-        '<div class="stage"><div class="qcard"><div class="qtop"><span class="chip">'+(q.p>=2.5?'3점':'기출')+'</span>'+(q.lb?'<span class="chip">'+esc(q.lb)+'</span>':'')+'<span class="srcline">'+src(q)+'</span></div>'+
+      host.innerHTML='<button class="back" id="back">← 목록</button>'+
+        '<div class="grp" style="margin-top:0"><h2>'+esc(x.leaf.name)+'</h2><p class="sub">'+(i+1)+' / '+list_.length+'</p></div>'+
+        '<div class="stage"><div class="qcard"><div class="qtop"><span class="chip">'+'기출'+'</span>'+(q.lb?'<span class="chip">'+esc(q.lb)+'</span>':'')+'<span class="srcline">'+src(q)+'</span></div>'+
         '<div class="qbody">'+몸+'<div class="opts'+(q.ff?' nums':'')+'">'+(q.ff?[0,1,2,3,4]:d.o.map(function(_,k){return k;})).map(function(k){
           return '<button class="opt" data-v="'+k+'"><span class="k">'+M.charAt(k)+'</span>'+(q.ff?'':'<span>'+(window.QRENDER?QRENDER.body(d.o[k]):esc(d.o[k]))+'</span>')+'</button>';
         }).join("")+'</div><div id="v"></div></div></div></div>';
@@ -164,7 +162,7 @@
     }
     function finish(){
       var got=marks.filter(Boolean).length;
-      host.innerHTML='<button class="back" id="back">← 어려운 자리 목록</button><div class="fin"><b>'+got+'<small> / '+list_.length+'</small></b>'+
+      host.innerHTML='<button class="back" id="back">← 목록</button><div class="fin"><b>'+got+'<small> / '+list_.length+'</small></b>'+
         '<p>'+(got===list_.length?"이 자리는 다 맞혔습니다.":"틀린 문항은 오늘 복습에 들어갑니다.")+'</p>'+
         '<button class="btn" id="again">다른 자리 보기</button></div>';
       document.getElementById("back").onclick=list; document.getElementById("again").onclick=function(){ P=NAESHIN.포인트들(); list(); };

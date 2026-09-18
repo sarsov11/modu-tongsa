@@ -249,7 +249,11 @@
     var 수준 = 훈련수준();
     var 쓸것 = D;
     if (범위걸림) {
-      var 안 = D.filter(function (d) { return !d.root || inScope(d.root); });
+      /* 훈련이 범위 안인가 — mid(노동=F5)나 mids(사상가 판별=제시문이 넉넉한 축)를 적어 둔 훈련은 그것으로 본다(2026-09-19) */
+      var 안 = D.filter(function (d) {
+        if (d.mids) return d.mids.some(function (k) { return inScopeMid(k); });
+        if (d.mid) return inScopeMid(d.mid);
+        return !d.root || inScope(d.root); });
       if (안.length) 쓸것 = 안;
     }
     var 점수 = 쓸것.map(function (d) {
@@ -699,7 +703,7 @@
   var 기본범위 = {
     학교: "서문여고",
     /* ★ 2학기(통합사회 2) 는 서문여고 **실측**이다 — 대표님이 알려 주신 값. */
-    s2mid: { name: "2학기 중간고사", 과목: "통합사회 2", 단원: "1단원(헌법의 역할까지)·2·4단원",
+    s2mid: { name: "2학기 중간고사", 과목: "통합사회 2", 단원: "1·2·4단원",
              roots: ["F", "G", "I"], 근거: "실측",
              /* ★ 1단원은 권력분립(F3)까지 — 준법·시민 참여(F4)·노동권(F5)·국내외 인권(F6)은 이번 범위 밖(2026-09-17 대표님) */
              mids: ["F1", "F2", "F3", "G", "I"],
@@ -1420,7 +1424,7 @@
           title: 학년3 === "고1" ? "오늘 개념 읽기" : "개념 다시 읽기",
           say: cc.st.name + " " + 장 + "개",
           why: "읽고 바로 확인해요. 강의 대신 이걸로 배우고, 다 맞히면 문제로 넘어가요.",
-          href: "card.html?leaf=" + cc.code, cta: "읽기" });
+          href: "card.html?leaf=" + cc.code, cta: "개념 학습" });   /* 「읽기 7분」 → 「개념 학습」(2026-09-19 대표님) */
         left -= CARD몫; 배움 = true;
       }
     }
@@ -1480,14 +1484,14 @@
               ? "지난번 정답률이 " + st9.pct + "%였어요. 여기가 지금 제일 약합니다."
               : "해 둔 지 좀 됐어요. 잊기 전에 한 번 돌립니다.");
         items.push({ kind: "drill", min: DRILL_MIN, drill: 하나.id,
-          title: scopeOn() ? (내신킬러 ? "내신 킬러드릴" : "시험 범위 Killer Drill")
-                           : (골라.level === "기초" ? "준킬러부터" : "오늘의 킬러"),
-          say: 내신킬러 ? "시험 범위에서 어렵게 나오는 자리" : 하나.name + " 한 세트",
-          why: 내신킬러 ? "실제 기출에서 3점으로 나온 자리부터 풀어요." : (하나.tier ? "준킬러예요. " : "킬러예요. ") + 까닭,
+          title: scopeOn() ? (내신킬러 ? "내신 Killer Drill" : "시험 범위 Killer Drill")
+                           : ((((S.student && S.student.grade) || "고1") === "고1") ? "오늘의 Killer Drill" : (골라.level === "기초" ? "준킬러부터" : "오늘의 킬러")),   /* 내신 대비(고1)에서 킬러·준킬러라는 말은 어색하다(2026-09-19 대표님) */
+          say: 내신킬러 ? "시험 범위에서 헷갈리는 문항" : 하나.name + " 한 세트",
+          why: 내신킬러 ? "헷갈리는 문항부터 풀어볼까요?" : ((((S.student && S.student.grade) || "고1") === "고1") ? "" : (하나.tier ? "준킬러예요. " : "킬러예요. ")) + 까닭,
           href: 내신킬러 ? "naeshin.html" : "drill.html?type=" + 하나.id, cta: "Killer Drill" });
       } else {
         items.push({ kind: "drill", min: DRILL_MIN,
-          title: "마무리 한 세트", say: "킬러 유형 5문항",
+          title: "마무리 한 세트", say: "Killer Drill 5문제",
           why: "짧게 매일 하는 게 몰아서 하는 것보다 오래 남아요.",
           href: "drill.html", cta: "Killer Drill" });
       }
@@ -1523,7 +1527,7 @@
         tgt = fresh || (S.last && BY[S.last.leaf]);
         제목 = fresh ? "처음 배우는 개념" : "보던 데 마저";
         왜 = fresh ? "아직 손 안 댄 곳 가운데 시험에서 제일 무거워요."
-                   : "여기까지 하면 오늘 몫이 끝나요.";
+                   : "여기까지 하면 오늘은 끝이에요.";
       }
       if (tgt) {
         var nq = Math.max(2, Math.floor(left * 60 / SEC_PER_Q));
@@ -1699,14 +1703,23 @@
     if (!sc.length) return true;                 // 안 정했으면 전 범위
     if (sc.indexOf(rootCode) >= 0) return true;
     if (sc.some(function (c) { return c.charAt(0) === rootCode && BY[c] && BY[c].leaves; })) return true;
-    // 사상가는 정의·행복이 범위면 따라 든다
-    if (rootCode === "K") return sc.some(function (c) { return 사상가딸림[c.charAt(0)]; });
+    // 사상가는 **그 사상가를 배우는 단원**이 범위일 때만 따라 든다
+    if (rootCode === "K") return Object.keys(사상가단원).some(function (k) { return 사상가중영역범위(k); });
     return false;
+  }
+  /* ★ 사상가 축(K)의 중영역은 배우는 단원이 따로 있다 — 행복론(K1)은 1학기 행복 단원, 정의(K3)는 사회 정의 단원.
+     전에는 정의(G)만 범위여도 K 가 통째로 들어와, 2학기 중간 범위인 학생에게 「동양 행복론」·에피쿠로스가 권해졌다(2026-09-19 대표님 폰 홈 실측).
+     drill.html 의 사상가범위() 와 같은 짝이다. */
+  var 사상가단원 = { "K1": "B", "K2": "C", "K3": "G", "K4": "F4", "K5": "I", "K6": "H" };
+  function 사상가중영역범위(k) {
+    var 짝 = 사상가단원[k]; if (!짝) return false;
+    if (짝.length === 1) return scope().some(function (c) { return c.charAt(0) === 짝; });
+    return !!scopeMids()[짝];
   }
   function inScopeMid(midCode) {
     if (!scope().length) return true;
     if (scopeMids()[midCode]) return true;
-    if (String(midCode).charAt(0) === "K") return inScope("K");
+    if (String(midCode).charAt(0) === "K") return 사상가중영역범위(String(midCode));
     return false;
   }
   /* 리프 하나가 범위 안인가 — 중영역이 범위 안이고, 심화(★) 리프면 그 중영역의 심화가 켜져 있어야 한다 */
@@ -1798,7 +1811,7 @@
         (full ? "var(--mint)" : "var(--red)") + '" stroke-width="3.5" stroke-linecap="round"' +
         ' stroke-dasharray="' + on + ' ' + (C - on).toFixed(1) + '"/></svg>' +
       '<b>' + done + '</b></span>' +
-      '<span class="tx"><b>' + (full ? "오늘 몫을 다 했어요"
+      '<span class="tx"><b>' + (full ? "오늘 할 것 다 했어요"
           : step.title + " " + step.min + "분") + '</b>' +
       '<span>' + step.say + '</span></span>' +
       '<span class="go"><a class="btn" href="' + step.href + '">' + step.cta + '</a>' +

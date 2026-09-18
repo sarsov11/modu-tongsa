@@ -15,8 +15,8 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/login.css?v=bcda8ea1">
-<link rel="stylesheet" href="css/base.css?v=838e6ebd">
-<link rel="stylesheet" href="css/coach.css?v=fec8b445">
+<link rel="stylesheet" href="css/base.css?v=873fa070">
+<link rel="stylesheet" href="css/coach.css?v=b5de5f32">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:1080px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -195,6 +195,16 @@
   .sc-mid.on .mid{border-color:var(--cta);background:var(--cta-soft);color:var(--ink)}
   .sc-mid .deep{flex:0 0 auto;padding:0 12px;border-radius:10px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink-3);font-family:var(--kr);font-size:13.5px;font-weight:800;cursor:pointer}
   .sc-mid .deep[aria-pressed="true"]{border-color:var(--amber);color:var(--amber)}
+  .ulist{display:grid;gap:8px;margin-top:14px}
+  .ulist .bk{font-weight:700;font-size:14.5px;color:var(--ink-4);margin-top:8px}
+  .urow{border:1.5px solid var(--line-2);border-radius:var(--r1);background:var(--surface);overflow:hidden}
+  .urow.on{border-color:var(--cta)}
+  .urow .u{display:flex;align-items:baseline;gap:10px;width:100%;padding:13px 14px;border:0;background:transparent;color:var(--ink-2);font:inherit;font-size:16px;text-align:left;cursor:pointer}
+  .urow .u b{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-weight:800;flex:0 0 auto}
+  .urow.on .u{background:var(--cta-soft);color:var(--ink);font-weight:700}
+  .mchk{display:grid;padding:4px 14px 10px}
+  .mchk label{display:flex;align-items:center;gap:10px;min-height:42px;font-size:15.5px;color:var(--ink-2);cursor:pointer}
+  .mchk input{width:20px;height:20px;accent-color:var(--cta);flex:0 0 auto}
 </style>
 </head>
 <body>
@@ -205,7 +215,7 @@
       <h1>내 학습 설정</h1>
       <p class="sub" id="lede"></p>
       <p class="sub" style="margin-top:8px"><a href="start.html" style="color:var(--red-2);font-weight:700">처음 설정 다시 하기 →</a>
-        <span style="color:var(--ink-4);font-size:13px"> 이름·학년·시험·범위·하루 분·알림을 한 화면에 하나씩 다시 정해요.</span></p>
+        </p>
     </div>
   </div>
 
@@ -225,12 +235,12 @@
 
   <section class="sec">
     <div class="sechd"><h2>학년</h2>
-      <span class="cap">학년에 따라 배우는 과목과 겨누는 시험이 달라집니다</span></div>
+    </div>
     <div class="grades" id="grades"></div>
-    <p class="note" id="gnote"></p>
+    <p class="note" id="gnote" hidden></p>
   </section>
 
-  <section class="sec">
+  <section class="sec" hidden>   <!-- 학생이 고를 일이 아니다. 학년에 맞춰 자동(2026-09-19 대표님) -->
     <div class="sechd"><h2>개념트리를 묶는 축</h2>
       <span class="cap">통합사회는 통합 과목이라 한 가지로 안 갈립니다</span></div>
     <div class="grades" id="axes"></div>
@@ -245,11 +255,11 @@
 
   <section class="sec">
     <div class="sechd"><h2>디자인</h2>
-      <span class="cap">고른 결은 이 브라우저에 남습니다</span></div>
+    </div>
     <div class="skins" id="skins"></div>
   </section>
 
-  <section class="sec">
+  <section class="sec" hidden>   <!-- 값·출간일 미정 안내는 학생 화면에서 뺀다(2026-09-19) -->
     <div class="sechd"><h2>구독</h2></div>
     <div class="plan" id="plan"></div>
   </section>
@@ -267,7 +277,7 @@
       ‘정치’와 ‘법과 사회’는 옛 <b>정치와 법</b>이 둘로 갈린 것이라 단원별로 나눠 담았습니다.</p>
   </section>
 
-  <section class="sec">
+  <section class="sec" hidden>   <!-- 값·출간일 미정 안내는 학생 화면에서 뺀다(2026-09-19) -->
     <div class="sechd"><h2>교재</h2><span class="cap" id="bkcap"></span></div>
     <div class="books" id="books"></div>
   </section>
@@ -283,9 +293,7 @@
   <section class="sec">
     <div class="sechd"><h2>기록 옮기기</h2>
       <span class="cap">폰을 바꾸기 전에 꺼내 두세요</span></div>
-    <p class="note" style="margin-bottom:var(--s2)">지금까지 푼 기록은 <b>이 기기 이 브라우저</b>에만
-      있습니다. 폰을 바꾸거나 브라우저 자료를 지우면 사라집니다. 아래에서 꺼내 두면
-      다른 기기에서 그대로 이어서 할 수 있어요.</p>
+    <p class="note" style="margin-bottom:var(--s2)">기록은 이 폰에만 있어요. 폰을 바꾸기 전에 꺼내 두세요.</p>
     <div class="keep">
       <button id="kexp" type="button">파일로 내보내기</button>
       <button id="kimp" type="button">파일에서 가져오기</button>
@@ -298,26 +306,26 @@
     <p class="keepsay" id="ksay"></p>
   </section>
 
-  <p class="note" style="margin-top:var(--s5)">설정은 이 브라우저에만 저장됩니다(localStorage).
+  <p class="note" hidden>설정은 이 브라우저에만 저장됩니다(localStorage).
     계정이 붙으면 그대로 옮겨 갑니다. <b>값이 정해지지 않은 것은 비워 두었습니다</b> —
     교재 값과 확장팩 값은 아직 정하지 않아 적지 않았습니다.</p>
 </div>
 
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/tree.js?v=ecaf03f7"></script>
-<script src="js/lecture.js?v=9bbbb16d"></script>
+<script src="js/tree.js?v=619e0fba"></script>
+<script src="js/lecture.js?v=b1f48c88"></script>
 <script src="js/video.js?v=267bdcea"></script>
-<script src="js/pool.js?v=4a7d39b1"></script>
-<script src="js/packs.js?v=c8178b32"></script>
-<script src="js/drills.js?v=82b6c52c"></script>
+<script src="js/pool.js?v=ad608681"></script>
+<script src="js/packs.js?v=2f880f28"></script>
+<script src="js/drills.js?v=9d14bfc8"></script>
 <script src="js/cards.js?v=bc64661b"></script>
-<script src="js/store.js?v=fd8d2eeb"></script>
+<script src="js/store.js?v=4a13680b"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
 <script src="js/loginui.js?v=4c82af4a"></script>
-<script src="js/coach.js?v=8dfc568e"></script>
-<script src="js/notify.js?v=a6c06818"></script>
+<script src="js/coach.js?v=41172bcc"></script>
+<script src="js/notify.js?v=dee63408"></script>
 <script>
 (function(){
   var T=TERRA;
@@ -355,44 +363,24 @@
     return 목록;
   })();
   function paintScope(){
-    var sc=T.scope(), M=T.scopeMids?T.scopeMids():{};
+    var M=T.scopeMids?T.scopeMids():{};
     function rootOn(code){ var r=T.BY[code]; return !!(r&&r.mids&&r.mids.some(function(m){ return M[m.code]; })); }
-    var 칸="";
+    var 줄="";
     Object.keys(BOOK).forEach(function(bk){
-      칸+='<div class="sc-book">'+bk+'</div>';
-      BOOK[bk].forEach(function(code){
-        var r=T.BY[code];
-        if(!r) return;
-        var on=rootOn(code), 든=r.mids.filter(function(m){ return M[m.code]; }).length;
-        var 몫=0;
-        r.mids.forEach(function(m){ m.leaves.forEach(function(l){ 몫+=T.mainCount(l); }); });
-        칸+='<button data-sc="'+code+'" aria-pressed="'+on+'">'+
-          '<b>'+esc(r.name)+'</b><small>'+(on&&든<r.mids.length?('중단원 '+든+' / '+r.mids.length):('지금 풀 수 있는 '+몫+'문항'))+'</small></button>';
+      줄+='<span class="bk">'+bk+'</span>';
+      BOOK[bk].forEach(function(code,k){
+        var r=T.BY[code]; if(!r) return;
+        var on=rootOn(code);
+        줄+='<div class="urow'+(on?' on':'')+'"><button type="button" class="u" data-sc="'+code+'" aria-pressed="'+on+'"><b>'+(k+1)+'단원</b>'+esc(r.name)+'</button>'+
+          (on?'<div class="mchk">'+r.mids.map(function(m){
+            return '<label><input type="checkbox" data-mid="'+m.code+'"'+(M[m.code]?' checked':'')+'><span>'+esc(String(m.name).replace(/\s*★.*$/,""))+'</span></label>'; }).join("")+'</div>':'')+
+          '</div>';
       });
-    });
-    /* ★ 범위에 든 대단원의 중단원 — 하나씩 넣고 빼고, 심화(★)도 중단원마다 (2026-09-17 대표님) */
-    var 중="";
-    ["A","B","C","D","E","F","G","H","I","J"].forEach(function(code){
-      var r=T.BY[code]; if(!r||!rootOn(code)) return;
-      중+='<div class="sc-mids"><div class="sc-mh">'+esc(r.name)+'<span>중단원을 눌러 넣고 뺍니다. 별은 심화 리프를 이 중단원에서 넣을지입니다.</span></div>'+
-        r.mids.map(function(m){
-          var on=!!M[m.code], 심화=m.leaves.some(function(l){ return l.grade==="심화"; }), deep=T.deepOn?T.deepOn(m.code):true;
-          var 몫=0; m.leaves.forEach(function(l){ 몫+=T.mainCount(l); });
-          return '<div class="sc-mid'+(on?' on':'')+'">'+
-            '<button class="mid" data-mid="'+m.code+'" aria-pressed="'+on+'"><b>'+esc(m.name)+'</b><small>'+몫+'문항'+(심화?', 심화 '+m.leaves.filter(function(l){return l.grade==="심화";}).length+'개':'')+'</small></button>'+
-            (심화&&on?'<button class="deep" data-deep="'+m.code+'" aria-pressed="'+deep+'" title="심화 넣기">★ 심화 '+(deep?'넣음':'뺌')+'</button>':'')+
-            '</div>';
-        }).join("")+'</div>';
     });
     document.getElementById("scope").innerHTML=
       '<div class="sc-quick">'+빠른.map(function(q,i){
         return '<button data-q="'+i+'">'+q.name+'</button>'; }).join("")+'</div>'+
-      '<div class="sc-grid">'+칸+'</div>'+중+
-      '<div class="sc-sum">'+(sc.length
-        ? '이번 시험 범위 <b>'+T.scopeName()+'</b>. '+
-          'Killer Drill과 오늘 할 일이 이 범위 안에서만 나옵니다.'
-        : '아직 안 정했습니다 — <b>전 범위</b>로 나옵니다. '+
-          '범위를 정하면 시험에 안 나올 단원이 빠져 시간을 아낍니다.')+'</div>';
+      '<div class="ulist">'+줄+'</div>';
     function 저장(cur){ T.setScope(cur); paintScope(); }
     document.querySelectorAll("[data-sc]").forEach(function(b){
       b.onclick=function(){
@@ -401,8 +389,8 @@
         저장(cur);
       };
     });
-    document.querySelectorAll("[data-mid]").forEach(function(b){
-      b.onclick=function(){
+    document.querySelectorAll("#scope [data-mid]").forEach(function(b){
+      b.onchange=function(){
         var mc=b.dataset.mid, rc=mc.charAt(0), r=T.BY[rc];
         var cur=T.scope().filter(function(x){ return x.charAt(0)!==rc; });   // 그 대단원 항목을 걷어내고 중단원으로 다시 쓴다
         var now=T.scopeMids?T.scopeMids():{};
@@ -412,15 +400,10 @@
         저장(cur);
       };
     });
-    document.querySelectorAll("[data-deep]").forEach(function(b){
-      b.onclick=function(){ T.setDeep(b.dataset.deep, b.getAttribute("aria-pressed")!=="true"); paintScope(); };
-    });
     document.querySelectorAll("[data-q]").forEach(function(b){
       b.onclick=function(){ 저장(빠른[+b.dataset.q].codes.slice()); };
     });
-    document.getElementById("scnote").innerHTML=
-      '대단원을 누르면 통째로 들어오고, 아래에서 중단원을 하나씩 넣고 뺄 수 있습니다. 학교마다 진도가 달라 같은 단원이라도 어디까지 나오는지가 다릅니다. '+
-      '★ 심화는 그 중단원의 심화 리프(교과서 밖 내신 심화)를 넣을지입니다. <b>사상가</b>는 <b>행복</b>이나 <b>사회 정의와 불평등</b>이 범위에 들면 따라 붙습니다.';
+    document.getElementById("scnote").hidden=true;
   }
   paintScope();
 
@@ -461,10 +444,7 @@
     var tm=document.getElementById("ntime2");
     if(tm&&N) tm.onchange=function(){ N.setAt(this.value); paintRt(); };
 
-    document.getElementById("rtnote").innerHTML=
-      '분은 <b>어림값</b>이에요 — 문항 하나에 50초, 강의는 실제 길이, 트레이닝 한 세트 3분으로 잡았습니다. '+
-      '학평 통합사회가 25문항 30분(문항당 72초)인데, 복습하는 문항은 이미 본 것이라 더 빠르다고 보았어요. '+
-      '리포트의 달력은 이 시간을 채운 날을 칠합니다.';
+    document.getElementById("rtnote").hidden=true;
   }
   paintRt();
 
@@ -481,8 +461,7 @@
       b.onclick=function(){ T.setGrade(b.dataset.g); paintAll(); };
     });
     var G=T.gradeInfo();
-    document.getElementById("lede").textContent=
-      "지금은 "+now+" 입니다. "+G.say;
+    document.getElementById("lede").textContent="";
     document.getElementById("gnote").innerHTML=
       "통합사회는 <b>고1 과목</b>입니다. 고2·고3 은 선택과목을 듣기 때문에, "+
       "학년을 바꾸면 문항 풀과 목표일, 권해 드리는 것이 함께 바뀝니다. "+

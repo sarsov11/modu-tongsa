@@ -61,7 +61,7 @@
         알림 한 줄에서 드러나야 학생이 연다. */
   function line() {
     var T = window.TERRA;
-    if (!T || !T.routine) return { t: "오늘 15분", b: "오늘 몫을 시작해요." };
+    if (!T || !T.routine) return { t: "오늘 15분", b: "15분만 해볼까요?" };
     var r = T.routine();
     var 시 = 다가온시험();
     /* 실전 모드는 알림도 달라야 한다 — "오늘 몇 분" 이 아니라 "오늘 시험" 이다 */
@@ -80,7 +80,7 @@
       ? (시.e.name + " " + 시.d.label + ", ") : "";
 
     if (r.done) {
-      return { t: 앞 + "오늘 몫을 끝냈어요",
+      return { t: 앞 + "오늘 할 것 다 했어요",
                b: 시 && 시.d.days <= 시험알림일수
                     ? "시험까지 " + 시.d.days + "일 남았어요."
                     : "더 풀 수 있어요." };
