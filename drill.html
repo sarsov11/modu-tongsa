@@ -1362,7 +1362,11 @@
     var pool=안.filter(function(x){ return tseen.indexOf(x.id)<0; });
     if(!pool.length){ tseen=[]; pool=안; }
     var it=pick(pool); tseen.push(it.id);
-    var rv=(TK.rival[it.w]||[]).filter(function(w){ return w!==it.w; });
+    /* 오답 후보도 범위 안 사람으로 — 「칸트 vs 벤담」처럼 이번 범위에 없는 이름은 안 낸다 */
+    var 안이름={}; 안.forEach(function(x){ 안이름[x.w]=1; });
+    var rv=(TK.rival[it.w]||[]).filter(function(w){ return w!==it.w && 안이름[w]; });
+    if(!rv.length) rv=Object.keys(안이름).filter(function(w){ return w!==it.w; });
+    if(!rv.length) rv=(TK.rival[it.w]||[]).filter(function(w){ return w!==it.w; });
     var other=rv.length?pick(rv):Object.keys(TK.people).filter(function(w){return w!==it.w;})[0];
     var opts=shuffle([it.w, other]);
     return {kind:"thinker", it:it, right:it.w, other:other,
