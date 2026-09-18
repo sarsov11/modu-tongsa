@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=873fa070">
-<link rel="stylesheet" href="css/coach.css?v=814d6969">
-<link rel="stylesheet" href="css/question.css?v=326c7f60">
+<link rel="stylesheet" href="css/coach.css?v=57f0f96e">
+<link rel="stylesheet" href="css/question.css?v=8db784a8">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .page{max-width:860px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -78,20 +78,20 @@
   <div id="host"></div>
 </div>
 
-<script src="js/tree.js?v=01584efd"></script>
-<script src="js/qbank.js?v=7c3de88c"></script>
+<script src="js/tree.js?v=8696fd11"></script>
+<script src="js/qbank.js?v=074be56e"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
 <script src="js/cardox.js?v=0e6d325d"></script>
-<script src="js/conceptq.js?v=47f884d9"></script>
+<script src="js/conceptq.js?v=9577894d"></script>
 <script src="js/cards.js?v=f1dd1e75"></script>
 <script src="js/keyword.js?v=810eff32"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/judge.js?v=43f690d4"></script>
-<script src="js/pool.js?v=17a135cb"></script>
+<script src="js/pool.js?v=b9bb4baa"></script>
 <script src="js/drills.js?v=9d14bfc8"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
 <script src="js/store.js?v=dfb93453"></script>
-<script src="js/qrender.js?v=23dd5e47"></script>
+<script src="js/qrender.js?v=baf2df9c"></script>
 <script src="js/naeshin.js?v=98cce591"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
@@ -141,7 +141,7 @@
       몸=몸.replace(/<ol class="opts5">[\s\S]*?<\/ol>/,'');
       host.innerHTML='<button class="back" id="back">← 목록</button>'+
         '<div class="grp" style="margin-top:0"><h2>'+esc(x.leaf.name)+'</h2><p class="sub">'+(i+1)+' / '+list_.length+'</p></div>'+
-        '<div class="stage"><div class="qcard"><div class="qtop"><span class="chip">'+'기출'+'</span>'+(q.lb?'<span class="chip">'+esc(q.lb)+'</span>':'')+'<span class="srcline">'+src(q)+'</span></div>'+
+        '<div class="stage"><div class="qcard"><div class="qtop"><span class="chip">'+'기출'+'</span>'+'<span class="srcline">'+src(q)+'</span></div>'+
         '<div class="qbody">'+몸+'<div class="opts'+(q.ff?' nums':'')+'">'+(q.ff?[0,1,2,3,4]:d.o.map(function(_,k){return k;})).map(function(k){
           return '<button class="opt" data-v="'+k+'"><span class="k">'+M.charAt(k)+'</span>'+(q.ff?'':'<span>'+(window.QRENDER?QRENDER.body(d.o[k]):esc(d.o[k]))+'</span>')+'</button>';
         }).join("")+'</div><div id="v"></div></div></div></div>';

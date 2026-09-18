@@ -62,6 +62,7 @@
 .boki p{ display:flex; gap:8px; margin:0 0 6px; }
 .boki p:last-child{ margin-bottom:0; }
 .boki .bk{ flex:0 0 auto; color:var(--ink-3); font-weight:600; }
+.boki .bt,.data .say .bt{ flex:1 1 0; min-width:0; }
 
 /* ── 표 ──────────────────────────────────── */
 .qtab{ overflow-x:auto; margin:0 0 14px; }
@@ -131,3 +132,6 @@
   .opts5 li,.picks .pick{ font-size:15.5px; }
   .picks.row .pick{ font-size:16px; padding:11px 4px; }
 }
+
+/* 끊을 자리 없는 긴 글(주소·점줄)이 상자를 뚫고 나가지 않게 */
+.data,.boki,.picks .pick .t,.opts5 .t{ overflow-wrap:anywhere; }

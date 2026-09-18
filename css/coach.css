@@ -150,3 +150,9 @@
 .wrapbox .flowbar .seg.next{background:var(--cta)}
 .wrapbox .autonext{margin:12px 0 0;font-size:15px;font-weight:600;color:var(--ink)}
 .wrapbox .autonext .cnt{font-family:var(--mono);color:var(--cta-2);font-weight:800}
+
+/* ★ 아래 띠를 없앤다(2026-09-19 대표님: "오늘 15분만 해볼까요가 왜 페이지 아래에 있음? 불필요함", X 를 눌러도 잘린 채 남는다).
+   권하는 말은 홈의 말풍선 하나로 모았다. 띠가 차지하던 아래 여백도 되돌린다. */
+.nextbar{display:none !important}
+body.hasnext{padding-bottom:calc(58px + env(safe-area-inset-bottom,0)) !important}
+@media(min-width:881px){ body.hasnext{padding-bottom:0 !important} }

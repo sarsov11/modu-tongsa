@@ -14,8 +14,8 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=873fa070">
-<link rel="stylesheet" href="css/coach.css?v=814d6969">
-<link rel="stylesheet" href="css/question.css?v=326c7f60">
+<link rel="stylesheet" href="css/coach.css?v=57f0f96e">
+<link rel="stylesheet" href="css/question.css?v=8db784a8">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .page{max-width:860px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -120,20 +120,20 @@
   <div id="host"></div>
 </div>
 
-<script src="js/tree.js?v=01584efd"></script>
-<script src="js/qbank.js?v=7c3de88c"></script>
+<script src="js/tree.js?v=8696fd11"></script>
+<script src="js/qbank.js?v=074be56e"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
 <script src="js/cardox.js?v=0e6d325d"></script>
-<script src="js/conceptq.js?v=47f884d9"></script>
+<script src="js/conceptq.js?v=9577894d"></script>
 <script src="js/cards.js?v=f1dd1e75"></script>
 <script src="js/keyword.js?v=810eff32"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/judge.js?v=43f690d4"></script>
-<script src="js/pool.js?v=17a135cb"></script>
+<script src="js/pool.js?v=b9bb4baa"></script>
 <script src="js/drills.js?v=9d14bfc8"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
 <script src="js/store.js?v=dfb93453"></script>
-<script src="js/qrender.js?v=23dd5e47"></script>
+<script src="js/qrender.js?v=baf2df9c"></script>
 <script src="js/skills.js?v=977fed69"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
@@ -221,7 +221,7 @@
     /* 순서도 문항은 (나) 그림의 낱말이 글로 흩어져 들어온다 — 그림은 아래에 다시 그리므로 그 줄은 뺀다 */
     if(opts.flowText) 몸=몸.replace(esc(opts.flowText),'');
     return '<div class="qcard"><div class="qtop">'+
-      '<span class="chip">'+esc(opts.label||"기출")+'</span>'+(q.lb?'<span class="chip">'+esc(q.lb)+'</span>':'')+
+      '<span class="chip">'+esc(opts.label||"기출")+'</span>'+
       '<span class="srcline">'+src(q)+'</span></div>'+
       '<div class="qbody">'+몸+(opts.extra||"")+'</div></div>';
   }

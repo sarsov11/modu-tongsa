@@ -15,7 +15,7 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=873fa070">
-<link rel="stylesheet" href="css/coach.css?v=814d6969">
+<link rel="stylesheet" href="css/coach.css?v=57f0f96e">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:1360px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -352,10 +352,10 @@
 </div>
 
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/tree.js?v=01584efd"></script>
-<script src="js/lecture.js?v=a5f5a102"></script>
+<script src="js/tree.js?v=8696fd11"></script>
+<script src="js/lecture.js?v=0756db6e"></script>
 <script src="js/video.js?v=267bdcea"></script>
-<script src="js/pool.js?v=17a135cb"></script>
+<script src="js/pool.js?v=b9bb4baa"></script>
 <script src="js/drills.js?v=9d14bfc8"></script>
 <script src="js/cards.js?v=f1dd1e75"></script>
 <script src="js/store.js?v=dfb93453"></script>
@@ -1263,7 +1263,7 @@
       var col=lt==="S"?GOLD:tone(n.fam,lt,paper()?14:0);
       var mine=todayLec()&&todayLec().code===x.code;
       return '<div class="lec'+(mine?" today":"")+'" data-code="'+x.code+'">'+
-        '<span class="no">'+x.no+'</span>'+
+        /* ★ 0919 대표님 「63 64 65 이런 번호는 학생에게 혼란을 주니까 보이게 하지마」 — x.no 는 데이터에만 둔다 */
         '<span class="mid"><h4>'+x.title+
         (mine?'<span class="todaytag">오늘</span>':'')+'</h4>'+
         '<span class="meta"><span class="g'+(x.grade==="핵심"?" core":"")+'">'+x.grade+'</span>'+
