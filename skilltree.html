@@ -352,8 +352,8 @@
 </div>
 
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/tree.js?v=c7593fc6"></script>
-<script src="js/lecture.js?v=207a14bb"></script>
+<script src="js/tree.js?v=ab9485f7"></script>
+<script src="js/lecture.js?v=62c36405"></script>
 <script src="js/video.js?v=267bdcea"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
@@ -1270,8 +1270,7 @@
         '<span class="meta"><span class="g'+(x.grade==="핵심"?" core":"")+'">'+x.grade+'</span>'+
         '<span>풀 수 있는 '+x.play+'</span>'+
         (ls.solved?'<span>성취도 '+ls.achieve+'%</span>':'<span>아직 안 풂</span>')+'</span>'+
-        (x.chap.length?'<span class="chips">'+x.chap.map(function(c){
-          return '<span>'+c+'</span>'; }).join("")+'</span>':'')+
+        /* 출제 의도 칩은 뺐다 — 세계지리 문항의 「몬순 아시아…」가 통합사회 리프에 붙어 나갔다(2026-09-18 대표님) */
         '<span class="bar"><i style="width:'+Math.max(2,ls.achieve)+'%;background:'+col+
         '"></i></span></span>'+
         '<span class="go">'+(function(){
