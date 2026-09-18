@@ -22,7 +22,7 @@
   border-radius:var(--r1); padding:17px 19px; margin:0 0 14px;
   background:var(--surface-2); border:1px solid var(--line);
   border-left:3px solid var(--mint);
-  font-size:15.5px; line-height:1.86; color:var(--ink-2);
+  font-size:16px; line-height:1.8; color:var(--ink); font-weight:500;
   word-break:keep-all;
 }
 .data p{ margin:0 0 8px; }

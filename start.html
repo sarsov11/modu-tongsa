@@ -11,8 +11,8 @@
 <meta name="theme-color" content="#08090B">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=8f6afdbf">
-<link rel="stylesheet" href="css/question.css?v=c76ab87d">
+<link rel="stylesheet" href="css/base.css?v=29536c03">
+<link rel="stylesheet" href="css/question.css?v=8facc44b">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   /* ── 처음 오는 학생을 위한 화면 — 한 화면에 질문 하나, 단추 하나 ──
@@ -143,6 +143,7 @@
   .mrow2.on .m{border-color:var(--cta);background:var(--cta-soft);color:var(--ink)}
   .mrow2 .dp{flex:0 0 auto;padding:0 11px;border-radius:10px;border:1px solid var(--line-2);background:var(--surface);color:var(--ink-3);font-family:var(--kr);font-size:13px;font-weight:800;cursor:pointer}
   .mrow2 .dp[aria-pressed="true"]{border-color:var(--amber);color:var(--amber)}
+  .qsrc{font-size:14px;font-weight:700;color:var(--ink-3);margin:-4px 0 10px}
 </style>
 </head>
 <body>
@@ -161,11 +162,11 @@
 <script src="js/qbank.js?v=f6d1a6a6"></script>
 <script src="js/lecture.js?v=207a14bb"></script>
 <script src="js/video.js?v=b02e3de6"></script>
-<script src="js/qrender.js?v=81abf19b"></script>
+<script src="js/qrender.js?v=a434b257"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/cards.js?v=5f7c4002"></script>
+<script src="js/cards.js?v=4e5efe41"></script>
 <script src="js/store.js?v=62205939"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
@@ -324,11 +325,6 @@
         var 프리셋인가=presets.some(function(k){ return same(A.scope,B[k].mids||B[k].roots); });
         if(!프리셋인가 && A.scope.length){ un.hidden=false; tg.setAttribute("aria-expanded","true"); tg.textContent="단원 접기"; }
         tg.onclick=function(){ var open=un.hidden; un.hidden=!open; tg.setAttribute("aria-expanded",open); tg.textContent=open?"단원 접기":"단원을 직접 고를게요"; }; })();
-      (function(){ var tg=el("unitstoggle"), un=el("units"); if(!tg) return;
-        /* 프리셋과 다른 범위면 처음부터 펼쳐 둔다 */
-        var 프리셋인가=presets.some(function(k){ return same(A.scope,B[k].mids||B[k].roots); });
-        if(!프리셋인가 && A.scope.length){ un.hidden=false; tg.setAttribute("aria-expanded","true"); tg.textContent="단원 접기"; }
-        tg.onclick=function(){ var open=un.hidden; un.hidden=!open; tg.setAttribute("aria-expanded",open); tg.textContent=open?"단원 접기":"단원을 직접 고를게요"; }; })();
       st.querySelectorAll(".units .u").forEach(function(b){ b.onclick=function(){ var c=b.dataset.r;
         if(rootIn(c)) A.scope=A.scope.filter(function(x){ return x.charAt(0)!==c; }); else A.scope.push(c); paint(); }; });
       paintMids();
@@ -370,6 +366,7 @@
         var q=qs[k], d=Q[q.id];
         var 몸=window.QRENDER?QRENDER.html(d,q,{}):esc(d.q);
         el("qhost").innerHTML='<div class="qwrap"><div class="qn">'+(k+1)+' / '+qs.length+', '+esc(T.BY[q.leaf]?T.BY[q.leaf].name:"")+'</div>'+
+          '<div class="qsrc">'+esc(window.QRENDER&&QRENDER.출처?QRENDER.출처(q):"")+'</div>'+
           '<div class="qbody">'+몸.replace(/<ol class="opts5">[\s\S]*?<\/ol>/,'')+'</div>'+
           '<div class="opts">'+d.o.map(function(o,z){ return '<button class="opt" data-v="'+z+'"><span class="k">'+"①②③④⑤".charAt(z)+'</span><span>'+(window.QRENDER?QRENDER.body(o):esc(o))+'</span></button>'; }).join("")+'</div>'+
           '<div id="qsay"></div></div>';
@@ -405,11 +402,22 @@
   };
 
   /* 세 문항 — 범위 안 리프 셋에서 글로 풀리는 것 하나씩. 같은 날은 같은 문항 */
+  /* ★ 첫 진단 3문항은 첫인상이다 — 빈칸(㉠)·(가)(나) 갈래·대화·표·긴 자료가 든 문항은 뽑지 않는다(2026-09-18 대표님 "무조건 고퀄") */
+  function 깔끔한가(d){
+    var q=String(d.q||""), a=String(d.d||""), 전체=q+" "+a;
+    if(/[㉠-㉭]/.test(전체)) return false;                      // 빈칸·참조 기호
+    if(/\((가|나|다|라)\)/.test(a)) return false;                // 갈래 자료
+    if(/[가-힣]{1,3}\s*[::]\s/.test(a) || /◦|•|▪|■/.test(a)) return false;   // 대화·항목 자료
+    if(a.length>220) return false;                              // 긴 자료
+    if(/그림|그래프|표는|표의|지도|자료는|자료의|사진/.test(q)) return false;   // 도판 의존
+    if(d.b || (d.t&&d.t.length)) return false;                  // 보기 상자·표
+    return (d.o||[]).every(function(o){ return String(o).length<=70; });
+  }
   function 고르기(n){
     var 후보=(T.오늘의리프?T.오늘의리프({전부:true}):[]), out=[], seen={};
     for(var z=0; z<후보.length && out.length<n; z++){
       var l=후보[z].leaf; if(seen[l.mid.root.code]) continue;
-      var qs=(l.play||[]).filter(function(q){ var d=Q[q.id]; return d && q.id.charAt(0)==="T" && !d.g && !q.ff && d.o && d.o.length>=4 && (!window.QRENDER||QRENDER.ok(d,q)) && !S.ans[q.id]; });
+      var qs=(l.play||[]).filter(function(q){ var d=Q[q.id]; return d && q.id.charAt(0)==="T" && !d.g && !q.ff && !q.fig && d.o && d.o.length>=4 && (!window.QRENDER||QRENDER.ok(d,q)) && !S.ans[q.id] && 깔끔한가(d); });
       if(!qs.length) continue;
       var pick=qs[Math.floor(T.seed("ob"+T.dayKey()+l.code)*qs.length)%qs.length];
       out.push(pick); seen[l.mid.root.code]=1;

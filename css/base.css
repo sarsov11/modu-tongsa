@@ -220,7 +220,7 @@
   --bg:#FAF8F3; --bg-2:#F3F0E8; --surface:#FFFFFF; --surface-2:#F3F0E8;
   --surface-3:#ECE8DE;
   --line:#E6E1D6; --line-2:#D9D3C5; --line-3:#BDB6A6;
-  --ink:#1F2430; --ink-2:#5B6170; --ink-3:#8A8F9C; --ink-4:#AEB2BC;
+  --ink:#171B24; --ink-2:#2B3140; --ink-3:#5C6371; --ink-4:#8A8F9C;   /* 2026-09-18 대표님 "글씨가 회색이라 흐릿" — 본문을 검정에 가깝게 */
 
   /* 빨강은 오답·경고에만 (수학의 retry 주황빨강) */
   --red:#C2410C; --red-2:#A8380A; --red-3:#8C2E08;

@@ -109,7 +109,7 @@
      조건: 갈래 표시가 둘 이상이고 갈래마다 글이 25자 이상(「(가) 시기와 비교한 (나) 시기」 같은 본문 속 참조는 손대지 않는다)
            또는 ◦ 항목이 갈래 안에 있을 때. */
   var _갈래머리 = /\((가|나|다|라|마|바)\)/g;
-  var _불릿 = /[◦•○▪■]/;
+  var _불릿 = /[◦•▪■]/;
   function 갈래나누기(t) {
     var s = String(t || "");
     var marks = s.match(_갈래머리) || [];
@@ -136,12 +136,12 @@
   }
   function 항목나누기(t) {
     var s = String(t || "").trim();
-    var parts = s.split(/\s*(?=[◦•○▪■])/).filter(function (x) { return x.trim(); });
-    var bullets = parts.filter(function (x) { return /^[◦•○▪■]/.test(x); });
+    var parts = s.split(/\s*(?=[◦•▪■])/).filter(function (x) { return x.trim(); });
+    var bullets = parts.filter(function (x) { return /^[◦•▪■]/.test(x); });
     if (bullets.length >= 2) {
-      var lead = parts.filter(function (x) { return !/^[◦•○▪■]/.test(x); }).join(" ").trim();
+      var lead = parts.filter(function (x) { return !/^[◦•▪■]/.test(x); }).join(" ").trim();
       return (lead ? '<p>' + 본문(lead) + '</p>' : '') +
-        '<ul class="bul">' + bullets.map(function (x) { return '<li>' + 본문(x.replace(/^[◦•○▪■]\s*/, "")) + '</li>'; }).join("") + '</ul>';
+        '<ul class="bul">' + bullets.map(function (x) { return '<li>' + 본문(x.replace(/^[◦•▪■]\s*/, "")) + '</li>'; }).join("") + '</ul>';
     }
     var 대화 = 화자나누기(s);
     return 대화 || 본문(s);
@@ -461,7 +461,17 @@
     return true;
   }
 
+  /* 출처 한 줄 — "고1 2024년 3월 학력평가 12번" (2026-09-18 대표님: 문제 출처 표기) */
+  function 출처(q) {
+    if (!q) return "";
+    var g = q.g || "", d = String(q.d || ""), n = q.n ? q.n + "번" : "";
+    if (/예시문항|예비/.test(g) || /^예비/.test(String(q.img || ""))) return "2028학년도 수능 예시문항 " + n;
+    var m = d.match(/^(\d{4})-(\d{2})/);
+    var 언제 = m ? (m[1] + "년 " + String(parseInt(m[2], 10)) + "월 학력평가") : d;
+    return [g, 언제, n].filter(Boolean).join(" ");
+  }
   window.QRENDER = {
+    출처: 출처,
     html: 문항HTML, picks: 선지단추, ok: 텍스트로되나,
     esc: esc, body: 본문, MARK: 동그라미
   };
