@@ -891,12 +891,14 @@
       ? Math.round(gr.items.reduce(function(s2,x){ return s2+x.st.achieve; },0)/gr.items.length)
       : 0;
     var lec=gr.items.reduce(function(s2,x){ return s2+x.lec.length; },0);
-    coreOrb(g,hue,gr.name,(HASV?lec+"강, ":"")+"성취도 "+av+"%",function(){ if(!busy) goFam(f,L.CX,L.CY); });
-    var back=txt(g,"↑ 눌러서 "+(FAM[f].label||f)+" 로",{x:L.CX,y:L.CY+L.rCore+22,"text-anchor":"middle",
+    var 한갈래=narrow()&&MODEL[f].groups.length===1;
+    function 위로(){ if(busy) return; if(한갈래) goAll(); else goFam(f,L.CX,L.CY); }
+    coreOrb(g,hue,gr.name,"",위로);
+    var back=txt(g,"↑ 눌러서 "+(한갈래?"전체로":(FAM[f].label||f)+" 로"),{x:L.CX,y:L.CY+L.rCore+22,"text-anchor":"middle",
       fill:SINK2,"font-size":Math.round(L.fSub+1),"font-weight":600,
       "font-family":cv("--kr"),opacity:".85"});
     back.style.cursor="pointer";
-    back.addEventListener("click",function(){ if(!busy) goFam(f,L.CX,L.CY); });
+    back.addEventListener("click",위로);
     unstack(g,L.CX,L.CY);
   }
 
@@ -1071,6 +1073,8 @@
     },620);
   }
   function goFam(f,ox,oy){
+    /* 폰에서 갈래가 하나뿐이면 원 하나짜리 층 1 은 건너뛴다(2026-09-18 대표님 "저 화면 불필요하잖아") */
+    if(narrow() && MODEL[f] && MODEL[f].groups.length===1){ fam=f; return goGroup(MODEL[f].groups[0],ox,oy); }
     var back=(level===2);
     fam=f; grp=null; level=1;
     swap(function(g){ drawFam(g,f); },ox,oy,back?-1:1);
@@ -1097,6 +1101,12 @@
       var 시험0=(T.scopeOn&&T.scopeOn()&&T.기본범위지금&&T.기본범위지금())||null;
       document.getElementById("plateTitle").textContent=시험0?(시험0.name+" 범위"):"통합사회";
       document.getElementById("plateSub").textContent=시험0?(FAMS.map(function(f){ return FAM[f].label||f; }).join(", ")):AX.name;
+    }else if(level===2&&grp&&narrow()){
+      /* 폰은 이름 하나만 — 「통합사회 › 1단원 › 인권 보장과 헌법」 세 줄로 접히던 것(2026-09-18) */
+      c.innerHTML='<span class="swapin">'+grp.name+'</span>';
+      document.getElementById("lede").textContent="";
+      document.getElementById("plateTitle").textContent=grp.name;
+      document.getElementById("plateSub").textContent="원을 누르면 강의와 문제가 열려요";
     }else if(level===2&&grp){
       c.innerHTML='<button class="up" id="upbtn">통합사회</button>'+
         '<span class="sep">›</span>'+
@@ -1139,7 +1149,8 @@
     /* ★ 묶음 층을 건너뛴 화면에서는 level 1 이 곧 첫 화면이라 올라갈 곳이 없다.
        그래도 단추를 두면 눌렀을 때 단추 하나짜리 빈 방이 나온다. */
     b.hidden=(level===0) || (묶음건너뜀 && level<=1);
-    b.textContent=(level===2&&fam)
+    var 한갈래=level===2&&fam&&narrow()&&MODEL[fam]&&MODEL[fam].groups.length===1;   // 폰에서 층 1 을 건너뛴 화면
+    b.textContent=(level===2&&fam&&!한갈래)
       ? ("← "+(묶음건너뜀 ? "단원 전체" : (FAM[fam].label||fam)))
       : "← 전체";
   }
@@ -1147,7 +1158,8 @@
     var bb=document.getElementById("backbtn");
     if(bb) bb.onclick=function(){
       if(busy) return;
-      if(level===2&&fam) goFam(fam,LAY.CX,LAY.CY);
+      if(level===2&&fam&&narrow()&&MODEL[fam]&&MODEL[fam].groups.length===1) goAll();   // 층 1 을 건너뛴 폰 화면은 전체로
+      else if(level===2&&fam) goFam(fam,LAY.CX,LAY.CY);
       else if(!묶음건너뜀) goAll();      /* 건너뛴 화면에는 내려갈 묶음 층이 없다 */
     };
     var host=document.getElementById("segs");
@@ -1234,7 +1246,7 @@
 
   function openSheet(n){
     var t=TIER[n.tier];
-    document.getElementById("shEyebrow").textContent=n.fam+", "+n.root.code+" "+n.root.name;
+    document.getElementById("shEyebrow").textContent=n.root.name;
     document.getElementById("shTitle").textContent=n.full;
     var 학년=(T.state().student||{}).grade||"고1";
     var 지금 = 학년!=="고3"
@@ -1243,19 +1255,10 @@
                 : '학교에서 아직 안 배웠어요')+'</span>'
       : '';
     document.getElementById("shFacts").innerHTML= 지금 +
-      '<span class="fact"><b>'+n.lec.length+'</b>강</span>'+
-      '<span class="fact">예상 <b>'+n.mins+'</b>분</span>'+
-      '<span class="fact">기출 <b>'+n.st.n+'</b>문항</span>'+
-      '<span class="fact">여기서만 <b>'+n.own+'</b>문항</span>'+
-      '<span class="fact">학습 무게 <b>'+n.wt+'</b></span>'+
+      (HASV?'<span class="fact"><b>'+n.lec.length+'</b>강</span>':'')+
       '<span class="fact" style="color:'+(n.tier==="S"?GOLD:tone(n.fam,n.tier,paper()?14:0))+
       '">'+howFar(n.st)+(n.st.solved?", "+n.st.achieve+"%":"")+'</span>';
-    document.getElementById("shNote").innerHTML=
-      '<b>학습 무게</b>는 기출 수가 아닙니다. 한 문항이 여러 개념에 걸쳐 나오기 때문에, '+
-      '<b>여기서만 나오는 문항</b>은 온전히 세고 여러 곳에 걸친 문항은 나눠 셌습니다. '+
-      '여기에 안에서 몇 갈래로 갈리는지를 곱했습니다. '+
-      '이 단원은 여기서만 나오는 문항이 <b>'+n.own+'</b>개, 서로 다른 갈래가 <b>'+n.eff+'</b>개입니다. '+
-      '강의 길이는 아직 녹화 전이라 <b>예상</b>입니다.';
+    document.getElementById("shNote").hidden=true;   // 학습 무게·예상 길이 설명은 뺐다(2026-09-18 대표님)
     document.getElementById("shList").innerHTML=n.lec.map(function(x){
       var ls=T.leafStat(x.code), lt=tierOf(ls.achieve,ls.solved>0);
       var col=lt==="S"?GOLD:tone(n.fam,lt,paper()?14:0);
@@ -1265,7 +1268,6 @@
         '<span class="mid"><h4>'+x.title+
         (mine?'<span class="todaytag">오늘</span>':'')+'</h4>'+
         '<span class="meta"><span class="g'+(x.grade==="핵심"?" core":"")+'">'+x.grade+'</span>'+
-        '<span>예상 '+x.min+'분</span><span>기출 '+x.n+'</span>'+
         '<span>풀 수 있는 '+x.play+'</span>'+
         (ls.solved?'<span>성취도 '+ls.achieve+'%</span>':'<span>아직 안 풂</span>')+'</span>'+
         (x.chap.length?'<span class="chips">'+x.chap.map(function(c){
@@ -1276,15 +1278,12 @@
           var V=(window.VIDEO||{})[x.code];
           /* ★ 항목은 있는데 주소가 둘 다 비면(배포판 — 영상을 못 올린 편) 준비 중으로.
              단추만 살아 있으면 "눌러도 안 나오는 강의" 가 된다. */
-          if(!V || !(V.web||V.local)) return '<button class="btn quiet soon" disabled>강의 준비 중</button>';
-          return '<button class="btn play" data-leaf="'+x.code+'">강의 '+V.min+'분</button>';
+          if(!V || !(V.yt||V.web||V.local)) return '<button class="btn quiet soon" disabled>강의 준비 중</button>';
+          return '<button class="btn play" data-leaf="'+x.code+'">강의 보기</button>';
         })()+
         (x.play?'<a class="btn ghost" href="study.html?leaf='+x.code+'">문제 '+x.play+'</a>':'')+
         '</span></div>';
-    }).join("")+
-    '<p style="font-size:12px;color:var(--ink-4);margin-top:14px;line-height:1.7">'+
-    '강의는 만든 것부터 올라갑니다. 길이가 적힌 것은 바로 볼 수 있고, '+
-    '나머지는 편성과 예상 길이만 잡아 둔 상태입니다.</p>';
+    }).join("");
     sheet.hidden=false;
     requestAnimationFrame(function(){ sheet.classList.add("on"); });
     document.body.style.overflow="hidden";
@@ -1364,8 +1363,7 @@
     document.getElementById("pkQ").textContent=FAM[f].sub;
     document.getElementById("pkBody").innerHTML=
       '<div class="pk-stats"><div><b>'+M.lec+'</b><span>강</span></div>'+
-      '<div><b>'+Math.round(M.mins/60)+'</b><span>예상 시간</span></div>'+
-      '<div><b>'+M.n.toLocaleString()+'</b><span>기출</span></div></div>'+
+      '</div>'+
       '<div class="pk-keys">'+M.groups.map(function(g2){
         return '<span class="pk-key">'+g2.name+'</span>'; }).join("")+'</div>'+
       '<div class="pk-foot">눌러서 들어가기</div>';
@@ -1377,12 +1375,12 @@
     var t=TIER[n.tier], st=n.st;
     document.getElementById("pkEyebrow").textContent=n.root.code+" "+n.root.name;
     var tc=document.getElementById("pkTier");
-    tc.textContent=n.tier==="L"?"미착수":t.n;
+    tc.textContent=n.tier==="L"?"아직 안 함":t.n;
     tc.style.background=n.tier==="S"?GOLD:tone(n.fam,n.tier);
     tc.style.color=(n.tier==="C"||n.tier==="L")?SBG2:SBG;
     document.getElementById("pkTitle").textContent=n.full;
     document.getElementById("pkQ").textContent=
-      n.lec.length+"강, 예상 "+n.mins+"분, 지금 풀 수 있는 기출 "+st.play+"문항";
+      (HASV?n.lec.length+"강, ":"")+"지금 풀 수 있는 기출 "+st.play+"문항";
     var ls=n.ref.leaves.map(function(l){ return T.leafStat(l.code); });
     var bars=ls.length?('<div class="pk-bars">'+ls.slice(0,10).map(function(s){
       var tk=tierOf(s.achieve,s.solved>0);
@@ -1391,9 +1389,7 @@
         (tk==="S"?GOLD:tone(n.fam,tk))+';opacity:'+(s.solved?1:.4)+'"></i></span>';
     }).join("")+'</div><div class="pk-cap">강별 성취도</div>'):"";
     document.getElementById("pkBody").innerHTML=
-      '<div class="pk-stats"><div><b>'+st.achieve+'%</b><span>성취도</span></div>'+
-      '<div><b>'+n.wt+'</b><span>학습 무게</span></div>'+
-      '<div><b>'+n.own+'</b><span>여기서만</span></div></div>'+bars+
+      '<div class="pk-stats"><div><b>'+st.achieve+'%</b><span>성취도</span></div></div>'+bars+
       '<div class="pk-keys">'+n.lec.slice(0,5).map(function(x){
         return '<span class="pk-key">'+x.title+'</span>'; }).join("")+'</div>'+
       '<div class="pk-foot">눌러서 강의 목록 열기</div>';
@@ -1439,7 +1435,7 @@
             (x.tier==="L"?.55:1)+'"></span>'+
             '<span class="nm">'+x.name+'</span>'+
             '<span class="pc">'+x.lec.length+'강, '+
-            (x.tier==="L"?"미착수":x.st.achieve+"%")+'</span></div>';
+            (x.tier==="L"?"아직 안 함":x.st.achieve+"%")+'</span></div>';
         }).join("")+'</div>';
     }).join("");
     host.querySelectorAll("[data-mid]").forEach(function(b){
@@ -1460,8 +1456,7 @@
   /* ══════ 범례·주석 ══════ */
   function legend(){
     var f=fam||"지리";
-    var size='<span class="sz">원 크기<i style="width:9px;height:9px"></i>'+
-             '<i style="width:16px;height:16px"></i>학습 무게</span>';
+    var size='';
     document.getElementById("legend").innerHTML=(level===1
       ? ["S","A","B","C","L"].map(function(k){
           return '<span class="k"><i class="dot" style="background:'+
@@ -1524,9 +1519,7 @@
         (bq&&bq.근거==="추정"
           ? ' <b>1학기 범위는 추정</b>이라 학교와 다를 수 있습니다 — 설정에서 고쳐 주세요.'
           : '') +
-        '<br><b>원 크기는 기출 수가 아니라 학습 무게</b>입니다. 한 문항이 여러 개념에 ' +
-        '걸쳐 나오기 때문에, 여기서만 나오는 문항은 온전히, 여러 곳에 걸친 문항은 나눠 ' +
-        '셌습니다. 성취도는 이 브라우저에 쌓인 학습 기록입니다.';
+        '';
       return;
     }
     var why = axisName()==="교과서"
@@ -1542,12 +1535,7 @@
         '가운데 어디서 다시 만나는지로 갈랐습니다. 다만 통합사회는 통합 과목이라 깨끗하게 '+
         '안 갈리는 단원이 있습니다(사회 정의와 불평등은 일반사회 55%·윤리 43%). ';
     document.getElementById("note").innerHTML= why +
-      '설정에서 묶는 축을 바꿀 수 있습니다.<br>' +
-      '<b>원 크기는 기출 수가 아니라 학습 무게</b>입니다. 한 문항이 여러 개념에 걸쳐 나오기 때문에'+
-      '(두 곳 이상에 걸친 문항 850개) 기출 수로만 재면 빌려온 문항까지 자기 몫이 됩니다. '+
-      '여기서만 나오는 문항은 온전히, 여러 곳에 걸친 문항은 나눠 세고 안에서 몇 갈래로 갈리는지를 곱했습니다 '+
-      '— 그래서 준법·시민 참여(기출 92, 여기서만 5)보다 노동권(기출 119, 여기서만 17)이 크게 나옵니다. '+
-      '성취도는 이 브라우저에 쌓인 학습 기록이고, 강의 길이는 아직 녹화 전이라 예상입니다.';
+      '설정에서 묶는 축을 바꿀 수 있습니다.';
   }
 
   /* ══════ 시작 ══════ */
