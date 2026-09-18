@@ -702,7 +702,9 @@
     s2mid: { name: "2학기 중간고사", 과목: "통합사회 2", 단원: "1단원(헌법의 역할까지)·2·4단원",
              roots: ["F", "G", "I"], 근거: "실측",
              /* ★ 1단원은 권력분립(F3)까지 — 준법·시민 참여(F4)·노동권(F5)·국내외 인권(F6)은 이번 범위 밖(2026-09-17 대표님) */
-             mids: ["F1", "F2", "F3", "G", "I"] },
+             mids: ["F1", "F2", "F3", "G", "I"],
+             /* ★ "권력 분립까지" — 국가 기관(F3) 가운데 지방 자치·주민 참여(F3.6)는 시민 참여 쪽이라 뺀다(2026-09-18 대표님) */
+             drop: ["F3.6"] },
     s2fin: { name: "2학기 기말고사", 과목: "통합사회 2", 단원: "3·5단원",
              roots: ["H", "J"], 근거: "실측" },
     /* ★ 1학기(통합사회 1) 는 **추정**이다. 서문여고에서 확인된 것은 통사2 뿐이라,
@@ -1708,8 +1710,18 @@
     return false;
   }
   /* 리프 하나가 범위 안인가 — 중영역이 범위 안이고, 심화(★) 리프면 그 중영역의 심화가 켜져 있어야 한다 */
+  /* 지금 범위가 학교 프리셋과 같은 묶음이면 그 프리셋이 빼기로 한 리프(drop)를 적용한다 */
+  function 범위드롭() {
+    var sc = scope().slice().sort().join(","), B = 기본범위;
+    for (var k in B) {
+      var b = B[k]; if (!b || !b.drop || !b.mids) continue;
+      if (b.mids.slice().sort().join(",") === sc) return b.drop;
+    }
+    return [];
+  }
   function inScopeLeaf(leafCode) {
     if (!scope().length) return true;
+    if (범위드롭().indexOf(leafCode) >= 0) return false;
     var l = BY[leafCode];
     if (!l || !l.mid) return inScope(String(leafCode || "").charAt(0));
     if (!inScopeMid(l.mid.code)) return false;
