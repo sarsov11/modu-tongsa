@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>홈 시안 — 모두의 통사</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="css/base.css">
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<style>
+  body{margin:0}
+  .pick{position:sticky;top:0;z-index:20;display:flex;gap:6px;padding:10px 14px;background:var(--bg);border-bottom:1px solid var(--line)}
+  .pick button{flex:1;padding:10px 6px;border-radius:999px;border:1.5px solid var(--line-2);background:var(--surface);color:var(--ink-2);font:inherit;font-weight:700;font-size:14.5px}
+  .pick button[aria-pressed="true"]{background:var(--cta);border-color:var(--cta);color:#fff}
+  .v{display:none;max-width:520px;margin:0 auto;padding:22px 18px 110px}
+  .v.on{display:block}
+  .dd{font-size:15px;font-weight:700;color:var(--ink-3)} .dd b{color:var(--cta);font-family:var(--mono);font-weight:800}
+  h1{font-size:27px;line-height:1.3;margin:6px 0 0;letter-spacing:-.03em;font-weight:900;color:var(--ink)}
+  .big{display:block;width:100%;margin-top:18px;padding:19px 16px;border:0;border-radius:var(--r2);background:var(--cta);color:#fff;font:inherit;font-size:19px;font-weight:800;text-align:center;text-decoration:none;box-sizing:border-box}
+  .sub2{display:flex;gap:8px;margin-top:10px}
+  .sub2 a{flex:1;padding:13px 8px;border-radius:var(--r1);border:1.5px solid var(--line-2);background:var(--surface);color:var(--ink-2);font-weight:700;font-size:15px;text-align:center;text-decoration:none}
+  .other{display:block;margin:22px auto 0;padding:10px;border:0;background:none;color:var(--ink-3);font:inherit;font-size:15px;font-weight:700;text-decoration:underline;text-underline-offset:4px}
+  .sheet{margin-top:14px;display:grid;gap:8px}
+  .sheet[hidden]{display:none}
+  .sheet a{display:flex;justify-content:space-between;align-items:center;padding:15px 16px;border-radius:var(--r1);border:1.5px solid var(--line-2);background:var(--surface);color:var(--ink);font-weight:700;font-size:16px;text-decoration:none}
+  .sheet a span{font-weight:500;font-size:14px;color:var(--ink-4)}
+  .box{margin-top:20px;padding:20px 18px;border-radius:var(--r3);border:1.5px solid var(--line-2);background:var(--surface)}
+  .box .k{font-size:14px;font-weight:800;color:var(--cta)} .box .t{font-size:21px;font-weight:900;margin-top:6px;color:var(--ink);letter-spacing:-.02em;line-height:1.35}
+  .dots{display:flex;gap:6px;margin-top:16px} .dots i{flex:1;height:8px;border-radius:9px;background:var(--line-2)} .dots i.on{background:var(--cta)}
+  /* B — 대화 */
+  .bub{margin-top:18px;padding:16px 18px;border-radius:20px 20px 20px 6px;background:var(--surface);border:1.5px solid var(--line-2);font-size:18px;font-weight:700;line-height:1.5;color:var(--ink)}
+  .ans{display:grid;gap:8px;margin-top:12px;justify-items:end}
+  .ans a,.ans button{padding:14px 20px;border-radius:20px 20px 6px 20px;border:0;background:var(--cta);color:#fff;font:inherit;font-weight:800;font-size:17px;text-decoration:none}
+  .ans .lite{background:var(--surface);color:var(--ink-2);border:1.5px solid var(--line-2)}
+  /* C — 길 */
+  .path{margin-top:22px;display:grid;gap:0;justify-items:center}
+  .node{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;text-align:center;font-weight:800;font-size:15px;line-height:1.25;border:3px solid var(--line-2);background:var(--surface);color:var(--ink-3);text-decoration:none}
+  .node.now{width:118px;height:118px;border-color:var(--cta);background:var(--cta);color:#fff;font-size:18px;box-shadow:0 8px 0 rgba(0,0,0,.12)}
+  .node:nth-child(4n+1){transform:translateX(-46px)} .node:nth-child(4n+3){transform:translateX(46px)}
+  .link{width:4px;height:26px;background:var(--line-2)}
+  .cap2{margin-top:6px;font-size:14.5px;color:var(--ink-3);font-weight:700;text-align:center}
+  /* 튜토리얼 */
+  .tut{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.55);display:none;align-items:flex-end}
+  .tut.on{display:flex}
+  .tutbox{width:100%;box-sizing:border-box;padding:24px 20px 28px;border-radius:24px 24px 0 0;background:var(--surface)}
+  .tutbox .n{font-family:var(--mono);font-weight:800;color:var(--cta);font-size:14px}
+  .tutbox h2{font-size:22px;font-weight:900;margin:6px 0 8px;color:var(--ink)} .tutbox p{font-size:16px;line-height:1.6;color:var(--ink-2);margin:0}
+  .demo{margin:14px 0 4px;padding:14px;border-radius:var(--r1);border:1.5px dashed var(--line-2);font-size:15.5px;line-height:1.55;color:var(--ink)}
+  .demo mark{background:#ffe08a;padding:1px 3px;border-radius:4px}
+  .tutbox .row{display:flex;gap:8px;margin-top:16px} .tutbox .row button{flex:1;padding:15px;border-radius:var(--r1);border:0;font:inherit;font-weight:800;font-size:16.5px;background:var(--cta);color:#fff} .tutbox .row .lite{background:transparent;color:var(--ink-3);flex:0 0 auto}
+  .memo{margin:26px 0 0;padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.05);font-size:13.5px;color:var(--ink-3);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="pick" id="pick">
+  <button data-v="A" aria-pressed="true">A 한 장</button>
+  <button data-v="B" aria-pressed="false">B 대화</button>
+  <button data-v="C" aria-pressed="false">C 길</button>
+  <button data-v="T" aria-pressed="false">튜토리얼</button>
+</div>
+
+<div class="v on" id="vA"></div>
+<div class="v" id="vB"></div>
+<div class="v" id="vC"></div>
+<div class="v" id="vT"><p class="memo">튜토리얼은 처음 들어온 학생에게 한 번만 뜹니다. 아래 단추로 미리 봅니다.</p><button class="big" id="tutgo">튜토리얼 보기</button></div>
+
+<div class="tut" id="tut"><div class="tutbox" id="tutbox"></div></div>
+
+<script src="js/trend.js"></script>
+<script src="js/tree.js"></script>
+<script src="js/pool.js"></script>
+<script src="js/drills.js"></script>
+<script src="js/cards.js"></script>
+<script src="js/store.js"></script>
+<script>
+(function(){
+  var T=window.TERRA, S=T.state();
+  function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  var 이름=(S.student&&S.student.name)||"";
+  var 후보=(T.오늘의리프?T.오늘의리프({전부:true}):[]).filter(function(c){ return (window.CARDS||{})[c.code]; });
+  var 리프=후보[0]?후보[0].leaf:T.LEAVES[0], 다음들=후보.slice(1,4).map(function(c){ return c.leaf; });
+  var 개념=((window.CARDS||{})[리프.code]||{cards:[{title:리프.name}]}).cards[0].title;
+  var 시험=null; try{ (T.exams()||[]).filter(function(e){return e.date;}).forEach(function(e){ var d=T.dday(e.date); if(d.days>=0&&(!시험||d.days<시험.d.days)) 시험={e:e,d:d}; }); }catch(e){}
+  var 머리='<div class="dd">'+(시험?esc(시험.e.name)+' <b>'+esc(시험.d.label)+'</b>':esc(이름))+'</div>';
+  var ox="ox.html?leaf="+리프.code, card="card.html?leaf="+리프.code, lec="skilltree.html?lec="+리프.code;
+  var 다른='<div class="sheet" hidden>'+
+      '<a href="skilltree.html">단원 골라서 O·X <span>개념트리</span></a>'+
+      '<a href="ox.html?wrong=1">틀린 문장만 다시 <span>복습</span></a>'+
+      '<a href="naeshin.html">어려운 O·X만 <span>Killer Drill</span></a>'+
+      '<a href="exam.html">시험처럼 25문제 <span>모의고사</span></a></div>';
+
+  /* A — 한 장: 할 것 하나, 큰 단추 하나 */
+  document.getElementById("vA").innerHTML=머리+
+    '<div class="box"><div class="k">지금 할 것</div><div class="t">'+esc(개념)+'<br>O·X 10문장</div>'+
+    '<div class="dots"><i class="on"></i><i></i><i></i></div></div>'+
+    '<a class="big" href="'+ox+'">시작</a>'+
+    '<div class="sub2"><a href="'+card+'">개념 먼저 보기</a><a href="'+lec+'">강의 보기</a></div>'+
+    '<button class="other" data-other>다른 걸 연습할래요</button>'+다른+
+    '<p class="memo">A안 — 홈에는 할 것 하나와 단추 하나뿐. 개념·강의는 작은 단추 둘. 나머지 기능은 아래 탭과 「다른 걸 연습할래요」 안에.</p>';
+
+  /* B — 대화: 선생님이 권하고 학생이 답한다 */
+  document.getElementById("vB").innerHTML=머리+
+    '<div class="bub">'+(이름?esc(이름)+', ':'')+'오늘은 <b>'+esc(개념)+'</b> O·X부터 해볼까요?</div>'+
+    '<div class="ans"><a href="'+ox+'">좋아요, 시작</a><a class="lite" href="'+card+'">개념부터 볼래요</a><button class="lite" data-other>다른 거 할래요</button></div>'+다른+
+    '<p class="memo">B안 — 선생님이 말을 걸고 학생은 답만 고른다. 「다른 거 할래요」를 누르면 그때 무엇을 연습하고 싶은지 묻는다.</p>';
+
+  /* C — 길: 오늘 갈 길이 한 줄로 보이고, 지금 자리만 크게 */
+  var 길=[["O·X",개념,ox,1]].concat(다음들.slice(0,2).map(function(l){ var c=((window.CARDS||{})[l.code]||{cards:[{title:l.name}]}).cards[0].title; return ["O·X",c,"ox.html?leaf="+l.code,0]; }));
+  길.push(["어려운<br>O·X","Killer Drill","naeshin.html",0]);
+  document.getElementById("vC").innerHTML=머리+'<div class="path">'+길.map(function(n,i){
+      return (i?'<span class="link"></span>':'')+'<a class="node'+(n[3]?' now':'')+'" href="'+n[2]+'">'+(n[3]?'시작':n[0])+'</a><div class="cap2">'+esc(n[1])+'</div>'; }).join("")+'</div>'+
+    '<button class="other" data-other>다른 걸 연습할래요</button>'+다른+
+    '<p class="memo">C안 — 게임 스테이지처럼 오늘 갈 길이 보인다. 지금 자리만 크게, 누르면 바로 O·X. 끝에 어려운 O·X(Killer Drill)가 선택 스테이지로 있다.</p>';
+
+  document.querySelectorAll("[data-other]").forEach(function(b){ b.onclick=function(){ var sh=b.parentNode.querySelector(".sheet")||b.closest(".v").querySelector(".sheet"); sh.hidden=!sh.hidden; }; });
+  document.querySelectorAll("#pick button").forEach(function(b){ b.onclick=function(){
+    document.querySelectorAll("#pick button").forEach(function(x){ x.setAttribute("aria-pressed", x===b); });
+    document.querySelectorAll(".v").forEach(function(v){ v.classList.toggle("on", v.id==="v"+b.dataset.v); }); }; });
+
+  /* 튜토리얼 — 한 장에 하나씩, 실제 화면 모양을 보여 주며 */
+  var 단계=[
+    ["문장 하나만 봐요","기출 문제를 통째로 풀지 않아요. <b>형광펜 친 문장 하나</b>가 맞는지 틀린지만 답해요.",'<div class="demo">① 사회권은 천부 인권의 성격을 가진다<br><mark>② 자유권은 국가의 간섭을 받지 않을 권리이다</mark><br>③ 참정권은 소극적 권리이다</div>'],
+    ["O 아니면 X","맞는 문장이면 O, 틀린 문장이면 X. 20초 안에 답해요.",'<div class="demo" style="text-align:center;font-size:30px;font-weight:900;letter-spacing:40px">O X</div>'],
+    ["틀리면 3일 뒤에 다시","틀린 문장은 3일, 7일, 21일 뒤에 다시 나와요. 따로 챙길 필요 없어요.",""],
+    ["모르겠으면 개념부터","문장이 낯설면 <b>개념 먼저 보기</b>를 눌러요. 강의가 있는 개념은 강의도 볼 수 있어요.",""],
+    ["Killer Drill","더 어려운 O·X만 모아 둔 곳이에요. 하고 싶을 때만 해요.",""]
+  ], k=0;
+  function 그림(){ var d=단계[k];
+    document.getElementById("tutbox").innerHTML='<div class="n">'+(k+1)+' / '+단계.length+'</div><h2>'+d[0]+'</h2><p>'+d[1]+'</p>'+d[2]+
+      '<div class="row"><button class="lite" id="tskip">건너뛰기</button><button id="tnext">'+(k<단계.length-1?"다음":"시작할게요")+'</button></div>';
+    document.getElementById("tnext").onclick=function(){ if(++k>=단계.length){ 닫기(); } else 그림(); };
+    document.getElementById("tskip").onclick=닫기; }
+  function 닫기(){ document.getElementById("tut").classList.remove("on"); k=0; }
+  document.getElementById("tutgo").onclick=function(){ document.getElementById("tut").classList.add("on"); 그림(); };
+})();
+</script>
+</body>
+</html>
