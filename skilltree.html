@@ -751,12 +751,9 @@
       var 위 = Math.sin(rad(a)) < -0.5;
       var y1 = 위 ? y-rr-(L.fSub+1)-18 : y+rr+L.fName+8;
       var y2 = 위 ? y-rr-8 : y+rr+L.fName*2+13;
-      var l1=txt(labs,HASV?(M.lec+"강, 예상 "+Math.round(M.mins/60)+"시간"):("기출 "+M.n.toLocaleString()+"문항"),
-        {x:x,y:y1,"text-anchor":"middle",fill:SINK,
-         "font-size":L.fName,"font-weight":700,"font-family":cv("--kr")});
-      var l2=txt(labs,(HASV?"기출 "+M.n.toLocaleString()+"문항, ":"")+"성취도 "+av+"%",
-        {x:x,y:y2,"text-anchor":"middle",fill:SINK2,
-         "font-size":L.fSub+1,"font-weight":600,"font-family":cv("--kr")});
+      /* 강 수·예상 시간·기출 수·성취도 글은 뺐다(2026-09-18 대표님 "아무도 관심 없어") — 원 이름만 남긴다 */
+      var l1=txt(labs,"",{x:x,y:y1,"text-anchor":"middle",fill:SINK,"font-size":L.fName});
+      var l2=txt(labs,"",{x:x,y:y2,"text-anchor":"middle",fill:SINK2,"font-size":L.fSub+1});
       [l1,l2].forEach(function(e){ e.classList.add("lbl"); });
       function open(){ if(!busy) goFam(f,x,y); }
       /* 0.3초 머물면 알아서 들어간다 — 그동안 테두리가 한 바퀴 돌아 예고한다.
@@ -789,7 +786,7 @@
     /* 가운데는 「2학기 중간」처럼 지금 범위의 시험 이름(2026-09-18 대표님 "2학기 중간이라도 써놔야지"). 범위가 없으면 통합사회 */
     var 시험=(T.scopeOn&&T.scopeOn()&&T.기본범위지금&&T.기본범위지금())||null;
     var 가운데=시험?String(시험.name||"").replace(/고사$/,""):"통합사회";
-    coreOrb(g,CORE,가운데,(시험?FAMS.length+"단원, ":"")+ALL.n.toLocaleString()+"문항"+(HASV?", "+ALL.lec+"강":""),null);
+    coreOrb(g,CORE,가운데,"",null);
   }
 
   /* ══════ 층 1 — 갈래
@@ -826,7 +823,7 @@
       var 꼬리=(학년2!=="고3")
         ? (몫 ? "지금 "+몫+"문항"+(HASV?", "+lec+"강":"") : "아직 안 배운 곳"+(HASV?", "+lec+"강":""))
         : (HASV?lec+"강, ":"")+"성취도 "+av+"%";
-      var l2=txt(labs,꼬리,
+      var l2=txt(labs,"",
         {x:x,y:y+rr+L.fName*2+12,"text-anchor":"middle",
          fill:SINK2,"font-size":L.fSub,"font-weight":600,"font-family":cv("--kr")});
       [l1,l2].forEach(function(e){ e.classList.add("lbl"); });
@@ -840,7 +837,7 @@
     var avAll=M.items.length
       ? Math.round(M.items.reduce(function(s2,x){ return s2+x.st.achieve; },0)/M.items.length)
       : 0;
-    coreOrb(g,hue,FAM[f].label||f,(HASV?M.lec+"강, ":"")+"성취도 "+avAll+"%",function(){ if(!busy) goAll(); });
+    coreOrb(g,hue,FAM[f].label||f,"",function(){ if(!busy) goAll(); });
     var back=txt(g,"↑ 눌러서 전체로",{x:L.CX,y:L.CY+L.rCore+22,"text-anchor":"middle",
       fill:SINK2,"font-size":Math.round(L.fSub+1),"font-weight":600,
       "font-family":cv("--kr"),opacity:".85"});
@@ -879,7 +876,7 @@
       var l1=txt(lg,nd.name,{x:x+ca*off,y:up?y0-L.fSub-4:y0,"text-anchor":anc,
         fill:lock?SINK2:SINK,"font-size":L.fName,"font-weight":700,
         "font-family":cv("--kr")});
-      var l2=txt(lg,노드꼬리(nd,lock),
+      var l2=txt(lg,"",
         {x:x+ca*off,y:up?y0:y0+L.fSub+4,"text-anchor":anc,
          fill:SINK2,"font-size":L.fSub,"font-weight":600,"font-family":cv("--kr")});
       [l1,l2].forEach(function(e){ e.classList.add("lbl"); });
@@ -971,7 +968,7 @@
         var l1=txt(lg,n.name,{x:lx,y:up?y0-L.fSub-4:y0,"text-anchor":anc,
           fill:lock?SINK2:SINK,"font-size":L.fName,"font-weight":700,
           "font-family":cv("--kr")});
-        var l2=txt(lg,노드꼬리(n,lock),
+        var l2=txt(lg,"",
           {x:lx,y:up?y0:y0+L.fSub+4,"text-anchor":anc,
            fill:SINK2,"font-size":L.fSub,"font-weight":600,"font-family":cv("--kr")});
         [l1,l2].forEach(function(e){ e.classList.add("lbl"); });
@@ -986,7 +983,7 @@
     var av=M.items.length
       ? Math.round(M.items.reduce(function(s,x){ return s+x.st.achieve; },0)/M.items.length)
       : 0;
-    coreOrb(g,hue,FAM[f].label||f,(HASV?M.lec+"강, ":"")+"성취도 "+av+"%",function(){ if(!busy) goAll(); });
+    coreOrb(g,hue,FAM[f].label||f,"",function(){ if(!busy) goAll(); });
     var back=txt(g,"↑ 눌러서 전체로",{x:L.CX,y:L.CY+L.rCore+22,"text-anchor":"middle",
       fill:SINK2,"font-size":Math.round(L.fSub+1),"font-weight":600,
       "font-family":cv("--kr"),opacity:".85"});
@@ -1096,8 +1093,7 @@
     if(level===0){
       c.innerHTML='<span class="swapin">통합사회</span>';
       document.getElementById("lede").textContent=
-        (AX.name==="시험 범위" ? "이번 시험에 나오는 단원만 모았어요." : AX.name+(bat(AX.name)?"으로":"로")+" 묶었어요 — "+AX.say+".")+
-        " 기출 "+ALL.n.toLocaleString()+"문항"+(HASV?", 강의 "+ALL.lec+"강, 약 "+Math.round(ALL.mins/60)+"시간":"");
+        (AX.name==="시험 범위" ? "이번 시험에 나오는 단원만 모았어요." : AX.name+(bat(AX.name)?"으로":"로")+" 묶었어요 — "+AX.say+".");
       var 시험0=(T.scopeOn&&T.scopeOn()&&T.기본범위지금&&T.기본범위지금())||null;
       document.getElementById("plateTitle").textContent=시험0?(시험0.name+" 범위"):"통합사회";
       document.getElementById("plateSub").textContent=시험0?(FAMS.map(function(f){ return FAM[f].label||f; }).join(", ")):AX.name;
