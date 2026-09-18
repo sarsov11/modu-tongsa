@@ -11,7 +11,7 @@
 <meta name="theme-color" content="#FAF8F3">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=53e7b8e2">
+<link rel="stylesheet" href="css/base.css?v=838e6ebd">
 <link rel="stylesheet" href="css/question.css?v=326c7f60">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <link rel="stylesheet" href="css/keyword.css?v=e00f83be">
@@ -183,17 +183,17 @@
 <script src="js/qbank.js?v=f6d1a6a6"></script>
 <script src="js/lecture.js?v=207a14bb"></script>
 <script src="js/video.js?v=b02e3de6"></script>
-<script src="js/qrender.js?v=7e690aff"></script>
+<script src="js/qrender.js?v=23dd5e47"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
 <script src="js/cardox.js?v=ca4891ae"></script>
-<script src="js/keyword.js?v=9ead7c20"></script>
+<script src="js/keyword.js?v=14741f27"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/judge.js?v=43f690d4"></script>
-<script src="js/cards.js?v=4e5efe41"></script>
-<script src="js/store.js?v=982afaa9"></script>
+<script src="js/cards.js?v=afd2fbee"></script>
+<script src="js/store.js?v=2d979295"></script>
 <script src="js/kwask.js?v=37cf1b37"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
@@ -218,7 +218,7 @@
     scopeH:"이번 시험 범위를 골라 주세요.", scopeP:"학교마다 달라서 직접 골라요. 나중에 설정에서 바꿀 수 있어요.",
     goalH:"하루에 얼마나 할까요?", goalP:"매일 할 수 있는 만큼만 정해요.",
     alarmH:"몇 시에 알릴까요?", alarmP:"정한 시각에 오늘 할 것을 알려요.",
-    checkH:"지금 어디쯤인지<br>20문항으로 확인해요.", checkP:"O·X 열 개, 개념어 쓰기 네 개, 기출 여섯 개예요. O·X와 개념어는 10초, 기출은 35초 안에 답해요. 언제든 건너뛸 수 있어요.",
+    checkH:"지금 어디쯤인지<br>20문항으로 확인해요.", checkP:"O·X 열 개, 개념어 쓰기 네 개, 기출 여섯 개예요. O·X는 20초, 개념어는 30초, 기출은 1분 안에 답해요. 언제든 건너뛸 수 있어요.",
     doneH:"준비됐어요.", doneP:"오늘 할 것은 이거예요. 누르면 바로 시작해요."
   };
 
@@ -363,7 +363,7 @@
       st.innerHTML=머리("5 / 7",esc(MSG.goalH),esc(MSG.goalP))+
         '<div class="tiles two">'+opts.map(function(o){
           return '<button class="tile" data-m="'+o[0]+'" aria-pressed="'+(A.goal===o[0])+'"><b>'+o[0]+'<small class="u">분</small></b><span>'+o[1]+'</span></button>'; }).join("")+'</div>'+
-        '<p class="note">되돌리기·강의·개념 확인·Killer Drill을 이 시간 안에 나눠 드려요.</p>';
+        '<p class="note">복습, 강의, 개념 확인, Killer Drill을 이 시간 안에 나눠 드려요.</p>';
       st.querySelectorAll(".tile").forEach(function(b){ b.onclick=function(){ A.goal=+b.dataset.m; 눌림(st,".tile",function(x){return +x.dataset.m===A.goal;}); }; });
       단추("다음");
     },
@@ -382,8 +382,8 @@
     },
     check:function(st){
       /* ── 배치 시험 20문항 — O·X 10, 객관식 6, 개념어 쓰기 4. 리프를 돌아가며 골고루(2026-09-18 대표님).
-         문항마다 초읽기: O·X·개념어 10초, 객관식 35초. 시간이 다 되면 틀린 것으로 적고 넘어간다. ── */
-      var 제한 = { ox:10, q:35, kw:10 };
+         문항마다 초읽기: O·X 20초, 개념어 30초, 객관식 60초(2026-09-18 대표님 '개념어 쓰기 너무 짧아'). 시간이 다 되면 틀린 것으로 적고 넘어간다. ── */
+      var 제한 = { ox:20, q:60, kw:30 };
       var 차례 = ["ox","q","ox","kw","ox","q","ox","ox","kw","q","ox","ox","q","kw","ox","q","ox","kw","ox","q"];
       var 리프들 = (T.오늘의리프?T.오늘의리프({전부:true}):[]).map(function(c){ return c.leaf; })
         .filter(function(l){ return !T.scopeOn() || !T.inScopeLeaf || T.inScopeLeaf(l.code); });

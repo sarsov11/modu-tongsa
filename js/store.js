@@ -292,10 +292,10 @@
        ④ 시험 **범위 안**이면 크게 올린다. 범위 밖은 지금 급하지 않다
        ⑤ 이미 **다 잡은 자리**(이해도 높음)는 내린다 — 아는 것을 또 시키지 않는다 */
   /* 반응 시간대(2026-09-18 대표님 "맞춘 시간도 다 체크해서 반응시간대별로 이해도에 반영") —
-     O·X 4초·8초, 개념어 6초·10초, 객관식 15초·28초를 경계로 빠름·보통·느림. 시간이 없으면 null */
+     O·X 7초·14초, 개념어 12초·22초, 객관식 25초·45초를 경계로 빠름·보통·느림. 시간이 없으면 null */
   function 반응대(kind, ms) {
     if (ms == null) return null;
-    var t = kind === "ox" ? [4000, 8000] : kind === "kw" ? [6000, 10000] : [15000, 28000];
+    var t = kind === "ox" ? [7000, 14000] : kind === "kw" ? [12000, 22000] : [25000, 45000];   // 제한 20·30·60초의 약 1/3·2/3
     return ms < t[0] ? "빠름" : ms < t[1] ? "보통" : "느림";
   }
   function 속도무게(kind, ms) {
@@ -364,7 +364,7 @@
            + (c.범위안 ? " — 시험 범위이기도 하고요." : ".");
     if (st.lastAt && (Date.now() - st.lastAt) > 12 * 86400000)
       return "마지막으로 푼 지 "
-           + Math.round((Date.now() - st.lastAt) / 86400000) + "일 됐어요. 되돌릴 때예요.";
+           + Math.round((Date.now() - st.lastAt) / 86400000) + "일 됐어요. 다시 볼 때예요.";
     return c.범위안 ? "시험 범위 안에서 지금 가장 값이 큰 자리예요."
                     : "지금 가장 값이 큰 자리예요.";
   }
@@ -993,10 +993,10 @@
     if (leaves.length) {
       var l0 = BY[leaves[0]];
       steps.push({ kind: "due", n: byLeaf[leaves[0]].length, leaf: leaves[0],
-        title: "되돌릴 때가 됐어요",
+        title: "복습할 때가 됐어요",
         say: (l0 ? l0.name : leaves[0]) + " 에서 틀린 " + byLeaf[leaves[0]].length +
              "문항이 다시 나올 차례예요.",
-        href: "study.html?leaf=" + leaves[0] + "&mode=wrong", cta: "되돌리기" });
+        href: "study.html?leaf=" + leaves[0] + "&mode=wrong", cta: "복습하기" });
     }
     if (S.last && S.last.leaf && BY[S.last.leaf]) {
       var ls = leafStat(S.last.leaf);
@@ -1313,7 +1313,7 @@
       items.push({ kind: "vacation", min: 1, stage: XM.stage,
         title: XM.stage === "보충" ? "방학 — 지난 학기 메우기"
                                    : "방학 — 다음 학기 미리 보기",
-        say: XM.stage === "보충" ? "약한 곳부터 되돌립니다"
+        say: XM.stage === "보충" ? "약한 곳부터 복습합니다"
                                  : "다음 단원을 미리 훑습니다",
         why: XM.stage === "보충"
           ? "진도 압박이 없는 유일한 시기예요. 밀린 것을 지금 메웁니다."

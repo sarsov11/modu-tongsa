@@ -14,8 +14,8 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=53e7b8e2">
-<link rel="stylesheet" href="css/coach.css?v=208a602f">
+<link rel="stylesheet" href="css/base.css?v=838e6ebd">
+<link rel="stylesheet" href="css/coach.css?v=fec8b445">
 <link rel="stylesheet" href="css/keyword.css?v=e00f83be">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -126,7 +126,8 @@
   .qrest{margin-top:10px;font-size:15px;color:var(--ink-2)}
   .qrest summary{cursor:pointer;color:var(--ink-3);font-size:14.5px}
   .qrest ol{margin:8px 0 0;padding-left:20px;line-height:1.7}
-  .qrest li.hit{color:var(--mint);font-weight:600}
+  .qrest li.mine{color:var(--ink);font-weight:700;border-left:3px solid var(--ink-3);padding-left:10px;margin-left:-13px}
+  .qrest li.mine .minetag{display:block;font-style:normal;font-size:13.5px;font-weight:700;color:var(--ink-3);margin-top:2px}
   .qfall{font-size:14.5px;color:var(--ink-3);margin:0 2px 10px}
   @media(max-width:520px){ .qpick .tx{font-size:15.5px} .qdata{font-size:14.5px} }
   .hot{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;font-size:14.5px;vertical-align:middle;
@@ -154,10 +155,10 @@
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
 <script src="js/conceptq.js?v=fc0c09eb"></script>
-<script src="js/cards.js?v=4e5efe41"></script>
-<script src="js/keyword.js?v=9ead7c20"></script>
+<script src="js/cards.js?v=afd2fbee"></script>
+<script src="js/keyword.js?v=14741f27"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
-<script src="js/store.js?v=982afaa9"></script>
+<script src="js/store.js?v=2d979295"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -416,8 +417,9 @@
         (x.why ? '<div class="why"><b>근거</b> — '+esc(x.why)+
                  (x.src?'<span class="src">'+esc(x.src)+'</span>':'')+'</div>' : '')+
         /* ★ 채점한 뒤에야 나머지 선지를 연다 — 풀 때 보이면 소거법이 된다 */
-        (x.o ? '<details class="qrest" open><summary>나머지 선지 보기</summary><ol>'+
-               x.o.map(function(s,k){ return '<li'+(k===x.i?' class="hit"':'')+'>'+esc(s)+'</li>'; }).join("")+
+        /* 방금 푼 문장은 초록이 아니라 「방금 푼 문장, 맞는/틀린 문장」 꼬리표로 — 초록이면 정답 선지로 읽힌다(2026-09-18 대표님) */
+        (x.o ? '<details class="qrest" open><summary>이 문장이 나온 문항의 선지 다섯</summary><ol>'+
+               x.o.map(function(s,k){ return '<li'+(k===x.i?' class="mine"':'')+'>'+esc(s)+(k===x.i?'<em class="minetag">방금 푼 문장, '+(x.a?"맞는 문장":"틀린 문장")+'</em>':'')+'</li>'; }).join("")+
                '</ol></details>' : '')+
       '</div>'+
       '<div class="nextbar">'+

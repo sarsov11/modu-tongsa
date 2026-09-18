@@ -14,8 +14,8 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=53e7b8e2">
-<link rel="stylesheet" href="css/coach.css?v=208a602f">
+<link rel="stylesheet" href="css/base.css?v=838e6ebd">
+<link rel="stylesheet" href="css/coach.css?v=fec8b445">
 <link rel="stylesheet" href="css/question.css?v=326c7f60">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -496,12 +496,12 @@
 <script src="js/qbank.js?v=f6d1a6a6"></script>
 <script src="js/lecture.js?v=207a14bb"></script>
 <script src="js/video.js?v=b02e3de6"></script>
-<script src="js/qrender.js?v=7e690aff"></script>
+<script src="js/qrender.js?v=23dd5e47"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/cards.js?v=4e5efe41"></script>
-<script src="js/store.js?v=982afaa9"></script>
+<script src="js/cards.js?v=afd2fbee"></script>
+<script src="js/store.js?v=2d979295"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -752,9 +752,9 @@
          "지금까지 푼 것 기준")+
     tile("지금 성적대", (f.now.band==null?"—":f.now.band+'<small>등급</small>'),
          "내신 5등급 기준 <b>가늠</b>이에요 — 실제 등급은 학교 응시자 분포로 갈립니다")+
-    tile("되돌릴 문항", 되돌릴+'<small>개</small>',
+    tile("복습할 문항", 되돌릴+'<small>개</small>',
          되돌릴 ? "틀린 지 3·7·21일이 지나 다시 볼 때가 됐어요"
-                : "지금은 되돌릴 것이 없어요", 되돌릴>0);
+                : "지금은 복습할 것이 없어요", 되돌릴>0);
   /* 네 칸은 접힌 '단원별' 첫머리에 둔다 — 열면 먼저 보인다 */
   (function(){ var b=document.getElementById("band"), m=document.querySelector("#more-stat .mbody");
     if(b&&m) m.insertBefore(b, m.firstChild); })();

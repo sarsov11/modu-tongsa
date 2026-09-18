@@ -30,6 +30,11 @@
   .nextbar.coach .chips .chip{padding:3px 7px}
   .nextbar.coach .in{gap:8px}
   .nextbar.coach .skinpick button span{display:none}
+  /* 폰에서 띠가 519px 로 늘어나 오른쪽 단추·닫기가 잘렸다(2026-09-18 ox.html 375px 실측) — 글 칸만 줄어들게 */
+  .nextbar.coach .in{max-width:100%;min-width:0}
+  .nextbar.coach .tx{flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .nextbar.coach .tx *{display:inline}
+  .nextbar.coach .chips,.nextbar.coach .go{flex:0 0 auto}
 }
 
 /* ── 결산 — 짠 ── */

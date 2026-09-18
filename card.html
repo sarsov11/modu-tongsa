@@ -14,8 +14,8 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=53e7b8e2">
-<link rel="stylesheet" href="css/coach.css?v=208a602f">
+<link rel="stylesheet" href="css/base.css?v=838e6ebd">
+<link rel="stylesheet" href="css/coach.css?v=fec8b445">
 <link rel="stylesheet" href="css/keyword.css?v=e00f83be">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -122,6 +122,8 @@
   .card .ctrap{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--red-soft);border:1px solid var(--red-line)}
   .card .ctrap .ctt{margin:0 0 6px;color:var(--red-2)} .card .ctrap ul{margin:0;padding-left:18px} .card .ctrap li{font-size:15px;line-height:1.6;color:var(--ink);margin-bottom:4px}
   .card .cnote{font-size:14.5px;color:var(--ink-3);margin:8px 0 0}
+  .verdict .why{margin-top:11px;padding-top:11px;border-top:1px solid var(--line-2);font-size:15.5px;line-height:1.6;color:var(--ink-2)}
+  .verdict .why b{color:var(--ink)} .verdict .why .src{display:block;margin-top:4px;font-size:13.5px;color:var(--ink-3);font-weight:600}
 </style>
 </head>
 <body>
@@ -141,14 +143,14 @@
 <script src="js/oxbank.js?v=1884002d"></script>
 <script src="js/cardox.js?v=ca4891ae"></script>
 <script src="js/conceptq.js?v=fc0c09eb"></script>
-<script src="js/cards.js?v=4e5efe41"></script>
-<script src="js/keyword.js?v=9ead7c20"></script>
+<script src="js/cards.js?v=afd2fbee"></script>
+<script src="js/keyword.js?v=14741f27"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/judge.js?v=43f690d4"></script>
 <script src="js/pool.js?v=4a7d39b1"></script>
 <script src="js/drills.js?v=82b6c52c"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/store.js?v=982afaa9"></script>
+<script src="js/store.js?v=2d979295"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -224,7 +226,7 @@
       '<tbody>'+(b.rows||[]).map(function(r){ return '<tr>'+r.map(function(x){return '<td>'+굵게(x)+'</td>';}).join("")+'</tr>'; }).join("")+'</tbody></table></div>';
     if(b.t==="tree") return '<div class="ctree">'+(b.title?'<div class="ctt">'+굵게(b.title)+'</div>':'')+'<div class="root">'+굵게(b.root)+'</div><ul>'+(b.branches||[]).map(function(x){ return '<li><b>'+굵게(x[0])+'</b><span>'+굵게(x[1]||"")+'</span></li>'; }).join("")+'</ul></div>';
     if(b.t==="flow") return '<div class="cflow">'+(b.title?'<div class="ctt">'+굵게(b.title)+'</div>':'')+'<ol>'+(b.steps||[]).map(function(x){ return '<li>'+굵게(x)+'</li>'; }).join("")+'</ol></div>';
-    if(b.t==="trap") return '<div class="ctrap"><div class="ctt">시험이 비트는 자리</div><ul>'+(b.items||[]).map(function(x){ return '<li>'+굵게(x)+'</li>'; }).join("")+'</ul></div>';
+    if(b.t==="trap") return '<div class="ctrap"><div class="ctt">틀리기 쉬운 선지</div><ul>'+(b.items||[]).map(function(x){ return '<li>'+굵게(x)+'</li>'; }).join("")+'</ul></div>';
     if(b.t==="note") return '<p class="cnote">'+(b.title?'<b>'+굵게(b.title)+'</b> ':'')+굵게(b.text)+'</p>';
     return '';
   }
@@ -296,7 +298,11 @@
       '<div class="verdict '+v.tone+'">'+
         '<div class="top"><span class="mark">'+(ok?"○ 맞았어요":"✕ 아니에요")+'</span>'+
           '<span class="kind">'+esc(v.label||v.kind)+'</span></div>'+
-        '<p class="say">'+esc(v.say)+'</p>'+
+        '<p class="say">'+esc(v.say || (ok ? "방금 읽은 것으로 바로 풀렸어요." : "방금 읽은 것과 어긋난 자리예요."))+'</p>'+
+        /* 맞아도 까닭을 보여 준다 — 「알고 맞힘」 한 줄로 끝내면 왜 맞는지 모른 채 넘어간다(2026-09-18 대표님) */
+        '<div class="why"><b>'+(x.a ? "맞는 문장" : "틀린 문장")+'</b>'+(x.why ? ' — '+esc(String(x.why).replace(/\s*\((고[123] \d\d\.\d\d)\)\s*$/, "")) : '')+
+          (function(){ var m=String(x.why||"").match(/\((고[123] \d\d\.\d\d)\)\s*$/); var src=m?m[1]:(x.src&&x.src!=="원고"?x.src:""); return src?'<span class="src">'+esc(src)+'</span>':''; })()+
+        '</div>'+
         (!ok ? '<p class="say" style="margin-top:8px"><b>개념으로 돌아가 한 번 더 읽어요.</b> '+
                '방금 읽은 것과 어긋난 자리예요.</p>' : '')+
         '<div class="act">'+
