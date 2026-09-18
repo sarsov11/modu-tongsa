@@ -349,7 +349,7 @@
   .srcbadge.real{background:var(--mint-soft);color:var(--mint-2)}
   .srcbadge.drill{background:var(--surface-3);color:var(--ink-4)}
   /* ★ 폰에서 #modes 가 부모(.pheadact, flex 열) 안에서 내용 너비만큼 커져 지면이 1,597px 로 늘어났다(2026-09-18 대표님 폰 실측) — 너비를 100% 로 묶는다 */
-  @media (max-width:640px){ #modes{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;padding-bottom:6px;width:100%;max-width:100%;min-width:0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  @media (max-width:640px){ .phead,.pheadact{max-width:calc(100vw - 32px)} #modes{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;padding-bottom:6px;width:100%;max-width:calc(100vw - 32px);min-width:0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
     #modes::-webkit-scrollbar{display:none} #modes button,#modes .mgrp{flex:0 0 auto;white-space:nowrap} }
   .naeshin{display:flex;align-items:center;gap:14px;margin:0 0 18px;padding:16px 18px;border:1.5px solid var(--cta);border-radius:var(--r2);background:var(--cta-soft);color:var(--ink);text-decoration:none}
   .naeshin b{font-size:17px;font-weight:900;white-space:nowrap} .naeshin span{flex:1;font-size:14.5px;font-weight:600;color:var(--ink-2)} .naeshin i{font-style:normal;font-weight:900;color:var(--cta)}
@@ -446,7 +446,10 @@
 
   /* 시험 범위 밖 훈련은 흐리게 — 감추지는 않는다.
      학생이 "이건 이번 시험이 아니구나" 를 알고 스스로 고르게 한다. */
-  function 범위밖(m){ return m.root && !T.inScope(m.root); }
+  function 범위밖(m){
+    if(m.id==="thinker") return !(window.THINKER&&THINKER.items||[]).some(사상가범위);   // 범위 안 사상가 제시문이 하나도 없으면 범위 밖
+    return m.root && !T.inScope(m.root);
+  }
   function 단추(m){
     return '<button data-m="'+m.id+'" class="mode'+(범위밖(m)?" out":"")+'" '+
       'aria-selected="'+(m.id===mode)+'">'+m.name+'</button>';
@@ -1344,9 +1347,20 @@
   var TK = window.THINKER || {people:{},rival:{},items:[]};
   var ORI={W:"서양",E:"동양"};
   var tseen=[];
+  /* ★ 사상가도 시험 범위로 거른다 — 에피쿠로스(B 행복)가 2학기 중간(F·G·I) 범위 학생에게 나갔다(2026-09-18 대표님 폰).
+     사상가 축(K) 리프는 실제로 배우는 단원으로 바꿔 본다: K1→B, K2→C, K3→G, K4→F4.2(시민 불복종), K5→I, K6→H */
+  function 사상가범위(x){
+    if(!T.scopeOn || !T.scopeOn()) return true;
+    var l=String(x.leaf||"");
+    if(!/^K/.test(l)) return T.inScopeLeaf ? T.inScopeLeaf(l) : true;
+    var m={K1:"B",K2:"C",K3:"G",K4:"F4.2",K5:"I",K6:"H"}[l.slice(0,2)];
+    if(!m) return false;
+    return m.length===1 ? T.inScope(m) : T.inScopeLeaf(m);
+  }
   function makeThinker(){
-    var pool=TK.items.filter(function(x){ return tseen.indexOf(x.id)<0; });
-    if(!pool.length){ tseen=[]; pool=TK.items; }
+    var 안=TK.items.filter(사상가범위); if(!안.length) 안=TK.items;
+    var pool=안.filter(function(x){ return tseen.indexOf(x.id)<0; });
+    if(!pool.length){ tseen=[]; pool=안; }
     var it=pick(pool); tseen.push(it.id);
     var rv=(TK.rival[it.w]||[]).filter(function(w){ return w!==it.w; });
     var other=rv.length?pick(rv):Object.keys(TK.people).filter(function(w){return w!==it.w;})[0];
