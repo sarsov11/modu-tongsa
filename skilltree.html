@@ -209,6 +209,11 @@
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .mrow .pc{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);flex:0 0 auto;font-weight:800}
   @media(max-width:760px){
+    /* ★ 폰에서는 개념트리가 맨 위(2026-09-18 대표님 "저 아래 처박혀 있다") — 머리 다음에 바로 그림, 띠·오늘 카드는 그 아래 */
+    .wrapx{display:flex;flex-direction:column}
+    .phead{order:0} .board{order:1} .treelist{order:2} #scopeband{order:3;margin-top:var(--s3)} #deltahost{order:4} #pickhost{order:5} .legend{order:6} .note{order:7}
+    .phead .sub{display:none}
+    .board .stage{min-height:0}
     .treelist{display:block;margin-top:var(--s3)}
     .board .plate{padding:16px 18px 8px}
     .board .plate h2{font-size:22px}
@@ -588,9 +593,9 @@
     var st=document.querySelector(".board .stage");
     var W=Math.max(340,Math.round(st?st.clientWidth:1180));
     var k=Math.max(.52,Math.min(1,W/1180));
-    var H=Math.round((W<640?790:W<900?860:950)*Math.max(.88,k));
+    var H=Math.round((W<640?600:W<900?860:950)*Math.max(.88,k));   // 폰은 낮게 — 원이 화면을 다 먹지 않게(2026-09-18)
     LAY={W:W,H:H,CX:W/2,CY:H/2,k:k,
-         rCore:Math.round(74*k+12),
+         rCore:Math.round((74*k+12)*(W<640?.72:1)),
          rHub:Math.round(196*k+18),
          rChild:Math.round(126*k+16),
          fCore:Math.round(28*k+8),
@@ -730,7 +735,7 @@
       var a=시작+i*(360/FAMS.length), M=MODEL[f], hue=FAM[f].hex;
       var x=L.CX+R*Math.cos(rad(a)), y=L.CY+R*Math.sin(rad(a));
       el("line",{x1:L.CX,y1:L.CY,x2:x,y2:y,stroke:hue,"stroke-width":1.5,opacity:".28"},link);
-      var rr=Math.round((40+22*Math.sqrt(M.wt/maxWt))*L.k+8);
+      var rr=Math.round(((40+22*Math.sqrt(M.wt/maxWt))*L.k+8)*(L.W<640?.7:1));
       // 갈래는 그 안 중영역들의 평균 성취도만큼 차오른다
       var av=M.items.length
         ? Math.round(M.items.reduce(function(s,x2){ return s+x2.st.achieve; },0)/M.items.length)
@@ -781,7 +786,10 @@
       gp.addEventListener("keydown",function(e){
         if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(); } });
     });
-    coreOrb(g,CORE,"통합사회",ALL.n.toLocaleString()+"문항"+(HASV?", "+ALL.lec+"강":""),null);
+    /* 가운데는 「2학기 중간」처럼 지금 범위의 시험 이름(2026-09-18 대표님 "2학기 중간이라도 써놔야지"). 범위가 없으면 통합사회 */
+    var 시험=(T.scopeOn&&T.scopeOn()&&T.기본범위지금&&T.기본범위지금())||null;
+    var 가운데=시험?String(시험.name||"").replace(/고사$/,""):"통합사회";
+    coreOrb(g,CORE,가운데,(시험?FAMS.length+"단원, ":"")+ALL.n.toLocaleString()+"문항"+(HASV?", "+ALL.lec+"강":""),null);
   }
 
   /* ══════ 층 1 — 갈래
@@ -1090,8 +1098,9 @@
       document.getElementById("lede").textContent=
         (AX.name==="시험 범위" ? "이번 시험에 나오는 단원만 모았어요." : AX.name+(bat(AX.name)?"으로":"로")+" 묶었어요 — "+AX.say+".")+
         " 기출 "+ALL.n.toLocaleString()+"문항"+(HASV?", 강의 "+ALL.lec+"강, 약 "+Math.round(ALL.mins/60)+"시간":"");
-      document.getElementById("plateTitle").textContent="통합사회";
-      document.getElementById("plateSub").textContent=AX.name;
+      var 시험0=(T.scopeOn&&T.scopeOn()&&T.기본범위지금&&T.기본범위지금())||null;
+      document.getElementById("plateTitle").textContent=시험0?(시험0.name+" 범위"):"통합사회";
+      document.getElementById("plateSub").textContent=시험0?(FAMS.map(function(f){ return FAM[f].label||f; }).join(", ")):AX.name;
     }else if(level===2&&grp){
       c.innerHTML='<button class="up" id="upbtn">통합사회</button>'+
         '<span class="sep">›</span>'+
