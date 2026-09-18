@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="css/login.css?v=bcda8ea1">
 <link rel="stylesheet" href="css/base.css?v=873fa070">
 <link rel="stylesheet" href="css/coach.css?v=b5de5f32">
-<script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="paper";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:1080px;margin:0 auto;padding:0 var(--s3) var(--s6)}
   h1,h2,h3{font-family:var(--title);font-weight:var(--tw);letter-spacing:var(--tls)}
@@ -205,6 +205,16 @@
   .mchk{display:grid;padding:4px 14px 10px}
   .mchk label{display:flex;align-items:center;gap:10px;min-height:42px;font-size:15.5px;color:var(--ink-2);cursor:pointer}
   .mchk input{width:20px;height:20px;accent-color:var(--cta);flex:0 0 auto}
+  /* ── 설정 구획 — 묶음 제목 아래 항목이 접혀 있고, 누른 것만 펼쳐진다(2026-09-19 대표님: 주르륵 스크롤 금지) ── */
+  .setgrp{margin:26px 0 8px;font-size:14px;font-weight:800;color:var(--ink-4);letter-spacing:-.01em}
+  .sec.fold{margin-top:8px;border:1.5px solid var(--line-2);border-radius:var(--r2);background:var(--surface);overflow:hidden}
+  .sec.fold>.sechd{margin:0;padding:16px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .sec.fold>.sechd h2{font-size:17px;margin:0}
+  .sec.fold>.sechd .cap{display:none}
+  .sec.fold>.sechd:after{content:"";width:9px;height:9px;border-right:2px solid var(--ink-4);border-bottom:2px solid var(--ink-4);transform:rotate(45deg);flex:0 0 auto;transition:transform .2s;margin-right:4px}
+  .sec.fold.open>.sechd:after{transform:rotate(-135deg)}
+  .sec.fold>*:not(.sechd){display:none}
+  .sec.fold.open>*:not(.sechd):not([hidden]){display:block;margin:0 16px 16px}
 </style>
 </head>
 <body>
@@ -319,7 +329,7 @@
 <script src="js/packs.js?v=ea06fb8e"></script>
 <script src="js/drills.js?v=9d14bfc8"></script>
 <script src="js/cards.js?v=bc64661b"></script>
-<script src="js/store.js?v=4a13680b"></script>
+<script src="js/store.js?v=dfb93453"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -752,6 +762,27 @@
   var host=document.getElementById("saveplan"); if(!host||!window.LOGINUI) return;
   function 그리기(){ LOGINUI.draw(host, {naver:true}); }
   그리기(); window.addEventListener("terra:synced", 그리기);
+})();
+</script>
+<script>
+/* 설정 구획 접기 — 묶음: 공부 / 화면·학년 / 기록 */
+(function(){
+  var 묶음=[["공부",["하루 루틴","이번 시험 범위","목표일","확장팩"]],["화면·학년",["디자인","학년"]],["기록",["저장","기록 옮기기"]]];
+  var secs=[].slice.call(document.querySelectorAll("section.sec")).filter(function(x){ return !x.hidden; });
+  var by={}; secs.forEach(function(x){ var h=x.querySelector(".sechd h2"); if(h) by[h.textContent.trim()]=x; });
+  var 자리=secs[0]&&secs[0].parentNode, 앞=secs[0]; if(!자리) return;
+  var 표=document.createElement("div"); 자리.insertBefore(표, 앞);   /* 자리표를 먼저 꽂는다 — 구획을 옮긴 뒤에는 「앞」이 이미 자리에서 빠져 있다 */
+  var 틀=document.createDocumentFragment();
+  묶음.forEach(function(g){
+    var 있는=g[1].map(function(n){ return by[n]; }).filter(Boolean); if(!있는.length) return;
+    var t=document.createElement("div"); t.className="setgrp"; t.textContent=g[0]; 틀.appendChild(t);
+    있는.forEach(function(x){ x.classList.add("fold"); 틀.appendChild(x);
+      x.querySelector(".sechd").onclick=function(){ var was=x.classList.contains("open");
+        secs.forEach(function(y){ y.classList.remove("open"); }); if(!was){ x.classList.add("open"); x.scrollIntoView({block:"start",behavior:"smooth"}); } }; });
+  });
+  자리.insertBefore(틀, 표); 표.remove();
+  var h=(location.hash||"").replace("#","");
+  if(h){ var el=document.getElementById(h), sec=el&&el.closest("section.sec"); if(sec) sec.classList.add("open"); }
 })();
 </script>
 </body>
