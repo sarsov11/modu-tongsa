@@ -15,7 +15,7 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=873fa070">
-<link rel="stylesheet" href="css/coach.css?v=b5de5f32">
+<link rel="stylesheet" href="css/coach.css?v=814d6969">
 <link rel="stylesheet" href="css/question.css?v=326c7f60">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -255,7 +255,7 @@
     gap:7px;justify-content:flex-end;height:100%}
   .week .d i{display:block;width:100%;border-radius:5px 5px 2px 2px;background:var(--lv2);
     min-height:3px}
-  .week .d.today i{background:var(--red)}
+  .week .d.now i{background:var(--red)}
   .week .d span{font-size:14.5px;color:var(--ink-4);font-family:var(--mono);font-weight:800}
 
   @media(max-width:520px){
@@ -337,7 +337,9 @@
   .cd.l1{background:color-mix(in srgb,var(--red) 26%,var(--line-2));color:var(--ink-2)}
   .cd.l2{background:var(--red);color:#fff;font-weight:700}
   .cd.future{background:transparent;border:1px dashed var(--line);color:var(--ink-4);opacity:.55}
-  .cd.today{outline:2px solid var(--ink-1);outline-offset:1px}
+  /* ★ 칸에 「today」 클래스를 달았더니 위쪽 .today(오늘 할 것 상자)의 margin-top·테두리가 같이 먹어 오늘 칸이 아래로 밀렸다(2026-09-19 대표님 "달력 깨짐") */
+  .cd.now{outline:2px solid var(--ink-1);outline-offset:1px}
+  .cd.l0{background:transparent;border:1px solid var(--line-2)}   /* 안 한 날은 비워 둔다 — 분홍 스킨에서 --line-2 가 분홍이라 다 한 것처럼 보였다 */
   .cd{align-content:center;gap:1px}
   .cd .m{font-size:8.5px;opacity:.8;font-style:normal}
   .cd.pad{background:none;border:none;height:34px}
@@ -417,6 +419,22 @@
     .more summary{padding:13px 14px;font-size:16px}
     .more .mbody{padding:4px 12px 16px}
   }
+  /* ── 홈 B안(대화) ── */
+  #talk{margin-top:18px}
+  .bub{padding:17px 18px;border-radius:22px 22px 22px 6px;background:var(--surface);border:1.5px solid var(--line-2);font-size:18.5px;font-weight:700;line-height:1.5;color:var(--ink);max-width:520px}
+  .bub b{color:var(--cta)}
+  .ans{display:grid;gap:9px;margin-top:12px;justify-items:end;max-width:520px}
+  .ans a,.ans button{padding:15px 22px;border-radius:22px 22px 6px 22px;border:0;background:var(--cta);color:#fff;font:inherit;font-weight:800;font-size:17.5px;text-decoration:none;cursor:pointer}
+  .ans .lite{background:var(--surface);color:var(--ink-2);border:1.5px solid var(--line-2);font-size:16px;padding:12px 18px}
+  .askmore{margin-top:14px;max-width:520px}
+  .askmore[hidden]{display:none}
+  .askmore .bub{font-size:17px}
+  .pickl{display:grid;gap:8px;margin-top:10px}
+  .pickl a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:15px 16px;border-radius:var(--r1);border:1.5px solid var(--line-2);background:var(--surface);color:var(--ink);font-weight:700;font-size:16px;text-decoration:none}
+  .pickl a span{font-weight:500;font-size:14px;color:var(--ink-4);flex:0 0 auto}
+  .mine{margin:34px 0 8px;font-size:14px;font-weight:800;color:var(--ink-4)}
+  body.home .nextbar{display:none}          /* 홈에서는 말 거는 목소리가 하나여야 한다 — 아래 띠는 다른 화면에서만 */
+  body.home.hasnext{padding-bottom:calc(58px + env(safe-area-inset-bottom,0))}
 </style>
 </head>
 <body>
@@ -426,26 +444,29 @@
       <span class="kicker"><i></i><span id="today"></span></span>
       <h1 id="hi"></h1>
       <p class="remode" id="remode"></p>
-      <p class="sub" id="lede"></p>
+      <p class="sub" id="lede" hidden></p>
     </div>
     <div class="pheadact" id="headact"></div>
   </div>
 
-  <!-- ① 지금 할 것 하나 — 화면을 열면 이것부터 보인다 -->
-  <section class="rt" id="today2"></section>
+  <!-- ★ 홈 B안 — 선생님이 권하고 학생은 답만 고른다 -->
+  <section id="talk"></section>
+
+  <section class="rt" id="today2" hidden></section>
 
   <!-- ② 오늘 수치 · 남은 날 — 가만히 있어도 보인다 -->
-  <div id="tstat"></div>
-  <div class="dday" id="dday"></div>
+  <div id="tstat" hidden></div>
+  <div class="dday" id="dday" hidden></div>
   <div class="band" id="band"></div>
 
   <!-- ③ 오늘의 개념 카드 — 눌러야 열린다 -->
-  <section class="sec tight" id="cardsec">
+  <section class="sec tight" id="cardsec" hidden>
     <div class="sechd"><h2>오늘 개념</h2></div>
     <div id="tcard"></div>
   </section>
 
   <!-- ④ 나머지는 접어 둔다 — 폰에서 한 화면에 할 것 하나만 보이게 -->
+  <div class="mine">내 기록</div>
   <details class="more" id="more-cal">
     <summary><span>이번 달 달력</span><i></i></summary>
     <div class="mbody"><div class="cal" id="cal"></div></div>
@@ -466,15 +487,15 @@
     </div>
   </details>
 
-  <details class="more" id="more-todo">
-    <summary><span>이어서 하면 좋은 것</span><i></i></summary>
+  <details class="more" id="more-todo" hidden>
+    <summary><span>추천 학습</span><i></i></summary>
     <div class="mbody">
       <p class="cap" style="margin:0 0 12px;font-size:13px;color:var(--ink-4)"></p>
       <div class="todo" id="todo"></div>
     </div>
   </details>
 
-  <details class="more" id="more-week">
+  <details class="more" id="more-week" hidden>
     <summary><span>최근 7일</span><i></i><em class="cap" id="weekCap"></em></summary>
     <div class="mbody"><div class="card"><div class="bd"><div class="week" id="week"></div></div></div></div>
   </details>
@@ -693,7 +714,7 @@
     var DW=["일","월","화","수","목","금","토"];
     var cells=C.cells.map(function(c){
       if(!c) return '<span class="cd pad"></span>';
-      return '<span class="cd l'+c.lv+(c.today?" today":"")+(c.future?" future":"")+
+      return '<span class="cd l'+c.lv+(c.today?" now":"")+(c.future?" future":"")+
         '" title="'+c.key+(c.min?", "+c.min+"분":"")+'">'+c.day+
         (c.min?'<i class="m">'+c.min+'</i>':'')+'</span>';
     }).join("");
@@ -832,12 +853,12 @@
   function pickTarget(){
     // 약하다고 본 곳 가운데 지금 풀 수 있는 문항이 있는 리프를 고른다
     for(var i=0;i<thin.length;i++){
-      var leaves=thin[i].m.leaves.filter(function(l){ return playable(l).length>=3; });
+      var leaves=thin[i].m.leaves.filter(function(l){ return playable(l).length>=3 && (!T.inScopeLeaf||T.inScopeLeaf(l.code)); });   /* 범위에서 뺀 리프(지방 자치)가 권해졌다(2026-09-19) */
       if(leaves.length) return {mid:thin[i], leaf:leaves.sort(function(a,b){
         return playable(b).length-playable(a).length; })[0]};
     }
     for(var j=0;j<mids.length;j++){
-      var ls=mids[j].m.leaves.filter(function(l){ return playable(l).length>=3; });
+      var ls=mids[j].m.leaves.filter(function(l){ return playable(l).length>=3 && (!T.inScopeLeaf||T.inScopeLeaf(l.code)); });
       if(ls.length) return {mid:mids[j], leaf:ls[0]};
     }
     return null;
@@ -1133,7 +1154,7 @@
   var mx=Math.max(1,Math.max.apply(null,ws.map(function(x){ return x.ans; })));
   document.getElementById("week").innerHTML=ws.map(function(x,i){
     var h=Math.round(x.ans/mx*100);
-    return '<span class="d'+(i===ws.length-1?" today":"")+'" title="'+x.d+
+    return '<span class="d'+(i===ws.length-1?" now":"")+'" title="'+x.d+
       ', '+x.ans+'문항">'+
       '<i style="height:'+Math.max(3,h)+'%"></i>'+
       '<span>'+x.label+'</span></span>';
@@ -1144,6 +1165,37 @@
 
   document.getElementById("foot").innerHTML="";   /* 만든 사람 메모였다 — 학생에게 안 보인다(2026-09-19) */
 
+
+  /* ══════ 홈 B안 — 대화 ══════ */
+  (function(){
+    document.body.classList.add("home");
+    var host=document.getElementById("talk"); if(!host) return;
+    var CARDS=window.CARDS||{};
+    var 후보=(T.오늘의리프?T.오늘의리프({전부:true}):[]).filter(function(c){ return CARDS[c.code]; });
+    var 리프=후보[0]?후보[0].leaf:null;
+    if(!리프){ host.innerHTML='<div class="bub">시험 범위부터 정해볼까요?</div><div class="ans"><a href="settings.html#scope">범위 정하기</a></div>'; return; }
+    var 개념=(CARDS[리프.code].cards[0]||{}).title||리프.name;
+    /* 오늘 O·X 를 얼마나 했나 — 말이 달라진다 */
+    var 오늘=T.dayKey(), ox=S.ox||{}, 한=0, 맞=0;
+    Object.keys(ox).forEach(function(k){ var x=ox[k]; if(x&&x.at&&T.dayKey(new Date(x.at))===오늘){ 한++; if(x.ok) 맞++; } });
+    var 부름=(S.student&&S.student.name)?esc(S.student.name)+', ':'';
+    var 말 = 한===0 ? 부름+'오늘은 <b>'+esc(개념)+'</b> O·X부터 해볼까요?'
+           : 한<30  ? '오늘 O·X '+한+'문장 중 '+맞+'개 맞혔어요. <b>'+esc(개념)+'</b> 한 세트 더 해볼까요?'
+                    : '오늘 O·X '+한+'문장 했어요. 더 하고 싶으면 <b>'+esc(개념)+'</b>도 있어요.';
+    var 틀린=Object.keys(ox).filter(function(k){ return ox[k]&&ox[k].ok===false; }).length;
+    host.innerHTML='<div class="bub">'+말+'</div>'+
+      '<div class="ans"><a href="ox.html?leaf='+리프.code+'">좋아요, 시작</a>'+
+      '<a class="lite" href="card.html?leaf='+리프.code+'">개념부터 볼래요</a>'+
+      '<button type="button" class="lite" id="talkmore">다른 거 할래요</button></div>'+
+      '<div class="askmore" id="askmore" hidden><div class="bub">뭘 연습하고 싶어요?</div><div class="pickl">'+
+        '<a href="skilltree.html">단원을 골라서 O·X<span>개념트리</span></a>'+
+        (틀린?'<a href="ox.html?wrong=1">틀린 문장만 다시<span>'+틀린+'문장</span></a>':'')+
+        '<a href="naeshin.html">어려운 O·X만<span>Killer Drill</span></a>'+
+        '<a href="exam.html">시험처럼 풀기<span>모의고사</span></a>'+
+        '<a href="skilltree.html?lec='+리프.code+'">강의 보기<span>'+esc(개념)+'</span></a>'+
+      '</div></div>';
+    document.getElementById("talkmore").onclick=function(){ var m=document.getElementById("askmore"); m.hidden=!m.hidden; if(!m.hidden) m.scrollIntoView({block:"nearest",behavior:"smooth"}); };
+  })();
   window.addEventListener("terra:skin",function(){ location.reload(); });
 })();
 </script>

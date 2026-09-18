@@ -35,7 +35,7 @@
   /* ★ 말줄임 금지(2026-09-19 대표님 「오늘 몫은 15…」) — 글은 윗줄에 통째로, 칩·단추는 아랫줄에 */
   .nextbar.coach .in{flex-wrap:wrap;row-gap:6px}
   .nextbar.coach .tx{flex:1 1 calc(100% - 64px);min-width:0;white-space:normal;overflow:visible;line-height:1.35}
-  .nextbar.coach .tx *{display:inline}
+  .nextbar.coach .tx b,.nextbar.coach .tx span{display:block;white-space:normal;overflow:visible;text-overflow:clip}   /* 둘째 줄(오른 곳·연속 일수)이 한 줄로 잘렸다(2026-09-19) */
   .nextbar.coach .chips,.nextbar.coach .go{flex:0 0 auto}
 }
 

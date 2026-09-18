@@ -15,7 +15,7 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=873fa070">
-<link rel="stylesheet" href="css/coach.css?v=b5de5f32">
+<link rel="stylesheet" href="css/coach.css?v=814d6969">
 <link rel="stylesheet" href="css/keyword.css?v=e00f83be">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -132,6 +132,34 @@
   @media(max-width:520px){ .qpick .tx{font-size:15.5px} .qdata{font-size:14.5px} }
   .hot{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;font-size:14.5px;vertical-align:middle;
     background:var(--red,#e5484d);color:#fff;font-weight:700}
+  /* ── 연속 정답 콤보 ── */
+  .combo{position:fixed;left:50%;top:22%;z-index:200;transform:translate(-50%,-50%) scale(.4);opacity:0;pointer-events:none;
+    display:flex;align-items:baseline;gap:8px;padding:12px 22px;border-radius:999px;background:var(--cta);color:#fff;
+    box-shadow:0 10px 0 rgba(0,0,0,.14);animation:comboin .42s cubic-bezier(.2,1.6,.4,1) forwards}
+  .combo b{font-family:var(--mono);font-size:34px;font-weight:800;line-height:1}
+  .combo span{font-size:17px;font-weight:800}
+  .combo.big{padding:16px 28px} .combo.big b{font-size:48px} .combo.big span{font-size:20px}
+  .combo.out{animation:comboout .35s ease-in forwards}
+  .combo i{position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px;border-radius:3px;opacity:0}
+  .combo i:nth-child(3){background:#ffd34d;animation:spark0 .9s ease-out forwards}
+  .combo i:nth-child(4){background:#7be0c3;animation:spark1 .9s ease-out forwards}
+  .combo i:nth-child(5){background:#fff;animation:spark2 .9s ease-out forwards}
+  .combo i:nth-child(6){background:#ffd34d;animation:spark3 .9s ease-out forwards}
+  .combo i:nth-child(7){background:#7be0c3;animation:spark4 .9s ease-out forwards}
+  .combo i:nth-child(8){background:#fff;animation:spark5 .9s ease-out forwards}
+  .combo i:nth-child(9){background:#ffd34d;animation:spark6 .9s ease-out forwards}
+  .combo i:nth-child(10){background:#7be0c3;animation:spark7 .9s ease-out forwards}
+  @keyframes comboin{to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+  @keyframes comboout{to{transform:translate(-50%,-90%) scale(.9);opacity:0}}
+  @keyframes spark0{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(127px,32px) rotate(200deg) scale(.4);opacity:0}}
+  @keyframes spark1{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(57px,86px) rotate(200deg) scale(.4);opacity:0}}
+  @keyframes spark2{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(-46px,89px) rotate(200deg) scale(.4);opacity:0}}
+  @keyframes spark3{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(-122px,40px) rotate(200deg) scale(.4);opacity:0}}
+  @keyframes spark4{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(-127px,-32px) rotate(200deg) scale(.4);opacity:0}}
+  @keyframes spark5{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(-57px,-86px) rotate(200deg) scale(.4);opacity:0}}
+  @keyframes spark6{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(46px,-89px) rotate(200deg) scale(.4);opacity:0}}
+  @keyframes spark7{from{transform:translate(0,0) scale(1);opacity:1}to{transform:translate(122px,-40px) rotate(200deg) scale(.4);opacity:0}}
+  @media(prefers-reduced-motion:reduce){ .combo,.combo i{animation-duration:.01s} }
 </style>
 </head>
 <body>
@@ -251,7 +279,29 @@
     return 뽑;
   }
 
+  /* ★ 틀린 문장만 다시(ox.html?wrong=1) — 홈 「다른 거 할래요」 에서 온다(2026-09-19) */
+  var 틀린것만 = /[?&]wrong=1/.test(location.search);
+  function 틀린고르기(){
+    var ox=(T.state().ox)||{}, 풀=[];
+    BANK.forEach(function(x){ if(ox[x.id]&&ox[x.id].ok===false) 풀.push(x); });
+    Object.keys(CQ).forEach(function(k){ CQ[k].forEach(function(z){ if(ox[z.id]&&ox[z.id].ok===false){ 풀.push(z); } }); });
+    풀.sort(function(a,b){ return (ox[a.id].at||0)-(ox[b.id].at||0); });   /* 오래전에 틀린 것부터 */
+    var 뽑=풀.slice(0,세트수);
+    if(뽑.some(function(z){ return z.stem!=null||z.o; })) 기출판=true;
+    return 뽑;
+  }
+  var 연속=0;
+  function 콤보(n){
+    var 큰=(n===3||n===5||n===7||n>=10);
+    var el=document.createElement("div"); el.className="combo"+(큰?" big":"");
+    el.innerHTML='<b>'+n+'</b><span>연속 정답</span>'+(큰?'<i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>':'');
+    document.body.appendChild(el);
+    if(navigator.vibrate){ try{ navigator.vibrate(큰?[18,40,28]:12); }catch(e){} }
+    setTimeout(function(){ el.classList.add("out"); },큰?1100:800);
+    setTimeout(function(){ el.remove(); },큰?1500:1150);
+  }
   function 고르기(){
+    if(틀린것만){ var 틀=틀린고르기(); if(틀.length) return 틀; }
     var 기 = 기출고르기();
     if(기) return 기;
     var 범위 = BANK.filter(function(x){
@@ -391,6 +441,9 @@
     var 앞=S.ox[x.id];
     var 시도=(앞&&앞.n?앞.n:0)+1;
     S.ox[x.id]={ok:ok,c:확신,ms:ms,n:시도,at:Date.now(),leaf:x.leaf};
+    /* ★ 연속 정답 — 게임처럼 터뜨린다(2026-09-19 대표님). 2연속부터 뜨고, 3·5·7·10 에서 더 크게 */
+    연속 = ok ? 연속+1 : 0;
+    if(ok && 연속>=2) 콤보(연속);
     /* 리프 통계에도 넣는다 — 개념 체크도 학습이다 */
     T.drill && T.drill("ox", ok);
     T.save && T.save();
