@@ -598,7 +598,6 @@
     var 몸 = window.QRENDER ? QRENDER.html(d, q, {}) : '';
     document.getElementById("stage").innerHTML=
       '<div class="qtop"><span class="no">'+(i+1)+'번</span>'+
-      '<span class="chip mono">'+leaf.code+'</span>'+
       (q.lb?'<span class="chip mono">'+esc(q.lb)+'</span>':'')+
       '<span class="srcline">'+esc(window.QRENDER&&QRENDER.출처?QRENDER.출처(q):(q.g||"")+" "+(q.d||""))+'</span></div>'+
       '<div class="qbody">'+
