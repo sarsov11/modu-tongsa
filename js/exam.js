@@ -355,6 +355,16 @@
     /* 리프마다 실제 문항을 고른다 — 최근에 나온 것은 뒤로 민다.
        ★ 한 문항이 여러 리프에 배정돼 있다(실측 1,319건). id 로 걸러야
           같은 문항이 시험지에 두 번 나오지 않는다. */
+    /* ★ 재고가 넉넉하면(안 나온 문항만으로 한 회차가 찬다) 리프 몫을 **그 리프의 안 나온 문항 수**로 묶는다(2026-09-19).
+       못 푸는 문항 185개를 걷어낸 뒤 얇아진 리프가 제 몫을 채우느라 같은 문항을 되풀이했다(전 범위 열흘 되풀이 13%).
+       모자란 자리는 아래 「나머지」가 다른 리프의 안 나온 문항으로 채운다. */
+    var 안나온수 = all.filter(function (x) { return !피할[x.q.id]; }).length;
+    if (안나온수 >= 문항수) {
+      리프들.forEach(function (k) {
+        var 새것 = byLeaf[k].qs.filter(function (x) { return !피할[x.q.id]; }).length;
+        if ((몫[k] || 0) > 새것) 몫[k] = 새것;
+      });
+    }
     var 뽑힘 = [], 담음 = {};
     리프들.forEach(function (k) {
       var n = 몫[k] || 0;
@@ -388,9 +398,16 @@
        억지로 채우면 글이 깨진 문항이 섞이고, 그건 크롭으로 때우던 것과 같다. */
     if (뽑힘.length < 문항수) {
       var 나머지 = 섞기(all.filter(function (x) { return !담음[x.q.id]; }), rnd);
-      for (var j = 0; j < 나머지.length && 뽑힘.length < 문항수; j++) {
-        if (담음[나머지[j].q.id]) continue;
-        담음[나머지[j].q.id] = 1; 뽑힘.push(나머지[j]);
+      나머지.sort(function (a, b) { return (피할[a.q.id] ? 1 : 0) - (피할[b.q.id] ? 1 : 0); });   /* 안 나온 것부터 */
+      /* 채울 때도 킬러 상한을 지킨다 — 첫 바퀴는 상한 안에서만, 그래도 모자라면 둘째 바퀴에 가리지 않고 */
+      var 킬수 = 뽑힘.filter(function (x) { return x.killer; }).length;
+      for (var 바퀴 = 0; 바퀴 < 2 && 뽑힘.length < 문항수; 바퀴++) {
+        for (var j = 0; j < 나머지.length && 뽑힘.length < 문항수; j++) {
+          if (담음[나머지[j].q.id]) continue;
+          if (바퀴 === 0 && 나머지[j].killer && 킬수 >= 킬러상한) continue;
+          담음[나머지[j].q.id] = 1; 뽑힘.push(나머지[j]);
+          if (나머지[j].killer) 킬수++;
+        }
       }
     }
 
