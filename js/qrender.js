@@ -92,8 +92,11 @@
 
   function 본문(t) {
     var s = esc(쓰레기빼기(t));
-    s = s.replace(/([㉠-㉭ⓐ-ⓩ])/g, '<b class="mk">$1</b>');
+    s = s.replace(/([㉠-㉭ⓐ-ⓩ])/g, '<b class="mk box">$1</b>');
     s = s.replace(/(\([가-힣]\))/g, '<b class="mk">$1</b>');
+    /* 홑 대문자 A~H 자리표시(「A 를 침해」 「A ~ C」)는 상자로 — 글 사이에 묻혀 안 보인다(2026-09-18 대표님).
+       EU·GDP 처럼 영문 낱말의 일부는 손대지 않는다. */
+    s = s.replace(/(^|[^A-Za-z0-9&#;])([A-H])(?![A-Za-z0-9;])/g, '$1<b class="mk box">$2</b>');
     return s;
   }
 

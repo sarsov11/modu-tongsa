@@ -16,6 +16,8 @@
 
 /* ㉠ ㄱ (가) 같은 표지 — 문항이 가리키는 자리다 */
 .mk{ color:var(--red-2); font-weight:700; }
+.mk.box{ display:inline-block; min-width:1.55em; padding:0 .32em; margin:0 .08em; line-height:1.4; text-align:center;
+  border:1.5px solid var(--red-2); border-radius:5px; background:var(--surface); font-weight:900; font-size:.94em; vertical-align:baseline; }
 
 /* ── 자료 상자 ───────────────────────────── */
 .data{
