@@ -488,11 +488,18 @@
         '<p>' + esc(MSG.cardNone) + '</p></div>';
       return;
     }
+    /* 카드 2판(blocks)은 부제 + 첫 문단들로 미리 보인다(2026-09-18 홈이 lines 를 가정해 죽었던 것) */
+    function 미리보기(card) {
+      if (card.lines) return card.lines;
+      var out = []; if (card.sub) out.push(card.sub);
+      (card.blocks || []).forEach(function (b) { if (b.t === "p" && b.text) out.push(String(b.text).replace(/\*\*/g, "").slice(0, 120)); });
+      return out;
+    }
     function face(c) {
       return '<div class="face back">' +
         '<span class="eb">' + esc((T.BY[c.set.root] ? T.BY[c.set.root].name + ", " : "") + c.set.mid) + '</span>' +   /* 단원 알파벳 대신 단원 이름 */
         '<h3>' + esc(c.card.title) + '</h3>' +
-        '<ul>' + c.card.lines.slice(0, 3).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join("") + '</ul>' +
+        '<ul>' + 미리보기(c.card).slice(0, 3).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join("") + '</ul>' +
         '<p class="cap">' + esc(MSG.cardOpened) + '</p>' +
         '<div class="act"><a class="btn" href="card.html?leaf=' + c.leaf + '">바로 확인 →</a>' +
         '<span class="cnt">' + esc(fmt("cardCount", { n: cardCount() })) + '</span></div></div>';
