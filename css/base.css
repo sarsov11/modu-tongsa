@@ -536,3 +536,16 @@ h1,h2,h3,h4{font-weight:900}
 
 /* ── 숫자 문법(2026-09-16 대표님): 굵고 크게, 단위는 숫자 뒤에 작게. 모노는 없다 ── */
 .mono,.num,[data-num]{font-family:var(--kr);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+
+/* ── 맞았을 때 — 선생님이 치는 초록 동그라미 (2026-09-18 대표님) ── */
+.opt,.ox button{ position:relative; }
+.opt.hit::after,.ox button.hit::after{
+  content:""; position:absolute; left:-10px; top:-10px; right:-10px; bottom:-10px; pointer-events:none;
+  border:5px solid #1F9D5B; border-radius:50% / 50%; box-shadow:0 0 0 3px rgba(31,157,91,.12);
+  animation:okcircle .45s cubic-bezier(.2,.9,.3,1.2) both;
+}
+.opt.hit{ z-index:1; }
+@keyframes okcircle{ 0%{ transform:scale(.55) rotate(-8deg); opacity:0 } 60%{ opacity:1 } 100%{ transform:scale(1) rotate(0); opacity:1 } }
+.verdict .tag2.ok{ animation:okpop .4s cubic-bezier(.2,.9,.3,1.3) both; font-size:16px; padding:6px 14px; }
+@keyframes okpop{ 0%{ transform:scale(.4); opacity:0 } 100%{ transform:scale(1); opacity:1 } }
+@media (prefers-reduced-motion:reduce){ .opt.hit::after,.ox button.hit::after,.verdict .tag2.ok{ animation:none } }
