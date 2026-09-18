@@ -1,13 +1,12 @@
 {
  "name": "모두의 통사",
  "short_name": "모두의 통사",
- "description": "통합사회 스킬트리 · 기출 문제풀이 · 킬러 트레이닝",
+ "description": "통합사회 개념트리 · 기출 문제풀이 · Killer Drill",
  "start_url": "./index.html",
  "scope": "./",
  "display": "standalone",
- "orientation": "portrait-primary",
- "background_color": "#08090B",
- "theme_color": "#08090B",
+ "background_color": "#FAF8F3",
+ "theme_color": "#FAF8F3",
  "lang": "ko",
  "icons": [
   {
@@ -29,7 +28,7 @@
  ],
  "shortcuts": [
   {
-   "name": "스킬트리",
+   "name": "개념트리",
    "url": "./skilltree.html"
   },
   {
@@ -37,7 +36,7 @@
    "url": "./study.html"
   },
   {
-   "name": "킬러 트레이닝",
+   "name": "Killer Drill",
    "url": "./drill.html"
   }
  ]

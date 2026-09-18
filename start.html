@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#08090B">
+<meta name="theme-color" content="#FAF8F3">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=53e7b8e2">
@@ -50,7 +50,7 @@
   .tile .ic{flex:0 0 auto;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
     background:var(--surface-3);font-family:var(--mono);font-size:15px;font-weight:800;color:var(--ink-2)}
   .tile[aria-pressed="true"] .ic{background:var(--cta);color:#fff}
-  .tile b{display:block;font-size:16.5px;letter-spacing:-.02em}
+  .tile b{display:block;font-size:17px;font-weight:800;letter-spacing:-.02em;line-height:1.35}
   .tile span{display:block;font-size:15px;color:var(--ink-3);margin-top:2px}
   .tile .tag{margin-left:auto;font-family:var(--mono);font-size:14.5px;color:var(--cta-2);font-weight:800;flex:0 0 auto}
   .tiles.two{grid-template-columns:1fr 1fr}
@@ -128,8 +128,9 @@
   .stage.in{animation:obin .32s cubic-bezier(.32,.72,0,1)}
   @keyframes obin{0%{opacity:0;transform:translateX(14px)}100%{opacity:1;transform:none}}
   @media (prefers-reduced-motion: reduce){.stage.in{animation:none}}
-  .tile b{font-size:34px;font-weight:900;letter-spacing:-.04em;line-height:1;font-family:var(--kr);font-variant-numeric:tabular-nums}
-  .tile b .u{display:inline;font-size:15px;font-weight:800;color:var(--ink-3);margin-left:2px;letter-spacing:0}
+  /* 숫자 타일(하루 목표)만 크게 — 학년 타일 제목까지 34px 로 커져 줄이 넘어갔다(2026-09-18 대표님) */
+  .tiles.two .tile b{font-size:34px;font-weight:900;letter-spacing:-.04em;line-height:1;font-family:var(--kr);font-variant-numeric:tabular-nums}
+  .tiles.two .tile b .u{display:inline;font-size:15px;font-weight:800;color:var(--ink-3);margin-left:2px;letter-spacing:0}
   .unitstoggle{margin:12px 0 6px;height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--line-2);background:var(--surface);
     color:var(--ink-2);font-family:var(--kr);font-size:15px;font-weight:700;cursor:pointer}
   .unitstoggle[aria-expanded="true"]{border-color:var(--cta);color:var(--cta)}
