@@ -355,6 +355,7 @@
 <script src="js/tree.js?v=45426a99"></script>
 <script src="js/lecture.js?v=6c12a0f0"></script>
 <script src="js/video.js?v=267bdcea"></script>
+<script src="js/lecprac.js"></script>
 <script src="js/pool.js?v=1b40e933"></script>
 <script src="js/drills.js?v=9d14bfc8"></script>
 <script src="js/cards.js?v=a225153d"></script>
@@ -1285,7 +1286,13 @@
           if(!V || !(V.yt||V.web||V.local)) return '<button class="btn quiet soon" disabled>강의 준비 중</button>';
           return '<button class="btn play" data-leaf="'+x.code+'">강의 보기</button>';
         })()+
-        (x.play?'<a class="btn ghost" href="study.html?leaf='+x.code+'">문제 '+x.play+'</a>':'')+
+        /* ★ 0919 대표님 「강의 옆 관련 문항 1개 딸랑 — 적합도도 떨어지고 문제 수도 적다」
+           강의가 있으면 그 강의 내용 O·X(lecprac.js) 로 — 고1 기출 문항은 리프에 0~2개뿐이었다 */
+        (function(){
+          var P=(window.LECPRAC||{})[x.code];
+          if(P&&P.ids.length) return '<a class="btn ghost" href="ox.html?lec='+x.code+'">강의 연습 '+P.ids.length+'</a>';
+          return x.play?'<a class="btn ghost" href="study.html?leaf='+x.code+'">문제 '+x.play+'</a>':'';
+        })()+
         '</span></div>';
     }).join("");
     sheet.hidden=false;

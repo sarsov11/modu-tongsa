@@ -183,6 +183,7 @@
 <script src="js/drills.js?v=9d14bfc8"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
 <script src="js/conceptq.js?v=107d7c8c"></script>
+<script src="js/lecprac.js"></script>
 <script src="js/cards.js?v=a225153d"></script>
 <script src="js/keyword.js?v=284ec545"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
@@ -300,7 +301,36 @@
     setTimeout(function(){ el.classList.add("out"); },큰?1100:800);
     setTimeout(function(){ el.remove(); },큰?1500:1150);
   }
+  /* ★ 강의 연습(ox.html?lec=<리프>) — 0919 대표님 「강의 옆 관련 문항 1개 딸랑, 적합도도 떨어지고 문제 수도 적다」
+     그 강의 대본·화면 글과 내용 낱말이 겹치는 교과서·기출 문장만(강의연습.py → lecprac.js). 10문제, O·X 반반. */
+  var 강의표 = (location.search.match(/[?&]lec=([^&]+)/)||[])[1];
+  if(강의표) 강의표 = decodeURIComponent(강의표);
+  function 강의고르기(){
+    var P=(window.LECPRAC||{})[강의표]; if(!P) return null;
+    var 옥스={}; BANK.forEach(function(x){ 옥스[x.id]=x; });
+    var 풀=[];
+    P.ids.forEach(function(r){
+      var z = r.k==="cq" ? (CQ[r.leaf]||[]).filter(function(q){ return q.id===r.id; })[0] : 옥스[r.id];
+      if(z) 풀.push(z);
+    });
+    if(풀.length < 4) return null;
+    function 점수(x){ var 본적=(T.state().ox||{})[x.id]; return (본적?(본적.ok?-0.6:0.5):0) + Math.random(); }
+    var O=풀.filter(function(z){return z.a}).sort(function(a,b){return 점수(b)-점수(a)});
+    var X=풀.filter(function(z){return !z.a}).sort(function(a,b){return 점수(b)-점수(a)});
+    var 반=Math.min(Math.ceil(세트수/2), O.length), 뽑=O.slice(0,반).concat(X.slice(0,세트수-반));
+    if(뽑.length<세트수) 뽑=뽑.concat(O.slice(반, 반+세트수-뽑.length));
+    for(var k=뽑.length-1;k>0;k--){ var j=Math.floor(Math.random()*(k+1)); var t=뽑[k]; 뽑[k]=뽑[j]; 뽑[j]=t; }
+    기출판 = true;   /* 「기출 재료가 모자라 개념 문장으로」 안내를 띄우지 않는다 — 강의 연습은 원래 두 재료를 섞는다 */
+    try{
+      var _h=document.getElementById('lede');
+      if(_h) _h.innerHTML='방금 들은 강의 <b>'+esc(P.제목)+'</b>에서 나온 내용이에요. O·X로 답하세요.';
+      var _t=_h && _h.parentNode ? _h.parentNode.querySelector('h1') : null;
+      if(_t) _t.textContent='강의 연습';
+    }catch(e){}
+    return 뽑;
+  }
   function 고르기(){
+    if(강의표){ var 강=강의고르기(); if(강&&강.length) return 강; }
     if(틀린것만){ var 틀=틀린고르기(); if(틀.length) return 틀; }
     var 기 = 기출고르기();
     if(기) return 기;
@@ -341,7 +371,7 @@
      카드에서 넘어왔으면(리프표) 그 리프 것만, 아니면 시험 범위 안 약한 리프에서.
      방금(10분 안) 푼 것은 다시 안 낸다 — 카드 뒤에서 쓴 개념어가 곧바로 되풀이되지 않게. */
   function 개념어섞기(세트){
-    if(!window.KWASK || !세트 || 세트.length < 4) return 세트;
+    if(!window.KWASK || !세트 || 세트.length < 4 || 강의표) return 세트;   /* 강의 연습에는 다른 리프 개념어를 섞지 않는다 */
     var 몇 = 세트.length >= 8 ? 2 : 1;
     var 뽑 = 리프표 ? KWASK.리프에서(T, 리프표, 몇) : KWASK.범위에서(T, 몇);
     var 자리 = [2, 6];
