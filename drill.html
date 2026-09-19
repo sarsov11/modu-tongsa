@@ -391,10 +391,7 @@
         </div>
       </div>
       <!-- 알림 설정은 설정 화면 하나에만 둔다(2026-09-17 감사: 중복) -->
-      <div class="card">
-        <div class="hd"><h3>근거</h3></div>
-        <div class="bd" style="font-size:13px;line-height:1.75;color:var(--ink-3)" id="basis"></div>
-      </div>
+      <!-- 「근거」 카드(법령ID·확인 날짜) 뺌 — 학생에게 쓸모없는 작업 기록(2026-09-19 대표님). 조문 원문은 문항 풀이 뒤에 그대로 뜬다 -->
     </div>
   </div>
 </div>
@@ -407,11 +404,11 @@
 <script src="js/laborcase.js?v=786e26c2"></script>
 <script src="js/econcase.js?v=a06c335f"></script>
 <script src="js/consticase.js?v=cd204a55"></script>
-<script src="js/drills.js?v=9d14bfc8"></script>
+<script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/rights.js?v=07b8651a"></script>
 <script src="js/power.js?v=e8c8a180"></script>
-<script src="js/peace.js?v=d2be76da"></script>
-<script src="js/justice.js?v=4843e05f"></script>
+<script src="js/peace.js?v=ee391c4c"></script>
+<script src="js/justice.js?v=a1037384"></script>
 <script src="js/pool.js?v=1b40e933"></script>
 <script src="js/cards.js?v=a225153d"></script>
 <script src="js/store.js?v=dfb93453"></script>
@@ -433,8 +430,7 @@
     var host=document.getElementById("scopehost");
     if(!host) return;
     if(!T.scopeOn()){
-      host.innerHTML='<div class="scopebar">이번 시험 범위를 정하면 '+
-        '<b>그 범위만</b> 훈련해 드려요.<a href="settings.html">범위 정하기 →</a></div>';
+      host.innerHTML='<div class="scopebar">시험 범위를 정해 볼까요?<a href="settings.html">범위 정하기 →</a></div>';
       return;
     }
     var 안=MODES.filter(function(m){ return !범위밖(m); }).length;
@@ -486,7 +482,7 @@
   function head(){
     var m=def();
     document.getElementById("kdesc").textContent=m.desc;   /* 단원 알파벳은 학생에게 안 보인다(2026-09-16) */
-    document.getElementById("basis").innerHTML="<b>"+m.name+"</b><br>"+m.basis;
+    var _bs=document.getElementById("basis"); if(_bs) _bs.innerHTML="<b>"+m.name+"</b><br>"+m.basis;
   }
   function grade(ok){
     answered=true; session.push(ok); T.drill(mode,ok); side();
@@ -653,7 +649,7 @@
         zoomTo(boxAt(q.city), 1150, function(){
           var svg=document.getElementById("wmap");
           var cl=document.getElementById("cityline");
-          if(cl) cl.innerHTML='지금 반짝이는 지점 — <b style="color:var(--ink);font-weight:800;'+
+          if(cl) cl.innerHTML='반짝이는 곳 <b style="color:var(--ink);font-weight:800;'+
             'font-size:19px">'+q.city.n+'</b>';
           if(svg){
             var k=WORLD[2]/boxAt(q.city)[2], big=narrow()?1.5:1;
@@ -823,8 +819,7 @@
         ? '<div class="amb"><b>'+(q.city.g==="F"?"판독을 바로잡았습니다.":"분류가 갈리는 곳입니다.")+
           '</b> '+q.city.note+'</div>'
         : '')+
-      '<span class="src">국경선 Natural Earth 1:110m, 정답은 출제기관 해설을 따른다, '+
-      '기후형 기출 수는 개념트리 '+q.city.leaf+' 리프 실측</span></div>'+
+      '</div>'+
       '';
     document.getElementById("next").onclick=function(){
       set.i++;
@@ -907,7 +902,7 @@
     document.getElementById("stage").innerHTML=
       '<div class="result"><div class="big">'+got+'<span> / '+SET_NOW+'</span></div>'+
       '<div class="cap">'+(got===SET_NOW?"전부 맞혔습니다.":
-        got>=4?"거의 다 왔습니다. 놓친 것만 다시 보세요.":
+        got>=4?"틀린 것만 다시 볼까요?":
         got>=2?"헷갈리는 기후가 남아 있습니다.":
         "여기서 갈리는 것을 찾았습니다. 틀린 것만 다시 가면 됩니다.")+'</div>'+
       (miss?'<div class="missed">'+miss+'</div>':'')+review+
@@ -982,7 +977,7 @@
       why:X+' 1개를 만들려고 포기하는 양이 '+A+' <b>'+r2(q.oa)+'</b>, '+
           B+' <b>'+r2(q.ob)+'</b>예요. <b>적게 포기하는 쪽</b>이 '+
           '<b>비교우위</b>가 있고, 그 나라가 '+X+'를 맡습니다. '+
-          (t.ax>t.bx&&!q.aHasX ? '더 많이 만드는 나라가 맡는 게 아니라는 점이 핵심이에요 — '+
+          (t.ax>t.bx&&!q.aHasX ? ''+
              A+'이 '+X+'를 더 많이 만들지만('+t.ax+'개 대 '+t.bx+'개), 맡는 쪽은 '+B+'예요. '
            : '')});
 
@@ -1042,7 +1037,7 @@
         '<span class="v '+(pos?"up":"dn")+'">'+(pos?"+":"")+Math.round(pc)+'%</span>'+
         '<span class="u">'+(pos?"+":"")+r2(v)+' '+unit+'</span></div>';
     }
-    return '<div class="gains"><div class="gcap">자급할 때와 견주어 얼마나 더 갖는가</div>'+
+    return '<div class="gains"><div class="gcap">자급할 때보다 더 갖는 양</div>'+
       row(xn,gx,px,q.G[1])+row(yn,gy,py,q.G[0])+'</div>';
   }
   function tableHtml(q){
@@ -1052,6 +1047,21 @@
       '<tr><td class="lab">'+q.C[1]+'</td><td>'+t.bx+'</td><td>'+t.by+'</td></tr></table>'+
       '<p class="tnote">두 나라가 <b>똑같은 양의 생산요소</b>를 한 재화에만 모두 '+
       '투입했을 때의 최대 생산량입니다.</p>';
+  }
+  /* ★ 선지 차례 — 자료가 정답을 늘 첫 칸(a:0)에 둔다(권력분립 21·정의 15·평화 11단계 전부, 2026-09-19 실측).
+     화면에서 섞지 않으면 맨 위만 눌러도 맞는다. 단계마다 한 번 섞어 붙여 둔다(다시 그려도 안 바뀜).
+     「O」「X」 둘뿐이면 섞지 않고 O 를 앞에 둔다 — O·X 는 늘 같은 자리에 있어야 헷갈리지 않는다. */
+  function 선지차례(st){
+    if(st.__ord) return st.__ord;
+    var idx=st.o.map(function(_,i){return i;});
+    var ox = st.o.length===2 && st.o.slice().sort().join()==="O,X";
+    st.__ord = ox ? idx.sort(function(a,b){return st.o[a]==="O"?-1:(st.o[b]==="O"?1:0);}) : shuffle(idx);
+    return st.__ord;
+  }
+  function 선지단추(st){
+    return 선지차례(st).map(function(i){
+      return '<button class="opt" data-v="'+i+'">'+st.o[i]+'</button>';
+    }).join("");
   }
   function renderEcon(){
     var q=eset.q, st=eset.steps[eset.i];
@@ -1066,16 +1076,14 @@
     /* 그림이 없는 단계는 한 칸으로 쓴다 — 빈 상자가 선지를 화면 밖으로 밀어낸다 */
     return (side ? '<div class="econgrid">'+left+'<div id="side">'+side+'</div></div>'
                  : '<div class="econone">'+left+'<div id="side" hidden></div></div>')+
-      '<div class="opts c2" style="margin-top:20px">'+st.o.map(function(x,i){
-        return '<button class="opt" data-v="'+i+'">'+x+'</button>';
-      }).join("")+'</div><div id="v"></div>';
+      '<div class="opts c2" style="margin-top:20px">'+선지단추(st)+'</div><div id="v"></div>';
   }
   function judgeEcon(btn){
     if(answered) return;
     var st=eset.steps[eset.i], i=+btn.dataset.v, ok=(i===st.a);
     document.querySelectorAll(".opts.c2 .opt").forEach(function(b,k){
       b.disabled=true;
-      if(k===st.a) b.dataset.s="ok"; else if(b===btn) b.dataset.s="no";
+      if(+b.dataset.v===st.a) b.dataset.s="ok"; else if(b===btn) b.dataset.s="no";
     });
     grade(ok);
     eset.marks.push(ok);
@@ -1088,8 +1096,7 @@
       '<div class="gorow"><button class="btn big" id="next">'+
       (last?"그래서 어떻게 되나 보기":"다음 단계")+'</button>'+
       '<span class="gohint">'+(eset.i+1)+' / '+eset.steps.length+' 단계</span></div>'+
-      '<div class="why"><b>'+(ok?"맞았습니다.":"틀렸습니다.")+'</b> '+st.why+
-      '<span class="src">숫자는 매번 새로 생성, 개념트리 H4.1 절대우위와 비교우위</span></div>';
+      '<div class="why"><b>'+(ok?"맞았습니다.":"틀렸습니다.")+'</b> '+st.why+'</div>';
     document.getElementById("next").onclick=function(){
       if(last){ econEnd(); return; }
       eset.i++;
@@ -1165,16 +1172,14 @@
       '<div class="sitbox">'+c.sit+'</div>'+
       조문블록(c.art, c.text)+
       (st.text2 ? 조문블록(st.art2, st.text2) : '')+
-      '<div class="opts c2" style="margin-top:18px">'+st.o.map(function(o,i){
-        return '<button class="opt" data-v="'+i+'">'+o+'</button>';
-      }).join("")+'</div><div id="v"></div>';
+      '<div class="opts c2" style="margin-top:18px">'+선지단추(st)+'</div><div id="v"></div>';
   }
   function judgePower(btn){
     if(answered) return;
     var c=pset.c, st=c.steps[pset.i], i=+btn.dataset.v, ok=(i===st.a);
     document.querySelectorAll(".opts.c2 .opt").forEach(function(b,k){
       b.disabled=true;
-      if(k===st.a) b.dataset.s="ok"; else if(b===btn) b.dataset.s="no";
+      if(+b.dataset.v===st.a) b.dataset.s="ok"; else if(b===btn) b.dataset.s="no";
     });
     grade(ok); pset.marks.push(ok); setHead();
     var last=(pset.i+1>=c.steps.length);
@@ -1238,8 +1243,7 @@
         ? "네 단계 가운데 <b>"+esc(c.failAt)+"</b>에서 걸렸으므로 침해입니다. "+
           "네 단계는 <b>하나라도 못 넘으면</b> 그것으로 끝입니다."
         : "네 단계를 모두 넘었으므로 침해가 아닙니다. "+
-          "제한이 있다고 다 침해인 것은 아닙니다 — 헌법은 "+
-          "<b>필요한 경우에 한하여 법률로써</b> 제한할 수 있게 열어 두었습니다.")});
+          "헌법은 <b>필요한 경우에 한하여 법률로써</b> 제한할 수 있다고 정합니다.")});
     return st;
   }
   function renderRights(){
@@ -1311,20 +1315,18 @@
     /* ★ 0919 대표님 폰 — 제목 「롤스와 노직을 나란히 놓으면」이 1단계(갑·을은 누구?) 답을 샜다.
        제목·누구 말인지는 1단계를 답한 뒤(2단계부터)에만 보인다. */
     var 풀림 = S2.i>0;
-    return '<h4 class="casetitle">'+(풀림?esc(c.title):'제시문 속 두 사람')+'</h4>'+
+    return '<h4 class="casetitle">'+(풀림?esc(c.title):(/·/.test(c.who)?'제시문 속 두 사람':'제시문 속 사상가'))+'</h4>'+
       '<div class="arti"><div class="ah">제시문 <b id="whobox">'+(풀림?esc(c.who):'?')+'</b>'+
         '<span style="margin-left:auto">기출 원문</span></div>'+
         '<div class="quotebox">'+c.quote+'</div></div>'+
-      '<div class="opts c2" style="margin-top:18px">'+st.o.map(function(o,i){
-        return '<button class="opt" data-v="'+i+'">'+o+'</button>';
-      }).join("")+'</div><div id="v"></div>';
+      '<div class="opts c2" style="margin-top:18px">'+선지단추(st)+'</div><div id="v"></div>';
   }
   function judgeCase(btn){
     if(answered) return;
     var c=qset.c, st=c.steps[qset.i], i=+btn.dataset.v, ok=(i===st.a);
     document.querySelectorAll(".opts.c2 .opt").forEach(function(b,k){
       b.disabled=true;
-      if(k===st.a) b.dataset.s="ok"; else if(b===btn) b.dataset.s="no";
+      if(+b.dataset.v===st.a) b.dataset.s="ok"; else if(b===btn) b.dataset.s="no";
     });
     grade(ok); qset.marks.push(ok); setHead();
     /* 답한 뒤에야 누구 말인지 드러낸다 — 먼저 보이면 1단계 답이 샌다 */
@@ -1397,10 +1399,10 @@
         if(b.dataset.open==="1") return;
         var p=TK.people[t.right]||{}, q=TK.people[t.other]||{}, k=b.dataset.h, txt="";
         if(k==="ori") txt = (p.ori===q.ori)
-          ? "둘 다 "+ORI[p.ori]+" 사람입니다 — 이걸로는 안 갈립니다"
+          ? "둘 다 "+ORI[p.ori]+" 사람입니다."
           : ORI[p.ori]+" 사람입니다";
         if(k==="era") txt = (p.era===q.era)
-          ? "둘 다 "+p.era+"입니다 — 이걸로는 안 갈립니다"
+          ? "둘 다 "+p.era+"입니다."
           : p.era+" 사람입니다";
         if(k==="field") txt = t.it.ln;
         b.textContent=txt; b.dataset.open="1"; t.hints++;
@@ -1424,16 +1426,15 @@
       (t.hints?', 힌트 '+t.hints+'개':'')+'</span></div>'+
       '<div class="why">'+
       '<div class="whocard"><span class="av">'+t.right.charAt(0)+'</span>'+
-      '<span class="tx"><b>'+t.right+'</b> — '+ORI[me.ori]+' '+me.era+
-      '<p>'+(ok?"이 대목의 주인입니다.":"이 대목의 주인입니다. 아래 두 줄을 견줘 보세요.")+
+      '<span class="tx"><b>'+t.right+'</b>, '+ORI[me.ori]+' '+me.era+
+      '<p>'+(ok?"":"아래 두 줄을 비교해 볼까요?")+
       '</p></span></div>'+
       '<div class="vs"><div class="col me"><h5>'+t.right+'</h5><p>'+(me.one||"")+'</p></div>'+
       '<div class="col"><h5>'+t.other+'</h5><p>'+(ot.one||"")+'</p></div></div>'+
       '<div style="margin-top:14px;display:flex;gap:9px;flex-wrap:wrap;align-items:center">'+
       '<span class="hits">'+it.ln+'</span>'+
       '<span class="hits">이 갈래 기출 '+(T.BY[it.leaf]?T.BY[it.leaf].n:0)+'문항</span></div>'+
-      '<span class="src">'+it.g+' '+it.d+' '+it.n+'번'+(it.lb?', '+it.lb:'')+
-      ', 제시문은 원문 그대로, 사상가는 출제기관 해설에서 특정</span></div>';
+      '<span class="src">'+it.g+' '+it.d+' '+it.n+'번'+(it.lb?', '+it.lb:'')+'</span></div>';
     bindNext();
   }
 
@@ -1586,14 +1587,14 @@
     document.getElementById("v").innerHTML=
       '<div class="gorow"><button class="btn big" id="next">다음 사례</button>'+
       '<span class="gohint">'+(ok?"맞았습니다":"정답은 "+"①②③④⑤".charAt(S2.a))+
-      (c.trap?', 함정 — '+esc(c.trap):(c.answerNote?', '+esc(c.answerNote):''))+'</span></div>'+
+      (c.trap?'. '+esc(c.trap):(c.answerNote?', '+esc(c.answerNote):''))+'</span></div>'+
       /* 실재 결정은 채점 뒤에 사건명과 결과를 밝힌다 — 풀기 전에는 감춘다 */
       (c.real ? '<div class="lcresult">'+esc(c.real.name)+' — <b>'+
                 esc(c.real.result)+'</b></div>' : '')+
       '<div class="lcwhy">'+S2.items.map(function(it,k){
         return '<div class="lcrow" data-ok="'+(it.ok?1:0)+'">'+
           '<span class="m">'+L.MARKS[k]+' '+(it.ok?"옳음":"틀림")+'</span>'+
-          '<span>'+it.why+(it.cite?'<span class="cite">'+esc(it.cite)+'</span>':'')+'</span></div>';
+          '<span>'+it.why+(it.cite?'<span class="cite">'+esc(String(it.cite).replace(/\s*·\s*/g,", "))+'</span>':'')+'</span></div>';
       }).join("")+'</div>'+
       /* 조문이 있는 훈련만 원문을 편다 — 경제는 조문이 아니라 계산이 근거다 */
       (Object.keys(쓴조문).length
@@ -1666,7 +1667,7 @@
     var L=lset, st=L.steps[L.i];
     document.getElementById("qtext").textContent=st.q;
     document.getElementById("qmeta").textContent="단계 "+(L.i+1)+" / "+L.steps.length;
-    return '<div class="caseflag prac">연습 사례, 숫자는 매번 새로 생성</div>'+
+    return '<div class="caseflag prac">연습 사례</div>'+
       '<div class="passage">'+
       '<b>'+L.nm+'</b>(만 '+L.age+'세, 고등학생)은(는) '+L.job+'에서 아르바이트를 한다. '+
       '주 '+L.days+'일, 하루 '+L.day+'시간씩 일하고 시급은 '+L.wage.toLocaleString()+'원이다.'+
@@ -1717,7 +1718,7 @@
     st.push({k:"table", q:t.n+" 지역의 유소년 부양비는?",
       o:[t.yd+"", r1(t.y/(t.y+t.o)*100)+""], a:0,
       why:"유소년 부양비 = 유소년 ÷ <b>생산 연령</b> × 100 = "+t.y+" ÷ "+t.p+" × 100 = <b>"+
-          t.yd+"</b>. 전체 인구로 나누면 안 됩니다 — 그게 가장 흔한 실수입니다."});
+          t.yd+"</b>. 분모는 전체 인구가 아니라 생산 연령 인구입니다."});
     var t2=pick(R);
     st.push({k:"table", q:t2.n+" 지역의 노령화지수는?",
       o:[t2.ai+"", t2.od+""], a:0,
@@ -1736,7 +1737,7 @@
       why:R.map(function(x){ return x.n+" "+x.ai; }).join(", ")+
           " 이므로 <b>"+topAi.n+"</b> 입니다."+
           (top.n!==topAi.n
-            ? " 총부양비가 가장 높은 곳("+top.n+")과 <b>다릅니다</b> — 분모가 다르기 때문입니다."
+            ? " 총부양비가 가장 높은 곳("+top.n+")과 <b>다릅니다</b>. 분모가 다르기 때문입니다."
             : " 이번에는 총부양비가 가장 높은 곳과 같습니다. 늘 같지는 않습니다.")});
     st.push({k:"table", q:"세 지역 가운데 고령화가 가장 앞선 곳은 어디로 읽습니까?",
       o:["노령화지수가 가장 높은 곳","유소년 부양비가 가장 높은 곳"], a:0,
@@ -1756,7 +1757,7 @@
     var D=dset, st=D.steps[D.i];
     document.getElementById("qtext").textContent=st.q;
     document.getElementById("qmeta").textContent="단계 "+(D.i+1)+" / "+D.steps.length;
-    return '<div class="caseflag prac">연습 자료, 숫자는 매번 새로 생성</div>'+
+    return '<div class="caseflag prac">연습 자료</div>'+
       demoTable(D.R)+
       '<div class="opts c2" style="margin-top:16px">'+st.o.map(function(o,i){
         return '<button class="opt" data-v="'+i+'">'+o+'</button>';
@@ -1866,12 +1867,12 @@
     climate:["5문항 한 세트","한 문항 10초","틀린 것만 다시 가능"],
     econ:["한 자료, 여러 단계","시간 제한 없음","단계마다 둘 중 하나"],
     thinker:["제시문만 보고 판별","둘 중 하나","힌트 3개"],
-    consti:["실재 판례 + 연습 사례","5단계 판단","단계마다 둘 중 하나"],
-    labor:["사례는 매번 새로","만 18세가 갈림길","조문은 원문 그대로"],
-    laborcase:["실제 있을 법한 상황","ㄱㄴㄷㄹ 중 둘이 옳다","근거 조문 원문 제공"],
-    econcase:["숫자는 매번 새로","ㄱㄴㄷㄹ 중 둘이 옳다","다섯 갈래가 번갈아"],
-    consticase:["연습 사례, 조문은 원문","ㄱㄴㄷㄹ 중 둘이 옳다","헌법 조문 원문 제공"],
-    demo:["세 지역 자료","부양비·노령화지수","단계마다 계산"]
+    consti:["판례와 연습 사례","5단계","단계마다 둘 중 하나"],
+    labor:["연습 사례","근로 기준법 조문","단계마다 둘 중 하나"],
+    laborcase:["ㄱㄴㄷㄹ 중 둘이 옳다","근로 기준법 조문"],
+    econcase:["ㄱㄴㄷㄹ 중 둘이 옳다"],
+    consticase:["ㄱㄴㄷㄹ 중 둘이 옳다","헌법 조문"],
+    demo:["세 지역 자료","부양비와 노령화 지수","단계마다 계산"]
   };
   function showStart(){
     stopTimer(); clearIntro();

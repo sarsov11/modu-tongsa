@@ -316,7 +316,7 @@
       몸 += '<figure class="qfig qfull">' +
         '<img src="assets/qfull/' + esc(String(q.ff).replace(/\.png$/, ".webp")) +
         '" alt="문항 자료와 선지" loading="lazy">' +
-        '<figcaption>자료와 선지 원본 · 발문은 위의 글을 보세요</figcaption>' +
+        '<figcaption>자료와 선지 원본</figcaption>' +
         '</figure>';
       return 몸;                     // 선지는 그림 안에 있다 — 글로 또 내지 않는다
     }
@@ -358,7 +358,7 @@
       몸 += '<figure class="qfig">' +
         '<img src="assets/qfig/' + esc(String(q.fig).replace(/\.png$/, ".webp")) +
         '" alt="문항 자료" loading="lazy">' +
-        '<figcaption>자료 원본 · 발문과 선지는 위아래 글을 보세요</figcaption>' +
+        '<figcaption>자료 원본</figcaption>' +
         '</figure>';
     }
 

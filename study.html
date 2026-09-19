@@ -183,8 +183,7 @@
   .lf:hover{border-color:var(--line-2)}
   .lf.on{border-color:var(--red-line);background:var(--red-soft)}
   .lf .dot{width:8px;height:8px;border-radius:50%;flex:0 0 8px;background:var(--lv1)}
-  .lf .nm{flex:1;min-width:0;color:var(--ink-2);font-weight:600;overflow:hidden;
-    text-overflow:ellipsis;white-space:nowrap}
+  .lf .nm{flex:1;min-width:0;color:var(--ink-2);font-weight:600;word-break:keep-all;overflow-wrap:anywhere}
   .lf .n{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-weight:800}
 
   /* ── 고르는 화면 ── */
@@ -272,7 +271,7 @@
 <script src="js/tree.js?v=45426a99"></script>
 <script src="js/qbank.js?v=60117b6e"></script>
 <script src="js/pool.js?v=1b40e933"></script>
-<script src="js/drills.js?v=9d14bfc8"></script>
+<script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/qrender.js?v=baf2df9c"></script>
 <script src="js/cards.js?v=a225153d"></script>
 <script src="js/store.js?v=dfb93453"></script>
@@ -363,7 +362,7 @@
     var st=오늘.st, n=playable(오늘.leaf).length;
     var 분=Math.max(3,Math.round(Math.min(n,20)*50/60));
     document.getElementById("lede").textContent=
-      "고를 것 없이 이것부터 하면 됩니다. 오늘 이 하나면 충분해요.";
+      "이것부터 해 볼까요?";
     document.getElementById("headact").innerHTML="";
 
     /* ── 리포팅 — 잘 잡힌 곳 · 급한 곳 · 오늘 하면 뭐가 좋아지나 ── */
@@ -628,7 +627,7 @@
     var out='';
     if(!ok && d.w[String(pick+1)])
       out+='<div class="whyrow mine"><span class="no">'+M.charAt(pick)+'</span>'+
-        '<span class="tt"><b>내가 고른 것 — 왜 아닌가</b>'+
+        '<span class="tt"><b>내가 고른 선지</b>'+
         '<span>'+esc(d.w[String(pick+1)])+'</span></span></div>';
     var why=d.c||d.w[String(d.a+1)]||"";
     if(why)
@@ -683,7 +682,7 @@
       '<span style="color:var(--ink-4);font-size:34px"> / '+list.length+'</span></div>'+
       '<p style="margin-top:12px;color:var(--ink-3);font-size:15px">'+
       (got===list.length?"전부 맞혔습니다.":
-       missed.length<=2?"거의 다 왔습니다. 놓친 것만 다시 보세요.":
+       missed.length<=2?"틀린 것만 다시 볼까요?":
        "틀린 것을 모아 두었습니다. 바로 다시 갈 수 있습니다.")+'</p>'+
       '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px">'+
       (missed.length?'<button class="btn" id="retry">틀린 '+missed.length+'개만 다시</button>':'')+

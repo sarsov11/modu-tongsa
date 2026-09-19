@@ -465,9 +465,9 @@ html,body{overflow-x:hidden}/* 지면 가로 넘침 막기 */
   font-family:var(--mono);font-size:14.5px;font-weight:800;color:var(--ink-2)}
 .nextbar .tx{flex:1;min-width:0}
 .nextbar .tx b{display:block;font-size:15.5px;color:var(--ink);font-weight:700;
-  letter-spacing:-.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  letter-spacing:-.02em;word-break:keep-all;overflow-wrap:anywhere}
 .nextbar .tx span{display:block;font-size:14.5px;color:var(--ink-3);margin-top:2px;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  word-break:keep-all;overflow-wrap:anywhere}
 .nextbar .go{flex:0 0 auto;display:flex;gap:8px;align-items:center}
 .nextbar .go .btn{font-size:15.5px;padding:10px 17px}
 .nextbar .x{appearance:none;border:0;background:transparent;cursor:pointer;

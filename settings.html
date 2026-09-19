@@ -278,13 +278,7 @@
     <div class="sechd"><h2>확장팩</h2>
       <span class="cap">듣는 선택과목만 골라 붙입니다</span></div>
     <div class="packs" id="packs"></div>
-    <p class="note">확장팩은 <b>선택과목 하나 단위</b>로 붙입니다. 통합사회 본품과 같은
-      개념트리·문제풀이·Killer Drill을 그 과목 범위로 쓰게 됩니다.<br>
-      <b>문항은 대부분 고3 기출(수능·모평·학력평가)입니다.</b>
-      고2 학력평가만으로는 한 과목에 100~300문항밖에 안 되어 범위를 채우지 못합니다 —
-      그래서 <b>범위에 맞는 고3 기출</b>로 채웁니다. 각 과목의 문항 수와 출처는 위에 적혀 있습니다.<br>
-      2022 개정으로 과목 이름이 바뀐 것은 <b>옛 이름</b>을 함께 적었습니다.
-      ‘정치’와 ‘법과 사회’는 옛 <b>정치와 법</b>이 둘로 갈린 것이라 단원별로 나눠 담았습니다.</p>
+    <!-- 확장팩 설명문(고2 학평 문항 수·고3 기출로 채운 까닭) 삭제 — 만든 사람 설명문(2026-09-19 멘트 조사) -->
   </section>
 
   <section class="sec" hidden>   <!-- 값·출간일 미정 안내는 학생 화면에서 뺀다(2026-09-19) -->
@@ -324,10 +318,10 @@
 <script src="js/trend.js?v=53fd8a90"></script>
 <script src="js/tree.js?v=45426a99"></script>
 <script src="js/lecture.js?v=6c12a0f0"></script>
-<script src="js/video.js?v=267bdcea"></script>
+<script src="js/video.js?v=e2856381"></script>
 <script src="js/pool.js?v=1b40e933"></script>
 <script src="js/packs.js?v=e89ffbaf"></script>
-<script src="js/drills.js?v=9d14bfc8"></script>
+<script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/cards.js?v=a225153d"></script>
 <script src="js/store.js?v=dfb93453"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -423,7 +417,7 @@
       '<div class="mins">'+MINS.map(function(v){
         return '<button data-min="'+v+'" aria-pressed="'+(v===goal)+'">'+
           '<b>'+v+'<small class="u">분</small></b><small>'+
-          (v<=10?"딱 한 가지":v<=15?"권해요":v<=20?"넉넉히":"작정하고")+
+          (v<=15&&v>10?"권해요":"")+
           '</small></button>'; }).join("")+'</div>'+
       '<div class="rt-what">'+R.items.map(function(it){
         return '<span class="r"><i></i>'+esc(it.title)+' — '+esc(it.say)+
@@ -476,10 +470,10 @@
       "통합사회는 <b>고1 과목</b>입니다. 고2·고3 은 선택과목을 듣기 때문에, "+
       "학년을 바꾸면 문항 풀과 목표일, 권해 드리는 것이 함께 바뀝니다. "+
       (now==="고2"
-        ? "고2 는 <b>REWIND</b> — 고1 통합사회를 되감아 수능 꼴로 바꿔 풉니다. 듣는 선택과목은 아래 <b>확장팩</b>으로 붙일 수 있어요."
+        ? "듣는 선택과목은 아래 <b>확장팩</b>으로 붙일 수 있어요."
         : now==="고3"
-          ? "고3 은 <b>REWIRE</b> — 평가원·교육청 기출을 실전처럼 대량으로 돌리는 쪽으로 맞춰 둡니다."
-          : "고1 은 <b>REMIND</b> — 학교 진도에 맞춘 개념 다지기와 내신 대비가 중심입니다.");
+          ? ""
+          : "");
     document.getElementById("packsec").style.display=(now==="고1")?"none":"";
     document.getElementById("excap").textContent=
       G.ddayName+" 날짜를 넣으면 리포트 맨 위에 남은 날이 뜹니다";
@@ -492,7 +486,7 @@
      (2026-08-31 실측: 사회 정의와 불평등은 일반사회 55%·윤리 43%). */
   var AXINFO={
     "교과서":{name:"교과서 차례",
-      say:"통합사회 1·2 의 대단원 순서 그대로 — 학교 진도와 1:1 로 맞습니다. 내신에 바로 씁니다.",
+      say:"통합사회 1, 2의 대단원 차례",
       tag:"통합사회 1, 통합사회 2, 사상가"},
     "수능":{name:"수능 선택과목",
       say:"이 내용을 세계지리·정치와법·생활과윤리 가운데 어디서 다시 만나는지로 묶습니다.",
@@ -526,13 +520,7 @@
         paintAxes();
       };
     });
-    document.getElementById("axnote").innerHTML=
-      '지금 개념트리는 <b>'+AXINFO[eff].name+'</b>로 묶여 있습니다. '+
-      '지리·일반사회·윤리라는 구분은 교과서에 있는 것이 아니라, 그 단원 문항이 '+
-      '어느 수능 선택과목 기출에서 왔는지로 저희가 가른 것입니다. '+
-      '실측해 보면 <b>사회 정의와 불평등</b>은 일반사회 55%·윤리 43%로 반씩이고, '+
-      '<b>통합적 관점</b>은 문항이 전부 통합사회 학평이라 판정할 근거조차 없습니다. '+
-      '그래서 고1·고2는 교과서 차례로, 고3은 수능 과목으로 묶어 둡니다.';
+    document.getElementById("axnote").innerHTML='';   /* 묶는 축 설명문(실측 55%·43%) 삭제 — 2026-09-19 멘트 조사 */
   }
 
   /* ── 목표일 ── */
@@ -561,7 +549,8 @@
   /* ── 디자인 ── */
   var PREV={
     "":     {bg:"#070B14", ring:"#4FC3E8", fill:"#2A7E95", ink:"#DEE8F8"},
-    "note": {bg:"#F6F2E7", ring:"#2F5AA8", fill:"#9DB4DC", ink:"#1F2B44"},
+    "paper":{bg:"linear-gradient(rgba(31,36,48,.08) 1px,transparent 1px) 0 0/14px 14px,linear-gradient(90deg,rgba(31,36,48,.08) 1px,transparent 1px) 0 0/14px 14px,#FAF8F3", ring:"#2F5BEA", fill:"#A9BCF5", ink:"#171B24"},   /* 없어서 밤으로 떨어져 종이·밤이 똑같이 보였다(2026-09-19 대표님) */
+    "note": {bg:"#F6F2E7", ring:"#C2452F", fill:"#EDB3A5", ink:"#1F2B44"},   /* 실제 주 색(--red #C2452F)으로 — 파랑이라 종이와 똑같아 보였다 */
     "jelly":{bg:"#FFF6FA", ring:"#F0417E", fill:"#F9A7C6", ink:"#33232C"},
     "white":{bg:"#FFFFFF", ring:"#E5202E", fill:"#F5A3A8", ink:"#111419"}
   };
@@ -686,7 +675,7 @@
       상자.value=코드;
       상자.select();
       알림("이 글자를 통째로 복사해 다른 기기의 같은 칸에 붙여 넣으세요. "+
-           "("+코드.length.toLocaleString()+"자 — 길면 파일 내보내기가 편해요)", "ok");
+           "("+코드.length.toLocaleString()+"자)", "ok");
     }).catch(function(e){ 알림("코드를 만들지 못했어요: "+e.message, "no"); });
   };
 

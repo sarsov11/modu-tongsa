@@ -152,7 +152,7 @@
   .row .dot{width:10px;height:10px;border-radius:50%;flex:0 0 10px}
   .row .nm{flex:1;min-width:0}
   .row .nm b{display:block;font-size:15.5px;color:var(--ink-2);font-weight:700;
-    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    word-break:keep-all;overflow-wrap:anywhere}
   .row .nm span{font-size:14.5px;color:var(--ink-4)}
   .row .pc{font-family:var(--mono);font-size:16px;color:var(--ink-3);flex:0 0 auto;font-weight:800}
 
@@ -515,10 +515,10 @@
 <script src="js/tree.js?v=45426a99"></script>
 <script src="js/qbank.js?v=60117b6e"></script>
 <script src="js/lecture.js?v=6c12a0f0"></script>
-<script src="js/video.js?v=267bdcea"></script>
+<script src="js/video.js?v=e2856381"></script>
 <script src="js/qrender.js?v=baf2df9c"></script>
 <script src="js/pool.js?v=1b40e933"></script>
-<script src="js/drills.js?v=9d14bfc8"></script>
+<script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/cards.js?v=a225153d"></script>
 <script src="js/store.js?v=dfb93453"></script>
@@ -767,8 +767,7 @@
     host.insertAdjacentHTML("beforebegin",
       '<div class="scopenote">'+
         '<b>시험 범위가 '+esc(b.학교)+' 기준으로 잡혀 있어요</b>'+
-        '<span>'+esc(b.name)+', '+esc(b.단원)+' — 우리 학교 범위와 다르면 꼭 고쳐 주세요. '+
-        '범위가 다르면 안 배운 데를 풀게 됩니다.</span>'+
+        '<span>'+esc(b.name)+', '+esc(b.단원)+'. 우리 학교 범위와 다르면 고쳐 주세요.</span>'+
         '<a href="settings.html#scope">내 학교 범위로 고치기 →</a>'+
       '</div>');
   })();
@@ -794,11 +793,7 @@
   /* ── 갈래 카드 ── */
   document.getElementById("fams").innerHTML=FAMS.map(function(x){
     var st=FAMSTAT[x];
-    var say = !st.solved ? "아직 손대지 않았어요"
-            : st.prog<15 ? "이제 막 발을 들였어요"
-            : st.prog<40 ? "차근차근 쌓이고 있어요"
-            : st.prog<70 ? "절반을 넘겼어요"
-            : "거의 한 바퀴 돌았어요";
+    var say = !st.solved ? "아직 안 풀었어요" : "진도 "+Math.round(st.prog)+"%";
     return '<a class="fam" href="skilltree.html?area='+st.roots[0].code+'" '+
       'style="--c:'+st.col+'">'+
       '<span style="position:absolute;left:0;top:0;bottom:0;width:3px;background:'+st.col+'"></span>'+
@@ -882,7 +877,7 @@
     host.innerHTML='<h2>세 문항으로 확인해요</h2>'+
       '<p class="lead">'+say+' 세 문제만 풀어볼까요?</p>'+
       '<div class="acts"><button class="btn" id="go3">세 문항으로 확인</button>'+
-      '<a class="btn ghost" href="study.html?leaf='+target.leaf.code+'">이 단원 제대로 풀기</a>'+
+      '<a class="btn ghost" href="study.html?leaf='+target.leaf.code+'">이 단원 풀기</a>'+
       '<span class="hint">'+esc(target.leaf.name)+'</span></div><div id="quizhost"></div>';
     document.getElementById("go3").onclick=startQuiz;
   }
@@ -940,7 +935,7 @@
     var out='';
     if(!ok && d.w[String(pick+1)])
       out+='<div class="whyrow mine"><span class="no">'+M.charAt(pick)+'</span>'+
-        '<span class="tt"><b>내가 고른 것 — 왜 아닌가</b>'+
+        '<span class="tt"><b>내가 고른 선지</b>'+
         '<span>'+esc(d.w[String(pick+1)])+'</span></span></div>';
     var why=d.c||d.w[String(d.a+1)]||"";
     if(why)
@@ -986,8 +981,8 @@
     var say = got===n
       ? "세 문항 다 맞았어요. 리포트를 고쳤어요."
       : got===0
-        ? "이 단원은 아직 약해요. 여기부터 해요."
-        : "절반쯤 알고 있어요. 헷갈리는 자리가 남았어요.";
+        ? "이 단원부터 다시 볼까요?"
+        : "틀린 문항부터 다시 볼까요?";
     document.getElementById("quizhost").innerHTML=
       '<div class="quiz"><div class="verdict"><div class="big">'+got+
       '<small> / '+n+'</small></div><p>'+say+'</p>'+
@@ -1115,10 +1110,10 @@
   (function(){
     var sell=G.sell;
     document.getElementById("shopTitle").textContent=
-      grade==="고2" ? "듣는 과목 붙이기" : "시험을 겨눈다면";
+      grade==="고2" ? "듣는 과목 붙이기" : "시험 대비";
     document.getElementById("shopCap").textContent=
       grade==="고2" ? "선택과목 하나 단위로 붙입니다"
-                    : G.ddayName+" 대비로 따로 만드는 것";
+                    : G.ddayName;
     var cards=[];
     if(grade==="고2"){
       var got=T.packs();
@@ -1181,7 +1176,7 @@
     var 부름=(S.student&&S.student.name)?esc(S.student.name)+', ':'';
     var 말 = 한===0 ? 부름+'오늘은 <b>'+esc(개념)+'</b> O·X부터 해볼까요?'
            : 한<30  ? '오늘 O·X '+한+'문장 중 '+맞+'개 맞혔어요. <b>'+esc(개념)+'</b> 한 세트 더 해볼까요?'
-                    : '오늘 O·X '+한+'문장 했어요. 더 하고 싶으면 <b>'+esc(개념)+'</b>도 있어요.';
+                    : '오늘 O·X '+한+'문장 했어요. <b>'+esc(개념)+'</b>도 해 볼까요?';
     var 틀린=Object.keys(ox).filter(function(k){ return ox[k]&&ox[k].ok===false; }).length;
     host.innerHTML='<div class="bub">'+말+'</div>'+
       '<div class="ans"><a href="ox.html?leaf='+리프.code+'">좋아요, 시작</a>'+

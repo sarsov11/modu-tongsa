@@ -180,12 +180,12 @@
 <script src="js/cardox.js?v=0022ba2e"></script>
 <script src="js/judge.js?v=43f690d4"></script>
 <script src="js/pool.js?v=1b40e933"></script>
-<script src="js/drills.js?v=9d14bfc8"></script>
+<script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
 <script src="js/conceptq.js?v=107d7c8c"></script>
-<script src="js/lecprac.js"></script>
+<script src="js/lecprac.js?v=d05c731d"></script>
 <script src="js/cards.js?v=a225153d"></script>
-<script src="js/keyword.js?v=284ec545"></script>
+<script src="js/keyword.js?v=c97a00a9"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/store.js?v=dfb93453"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -310,15 +310,22 @@
     var 옥스={}; BANK.forEach(function(x){ 옥스[x.id]=x; });
     var 풀=[];
     P.ids.forEach(function(r){
-      var z = r.k==="cq" ? (CQ[r.leaf]||[]).filter(function(q){ return q.id===r.id; })[0] : 옥스[r.id];
+      /* lv = 영상 속 기출 선지(고2·고3 선택과목 포함) — 글·답·해설을 lecprac.js 가 함께 싣는다 */
+      var z = r.k==="lv" ? {id:r.id, leaf:r.leaf, leafName:P.제목, t:r.t, a:r.a, why:r.why, src:r.src+" 기출 · 영상에서 다룬 선지", 영상:true}
+            : r.k==="cq" ? (CQ[r.leaf]||[]).filter(function(q){ return q.id===r.id; })[0] : 옥스[r.id];
       if(z) 풀.push(z);
     });
     if(풀.length < 4) return null;
     function 점수(x){ var 본적=(T.state().ox||{})[x.id]; return (본적?(본적.ok?-0.6:0.5):0) + Math.random(); }
-    var O=풀.filter(function(z){return z.a}).sort(function(a,b){return 점수(b)-점수(a)});
-    var X=풀.filter(function(z){return !z.a}).sort(function(a,b){return 점수(b)-점수(a)});
-    var 반=Math.min(Math.ceil(세트수/2), O.length), 뽑=O.slice(0,반).concat(X.slice(0,세트수-반));
-    if(뽑.length<세트수) 뽑=뽑.concat(O.slice(반, 반+세트수-뽑.length));
+    function 줄(arr){ return arr.slice().sort(function(a,b){return 점수(b)-점수(a)}); }
+    /* ★ 0919 대표님 「난이도 있는 문항의 선지도 들어갔는지」 — 열 문제 가운데 넷은 영상 속 기출 선지(어려운 쪽)로 */
+    var 영=줄(풀.filter(function(z){return z.영상})), 밖=줄(풀.filter(function(z){return !z.영상}));
+    var 뽑=[], 반=Math.ceil(세트수/2);
+    function 담기(arr, n, 조건){ arr.forEach(function(z){ if(n>0 && 뽑.indexOf(z)<0 && 조건(z)){ 뽑.push(z); n--; } }); }
+    function 수(a){ return 뽑.filter(function(z){return !!z.a===a}).length; }
+    담기(영, 2, function(z){return z.a}); 담기(영, 4-뽑.length, function(z){return !z.a}); 담기(영, 4-뽑.length, function(){return true});
+    담기(밖, 반-수(true), function(z){return z.a}); 담기(밖, 세트수-뽑.length, function(z){return !z.a});
+    담기(밖, 세트수-뽑.length, function(){return true}); 담기(영, 세트수-뽑.length, function(){return true});
     for(var k=뽑.length-1;k>0;k--){ var j=Math.floor(Math.random()*(k+1)); var t=뽑[k]; 뽑[k]=뽑[j]; 뽑[j]=t; }
     기출판 = true;   /* 「기출 재료가 모자라 개념 문장으로」 안내를 띄우지 않는다 — 강의 연습은 원래 두 재료를 섞는다 */
     try{

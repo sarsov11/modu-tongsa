@@ -83,7 +83,7 @@
   /* ── 단원별 ── */
   .bars{display:flex;flex-direction:column;gap:13px}
   .bar .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
-  .bar .nm{font-size:15px;font-weight:700;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bar .nm{font-size:15px;font-weight:700;color:var(--ink);word-break:keep-all;overflow-wrap:anywhere}
   .bar .nm .tag{display:inline-block;font-size:11px;font-weight:800;padding:2px 7px;border-radius:99px;margin-left:8px;vertical-align:2px}
   .bar .nm .tag.low{background:var(--red-soft);color:var(--red-2)}
   .bar .nm .tag.mid{background:rgba(183,121,31,.12);color:var(--amber)}
@@ -121,7 +121,7 @@
 <script src="js/tree.js?v=45426a99"></script>
 <script src="js/qbank.js?v=60117b6e"></script>
 <script src="js/pool.js?v=1b40e933"></script>
-<script src="js/drills.js?v=9d14bfc8"></script>
+<script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
 <script src="js/store.js?v=dfb93453"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -252,7 +252,7 @@
         '<p class="note">색이 찬 날은 그날 몫(15분)을 채운 날입니다. 파란 테두리가 오늘입니다.</p></div>'+
 
       (막대.length
-        ? '<div class="pcard"><h3>단원별 정답률 — 낮은 곳부터</h3><div class="bars">'+막대.map(function(x,i){
+        ? '<div class="pcard"><h3>단원별 정답률</h3><div class="bars">'+막대.map(function(x,i){
             var cls=x.pc<55?"low":(x.pc<75?"mid":"");
             var tag=cls==="low"?'<span class="tag low">보완 필요</span>':(cls==="mid"&&i<3?'<span class="tag mid">다시 볼 곳</span>':'');
             return '<div class="bar"><div class="top"><span class="nm">'+esc(x.name)+tag+'</span>'+
@@ -270,9 +270,8 @@
       '<div class="act"><button class="btn" onclick="window.print()">인쇄하기</button>'+
         '<a class="btn ghost" href="index.html">학생 화면으로</a></div>'+
 
-      '<div class="foot"><b>이 리포트는 무엇으로 만들었나</b><br>'+
-        '학생이 실제로 푼 기록만 씁니다. 추정하거나 지어낸 숫자는 없습니다. 문항은 교육청·평가원 <b>기출</b>이고, 시험 범위는 '+
-        (s.범위?('<b>'+esc(s.범위)+'</b> 으로 설정돼 있습니다.'):'아직 설정하지 않았습니다.')+'</div>';
+      '<div class="foot">시험 범위 '+
+        (s.범위?('<b>'+esc(s.범위)+'</b>'):'미설정')+'</div>';
 
     document.getElementById("lede").textContent=
       s.학년+", "+(s.시험? (s.시험.name+" "+s.ddayLabel) : "시험일을 정하면 남은 날이 나옵니다");

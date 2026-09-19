@@ -651,7 +651,7 @@
   function defaultExams(grade) {
     if (grade === "고3") {
       return [{ id: "su", name: "수능", date: suneungGuess(),
-                note: "11월 셋째 목요일로 잡은 예상일 — 확정되면 눌러서 바꾸세요" },
+                note: "예상일이에요. 확정되면 눌러서 바꿔 주세요." },
               { id: "mo", name: "다음 모의고사", date: "",
                 note: "시행일을 넣으면 함께 표시됩니다" }];
     }
@@ -1262,7 +1262,7 @@
         var 틀 = 지난기록.wrong.length;
         var 분3 = Math.max(3, Math.min(left, Math.round(틀 * SEC_PER_Q / 60)));
         items.push({ kind: "after", min: 분3, n: 틀,
-          title: XM.exam.name + " 끝났어요 — 틀린 것부터",
+          title: XM.exam.name + " 오답 다시 보기",
           say: 틀 + "문항 되짚기",
           why: "시험이 끝난 다음이 가장 잘 남습니다. 답을 아직 기억할 때 보는 게 빠릅니다.",
           href: "exam.html", cta: "되짚기" });
@@ -1317,8 +1317,8 @@
        앞쪽 절반은 지난 학기 보충, 뒤쪽 절반은 다음 학기 선행. */
     if (XM.mode === "vacation") {
       items.push({ kind: "vacation", min: 1, stage: XM.stage,
-        title: XM.stage === "보충" ? "방학 — 지난 학기 메우기"
-                                   : "방학 — 다음 학기 미리 보기",
+        title: XM.stage === "보충" ? "지난 학기 복습"
+                                   : "다음 학기 예습",
         say: XM.stage === "보충" ? "약한 곳부터 복습합니다"
                                  : "다음 단원을 미리 훑습니다",
         why: XM.stage === "보충"
@@ -1423,7 +1423,7 @@
         items.push({ kind: "card", min: CARD몫, leaf: cc.code, n: 장,
           title: 학년3 === "고1" ? "오늘 개념 읽기" : "개념 다시 읽기",
           say: cc.st.name + " " + 장 + "개",
-          why: "읽고 바로 확인해요. 강의 대신 이걸로 배우고, 다 맞히면 문제로 넘어가요.",
+          why: "읽고 바로 확인해요.",
           href: "card.html?leaf=" + cc.code, cta: "개념 학습" });   /* 「읽기 7분」 → 「개념 학습」(2026-09-19 대표님) */
         left -= CARD몫; 배움 = true;
       }

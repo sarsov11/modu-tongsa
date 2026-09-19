@@ -59,7 +59,7 @@
   .qh .kl{font-size:14.5px;font-weight:700;color:var(--red-2);background:var(--red-soft);
     border-radius:99px;padding:3px 9px;letter-spacing:.02em}
   .qh .lb{font-size:14.5px;color:var(--ink-4);margin-left:auto;max-width:46%;
-    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    word-break:keep-all;overflow-wrap:anywhere}
   .qb{padding:18px 20px 20px}
   .qb figure{margin:0 0 14px}
   /* 기출 크롭은 흰 종이다. 어두운 스킨에서는 반전해 지면에 녹인다 —
@@ -129,7 +129,7 @@
 <script src="js/tree.js?v=45426a99"></script>
 <script src="js/qbank.js?v=60117b6e"></script>
 <script src="js/pool.js?v=1b40e933"></script>
-<script src="js/drills.js?v=9d14bfc8"></script>
+<script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/cards.js?v=a225153d"></script>
 <script src="js/store.js?v=dfb93453"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -322,11 +322,9 @@
   }
 
   function 등급말(pct){
-    if(pct>=95) return "이대로면 1등급 다툼입니다.";
-    if(pct>=88) return "2등급 언저리예요. 킬러만 잡으면 올라갑니다.";
-    if(pct>=76) return "3등급 언저리. 틀린 곳이 몰린 단원이 보일 거예요.";
-    if(pct>=60) return "아직 채울 곳이 많아요. 틀린 것부터 다시 봅시다.";
-    return "지금 점수는 신경 쓰지 마세요. 오답이 곧 오늘 할 일입니다.";
+    /* 등급 예언·「킬러만 잡으면」·위로 문구는 뺐다(2026-09-19 멘트 조사) — 사실과 권유만 */
+    if(pct>=100) return "다 맞았어요.";
+    return "틀린 것부터 다시 볼까요?";
   }
 
   function 결과그리기(res){

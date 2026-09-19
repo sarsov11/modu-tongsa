@@ -126,11 +126,11 @@
 <script src="js/cardox.js?v=0022ba2e"></script>
 <script src="js/conceptq.js?v=107d7c8c"></script>
 <script src="js/cards.js?v=a225153d"></script>
-<script src="js/keyword.js?v=284ec545"></script>
+<script src="js/keyword.js?v=c97a00a9"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/judge.js?v=43f690d4"></script>
 <script src="js/pool.js?v=1b40e933"></script>
-<script src="js/drills.js?v=9d14bfc8"></script>
+<script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
 <script src="js/store.js?v=dfb93453"></script>
 <script src="js/qrender.js?v=baf2df9c"></script>
@@ -290,9 +290,9 @@
       '<div class="sec"><h2>같은 기술로 풀기</h2><p class="sub">'+pr.length+'문항입니다. 하나씩 눌러 풉니다.</p>'+
       '<div class="plist">'+pr.map(function(id,i){
         var q=item(id), st=p[id]==null?"":(p[id]?"ok":"no");
-        return '<button class="pi '+st+'" data-q="'+id+'"><span class="k">'+(i+1)+'</span><span class="t">'+esc(q.lb||bank(id).q.slice(0,40))+'</span><small>'+src(q)+'</small></button>';
+        return '<button class="pi '+st+'" data-q="'+id+'"><span class="k">'+(i+1)+'</span><span class="t">'+esc(q.lb||bank(id).q)+'</span><small>'+src(q)+'</small></button>';
       }).join("")+'</div><div id="pstage"></div></div>'+
-      '<p class="basis">'+esc(s.basis)+'</p>';
+      '';   /* 출처 설명문(basis) 은 학생 화면에서 뺐다 — 2026-09-19 멘트 조사 */
     document.getElementById("back").onclick=function(){ location.hash=""; };
     host.querySelectorAll(".pi").forEach(function(b){ b.onclick=function(){ solve(s,b.dataset.q); }; });
     if(window.webpFallback) webpFallback(document);

@@ -144,11 +144,11 @@
 <script src="js/cardox.js?v=0022ba2e"></script>
 <script src="js/conceptq.js?v=107d7c8c"></script>
 <script src="js/cards.js?v=a225153d"></script>
-<script src="js/keyword.js?v=284ec545"></script>
+<script src="js/keyword.js?v=c97a00a9"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/judge.js?v=43f690d4"></script>
 <script src="js/pool.js?v=1b40e933"></script>
-<script src="js/drills.js?v=9d14bfc8"></script>
+<script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
 <script src="js/store.js?v=dfb93453"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -367,9 +367,7 @@
         '<div class="ubar"><div class="lab"><span>이해도</span><b>'+u+' / 100</b></div>'+
           '<span class="track"><i style="width:'+u+'%;background:'+
           (u>=80?"var(--mint)":"var(--lv2)")+'"></i></span></div>'+
-        '<p>'+(u>=80
-          ? "여기는 잡혔어요. 문제로 굳히면 끝납니다."
-          : "이제 문제로 확인해요. 맞힐수록 이해도가 올라가요.")+'</p>'+
+        '<p>문제로 확인해 볼까요?</p>'+
         /* ★ 고르게 하지 않는다 — 묻고, 답하면, 바로 띄운다 (대표님 2026-09-12) */
         '<div class="ask" id="ask">'+
           '<h3>여기까지 이해됐나요?</h3>'+

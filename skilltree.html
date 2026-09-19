@@ -206,7 +206,7 @@
   .mrow:last-child{border-bottom:0}
   .mrow .bul{width:13px;height:13px;border-radius:50%;flex:0 0 13px}
   .mrow .nm{flex:1;min-width:0;font-size:16px;font-weight:700;color:var(--ink-2);
-    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    word-break:keep-all;overflow-wrap:anywhere}
   .mrow .pc{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);flex:0 0 auto;font-weight:800}
   @media(max-width:760px){
     /* ★ 폰에서는 개념트리가 맨 위(2026-09-18 대표님 "저 아래 처박혀 있다") — 머리 다음에 바로 그림, 띠·오늘 카드는 그 아래 */
@@ -264,7 +264,7 @@
   .pick .tx2{min-width:0}
   .pick .lbl{font-size:14.5px;font-family:var(--mono);color:var(--red-2);letter-spacing:.03em;font-weight:800}
   .pick h3{font-size:16.5px;font-weight:800;letter-spacing:-.015em;margin-top:2px;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    word-break:keep-all;overflow-wrap:anywhere}
   .pick p{font-size:14.5px;color:var(--ink-3);margin-top:3px;line-height:1.5}
   .pick .act{display:flex;flex-direction:column;gap:5px;align-items:flex-end}
   .pick .act .btn{white-space:nowrap}
@@ -354,10 +354,10 @@
 <script src="js/trend.js?v=53fd8a90"></script>
 <script src="js/tree.js?v=45426a99"></script>
 <script src="js/lecture.js?v=6c12a0f0"></script>
-<script src="js/video.js?v=267bdcea"></script>
-<script src="js/lecprac.js"></script>
+<script src="js/video.js?v=e2856381"></script>
+<script src="js/lecprac.js?v=d05c731d"></script>
 <script src="js/pool.js?v=1b40e933"></script>
-<script src="js/drills.js?v=9d14bfc8"></script>
+<script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/cards.js?v=a225153d"></script>
 <script src="js/store.js?v=dfb93453"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -395,7 +395,7 @@
       key:{"통합사회1":"--fam-geo","통합사회2":"--fam-soc","횡단":"--fam-eth"},
       sub:{"통합사회1":"통합적 관점, 행복, 자연환경, 문화, 생활공간",
            "통합사회2":"인권과 헌법, 정의, 시장경제, 세계화, 미래",
-           "횡단":"교과서 단원을 가로지르는 사상가 — 수능에서 크게 나옵니다"},
+           "횡단":"사상가"},
       of:function(r){ return r.book||"횡단"; }
     },
     "수능":{
@@ -1331,8 +1331,7 @@
     var vd=body.querySelector("video");
     vd.onerror=function(){
       body.innerHTML='<div class="vmiss"><b>'+V.title+'</b> ('+V.min+'분, '+V.mb+'MB)<br><br>'+
-        V.sum+'<br><br>이 화면에서는 영상 파일을 못 찾았습니다. '+
-        'USB 사본에서는 바로 재생됩니다 — <code>영상</code> 폴더가 같이 있어야 합니다.</div>';
+        V.sum+'<br><br>이 화면에서는 영상 파일을 못 찾았습니다.</div>';
     };
     vwrap.hidden=false; requestAnimationFrame(function(){ vwrap.classList.add("on"); });
     document.body.style.overflow="hidden";
@@ -1492,8 +1491,7 @@
       host.hidden=false;
       var bb=(T.기본범위지금&&T.기본범위지금())||null;
       host.innerHTML='<span class="ic">전</span><span class="tx">'+
-        '<b>전체를 보는 중</b> — 시험 범위 밖 단원도 함께 그렸어요. '+
-        '<em>시험 범위는 '+((bb&&bb.name)||"시험")+' 그대로 남아 있어요.</em></span>'+
+        '<b>전체 단원</b></span>'+
         '<span class="act"><a href="skilltree.html">범위만 보기</a>'+
         '<a href="settings.html#scope">범위 바꾸기</a></span>';
       return;
@@ -1504,8 +1502,8 @@
     var 이름 = 안.map(function(r){ return r.name; }).join(", ");
     var 꼬리 = "";
     if(자동 && b){
-      꼬리 = " <em>— " + (b.학교||"") + " " + (b.name||"") + " 기준으로 자동으로 잡았어요"
-           + (b.근거==="추정" ? " (1학기 범위는 <b>추정</b>이에요)" : "")
+      꼬리 = ". <em>" + (b.학교||"") + " " + (b.name||"") + " 기준이에요"
+           + (b.근거==="추정" ? "(1학기 범위는 추정)" : "")
            + ". 우리 학교와 다르면 설정에서 고쳐 주세요.</em>";
     }
     host.hidden=false;
@@ -1526,25 +1524,13 @@
       document.getElementById("note").innerHTML =
         '' +
         (bq&&bq.근거==="추정"
-          ? ' <b>1학기 범위는 추정</b>이라 학교와 다를 수 있습니다 — 설정에서 고쳐 주세요.'
+          ? ' 1학기 범위는 추정이에요. 우리 학교와 다르면 설정에서 고쳐 주세요.'
           : '') +
         '';
       return;
     }
-    var why = axisName()==="교과서"
-      ? '<b>지금은 교과서 차례로 묶여 있습니다</b> — 통합사회 1·2 의 대단원 순서 그대로라 '+
-        '학교 진도와 그대로 맞습니다. ' +
-        /* ★ 사상가 원을 안 그리는 학년(고1·고2)에서는 이 문장도 뺀다.
-           화면에 없는 것을 설명하면 학생이 못 찾고 헤맨다. */
-        (FAMS.indexOf("횡단") >= 0
-          ? '사상가는 교과서 대단원이 아니라 단원을 가로지르는 축이라 '+
-            '따로 세워 두었습니다(수능에서 크게 나옵니다). '
-          : '')
-      : '<b>지금은 수능 선택과목으로 묶여 있습니다</b> — 이 내용을 세계지리·정치와법·생활과윤리 '+
-        '가운데 어디서 다시 만나는지로 갈랐습니다. 다만 통합사회는 통합 과목이라 깨끗하게 '+
-        '안 갈리는 단원이 있습니다(사회 정의와 불평등은 일반사회 55%·윤리 43%). ';
-    document.getElementById("note").innerHTML= why +
-      '설정에서 묶는 축을 바꿀 수 있습니다.';
+    /* 묶는 축 설명(교과서 차례/수능 선택과목, 일반사회 55%·윤리 43% 실측)은 뺐다 — 만든 사람 설명문(2026-09-19 멘트 조사) */
+    document.getElementById("note").innerHTML='';
   }
 
   /* ══════ 시작 ══════ */
