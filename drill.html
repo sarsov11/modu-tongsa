@@ -100,6 +100,8 @@
   .opts.c5 .opt{min-height:62px}
   @media(max-width:1100px){.opts.c5{grid-template-columns:repeat(2,minmax(0,1fr))}}
   .opts.c2{grid-template-columns:1fr 1fr}
+  /* 0919 대표님 폰 — 긴 선지가 반쪽 칸에 한 낱말씩 끊겼다. 폰은 한 줄에 하나 */
+  @media(max-width:560px){.opts.c2{grid-template-columns:1fr}}
   .opt{display:flex;gap:11px;align-items:center;padding:14px 16px;border-radius:11px;
     border:1px solid var(--line-2);background:var(--surface-2);cursor:pointer;text-align:left;
     font-family:inherit;font-size:16px;color:var(--ink-2);transition:.14s}
@@ -1306,8 +1308,11 @@
     var S2=qset, c=S2.c, st=c.steps[S2.i];
     document.getElementById("qtext").innerHTML=st.q;
     document.getElementById("qmeta").textContent="단계 "+(S2.i+1)+" / "+c.steps.length;
-    return '<h4 class="casetitle">'+esc(c.title)+'</h4>'+
-      '<div class="arti"><div class="ah">제시문 <b id="whobox">?</b>'+
+    /* ★ 0919 대표님 폰 — 제목 「롤스와 노직을 나란히 놓으면」이 1단계(갑·을은 누구?) 답을 샜다.
+       제목·누구 말인지는 1단계를 답한 뒤(2단계부터)에만 보인다. */
+    var 풀림 = S2.i>0;
+    return '<h4 class="casetitle">'+(풀림?esc(c.title):'제시문 속 두 사람')+'</h4>'+
+      '<div class="arti"><div class="ah">제시문 <b id="whobox">'+(풀림?esc(c.who):'?')+'</b>'+
         '<span style="margin-left:auto">기출 원문</span></div>'+
         '<div class="quotebox">'+c.quote+'</div></div>'+
       '<div class="opts c2" style="margin-top:18px">'+st.o.map(function(o,i){

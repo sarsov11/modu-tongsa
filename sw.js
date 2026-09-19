@@ -1,7 +1,7 @@
 /* 모두의 통사 — 오프라인 캐시.
    틀(HTML·CSS)은 새것을 먼저 보고, 자료(js)는 캐시를 먼저 준 뒤 뒤에서 갱신한다.
    문항 그림은 미리 받지 않고 본 것만 남긴다(1,600장을 통째로 받으면 안 된다). */
-var VER = "terra-d59ba06e";   // 종이 스킨(모두의 수학 이식)·Pretendard 가 들어가 캐시를 새로 판다   // 회원·저장·서버 푸시(auth.js·supa.config.js) 가 들어가 캐시를 새로 판다   // 핵심 개념어 쓰기(keyword·kwgrade·kwask·keyword.css)가 들어가 캐시를 새로 판다 //   // 첫 설정(start.html)·아래 탭이 들어가 캐시를 새로 판다 //   // 선생님 층(coach.js·coach.css·card·ox)이 들어가 캐시를 새로 판다   // 확장팩·루틴 주기·훈련 개인화가 들어가 캐시를 새로 판다   // 루틴·알림이 들어가 캐시를 새로 판다
+var VER = "terra-23ba4d7d";   // 종이 스킨(모두의 수학 이식)·Pretendard 가 들어가 캐시를 새로 판다   // 회원·저장·서버 푸시(auth.js·supa.config.js) 가 들어가 캐시를 새로 판다   // 핵심 개념어 쓰기(keyword·kwgrade·kwask·keyword.css)가 들어가 캐시를 새로 판다 //   // 첫 설정(start.html)·아래 탭이 들어가 캐시를 새로 판다 //   // 선생님 층(coach.js·coach.css·card·ox)이 들어가 캐시를 새로 판다   // 확장팩·루틴 주기·훈련 개인화가 들어가 캐시를 새로 판다   // 루틴·알림이 들어가 캐시를 새로 판다
 var SHELL = [
   "./", "./index.html", "./skilltree.html", "./study.html",
   "./drill.html", "./settings.html", "./card.html", "./ox.html", "./exam.html", "./login.html", "./start.html", "./skills.html", "./js/skills.js", "./naeshin.html", "./js/naeshin.js", "./js/cardox.js", "./js/qrender.js",
@@ -20,10 +20,20 @@ self.addEventListener("install", function (e) {
 });
 
 self.addEventListener("activate", function (e) {
+  /* ★ 0919 대표님 폰 「이거 왜 남아있지? 예전에 앱 깔았으면 최신 버전 아닌 거임?」 —
+     js 는 캐시 먼저라, 새 판이 올라가도 **열려 있던 화면**은 옛 js 로 한 번 더 돌았다.
+     옛 캐시를 지운 경우(= 판 갈이)에는 열린 화면을 새로 불러 새 판으로 바로 넘긴다. */
+  var 갈이 = false;
   e.waitUntil(caches.keys().then(function (ks) {
-    return Promise.all(ks.filter(function (k) { return k !== VER; })
-      .map(function (k) { return caches.delete(k); }));
-  }).then(function () { return self.clients.claim(); }));
+    var old = ks.filter(function (k) { return k !== VER; });
+    갈이 = old.length > 0;
+    return Promise.all(old.map(function (k) { return caches.delete(k); }));
+  }).then(function () { return self.clients.claim(); }).then(function () {
+    if (!갈이) return;
+    return self.clients.matchAll({ type: "window" }).then(function (cs) {
+      cs.forEach(function (c) { try { c.navigate(c.url); } catch (x) {} });
+    });
+  }));
 });
 
 self.addEventListener("fetch", function (e) {

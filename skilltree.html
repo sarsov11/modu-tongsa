@@ -1258,14 +1258,20 @@
       '<span class="fact" style="color:'+(n.tier==="S"?GOLD:tone(n.fam,n.tier,paper()?14:0))+
       '">'+howFar(n.st)+(n.st.solved?", "+n.st.achieve+"%":"")+'</span>';
     document.getElementById("shNote").hidden=true;   // 학습 무게·예상 길이 설명은 뺐다(2026-09-18 대표님)
-    document.getElementById("shList").innerHTML=n.lec.map(function(x){
+    /* ★ 0919 대표님 「지방자치와 주민참여는 범위 아닌데 들어가 있음」 — 중영역(국가 기관)만 범위로 보고
+       리프를 안 걸렀다. 범위 밖 리프(학교 프리셋 drop·심화 끔)는 맨 아래로 내리고 흐리게 「이번 범위 아님」. */
+    var 안리프=function(x){ return !T.inScopeLeaf || T.inScopeLeaf(x.code); };
+    var 줄=n.lec.filter(안리프).concat(n.lec.filter(function(x){ return !안리프(x); }));
+    document.getElementById("shList").innerHTML=줄.map(function(x){
       var ls=T.leafStat(x.code), lt=tierOf(ls.achieve,ls.solved>0);
       var col=lt==="S"?GOLD:tone(n.fam,lt,paper()?14:0);
       var mine=todayLec()&&todayLec().code===x.code;
-      return '<div class="lec'+(mine?" today":"")+'" data-code="'+x.code+'">'+
+      var 밖=!안리프(x);
+      return '<div class="lec'+(mine?" today":"")+'" data-code="'+x.code+'"'+(밖?' style="opacity:.45"':'')+'>'+
         /* ★ 0919 대표님 「63 64 65 이런 번호는 학생에게 혼란을 주니까 보이게 하지마」 — x.no 는 데이터에만 둔다 */
         '<span class="mid"><h4>'+x.title+
-        (mine?'<span class="todaytag">오늘</span>':'')+'</h4>'+
+        (mine?'<span class="todaytag">오늘</span>':'')+
+        (밖?'<span class="todaytag" style="background:var(--line-2);color:var(--ink-3)">이번 범위 아님</span>':'')+'</h4>'+
         '<span class="meta"><span class="g'+(x.grade==="핵심"?" core":"")+'">'+x.grade+'</span>'+
         '<span>풀 수 있는 '+x.play+'</span>'+
         (ls.solved?'<span>성취도 '+ls.achieve+'%</span>':'<span>아직 안 풂</span>')+'</span>'+
