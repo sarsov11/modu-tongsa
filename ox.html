@@ -305,6 +305,7 @@
      그 강의 대본·화면 글과 내용 낱말이 겹치는 교과서·기출 문장만(강의연습.py → lecprac.js). 10문제, O·X 반반. */
   var 강의표 = (location.search.match(/[?&]lec=([^&]+)/)||[])[1];
   if(강의표) 강의표 = decodeURIComponent(강의표);
+  var 강의풀 = null;
   function 강의고르기(){
     var P=(window.LECPRAC||{})[강의표]; if(!P) return null;
     var 옥스={}; BANK.forEach(function(x){ 옥스[x.id]=x; });
@@ -316,6 +317,7 @@
       if(z) 풀.push(z);
     });
     if(풀.length < 4) return null;
+    강의풀 = 풀;
     function 점수(x){ var 본적=(T.state().ox||{})[x.id]; return (본적?(본적.ok?-0.6:0.5):0) + Math.random(); }
     function 줄(arr){ return arr.slice().sort(function(a,b){return 점수(b)-점수(a)}); }
     /* ★ 0919 대표님 「난이도 있는 문항의 선지도 들어갔는지」 — 열 문제 가운데 넷은 영상 속 기출 선지(어려운 쪽)로 */
@@ -550,6 +552,11 @@
     });
     if(!후보.length && next==="similar")
       후보 = BANK.filter(function(z){ return !이미[z.id] && z.leaf===방금.leaf; });
+    /* ★ 강의 연습이면 강의 묶음 안에서만 끼운다 — 리프 창고에서 가져오면 검토에서 뺀 중복·범위 밖 문장이 되살아났다(0919) */
+    if(강의풀){
+      후보 = 강의풀.filter(function(z){ return !이미[z.id] && (next!=="similar" || z.a!==방금.a); });
+      if(!후보.length) 후보 = 강의풀.filter(function(z){ return !이미[z.id]; });
+    }
     if(!후보.length) return;
 
     /* easier 는 **이미 맞힌 적 있는 리프**를 고른다 — 한 단계 낮추는 것이 목적이다 */

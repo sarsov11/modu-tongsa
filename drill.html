@@ -1219,20 +1219,19 @@
       q:"이 사례에서 문제 되는 것은 어떤 기본권입니까?",
       o:shuffle(갈래.slice()),
       ans:c.rightKind,
-      why:"<b>"+esc(c.right)+"</b> — "+c.rightWhy});
+      why:"<b>"+esc(c.right)+"</b>. "+c.rightWhy});
     /* ② 제한할 수 있는 목적인가 */
     st.push({
       q:"제37조 제2항이 든 목적(국가안전보장·질서유지·공공복리)에 드는 제한입니까?",
-      o:["그렇다 — 목적 자체는 정당하다", "아니다 — 목적부터 헌법이 허용하지 않는다"],
-      ans:(c.purposeOk ? "그렇다 — 목적 자체는 정당하다"
-                       : "아니다 — 목적부터 헌법이 허용하지 않는다"),
+      o:["그렇다", "아니다"],
+      ans:(c.purposeOk ? "그렇다" : "아니다"),
       why:c.purposeWhy});
     /* ③ 어느 단계에서 걸리는가 */
     var 단계이름=(RG.steps4||[]).map(function(x){ return x.k; });
     st.push({
       q:"과잉금지 네 단계 가운데 <b>어디에서 걸립니까?</b>",
-      o:단계이름.concat(["걸리지 않는다 — 네 단계를 다 넘는다"]),
-      ans:(c.failAt || "걸리지 않는다 — 네 단계를 다 넘는다"),
+      o:단계이름.concat(["걸리지 않는다"]),
+      ans:(c.failAt || "걸리지 않는다"),
       why:c.failWhy});
     /* ④ 결론 */
     st.push({
@@ -1240,8 +1239,7 @@
       o:["침해한다", "침해하지 않는다"],
       ans:(c.failAt ? "침해한다" : "침해하지 않는다"),
       why:(c.failAt
-        ? "네 단계 가운데 <b>"+esc(c.failAt)+"</b>에서 걸렸으므로 침해입니다. "+
-          "네 단계는 <b>하나라도 못 넘으면</b> 그것으로 끝입니다."
+        ? "네 단계 가운데 <b>"+esc(c.failAt)+"</b>에서 걸렸으므로 침해입니다."
         : "네 단계를 모두 넘었으므로 침해가 아닙니다. "+
           "헌법은 <b>필요한 경우에 한하여 법률로써</b> 제한할 수 있다고 정합니다.")});
     return st;
@@ -1463,8 +1461,8 @@
       o:["정당하다","정당하지 않다"], a:c.purposeOk?"정당하다":"정당하지 않다",
       why:c.purpose});
     st.push({q:"덜 제한하는 수단이 있었나요? (침해의 최소성)", show:"facts",
-      o:["있다 — 최소성에 걸린다","없다 — 최소성을 넘는다"],
-      a:c.lessOk?"있다 — 최소성에 걸린다":"없다 — 최소성을 넘는다", why:c.less});
+      o:["있다","없다"],
+      a:c.lessOk?"있다":"없다", why:c.less});
     st.push({q:"결론은?", show:"facts",
       o:shuffle([c.result].concat(c.resultAlt.slice(0,2))), a:c.result, why:c.resultWhy});
     return {c:c, real:real, steps:st, i:0, marks:[]};
@@ -1622,14 +1620,14 @@
     var week=day*days;
     var st=[];
     st.push({q:nm+"("+age+"세)에게 연소자 특칙이 걸립니까?",
-      o:["걸린다 — 만 18세 미만","안 걸린다 — 만 18세 이상"],
+      o:["걸린다","안 걸린다"],
       a:minor?0:1,
       why:"근로기준법의 연소자 특칙은 <b>15세 이상 18세 미만</b>에게 적용됩니다. "+
           nm+"은(는) 만 "+age+"세이므로 "+(minor?"특칙이 걸립니다.":"일반 규정을 따릅니다.")+
           " 고등학생인지 아닌지가 아니라 <b>만 나이</b>가 기준입니다."});
     st.push({q:"하루 법정 근로시간은 몇 시간입니까?",
       o:["7시간","8시간"], a:minor?0:1,
-      why:minor?"제69조 — 15세 이상 18세 미만은 <b>1일 7시간, 1주 35시간</b>을 넘길 수 없습니다. "+
+      why:minor?"제69조에 따라 15세 이상 18세 미만은 <b>1일 7시간, 1주 35시간</b>을 넘길 수 없습니다. "+
                 "합의해도 1일 1시간, 1주 5시간까지만 늘릴 수 있습니다."
                :"18세 이상은 <b>1일 8시간, 1주 40시간</b>이 기준입니다."});
     st.push({q:"하루 "+day+"시간을 일했다면 연장근로는 몇 시간입니까?",
@@ -1638,28 +1636,27 @@
           (over>0?"제56조에 따라 통상임금의 <b>50%를 가산</b>해 받습니다.":"넘긴 시간이 없습니다.")});
     st.push({q:"하루 "+day+"시간 일하면 휴게시간을 얼마나 주어야 합니까?",
       o:[rest+"분", (rest===60?30:60)+"분"], a:0,
-      why:"제54조 — 4시간이면 30분 이상, <b>8시간이면 1시간 이상</b>을 근로시간 도중에 줍니다. "+
+      why:"제54조에 따라 근로시간이 4시간이면 30분 이상, <b>8시간이면 1시간 이상</b>의 휴게시간을 근로시간 도중에 줍니다. "+
           day+"시간이므로 "+rest+"분입니다. 휴게시간은 근로시간에 들어가지 않습니다."});
     if(night){
       st.push({q:"밤 11시까지 일을 시켰습니다. 이건 됩니까?",
-        o:[minor?"안 된다 — 인가 없이는 금지":"된다 — 가산수당만 주면 된다",
-           minor?"된다 — 본인이 동의했으면 그만이다":"안 된다 — 야간근로는 금지된다"],
+        o:[minor?"안 된다":"된다", minor?"된다":"안 된다"],
         a:0,
-        why:minor?"제70조 제2항 — <b>18세 미만자는 오후 10시부터 오전 6시까지 근로시킬 수 없습니다.</b> "+
-                  "본인 동의만으로는 안 되고 <b>고용노동부장관의 인가</b>까지 받아야 합니다."
+        why:minor?"제70조 제2항은 <b>18세 미만자를 오후 10시부터 오전 6시까지 근로시키지 못한다</b>고 정합니다. "+
+                  "본인의 동의와 <b>고용노동부장관의 인가</b>가 있어야 합니다."
                  :"18세 이상은 야간근로가 금지되지 않습니다. 다만 제56조에 따라 "+
                   "오후 10시~오전 6시 근로에는 <b>50%를 가산</b>해야 합니다."});
     }
     var base=week*wage;
     st.push({q:"주 "+days+"일, 하루 "+day+"시간 일했습니다. 주휴수당은?",
-      o:["받는다 — 주 15시간 이상","못 받는다 — 아르바이트라서"], a:0,
-      why:"제55조 — 1주에 평균 1회 이상 <b>유급휴일</b>을 주어야 합니다. "+
+      o:["받는다","못 받는다"], a:0,
+      why:"제55조에 따라 1주에 평균 1회 이상 <b>유급휴일</b>을 주어야 합니다. "+
           "주 소정근로시간이 15시간 이상이면 아르바이트도 주휴수당을 받습니다. "+
           "이 사례는 주 "+week+"시간입니다."});
     st.push({q:"사장이 임금을 부모 계좌로 보내겠다고 합니다.",
-      o:["안 된다 — 본인에게 직접","된다 — 미성년자니까"], a:0,
-      why:"제68조 — <b>미성년자는 독자적으로 임금을 청구할 수 있습니다.</b> "+
-          "친권자가 대신 받을 수 없고 본인에게 직접 지급해야 합니다."});
+      o:["안 된다","된다"], a:0,
+      why:"제68조는 <b>미성년자는 독자적으로 임금을 청구할 수 있다</b>고 정합니다. "+
+          "임금은 본인에게 직접 지급해야 합니다."});
     return {nm:nm, job:job, age:age, minor:minor, day:day, days:days, night:night,
             wage:wage, week:week, steps:st, i:0, marks:[]};
   }
@@ -1673,14 +1670,12 @@
       '주 '+L.days+'일, 하루 '+L.day+'시간씩 일하고 시급은 '+L.wage.toLocaleString()+'원이다.'+
       (L.night?' 사장은 밤 11시까지 일해 달라고 한다.':'')+
       '</div>'+
-      '<div class="opts c2" style="margin-top:16px">'+st.o.map(function(o,i){
-        return '<button class="opt" data-v="'+i+'">'+o+'</button>';
-      }).join("")+'</div><div id="v"></div>';
+      '<div class="opts c2" style="margin-top:16px">'+선지단추(st)+'</div><div id="v"></div>';
   }
   function judgeLabor(btn){
     var L=lset, st=L.steps[L.i], i=+btn.dataset.v, ok=(i===st.a);
     document.querySelectorAll(".opt").forEach(function(b,k){
-      b.disabled=true; if(k===st.a) b.dataset.s="ok"; else if(b===btn) b.dataset.s="no";
+      b.disabled=true; if(+b.dataset.v===st.a) b.dataset.s="ok"; else if(b===btn) b.dataset.s="no";
     });
     grade(ok); L.marks.push(ok);
     var last=(L.i+1>=L.steps.length);
