@@ -11,7 +11,7 @@
 <meta name="theme-color" content="#FAF8F3">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=873fa070">
+<link rel="stylesheet" href="css/base.css?v=2862427b">
 <link rel="stylesheet" href="css/question.css?v=8db784a8">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <link rel="stylesheet" href="css/keyword.css?v=e00f83be">
@@ -198,22 +198,22 @@
 <div class="obfoot"><div class="in" id="foot"></div></div>
 
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/tree.js?v=45426a99"></script>
+<script src="js/tree.js?v=c9b66636"></script>
 <script src="js/qbank.js?v=60117b6e"></script>
-<script src="js/lecture.js?v=6c12a0f0"></script>
+<script src="js/lecture.js?v=719518aa"></script>
 <script src="js/video.js?v=e2856381"></script>
-<script src="js/qrender.js?v=baf2df9c"></script>
+<script src="js/qrender.js?v=56d6f982"></script>
 <script src="js/pool.js?v=1b40e933"></script>
 <script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
-<script src="js/cardox.js?v=0022ba2e"></script>
-<script src="js/keyword.js?v=c97a00a9"></script>
+<script src="js/cardox.js?v=2f9c36b6"></script>
+<script src="js/keyword.js?v=a02c415d"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/judge.js?v=43f690d4"></script>
-<script src="js/cards.js?v=a225153d"></script>
-<script src="js/store.js?v=dfb93453"></script>
-<script src="js/kwask.js?v=37cf1b37"></script>
+<script src="js/cards.js?v=def9a11e"></script>
+<script src="js/store.js?v=9b43dec6"></script>
+<script src="js/kwask.js?v=4832b5e4"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -372,11 +372,10 @@
     },
     goal:function(st){
       A.goal=T.goalMin?T.goalMin():15;
-      var opts=[[10,"딱 한 가지"],[15,"권해요"],[20,"넉넉히"],[30,"작정하고"]];
+      var opts=[[10,""],[15,"권해요"],[20,""],[30,""]];
       st.innerHTML=머리("5 / 7",esc(MSG.goalH),esc(MSG.goalP))+
         '<div class="tiles two">'+opts.map(function(o){
-          return '<button class="tile" data-m="'+o[0]+'" aria-pressed="'+(A.goal===o[0])+'"><b>'+o[0]+'<small class="u">분</small></b><span>'+o[1]+'</span></button>'; }).join("")+'</div>'+
-        '<p class="note">복습, 강의, 개념 확인, Killer Drill을 이 시간 안에 나눠 드려요.</p>';
+          return '<button class="tile" data-m="'+o[0]+'" aria-pressed="'+(A.goal===o[0])+'"><b>'+o[0]+'<small class="u">분</small></b><span>'+o[1]+'</span></button>'; }).join("")+'</div>';
       st.querySelectorAll(".tile").forEach(function(b){ b.onclick=function(){ A.goal=+b.dataset.m; 눌림(st,".tile",function(x){return +x.dataset.m===A.goal;}); }; });
       단추("다음");
     },

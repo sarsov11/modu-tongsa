@@ -60,7 +60,7 @@
     okAfterMiss:  "맞았어요. 방금 틀린 문제는 3일 뒤에 다시 풀어봐요.",
     missOne:      "틀렸어요. 3일 뒤에 다시 풀어봐요.",
     missSure:     "확실하다고 했는데 틀렸어요. {개념을} 다시 볼까요?",
-    missGuess:    "찍었죠? 해설 한 줄만 읽고 가요.",
+    missGuess:    "해설을 읽어 볼까요?",
     missRun3:     "세 문제 연속으로 틀렸어요. 개념부터 다시 읽어볼까요?",
     drillOk:      "맞았어요. 오늘 Killer Drill {n}문제째예요.",
     drillMiss:    "한 번 더 해볼까요? Killer Drill은 정답률에 안 들어가요.",

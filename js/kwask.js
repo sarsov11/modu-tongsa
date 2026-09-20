@@ -124,7 +124,7 @@
               return '<button type="button" data-c="' + c.v + '">' + esc(c.name) + '</button>';
             }).join("") +
           '</div>' +
-          '<button type="button" class="kwskip" id="kwskip">모르겠어요 — 정답 보기</button>' +
+          '<button type="button" class="kwskip" id="kwskip">모르겠어요</button>' +
         '</div>' +
       '</div>';
 
