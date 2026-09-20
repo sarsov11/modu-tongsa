@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=2862427b">
+<link rel="stylesheet" href="css/base.css?v=b6f4b519">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -353,7 +353,7 @@
   /* ★ 폰에서 #modes 가 부모(.pheadact, flex 열) 안에서 내용 너비만큼 커져 지면이 1,597px 로 늘어났다(2026-09-18 대표님 폰 실측) — 너비를 100% 로 묶는다 */
   @media (max-width:640px){ .phead,.pheadact{max-width:calc(100vw - 32px)} #modes{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;padding-bottom:6px;width:100%;max-width:calc(100vw - 32px);min-width:0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
     #modes::-webkit-scrollbar{display:none} #modes button,#modes .mgrp{flex:0 0 auto;white-space:nowrap} }
-  .naeshin{display:flex;align-items:center;gap:14px;margin:0 0 18px;padding:16px 18px;border:1.5px solid var(--cta);border-radius:var(--r2);background:var(--cta-soft);color:var(--ink);text-decoration:none}
+  .naeshin{display:flex;align-items:center;gap:14px;margin:0 0 18px;padding:16px 18px;border:1px solid var(--line-2);border-radius:var(--r2);background:var(--surface);color:var(--ink);text-decoration:none}
   .naeshin b{font-size:17px;font-weight:900;white-space:nowrap} .naeshin span{flex:1;font-size:14.5px;font-weight:600;color:var(--ink-2)} .naeshin i{font-style:normal;font-weight:900;color:var(--cta)}
 </style>
 </head>
@@ -411,7 +411,7 @@
 <script src="js/justice.js?v=164f853e"></script>
 <script src="js/pool.js?v=1b40e933"></script>
 <script src="js/cards.js?v=def9a11e"></script>
-<script src="js/store.js?v=9b43dec6"></script>
+<script src="js/store.js?v=06adb02b"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -434,7 +434,8 @@
       return;
     }
     var 안=MODES.filter(function(m){ return !범위밖(m); }).length;
-    host.innerHTML='<div class="scopebar">이번 시험 범위 <b>'+T.scopeName()+'</b>'+
+    /* 범위는 단원 이름만 — 괄호 속 세부까지 매번 보일 일이 아니다(2026-09-21) */
+    host.innerHTML='<div class="scopebar">시험 범위 <b>'+String(T.scopeName()||"").replace(/\s*\([^)]*\)/g,"")+'</b>'+
       '<a href="settings.html">범위 고치기 →</a></div>';
   }
   if(!MODES.some(function(m){return m.id===mode;})) mode="climate";
@@ -1876,7 +1877,8 @@
     document.getElementById("qtext").textContent=m.name;
     document.getElementById("qmeta").textContent=String(m.area||"").replace(/^[A-Z] /,"").replace(/ · [A-Z] /g,", ");
     document.getElementById("stage").innerHTML=
-      '<div class="startcard"><h3>'+m.name+'</h3><p>'+m.desc+'</p>'+
+      /* 제목은 화면 머리에 이미 있다 — 카드 안에서 되풀이하지 않는다(2026-09-21) */
+      '<div class="startcard">'+
       '<div class="rule">'+(RULE[mode]||[]).map(function(x){
         return '<span>'+x+'</span>'; }).join("")+'</div>'+
       '<button class="btn big" id="go">시작</button></div>';

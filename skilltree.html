@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=2862427b">
+<link rel="stylesheet" href="css/base.css?v=b6f4b519">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -289,7 +289,7 @@
 <div class="wrapx">
   <div class="phead">
     <div>
-      <span class="kicker"><i></i>개념트리</span>
+      <span class="kicker">개념트리</span>
       <h1><span class="crumb" id="crumb"></span></h1>
       <p class="sub" id="lede"></p>
     </div>
@@ -359,7 +359,7 @@
 <script src="js/pool.js?v=1b40e933"></script>
 <script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/cards.js?v=def9a11e"></script>
-<script src="js/store.js?v=9b43dec6"></script>
+<script src="js/store.js?v=06adb02b"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -1101,7 +1101,8 @@
         (AX.name==="시험 범위" ? "이번 시험에 나오는 단원만 모았어요." : AX.name+(bat(AX.name)?"으로":"로")+" 묶었어요 — "+AX.say+".");
       var 시험0=(T.scopeOn&&T.scopeOn()&&T.기본범위지금&&T.기본범위지금())||null;
       document.getElementById("plateTitle").textContent=시험0?(시험0.name+" 범위"):"통합사회";
-      document.getElementById("plateSub").textContent=시험0?(FAMS.map(function(f){ return FAM[f].label||f; }).join(", ")):AX.name;
+      /* 위 칩이 이미 단원을 보여 준다 — 같은 이름을 부제로 되풀이하지 않는다(2026-09-21) */
+      document.getElementById("plateSub").textContent=시험0?"":AX.name;
     }else if(level===2&&grp&&narrow()){
       /* 폰은 이름 하나만 — 「통합사회 › 1단원 › 인권 보장과 헌법」 세 줄로 접히던 것(2026-09-18) */
       c.innerHTML='<span class="swapin">'+grp.name+'</span>';

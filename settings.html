@@ -15,7 +15,7 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/login.css?v=bcda8ea1">
-<link rel="stylesheet" href="css/base.css?v=2862427b">
+<link rel="stylesheet" href="css/base.css?v=b6f4b519">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -221,8 +221,7 @@
 <div class="wrapx">
   <div class="phead">
     <div>
-      <span class="kicker"><i></i>설정</span>
-      <h1>내 학습 설정</h1>
+      <h1>설정</h1>
       <p class="sub" id="lede"></p>
       <p class="sub" style="margin-top:8px"><a href="start.html" style="color:var(--red-2);font-weight:700">처음 설정 다시 하기 →</a>
         </p>
@@ -323,7 +322,7 @@
 <script src="js/packs.js?v=e89ffbaf"></script>
 <script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/cards.js?v=def9a11e"></script>
-<script src="js/store.js?v=9b43dec6"></script>
+<script src="js/store.js?v=06adb02b"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -756,7 +755,7 @@
 <script>
 /* 설정 구획 접기 — 묶음: 공부 / 화면·학년 / 기록 */
 (function(){
-  var 묶음=[["공부",["하루 루틴","이번 시험 범위","목표일","확장팩"]],["화면·학년",["디자인","학년"]],["기록",["저장","기록 옮기기"]]];
+  var 묶음=[["공부",["하루 루틴","이번 시험 범위","목표일","확장팩"]],["화면과 학년",["디자인","학년"]],["기록",["저장","기록 옮기기"]]];
   var secs=[].slice.call(document.querySelectorAll("section.sec")).filter(function(x){ return !x.hidden; });
   var by={}; secs.forEach(function(x){ var h=x.querySelector(".sechd h2"); if(h) by[h.textContent.trim()]=x; });
   var 자리=secs[0]&&secs[0].parentNode, 앞=secs[0]; if(!자리) return;

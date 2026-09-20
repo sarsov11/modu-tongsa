@@ -1775,10 +1775,8 @@
       '<div class="navlinks">' + items.map(function (it) {
         return '<a href="' + it[0] + '"' + (it[0] === active ? ' class="on"' : '') + '>' + it[1] + '</a>';
       }).join("") + '</div>' +
-      '<div class="navact">' +
-      '<span class="chip mono hide-sm" id="navgrade"></span>' +
-      (S.seeded ? '<span class="srcflag hide-sm" id="srcflag">시연 데이터</span>' : '') +
-      '<span class="chip mono" id="navstreak"></span></div></div></nav>';
+      /* 위 배지(학년 모드·연속일·시연 데이터)는 뺐다 — 학생이 누를 것도 아니고 화면만 채웠다(2026-09-21 대표님 "지저분한 요소를 줄여라") */
+      '</div></nav>';
   }
   /* 지금 화면에서 할 만한 다음 것을 골라 아래에 띄운다.
      지금 있는 화면과 같은 것은 건너뛴다 — 이미 하고 있는 걸 또 권하면 안 된다. */

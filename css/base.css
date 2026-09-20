@@ -397,7 +397,7 @@ img{max-width:100%}
 .phead h1{font-size:clamp(32px,4.2vw,52px);margin-top:14px;letter-spacing:-.055em}
 .phead h1 em{font-style:normal;color:var(--cta-2)}
 .phead .sub{font-size:15.5px;color:var(--ink-3);margin-top:13px;max-width:58ch}
-.pheadact{display:flex;flex-direction:column;gap:12px;align-items:flex-end;justify-content:flex-end;min-width:0;max-width:100%}
+.pheadact{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:flex-end;min-width:0;max-width:100%}   /* 세로로 쌓이던 단추를 한 줄로(2026-09-21) */
 .phead>*{min-width:0}
 html,body{overflow-x:hidden}/* 지면 가로 넘침 막기 */
 @media(max-width:900px){.pheadact{align-items:flex-start}}

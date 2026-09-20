@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=2862427b">
+<link rel="stylesheet" href="css/base.css?v=b6f4b519">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
 <link rel="stylesheet" href="css/question.css?v=8db784a8">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
@@ -258,7 +258,7 @@
 <div class="wrapx">
   <div class="phead">
     <div>
-      <span class="kicker"><i></i>문제풀이</span>
+      <span class="kicker">문제풀이</span>
       <h1 id="ttl">문제풀이</h1>
       <p class="sub" id="lede"></p>
     </div>
@@ -274,7 +274,7 @@
 <script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/qrender.js?v=56d6f982"></script>
 <script src="js/cards.js?v=def9a11e"></script>
-<script src="js/store.js?v=9b43dec6"></script>
+<script src="js/store.js?v=06adb02b"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -475,17 +475,10 @@
     var st=T.leafStat(leaf.code);
     document.getElementById("ttl").textContent=leaf.name;
     var S3=T.state(), g3=(S3.student&&S3.student.grade)||"고1";
+    /* 부제는 단원 이름까지만 — 어느 학년 기출이 섞였는지는 문항마다 출처로 적힌다(2026-09-21) */
     document.getElementById("lede").textContent=
       leaf.mid.root.name+", "+leaf.mid.name+
-      ". "+
-      (wrongOnly?"지난번에 틀린 것만 모았어요."
-        : 붙임>0
-          ? (g3==="고3"
-              ? "통합사회 학평 문항도 함께 나와요."
-              : ((list.length-붙임)===0
-                  ? "고2·고3 기출로 풀어봐요."
-                  : "고2·고3 기출도 함께 나와요."))
-          : "");
+      (wrongOnly?". 지난번에 틀린 것만 모았어요.":"");
     document.getElementById("headact").innerHTML=
       '<a class="btn ghost sm" href="skilltree.html?area='+leaf.mid.root.code+'">개념트리</a>'+
       '<a class="btn ghost sm" href="study.html">다른 단원</a>';
