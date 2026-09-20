@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>홈 시안 셋 — 모두의 통사</title>
+<!-- 2026-09-21 대표님 「지금 홈이 난잡하다. 노트베이스의 깔끔한 디자인을 참고하라」
+     한 파일에 시안 셋. 위 칩으로 갈아 끼운다. 내용(이름·시험·D-day·오늘 할 것)은 세 안이 똑같고 **짜임새만** 다르다.
+     A 정돈형   — 지금 정보를 그대로 두되 상자를 없애고 세로 축 하나로 정렬
+     B 미니멀   — 노트베이스식. 흰 바탕, 색은 주 단추 하나, 여백과 실선만
+     C 절충     — 스킨 색(분홍)을 남기되 상자를 없애고 아래 고정 단추 -->
+<style>
+  :root{
+    --ink:#171B24; --ink-2:#39404E; --ink-3:#6B7280; --ink-4:#9AA1AC;
+    --line:#E8E5DF; --line-2:#D6D2C9;
+    --bg:#FFFFFF; --cta:#2F5BEA; --pink:#F0417E; --pink-soft:#FFF1F6;
+    --sans:"Pretendard Variable",Pretendard,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:var(--sans);background:#F3F4F6;color:var(--ink-2);
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:430px;margin:0 auto;background:var(--bg);min-height:100vh;
+    display:flex;flex-direction:column}
+  /* 시안 고르기 */
+  .pick{position:sticky;top:0;z-index:5;display:flex;gap:8px;padding:10px 16px;
+    background:#fff;border-bottom:1px solid var(--line)}
+  .pick button{flex:1;padding:9px 0;border:1px solid var(--line-2);background:#fff;border-radius:10px;
+    font-family:inherit;font-size:14px;font-weight:700;color:var(--ink-3);cursor:pointer}
+  .pick button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .stage{flex:1;display:flex;flex-direction:column}
+  section.view{display:none;flex:1;flex-direction:column}
+  section.view.on{display:flex}
+
+  /* ── 공통 조각 ── */
+  .top{display:flex;align-items:center;justify-content:space-between;
+    padding:16px 20px 0}
+  .brand{font-size:16px;font-weight:800;color:var(--ink)}
+  .dday{font-size:14px;font-weight:700;color:var(--ink-3)}
+  .hr{height:1px;background:var(--line);margin:0 20px}
+
+  /* ── A 정돈형 ── */
+  #A .head{padding:22px 20px 18px}
+  #A .exam{font-size:15px;font-weight:700;color:var(--ink-3)}
+  #A .big{font-size:30px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-top:4px}
+  #A .todo{padding:26px 20px 0}
+  #A .todo .lab{font-size:14px;font-weight:700;color:var(--ink-4)}
+  #A .todo .say{font-size:21px;font-weight:700;color:var(--ink);line-height:1.5;margin-top:8px;
+    word-break:keep-all}
+  #A .acts{padding:22px 20px 0;display:flex;flex-direction:column;gap:10px}
+  #A .btn{width:100%;padding:17px 0;border-radius:14px;border:0;background:var(--cta);color:#fff;
+    font-family:inherit;font-size:17px;font-weight:800;cursor:pointer}
+  #A .sub{display:flex;gap:18px;justify-content:center;padding:4px 0 0}
+  #A .sub button{border:0;background:none;font-family:inherit;font-size:15px;font-weight:700;
+    color:var(--ink-3);padding:8px 2px;cursor:pointer}
+  #A .rows{margin-top:30px;border-top:1px solid var(--line)}
+  #A .row{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:18px 20px;border-bottom:1px solid var(--line);background:none;border-left:0;border-right:0;border-top:0;
+    width:100%;font-family:inherit;text-align:left;cursor:pointer}
+  #A .row b{font-size:16px;font-weight:700;color:var(--ink)}
+  #A .row span{font-size:15px;color:var(--ink-4);font-weight:700}
+
+  /* ── B 미니멀 ── */
+  #B .head{padding:26px 20px 0}
+  #B .exam{font-size:14px;font-weight:700;color:var(--ink-4)}
+  #B .big{font-size:26px;font-weight:800;color:var(--ink);margin-top:6px;letter-spacing:-.02em}
+  #B .say{padding:40px 20px 0;font-size:22px;font-weight:700;color:var(--ink);line-height:1.55;
+    word-break:keep-all}
+  #B .meta{padding:14px 20px 0;font-size:14px;color:var(--ink-4);font-weight:600}
+  #B .spacer{flex:1}
+  #B .bottom{padding:0 20px calc(18px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px}
+  #B .btn{width:100%;padding:18px 0;border-radius:12px;border:0;background:var(--ink);color:#fff;
+    font-family:inherit;font-size:17px;font-weight:800;cursor:pointer}
+  #B .sub{display:flex;justify-content:space-between}
+  #B .sub button{border:0;background:none;font-family:inherit;font-size:15px;font-weight:700;
+    color:var(--ink-3);padding:10px 0;cursor:pointer}
+  #B .rows{margin:34px 0 0;border-top:1px solid var(--line)}
+  #B .row{display:flex;align-items:center;justify-content:space-between;padding:17px 20px;
+    border-bottom:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-top:0;
+    font-family:inherit;text-align:left;cursor:pointer}
+  #B .row b{font-size:15.5px;font-weight:700;color:var(--ink)}
+  #B .row span{font-size:14.5px;color:var(--ink-4);font-weight:700}
+
+  /* ── C 절충 ── */
+  #C{background:#FFFDFE}
+  #C .head{padding:20px 20px 16px;background:var(--pink-soft)}
+  #C .exam{font-size:14px;font-weight:700;color:#9E5C78}
+  #C .big{font-size:27px;font-weight:800;color:var(--ink);margin-top:4px;letter-spacing:-.02em}
+  #C .say{padding:28px 20px 0;font-size:21px;font-weight:700;color:var(--ink);line-height:1.5;
+    word-break:keep-all}
+  #C .why{padding:10px 20px 0;font-size:14.5px;color:var(--ink-4);font-weight:600}
+  #C .rows{margin-top:28px;border-top:1px solid var(--line)}
+  #C .row{display:flex;align-items:center;justify-content:space-between;padding:17px 20px;
+    border-bottom:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-top:0;
+    font-family:inherit;text-align:left;cursor:pointer}
+  #C .row b{font-size:15.5px;font-weight:700;color:var(--ink)}
+  #C .row span{font-size:14.5px;color:var(--ink-4);font-weight:700}
+  #C .spacer{flex:1}
+  #C .bar{position:sticky;bottom:0;background:rgba(255,255,255,.96);border-top:1px solid var(--line);
+    padding:12px 20px calc(12px + env(safe-area-inset-bottom));display:flex;gap:10px;align-items:center}
+  #C .bar .btn{flex:1;padding:16px 0;border-radius:999px;border:0;background:var(--pink);color:#fff;
+    font-family:inherit;font-size:16.5px;font-weight:800;cursor:pointer}
+  #C .bar .ghost{padding:16px 14px;border-radius:999px;border:1px solid var(--line-2);background:#fff;
+    font-family:inherit;font-size:15px;font-weight:700;color:var(--ink-3);cursor:pointer}
+
+  /* 아래 탭 — 세 안 공통(지금 사이트와 같은 자리) */
+  .tabs{display:flex;border-top:1px solid var(--line);background:#fff}
+  .tabs a{flex:1;text-align:center;padding:12px 0 calc(12px + env(safe-area-inset-bottom));
+    font-size:13.5px;font-weight:700;color:var(--ink-4);text-decoration:none}
+  .tabs a.on{color:var(--ink)}
+  .note{padding:14px 20px 22px;font-size:13.5px;color:var(--ink-4);line-height:1.7;background:#fff;
+    border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="pick" role="group">
+    <button data-v="A" aria-pressed="true">A 정돈</button>
+    <button data-v="B" aria-pressed="false">B 미니멀</button>
+    <button data-v="C" aria-pressed="false">C 절충</button>
+  </div>
+
+  <div class="stage">
+    <!-- ══ A 정돈형 ══ -->
+    <section class="view on" id="A">
+      <div class="top"><span class="brand">모두의 통사</span><span class="dday">고1</span></div>
+      <div class="head">
+        <div class="exam">2학기 중간고사</div>
+        <div class="big">D-15</div>
+      </div>
+      <div class="hr"></div>
+      <div class="todo">
+        <div class="lab">오늘</div>
+        <div class="say">기본권의 다섯 유형 O·X 15문장</div>
+      </div>
+      <div class="acts">
+        <button class="btn">시작</button>
+        <div class="sub">
+          <button>개념 먼저</button>
+          <button>다른 단원</button>
+        </div>
+      </div>
+      <div class="rows">
+        <button class="row"><b>이번 달</b><span>7일</span></button>
+        <button class="row"><b>단원별 정답률</b><span>72%</span></button>
+        <button class="row"><b>틀린 문장</b><span>18</span></button>
+      </div>
+      <div class="note">A — 지금 홈의 정보를 그대로 두고 상자를 없앴습니다. 단추는 화면 너비로 하나, 보조는 글자 단추 둘.
+        기록은 제목이 낱말인 행 셋으로 바꿨습니다.</div>
+      <nav class="tabs"><a class="on">홈</a><a>개념트리</a><a>스킬트리</a><a>Killer Drill</a><a>설정</a></nav>
+    </section>
+
+    <!-- ══ B 미니멀 ══ -->
+    <section class="view" id="B">
+      <div class="top"><span class="brand">모두의 통사</span><span class="dday">D-15</span></div>
+      <div class="head">
+        <div class="exam">2학기 중간고사</div>
+        <div class="big">오늘 15분</div>
+      </div>
+      <div class="say">기본권의 다섯 유형<br>O·X 15문장</div>
+      <div class="meta">어제 20문장 중 16개 맞힘</div>
+      <div class="rows">
+        <button class="row"><b>틀린 문장 다시</b><span>18</span></button>
+        <button class="row"><b>개념 읽기</b><span>4</span></button>
+        <button class="row"><b>어려운 O·X</b><span></span></button>
+      </div>
+      <div class="spacer"></div>
+      <div class="bottom">
+        <button class="btn">시작</button>
+        <div class="sub"><button>다른 단원</button><button>오늘은 쉬기</button></div>
+      </div>
+      <div class="note">B — 노트베이스식. 흰 바탕에 색은 주 단추 하나뿐이고, 구역은 실선과 여백으로만 나눕니다.
+        누르는 것은 화면 아래에 모아 두었습니다.</div>
+      <nav class="tabs"><a class="on">홈</a><a>개념트리</a><a>스킬트리</a><a>Killer Drill</a><a>설정</a></nav>
+    </section>
+
+    <!-- ══ C 절충 ══ -->
+    <section class="view" id="C">
+      <div class="head">
+        <div class="exam">2학기 중간고사</div>
+        <div class="big">D-15</div>
+      </div>
+      <div class="say">기본권의 다섯 유형 O·X 15문장</div>
+      <div class="why">어제 틀린 문장이 이 단원에 몰려 있어요.</div>
+      <div class="rows">
+        <button class="row"><b>이번 달</b><span>7일</span></button>
+        <button class="row"><b>단원별 정답률</b><span>72%</span></button>
+        <button class="row"><b>틀린 문장</b><span>18</span></button>
+      </div>
+      <div class="spacer"></div>
+      <div class="bar">
+        <button class="btn">시작</button>
+        <button class="ghost">다른 거</button>
+      </div>
+      <div class="note">C — 스킨 색은 머리와 단추에만 남기고 상자는 없앴습니다. 시작 단추는 화면 아래에 붙어 따라다닙니다.</div>
+      <nav class="tabs"><a class="on">홈</a><a>개념트리</a><a>스킬트리</a><a>Killer Drill</a><a>설정</a></nav>
+    </section>
+  </div>
+</div>
+<script>
+  var 칩 = document.querySelectorAll(".pick button");
+  칩.forEach(function(b){
+    b.onclick = function(){
+      칩.forEach(function(x){ x.setAttribute("aria-pressed", String(x === b)); });
+      document.querySelectorAll(".view").forEach(function(v){
+        v.classList.toggle("on", v.id === b.dataset.v);
+      });
+      scrollTo(0, 0);
+    };
+  });
+</script>
+</body>
+</html>
