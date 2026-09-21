@@ -436,7 +436,7 @@
         no: i + 1, id: x.q.id, leaf: x.leaf.code, leafName: x.leaf.name,
         root: x.root.code, rootName: x.root.name,
         killer: !!x.killer, point: 점, img: x.q.img || "",
-        fig: x.q.fig || "", ff: x.q.ff || "",
+        fig: x.q.fig || "", ff: x.q.ff || "", gf: x.q.gf || 0,   /* gf 가 빠져 그래프형 그림이 안 나왔다(2026-09-21 코덱스 SYS-EXAM-FIG) */
         a: x.q.a, lb: x.q.lb || "", src: (x.q.g || "") + " " + (x.q.d || "")
       };
     });

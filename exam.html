@@ -127,18 +127,18 @@
 </div>
 
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/tree.js?v=c9b66636"></script>
-<script src="js/qbank.js?v=60117b6e"></script>
-<script src="js/pool.js?v=1b40e933"></script>
+<script src="js/tree.js?v=3ac9c724"></script>
+<script src="js/qbank.js?v=d635cb44"></script>
+<script src="js/pool.js?v=16af7f80"></script>
 <script src="js/drills.js?v=2cfc3459"></script>
-<script src="js/cards.js?v=def9a11e"></script>
+<script src="js/cards.js?v=c775f0fc"></script>
 <script src="js/store.js?v=06adb02b"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
 <script src="js/coach.js?v=47a0f4c5"></script>
-<script src="js/qrender.js?v=56d6f982"></script>
-<script src="js/exam.js?v=1bf8819f"></script>
+<script src="js/qrender.js?v=e2ca6160"></script>
+<script src="js/exam.js?v=224a59ac"></script>
 <script src="js/notify.js?v=dee63408"></script>
 <script>
 (function(){
@@ -190,7 +190,7 @@
   function 문항HTML(it, i){
     var d=Q[it.id]||{};
     var 몸 = window.QRENDER
-      ? QRENDER.html(d, {img:it.img}, {})
+      ? QRENDER.html(d, {img:it.img, fig:it.fig, ff:it.ff, gf:it.gf}, {})   /* 그림 정보를 모두 넘긴다 — img 만 넘겨 전체 이미지형은 번호만 보였다(2026-09-21 코덱스 SYS-EXAM-FIG) */
       : '<p class="stem">'+esc(d.q||"")+'</p>';
     /* 선지는 조판기가 그린 것을 지우고 **누를 수 있는 단추**로 바꾼다 */
     몸 = 몸.replace(/<ol class="opts5">[\s\S]*?<\/ol>/, '');

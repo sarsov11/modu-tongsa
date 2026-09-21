@@ -198,6 +198,8 @@
   .pk .meta{font-family:var(--mono);font-size:14.5px;color:var(--ink-3);font-weight:800}
   .pk .track{margin-top:11px}
   .empty{padding:60px 20px;text-align:center;color:var(--ink-3)}
+  .cols > *{min-width:0}   /* 격자 칸이 표·긴 글 폭으로 늘어나 폰에서 오른쪽이 잘렸다(2026-09-21 코덱스 SYS-MOBILE) */
+  .qbody table{display:block;max-width:100%;overflow-x:auto}
 
   @media(max-width:1080px){.cols{grid-template-columns:1fr}
     .side{flex-direction:row;flex-wrap:wrap}.side .card{flex:1;min-width:260px}}
@@ -270,12 +272,12 @@
 </div>
 
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/tree.js?v=c9b66636"></script>
-<script src="js/qbank.js?v=60117b6e"></script>
-<script src="js/pool.js?v=1b40e933"></script>
+<script src="js/tree.js?v=3ac9c724"></script>
+<script src="js/qbank.js?v=d635cb44"></script>
+<script src="js/pool.js?v=16af7f80"></script>
 <script src="js/drills.js?v=2cfc3459"></script>
-<script src="js/qrender.js?v=56d6f982"></script>
-<script src="js/cards.js?v=def9a11e"></script>
+<script src="js/qrender.js?v=e2ca6160"></script>
+<script src="js/cards.js?v=c775f0fc"></script>
 <script src="js/store.js?v=06adb02b"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
@@ -325,7 +327,7 @@
        보기 상자가 통째로 없어 ㄱ·ㄴ 이 무슨 말인지 알 수 없었다. */
     if(window.QRENDER){
       var 되는것=all.filter(function(q){ return QRENDER.ok(Q[q.id], q); });
-      if(되는것.length) all=되는것;      // 하나도 안 남으면 어쩔 수 없이 그대로
+      all=되는것;   /* 하나도 안 남아도 되살리지 않는다 — 못 푸는 문항을 도로 냈다(2026-09-21 코덱스 SYS-STUDY-FILTER). 빈 목록은 아래에서 안내한다 */
     }
     var 갈래=T.splitPool(all, grade);
     function 신선(a){ return !S2.ans[a.id]; }

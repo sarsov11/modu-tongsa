@@ -175,18 +175,18 @@
   <div id="stage"></div>
 </div>
 
-<script src="js/tree.js?v=c9b66636"></script>
-<script src="js/qbank.js?v=60117b6e"></script>
+<script src="js/tree.js?v=3ac9c724"></script>
+<script src="js/qbank.js?v=d635cb44"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
-<script src="js/cardox.js?v=2f9c36b6"></script>
+<script src="js/cardox.js?v=1f0853ee"></script>
 <script src="js/judge.js?v=43f690d4"></script>
-<script src="js/pool.js?v=1b40e933"></script>
+<script src="js/pool.js?v=16af7f80"></script>
 <script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/conceptq.js?v=4dd409ae"></script>
+<script src="js/conceptq.js?v=abbec652"></script>
 <script src="js/lecprac.js?v=704d9a6e"></script>
-<script src="js/cards.js?v=def9a11e"></script>
-<script src="js/keyword.js?v=a02c415d"></script>
+<script src="js/cards.js?v=c775f0fc"></script>
+<script src="js/keyword.js?v=d05831d3"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/store.js?v=06adb02b"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
@@ -207,7 +207,8 @@
   /* ★ → «빈출» 딱지 · 출처는 «2023년 7월 고3 학력평가» 꼴로 (2026-09-13) */
   function 이름꼴(n){ n=String(n||""); var hot=/\s*★\s*$/.test(n); n=n.replace(/\s*★\s*$/,"");
     return esc(n)+(hot?' <span class="hot">빈출</span>':''); }
-  function 출처꼴(x){ var d=String(x.dt||""), y=d.slice(0,4), m=parseInt(d.slice(5,7),10), g=x.g||"";
+  function 출처꼴(x){ if(window.QRENDER&&QRENDER.시험이름) return QRENDER.시험이름(x.g||"", x.dt||"");   /* 공통 출처 이름(2026-09-21) */
+    var d=String(x.dt||""), y=d.slice(0,4), m=parseInt(d.slice(5,7),10), g=x.g||"";
     var 시험 = g==="고3" && m===11 ? "수능" : (g==="고3" && (m===6||m===9) ? "모의평가" : "학력평가");
     return (y?y+"년 ":"")+(m?m+"월 ":"")+(g?g+" ":"")+시험; }
   function esc(s){ return String(s==null?"":s)
@@ -344,10 +345,14 @@
     if(틀린것만){ var 틀=틀린고르기(); if(틀.length) return 틀; }
     var 기 = 기출고르기();
     if(기) return 기;
-    var 범위 = BANK.filter(function(x){
-      return !T.scopeOn || !T.scopeOn() || (T.inScopeItem?T.inScopeItem(x):T.inScope(범위대영역(x)));
-    });
-    if(!범위.length) 범위 = BANK.slice();
+    /* ★ 단원을 골랐으면(?leaf=) 끝까지 그 단원 문장만 — 모자라면 다른 단원을 섞던 길이 있었다
+       (F1.1 을 골랐는데 칸트·갈퉁이 나옴, 2026-09-21 코덱스 SYS-OX-LEAF). 모자라면 빈 세트 → 아래에서 안내 */
+    var 범위 = 리프표
+      ? BANK.filter(function(x){ return x.leaf===리프표; }).concat(CQ[리프표]||[])
+      : BANK.filter(function(x){
+          return !T.scopeOn || !T.scopeOn() || (T.inScopeItem?T.inScopeItem(x):T.inScope(범위대영역(x)));
+        });
+    if(!범위.length && !리프표) 범위 = BANK.slice();
 
     /* 리프 약점 — 못하는 리프일수록 앞으로 */
     function 점수(x){

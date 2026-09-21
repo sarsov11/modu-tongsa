@@ -82,10 +82,16 @@
     /* ★ 판정은 '고립되어 되풀이되는가' 로 하고, 지울 때는 **붙어 있어도** 지운다.
        실측 — 같은 자료에서 "붯 을:" 은 띄어져 있는데 "붯갑:" 은 붙어 있었다.
        고립된 것만 지우면 "붯갑:" 이 남아 화자 나누기까지 어긋난다. */
+    /* ★ 2026-09-21 코덱스 검수(SYS-KOREAN-CHAR-DELETE) — 예전에는 그 글자를 **본문 전체에서** 지워
+       「종교의」「의식」「의미」의 「의」까지 사라졌다(G0462). 이제
+       ⓐ 그 글자가 낱말 안에서도 쓰이면 진짜 글자다 — 아이콘으로 보지 않는다(「붯」 같은 아이콘은 낱말 안에 안 나온다)
+       ⓑ 지울 때도 홀로 선 자리와 화자 표시 바로 앞 자리만 지운다 */
     Object.keys(센다).forEach(function (c) {
-      if (센다[c] >= 3) {
-        s = s.split(c).join(" ");
-      }
+      if (센다[c] < 3) return;
+      var 낱말안 = new RegExp("[가-힣]" + c + "|" + c + "(?!(?:갑|을|병|정|무|교사|학생)\\s*[::])[가-힣]");
+      if (낱말안.test(s)) return;
+      s = s.replace(new RegExp("(^|\\s)" + c + "(?=\\s|$)", "g"), "$1 ")
+           .replace(new RegExp(c + "(?=(?:갑|을|병|정|무|교사|학생)\\s*[::])", "g"), " ");
     });
     return s.replace(/\s{2,}/g, " ").replace(/\s+([::,.])/g, "$1").trim();
   }
@@ -489,12 +495,20 @@
     if (!q) return "";
     var g = q.g || "", d = String(q.d || ""), n = q.n ? q.n + "번" : "";
     if (/예시문항|예비/.test(g) || /^예비/.test(String(q.img || ""))) return "2028학년도 수능 예시문항 " + n;
-    var m = d.match(/^(\d{4})-(\d{2})/);
-    var 언제 = m ? (m[1] + "년 " + String(parseInt(m[2], 10)) + "월 학력평가") : d;
-    return [g, 언제, n].filter(Boolean).join(" ");
+    return [시험이름(g, d), n].filter(Boolean).join(" ");
+  }
+  /* 시험 이름 — 고3 6·9월은 평가원 모의평가, 11월은 수능(학년도로 부른다), 나머지는 학력평가.
+     예전에는 날짜만 보고 모두 「학력평가」로 찍었다(2026-09-21 코덱스 SYS-SOURCE). 개념 체크 화면도 이것을 쓴다. */
+  function 시험이름(g, d) {
+    var m = String(d || "").match(/^(\d{4})-(\d{2})/);
+    if (!m) return [g, d].filter(Boolean).join(" ");
+    var y = +m[1], mo = parseInt(m[2], 10);
+    if (g === "고3" && mo === 11) return (y + 1) + "학년도 수능";
+    if (g === "고3" && (mo === 6 || mo === 9)) return (y + 1) + "학년도 " + mo + "월 모의평가";
+    return [g, y + "년 " + mo + "월 학력평가"].filter(Boolean).join(" ");
   }
   window.QRENDER = {
-    출처: 출처,
+    출처: 출처, 시험이름: 시험이름,
     html: 문항HTML, picks: 선지단추, ok: 텍스트로되나,
     esc: esc, body: 본문, MARK: 동그라미
   };
