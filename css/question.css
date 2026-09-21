@@ -15,9 +15,10 @@
 }
 
 /* ㉠ ㄱ (가) 같은 표지 — 문항이 가리키는 자리다 */
-.mk{ color:var(--red-2); font-weight:700; }
+/* 기호는 검정 굵은 글씨 — 빨강·주황은 본문 읽기를 끊었다(2026-09-21 대표님 「문제가 눈에 안 들어옴」) */
+.mk{ color:var(--ink); font-weight:800; }
 .mk.box{ display:inline-block; min-width:1.55em; padding:0 .32em; margin:0 .08em; line-height:1.4; text-align:center;
-  border:1.5px solid var(--red-2); border-radius:5px; background:var(--surface); font-weight:900; font-size:.94em; vertical-align:baseline; }
+  border:1px solid var(--ink-3); border-radius:3px; background:transparent; font-weight:800; font-size:.94em; vertical-align:baseline; }
 
 /* ── 자료 상자 ───────────────────────────── */
 .data{

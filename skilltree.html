@@ -489,10 +489,10 @@
 
   /* 밤에서는 밝을수록, 종이에서는 진할수록 잘한 것이다 */
   var TIER={
-    S:{n:"S",l:80,pl:38,m:1.00,pm:1.00,label:"성취도 80 이상"},
-    A:{n:"A",l:65,pl:52,m:1.00,pm:.98,label:"60 이상"},
-    B:{n:"B",l:52,pl:66,m:.94,pm:.86,label:"30 이상"},
-    C:{n:"C",l:40,pl:78,m:.86,pm:.70,label:"30 미만"},
+    S:{n:"S",l:80,pl:38,m:1.00,pm:1.00,label:"성취도 80% 이상"},
+    A:{n:"A",l:65,pl:52,m:1.00,pm:.98,label:"60% 이상"},
+    B:{n:"B",l:52,pl:66,m:.94,pm:.86,label:"30% 이상"},
+    C:{n:"C",l:40,pl:78,m:.86,pm:.70,label:"30% 미만"},
     L:{n:"–",l:36,pl:87,m:.44,pm:.30,label:"아직 안 풂"}
   };
   function tone(f,t,dl){
@@ -1256,7 +1256,7 @@
                 : '학교에서 아직 안 배웠어요')+'</span>'
       : '';
     document.getElementById("shFacts").innerHTML= 지금 +
-      (HASV?'<span class="fact"><b>'+n.lec.length+'</b>강</span>':'')+
+      /* 「N강」은 강의 영상 기준이었다 — 뺐다(2026-09-21) */
       '<span class="fact" style="color:'+(n.tier==="S"?GOLD:tone(n.fam,n.tier,paper()?14:0))+
       '">'+howFar(n.st)+(n.st.solved?", "+n.st.achieve+"%":"")+'</span>';
     document.getElementById("shNote").hidden=true;   // 학습 무게·예상 길이 설명은 뺐다(2026-09-18 대표님)
@@ -1384,26 +1384,28 @@
     clearTimeout(peekTimer);
     var svg=g.ownerSVGElement; if(svg) svg.classList.add("dim");
     var t=TIER[n.tier], st=n.st;
-    document.getElementById("pkEyebrow").textContent=n.root.code+" "+n.root.name;
+    document.getElementById("pkEyebrow").textContent=n.root.name;   /* 단원 코드(F)는 학생이 모르는 말이다(2026-09-21 대표님) */
     var tc=document.getElementById("pkTier");
+    /* 등급 글자(S·A·B·C)는 뜻을 모른다 — 뺐다(2026-09-21). 성취도는 아래 % 로 보인다 */
+    tc.style.display="none";
     tc.textContent=n.tier==="L"?"아직 안 함":t.n;
     tc.style.background=n.tier==="S"?GOLD:tone(n.fam,n.tier);
     tc.style.color=(n.tier==="C"||n.tier==="L")?SBG2:SBG;
     document.getElementById("pkTitle").textContent=n.full;
     document.getElementById("pkQ").textContent=
-      (HASV?n.lec.length+"강, ":"")+"지금 풀 수 있는 기출 "+st.play+"문항";
+      "지금 풀 수 있는 기출 "+st.play+"문항";   /* 「N강」은 강의 영상 기준이었다 — 영상은 2026-09-06 폐기 */
     var ls=n.ref.leaves.map(function(l){ return T.leafStat(l.code); });
     var bars=ls.length?('<div class="pk-bars">'+ls.slice(0,10).map(function(s){
       var tk=tierOf(s.achieve,s.solved>0);
       var h=(6+Math.max(0,Math.min(100,s.achieve))/100*36).toFixed(0);
       return '<span class="sp"><i style="height:'+h+'px;background:'+
         (tk==="S"?GOLD:tone(n.fam,tk))+';opacity:'+(s.solved?1:.4)+'"></i></span>';
-    }).join("")+'</div><div class="pk-cap">강별 성취도</div>'):"";
+    }).join("")+'</div><div class="pk-cap">세부 개념별 성취도</div>'):"";
     document.getElementById("pkBody").innerHTML=
       '<div class="pk-stats"><div><b>'+st.achieve+'%</b><span>성취도</span></div></div>'+bars+
       '<div class="pk-keys">'+n.lec.slice(0,5).map(function(x){
         return '<span class="pk-key">'+x.title+'</span>'; }).join("")+'</div>'+
-      '<div class="pk-foot">눌러서 강의 목록 열기</div>';
+      '<div class="pk-foot">눌러서 들어가기</div>';
     place(g);
   }
   function hidePeek(){
@@ -1471,7 +1473,7 @@
     document.getElementById("legend").innerHTML=(level===1
       ? ["S","A","B","C","L"].map(function(k){
           return '<span class="k"><i class="dot" style="background:'+
-            (k==="S"?GOLD:tone(f,k))+'"></i>'+TIER[k].n+' — '+TIER[k].label+'</span>';
+            (k==="S"?GOLD:tone(f,k))+'"></i>'+TIER[k].label+'</span>';   /* 등급 글자(S·A·B·C) 없이 뜻만(2026-09-21) */
         }).join("")
       : FAMS.map(function(x){
           return '<span class="k"><i class="dot" style="background:'+FAM[x].hex+'"></i>'+

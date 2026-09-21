@@ -16,7 +16,7 @@
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=b6f4b519">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
-<link rel="stylesheet" href="css/question.css?v=8db784a8">
+<link rel="stylesheet" href="css/question.css?v=4e44febc">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:900px;margin:0 auto;padding:0 var(--s3) calc(var(--s6) + 120px)}   /* 아래 선생님 띠 자리 */
@@ -110,6 +110,7 @@
     .picks button{padding:11px 0;font-size:16px}
     .exbar .tm{font-size:19px}
   }
+  @media(max-width:640px){ .phead h1{font-size:24px} .phead{padding:14px 0 10px} }   /* 풀이 화면 머리는 작게(2026-09-21) */
 </style>
 </head>
 <body>
@@ -424,10 +425,8 @@
       return;
     }
     document.getElementById("lede").textContent =
-      paper.round+"회차, "+paper.items.length+"문항 "+paper.total+"점, "+
-      paper.minutes+"분" + (paper.scope ? ", 범위 "+paper.scope : "");
-    document.getElementById("headact").innerHTML =
-      '<a class="btn ghost" href="settings.html">범위·시험일</a>';
+      paper.items.length+"문항, "+paper.minutes+"분";   /* 범위 목록·회차·배점은 뺐다 — 문제가 화면 아래로 밀렸다(2026-09-21). 회차는 시간 줄에 있다 */
+    document.getElementById("headact").innerHTML = "";
     불러오기();
     그리기();
     if(시작) 타이머시작();

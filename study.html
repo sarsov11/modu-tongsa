@@ -16,7 +16,7 @@
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=b6f4b519">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
-<link rel="stylesheet" href="css/question.css?v=8db784a8">
+<link rel="stylesheet" href="css/question.css?v=4e44febc">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:1360px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -26,8 +26,8 @@
   /* ── 문항 ── */
   .qcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r2);
     overflow:hidden}
-  .qtop{display:flex;align-items:center;gap:12px;padding:15px 22px;flex-wrap:wrap;
-    border-bottom:1px solid var(--line)}
+  /* 「1 / 20」(prog) 과 출처(qtop)를 한 줄에 — 띠 두 개가 문제 위를 차지했다(2026-09-21) */
+  .qtop{display:flex;align-items:center;gap:12px;padding:15px 22px;flex-wrap:wrap;overflow:hidden}
   .qtop .no{font-family:var(--mono);font-size:15px;color:var(--ink-4);font-weight:800}
   .qtop .srcline{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);margin-left:auto;font-weight:800}
   .qbody{padding:24px 26px 26px}
@@ -115,7 +115,7 @@
   .opts{display:flex;flex-direction:column;gap:9px;margin-top:20px}
   .opt{display:flex;gap:13px;align-items:flex-start;padding:14px 17px;border-radius:var(--r1);
     border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2);cursor:pointer;
-    font-family:inherit;font-size:15.5px;line-height:1.6;text-align:left;transition:.14s}
+    font-family:inherit;font-size:16.5px;line-height:1.62;text-align:left;transition:.14s;color:var(--ink)}
   .opt:hover:not([disabled]){border-color:var(--line-3);color:var(--ink)}
   .opt .k{flex:0 0 24px;height:24px;border-radius:7px;background:var(--surface-3);
     display:grid;place-items:center;font-family:var(--mono);font-size:14.5px;font-weight:800;
@@ -165,8 +165,8 @@
   .gorow .hint{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-weight:800}
 
   /* ── 진행 ── */
-  .prog{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 22px;
-    border-bottom:1px solid var(--line);background:var(--surface-2)}
+  .prog{float:left;display:flex;align-items:center;gap:14px;padding:15px 0 0 22px}
+  .qbody{clear:both}
   .pips{display:flex;gap:4px;flex-wrap:wrap}
   .pips i{width:20px;height:5px;border-radius:3px;background:var(--line-2);display:block}
   .pips i.ok{background:var(--mint)} .pips i.no{background:var(--red)}
@@ -203,8 +203,10 @@
     .side{flex-direction:row;flex-wrap:wrap}.side .card{flex:1;min-width:260px}}
   @media(max-width:640px){
     .wrapx{padding:0 14px var(--s5)}
-    .qbody{padding:18px 16px 20px}.qtop{padding:13px 16px}.prog{padding:12px 16px}
-    .stem{font-size:16.5px}.opt{font-size:16px;padding:13px 14px}
+    .qbody{padding:6px 16px 20px}.qtop{padding:13px 16px}.prog{padding:13px 0 0 16px}
+    .phead .btn.sm{padding:8px 13px;font-size:14px}
+    .stem{font-size:17px}.opt{font-size:16.5px;padding:13px 14px}
+    .phead h1{font-size:24px}.phead{padding:14px 0 10px}   /* 풀이 화면 머리는 작게 — 문제가 첫 화면에 들어오게 */
     .data{padding:16px 16px;font-size:16px}
     .side{flex-direction:column}}
 
@@ -544,9 +546,8 @@
     }
     var got=marks.filter(Boolean).length;
     document.getElementById("prog").innerHTML=
-      '<div class="pips">'+pips.join("")+'</div>'+
-      '<div class="sc"><b>'+got+'</b> / '+marks.length+' 맞음</div>'+
-      '<div class="sc" style="margin-left:auto">'+(done?list.length:(i+1))+' / '+list.length+'</div>';
+      /* 진행 점 20개·「0 / 0 맞음」 은 뺐다 — 문제가 화면 중간부터 시작했다(2026-09-21). 정답률은 끝에 나온다 */
+      '<div class="sc">'+(done?list.length:(i+1))+' / '+list.length+'</div>';
   }
   function session(){
     var got=marks.filter(Boolean).length, n=marks.length;
@@ -584,7 +585,7 @@
        그림이 꼭 필요한 자료만 조판기가 그 자리에 넣는다. */
     var 몸 = window.QRENDER ? QRENDER.html(d, q, {}) : '';
     document.getElementById("stage").innerHTML=
-      '<div class="qtop"><span class="no">'+(i+1)+'번</span>'+
+      '<div class="qtop">'+
       /* 출제의도 라벨은 답을 알려 준다(「카슈미르 분쟁에 대해 이해한다」) — 풀기 전에는 안 보인다(2026-09-19) */
       '<span class="srcline">'+esc(window.QRENDER&&QRENDER.출처?QRENDER.출처(q):(q.g||"")+" "+(q.d||""))+'</span></div>'+
       '<div class="qbody">'+
