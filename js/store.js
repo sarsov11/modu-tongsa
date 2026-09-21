@@ -498,7 +498,7 @@
       re: "REWIND", reKo: "복습, 수능 전환형",
       reSay: "고1에 배운 통합사회를 되감아, 수능 문항 꼴로 바꿔 풀어요.",
       say: "통합사회는 고1에 다 배웠습니다. 잊은 곳을 되감고 수능 꼴로 바꿔 풉니다.",
-      focus: "수능 전환", pool: "통합사회 학평, 예비시행", ddayName: "내신 시험",
+      focus: "수능 전환", pool: "통합사회 학평, 예비시행", ddayName: "모의고사",
       sell: { kind: "pack", id: "elective", name: "선택과목 확장팩",
               say: "듣는 과목만 골라 저렴하게 붙이는 확장팩" } },
     "고3": { key: "고3", subject: "수능 사회탐구",
@@ -648,12 +648,50 @@
     if (d < new Date()) d = third(y + 1);
     return dayKey(d);
   }
+  /* ★ 고2·고3 은 내신이 아니라 **다음 모의고사·수능**을 겨눈다(2026-09-22 대표님 「내신 시험 일정 고르는 거 빼, 고2·3은」).
+     2026년 시행일 — 메가스터디 「2026년 모의고사 및 수능 시행 일정」(교육청·평가원 발표, 2026-09-22 확인).
+     해가 바뀌면 이 표에 새 해 날짜를 넣는다. 표에 없는 해는 날짜를 비워 두고 학생이 넣게 한다. */
+  var 모의일정 = {
+    "고2": [["2026-03-24", "3월 학력평가"], ["2026-06-04", "6월 학력평가"], ["2026-09-02", "9월 학력평가"], ["2026-10-20", "10월 학력평가"]],
+    "고3": [["2026-03-24", "3월 학력평가"], ["2026-05-07", "5월 학력평가"], ["2026-06-04", "6월 모의평가"], ["2026-07-08", "7월 학력평가"],
+            ["2026-09-02", "9월 모의평가"], ["2026-10-20", "10월 학력평가"]]
+  };
+  function 다음모의(grade) {
+    var 오늘 = dayKey(), L = 모의일정[grade] || [];
+    for (var i = 0; i < L.length; i++) if (L[i][0] >= 오늘) return { date: L[i][0], name: L[i][1] };
+    return { date: "", name: "다음 모의고사" };
+  }
+  function 수능예상(더할해) {
+    var d = new Date(suneungGuess() + "T00:00:00");
+    if (더할해) d.setFullYear(d.getFullYear() + 더할해);
+    /* 셋째 목요일로 다시 맞춘다 */
+    var yy = d.getFullYear(), x = new Date(yy, 10, 1), c = 0;
+    while (true) { if (x.getDay() === 4) { c++; if (c === 3) break; } x.setDate(x.getDate() + 1); }
+    return dayKey(x);
+  }
+  /* 일정 옆 마크 — 설명 문장(「예상일이에요…」) 대신(2026-09-22) */
+  function 일정마크(e) {
+    if (!e || !e.date) return "";
+    if (/직접/.test(e.note || "")) return '<i class="bdg bdg-mine">직접</i>';
+    if (e.auto) return '<i class="bdg bdg-fixed">공식</i>';
+    if (/예상/.test(e.note || "")) return '<i class="bdg bdg-guess">예상</i>';
+    return "";
+  }
   function defaultExams(grade) {
     if (grade === "고3") {
-      return [{ id: "su", name: "수능", date: suneungGuess(),
-                note: "예상일이에요. 확정되면 눌러서 바꿔 주세요." },
-              { id: "mo", name: "다음 모의고사", date: "",
-                note: "시행일을 넣으면 함께 표시됩니다" }];
+      var m3 = 다음모의("고3");
+      var su = suneungGuess(), 공식수능 = { "2026-11-19": 1 };   // 교육부 발표 시행일(2027학년도 수능 2026-11-19)
+      return [{ id: "su", name: "수능", date: su, auto: 공식수능[su] ? 1 : undefined,
+                note: 공식수능[su] ? "공식" : "예상일이에요. 확정되면 눌러서 바꿔 주세요." },
+              { id: "mo", name: m3.name, date: m3.date, auto: 1,
+                note: m3.date ? "전국 공통 시행일" : "시행일을 넣으면 함께 표시됩니다" }];
+    }
+    if (grade === "고2") {
+      var m2 = 다음모의("고2");
+      return [{ id: "mo", name: m2.name, date: m2.date, auto: 1,
+                note: m2.date ? "전국 공통 시행일" : "시행일을 넣으면 함께 표시됩니다" },
+              { id: "su", name: "수능", date: 수능예상(1),
+                note: "고3 때 보는 수능 예상일이에요." }];
     }
     /* 처음 온 학생에게는 남의 날짜다. 첫 화면에서 제일 큰 숫자가 남의 것이면 안 된다.
        — 눌러서 고치라고 대놓고 말한다. */
@@ -785,6 +823,17 @@
     var g = S.student.grade || "고1";
     if (!S.exams) S.exams = {};
     if (!S.exams[g]) { S.exams[g] = defaultExams(g); flush(); }
+    /* 고2·고3 에 내신 일정(학기 중간·기말)이 저장돼 있으면 모의고사·수능으로 바꾼다 — 예전에는 고2 가 고1 과 같은 내신 넷을 받았다(2026-09-22) */
+    if (g === "고2" || g === "고3") {
+      var 내신 = S.exams[g].some(function (e) { return /^(s1mid|s1fin|s2mid|s2fin|mid|fin)$/.test(e.id); });
+      if (내신) { S.exams[g] = defaultExams(g); flush(); }
+      /* 자동으로 잡은 다음 모의고사가 지났으면 그다음 것으로 옮긴다(학생이 고친 날짜는 두고) */
+      S.exams[g].forEach(function (e) {
+        if (e.id === "mo" && e.auto && e.date && e.date < dayKey()) {
+          var n = 다음모의(g); e.name = n.name; e.date = n.date; flush();
+        }
+      });
+    }
     /* 옛 판(mid·fin 둘) 에서 넘어온 학생을 학기 넷으로 올린다 */
     if (g === "고1") {
       var 전 = JSON.stringify(S.exams[g]);
@@ -795,7 +844,7 @@
   }
   function setExam(id, patch) {
     exams().forEach(function (e) {
-      if (e.id === id) { for (var k in patch) e[k] = patch[k]; if (patch.date) e.note = "직접 입력한 일정"; }
+      if (e.id === id) { for (var k in patch) e[k] = patch[k]; if (patch.date) { e.note = "직접 입력한 일정"; delete e.auto; } }
     });
     flush();
   }
@@ -2003,7 +2052,7 @@
     examMode: examMode, nextExam: 다가온시험,
     watch: watch, watched: watched, spentOn: spentOn,
     /* 훈련 개인화 — 수준과 파트를 따로 정한다 */
-    훈련수준: 훈련수준, 훈련추천: 훈련추천, 훈련점수: 훈련점수,
+    훈련수준: 훈련수준, 훈련추천: 훈련추천, 훈련점수: 훈련점수, 일정마크: 일정마크,
     /* 주기 — 방학·고3 시기·주간 점검·범위 낡음 */
     방학인가: 방학인가, 방학단계: 방학단계, 고3시기: 고3시기,
     주간점검날: 주간점검날, 주간점검함: 주간점검함, 주간점검끝: 주간점검끝,

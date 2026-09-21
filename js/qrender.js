@@ -158,6 +158,30 @@
     return 대화 || 본문(s);
   }
 
+  /* ── 〈사례〉〈○○적 관점〉 같은 꺾쇠 제목 (2026-09-22 대표님 「구분 없이 쭉 붙어 있어 이상함」, 고1 2019.06 1번) ──
+     시험지에서는 제목이 제 줄에 서고 그 아래 글이 온다. 글로 옮기며 한 줄로 붙은 것을 되돌린다.
+     <보 기> 는 보기 상자가 따로 처리하므로 건드리지 않는다. 148문항. */
+  var _꺾쇠 = /[<〈＜]\s*([^<>〈〉＜＞]{1,20}?)\s*[>〉＞]/g;
+  function 꺾쇠나누기(t) {
+    var s = String(t || ""), 칸 = [], m, 끝 = 0, 앞 = "";
+    _꺾쇠.lastIndex = 0;
+    while ((m = _꺾쇠.exec(s))) {
+      if (/보\s*기/.test(m[1]) || !m[1].trim() || /@/.test(m[1])) continue;   // 보기 상자·빈 꺾쇠·전자우편 주소는 제목이 아니다
+      if (!칸.length) 앞 = s.slice(0, m.index).trim(); else 칸[칸.length - 1].몸 = s.slice(끝, m.index).trim();
+      var 제목 = m[1].replace(/\s+/g, " ");
+      if (/^[가-힣]( [가-힣])+$/.test(제목)) 제목 = 제목.replace(/ /g, "");   // 「사 례」「조 건」 은 시험지의 자간 벌림
+      칸.push({ 제목: 제목, 몸: "" });
+      끝 = m.index + m[0].length;
+    }
+    if (!칸.length) return null;
+    칸[칸.length - 1].몸 = s.slice(끝).trim();
+    function 속(x) { return 갈래나누기(x) || 화자나누기(x) || 항목나누기(x); }
+    return (앞 ? '<div class="dlead">' + 속(앞) + '</div>' : '') +
+      칸.map(function (c) {
+        return '<div class="dsec"><p class="dsh">〈' + esc(c.제목) + '〉</p>' + (c.몸 ? '<div class="dsb">' + 속(c.몸) + '</div>' : '') + '</div>';
+      }).join("");
+  }
+
   function 화자나누기(t) {
     var s = String(t || "");
     if (!_화자앞.test(s)) return null;
@@ -340,7 +364,8 @@
     if (자료 && !그림쓴다) {
       자료 = 아이콘글자빼기(자료);
       /* (가)(나)(다) 갈래는 상자로, ◦ 항목은 줄로 — 한 문단으로 흘리면 무엇이 (가)인지 안 읽힌다(2026-09-18 대표님) */
-      var 갈래 = 갈래나누기(자료);
+      var 꺾쇠 = 꺾쇠나누기(자료);
+      var 갈래 = 꺾쇠 || 갈래나누기(자료);
       var 대화 = 갈래 ? null : 화자나누기(자료);
       몸 += '<div class="data">' + (갈래 || 대화 || 항목나누기(자료)) + '</div>';
     }

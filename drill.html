@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=b6f4b519">
+<link rel="stylesheet" href="css/base.css?v=88c507a4">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -411,7 +411,7 @@
 <script src="js/justice.js?v=7e9430a4"></script>
 <script src="js/pool.js?v=16af7f80"></script>
 <script src="js/cards.js?v=c775f0fc"></script>
-<script src="js/store.js?v=06adb02b"></script>
+<script src="js/store.js?v=4e2fc57e"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -420,6 +420,17 @@
 <script>
 (function(){
   var T=TERRA, A=ATLAS;
+  /* ★ 지도 도법 — 위경도를 그대로 찍는 등장방형은 중위도 대륙이 옆으로 퍼져 「찌그러져」 보였다(2026-09-22 대표님).
+     교과서·지도책처럼 보이도록 밀러 도법으로 세로를 편다(경도는 그대로, 위도만 늘림). 위도 글(북위 ○도)은 c.y 원값을 쓴다. */
+  function 밀러(lat){ var f=Math.max(-84,Math.min(84,lat))*Math.PI/180; return 1.25*Math.log(Math.tan(Math.PI/4+0.4*f))*180/Math.PI; }
+  if(!A._밀러){
+    A._밀러=1;
+    A.paths=A.paths.map(function(d){
+      return d.replace(/(-?\d+(?:\.\d+)?)[ ,](-?\d+(?:\.\d+)?)/g,function(_,x,y){ return x+" "+(-밀러(-(+y))).toFixed(2); });
+    });
+    A.cities.forEach(function(c){ c.py=밀러(c.y); });
+    Object.keys(A.regions||{}).forEach(function(k){ var r=A.regions[k]; A.regions[k]=[r[0],r[1],밀러(r[2]),밀러(r[3])]; });
+  }
   T.mountNav("drill.html");
   var P=new URLSearchParams(location.search);
   /* 훈련 목록은 js/drills.js 하나뿐이다 — 홈도 같은 것을 읽는다 */
@@ -655,12 +666,12 @@
           if(svg){
             var k=WORLD[2]/boxAt(q.city)[2], big=narrow()?1.5:1;
             svg.insertAdjacentHTML("beforeend",
-              '<circle class="pulse" cx="'+q.city.x+'" cy="'+(-q.city.y)+'" r="'+(5/k*big)+'">'+
+              '<circle class="pulse" cx="'+q.city.x+'" cy="'+(-q.city.py)+'" r="'+(5/k*big)+'">'+
               '<animate attributeName="r" values="'+(3.4/k*big)+';'+(9/k*big)+';'+(3.4/k*big)+
               '" dur="2.2s" repeatCount="indefinite"/>'+
               '<animate attributeName="opacity" values=".85;0;.85" dur="2.2s" repeatCount="indefinite"/></circle>'+
-              '<text class="clab" data-fs="6.6" data-cy="'+(-q.city.y)+'" data-dy="-4.6"'+
-              ' x="'+q.city.x+'" y="'+(-q.city.y-4.6/k*big)+
+              '<text class="clab" data-fs="6.6" data-cy="'+(-q.city.py)+'" data-dy="-4.6"'+
+              ' x="'+q.city.x+'" y="'+(-q.city.py-4.6/k*big)+
               '" text-anchor="middle" font-size="'+(6.6/k*big)+'" stroke-width="'+(3.5/k*big)+
               '" class="clabt">'+q.city.n+'</text>');
           }
@@ -705,7 +716,7 @@
     var opts=shuffle([t.k].concat(wrong));
     return {kind:"climate", city:t, options:opts, answer:opts.indexOf(t.k)};
   }
-  var WORLD=[-189,-84,378,146];
+  var WORLD=[-189,-106,378,180];   // 밀러 도법으로 북위 80°(-105) ~ 남위 62°(+72)
   /* 폰은 화면이 세로로 길다. 지도 칸도 세로로 잡아야 도시가 커 보인다.
      그리고 대륙 전체를 다 담을 필요가 없으니 더 바짝 당긴다. */
   function narrow(){ return window.innerWidth<=760; }
@@ -723,7 +734,7 @@
   }
   function boxAt(city){
     var b=boxOf(city.rg||"");
-    return [city.x-b[2]/2, -city.y-b[3]/2, b[2], b[3]];
+    return [city.x-b[2]/2, -city.py-b[3]/2, b[2], b[3]];
   }
   function mapSvg(reveal, target, box){
     var paths=A.paths.map(function(d){return '<path class="land" d="'+d+'"/>';}).join("");
@@ -737,14 +748,14 @@
       if(isT&&reveal){
         var up=true;
         var fs=(isT?6.6:4.6)/k;
-        lab='<text class="clab" data-fs="'+(isT?6.6:4.6)+'" data-cy="'+(-c.y)+
-            '" data-dy="'+(up?-4.6:7.6)+'" x="'+c.x+'" y="'+(-c.y+(up?-4.6:7.6)/k)+
+        lab='<text class="clab" data-fs="'+(isT?6.6:4.6)+'" data-cy="'+(-c.py)+
+            '" data-dy="'+(up?-4.6:7.6)+'" x="'+c.x+'" y="'+(-c.py+(up?-4.6:7.6)/k)+
             '" text-anchor="middle" font-size="'+fs+'" stroke-width="'+(3.5/k)+
             '" fill="'+(isT?"#EAF6F8":A.koppen[c.k].color)+'">'+c.n+'</text>';
       }
-      return '<g><circle data-r="'+(isT?2.8:(reveal?1.8:1.5))+'" cx="'+c.x+'" cy="'+(-c.y)+
+      return '<g><circle data-r="'+(isT?2.8:(reveal?1.8:1.5))+'" cx="'+c.x+'" cy="'+(-c.py)+
         '" r="'+r+'" fill="'+col+'"'+(isT?' filter="url(#glow)"':'')+'/>'+
-        (isT&&reveal?'<circle class="pulse" cx="'+c.x+'" cy="'+(-c.y)+'" r="'+(5/k)+
+        (isT&&reveal?'<circle class="pulse" cx="'+c.x+'" cy="'+(-c.py)+'" r="'+(5/k)+
           '"><animate attributeName="r" values="'+(3.4/k)+';'+(9/k)+';'+(3.4/k)+
           '" dur="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".85;0;.85" dur="2.2s" repeatCount="indefinite"/></circle>':'')+
         lab+'</g>';
@@ -754,7 +765,7 @@
       '<defs><filter id="glow" x="-300%" y="-300%" width="700%" height="700%">'+
       '<feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/>'+
       '<feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'+
-      '<rect class="mapbg" x="-189" y="-84" width="378" height="146"/>'+paths+dots+'</svg></div>';
+      '<rect class="mapbg" x="-189" y="-106" width="378" height="180"/>'+paths+dots+'</svg></div>';
   }
   function renderClimate(q){
     document.getElementById("qtext").textContent="이 도시의 기후는?";
@@ -854,20 +865,20 @@
     var paths=A.paths.map(function(d){return '<path class="land" d="'+d+'"/>';}).join("");
     var lit=0;
     var dots=A.cities.map(function(c){
-      if(!on[c.n]) return '<circle cx="'+c.x+'" cy="'+(-c.y)+'" r="1.1" class="city off"/>';
+      if(!on[c.n]) return '<circle cx="'+c.x+'" cy="'+(-c.py)+'" r="1.1" class="city off"/>';
       var col=A.koppen[c.k].color, up=(lit++%2===0);
-      return '<g><circle cx="'+c.x+'" cy="'+(-c.y)+'" r="3" fill="'+col+'" filter="url(#glow2)"/>'+
-        '<circle class="pulse" cx="'+c.x+'" cy="'+(-c.y)+'" r="5" stroke="'+col+'">'+
+      return '<g><circle cx="'+c.x+'" cy="'+(-c.py)+'" r="3" fill="'+col+'" filter="url(#glow2)"/>'+
+        '<circle class="pulse" cx="'+c.x+'" cy="'+(-c.py)+'" r="5" stroke="'+col+'">'+
         '<animate attributeName="r" values="3.4;10;3.4" dur="2.4s" repeatCount="indefinite"/>'+
         '<animate attributeName="opacity" values=".8;0;.8" dur="2.4s" repeatCount="indefinite"/></circle>'+
-        '<text class="clab" x="'+c.x+'" y="'+(-c.y+(up?-5.4:9))+'" text-anchor="middle" font-size="6.4" '+
+        '<text class="clab" x="'+c.x+'" y="'+(-c.py+(up?-5.4:9))+'" text-anchor="middle" font-size="6.4" '+
         'fill="'+col+'">'+c.n+'</text></g>';
     }).join("");
-    return '<div class="mapwrap"><svg viewBox="-189 -84 378 146" preserveAspectRatio="xMidYMid meet">'+
+    return '<div class="mapwrap"><svg viewBox="-189 -106 378 180" preserveAspectRatio="xMidYMid meet">'+
       '<defs><filter id="glow2" x="-300%" y="-300%" width="700%" height="700%">'+
       '<feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/>'+
       '<feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>'+
-      '<rect class="mapbg" x="-189" y="-84" width="378" height="146"/>'+paths+dots+'</svg></div>';
+      '<rect class="mapbg" x="-189" y="-106" width="378" height="180"/>'+paths+dots+'</svg></div>';
   }
   function showResult(){
     stopTimer();

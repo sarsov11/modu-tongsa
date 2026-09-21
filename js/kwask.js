@@ -59,7 +59,13 @@
     if (글 && G.norm(글).indexOf(G.norm(x.a)) >= 0) s += 0.5;       // 방금 읽은 카드에 있던 낱말
     return s + 씨(x.id + 오늘()) * 0.3;
   }
+  /* ★ 단답형은 고1만 — 고2·고3 은 모의고사·수능이라 시험에서 볼 일이 없다(2026-09-22 대표님) */
+  function 고1인가(T) {
+    var g = (T && T.state && ((T.state().student || {}).grade)) || "고1";
+    return g === "고1";
+  }
   function 리프에서(T, leaf, 몇, 글) {
+    if (!고1인가(T)) return [];
     var K = window.KEYWORD;
     if (!K || !K.byLeaf || !K.byLeaf[leaf]) return [];
     var 목록 = K.byLeaf[leaf].map(function (id) { return 찾기(id); }).filter(Boolean);
@@ -68,6 +74,7 @@
   }
   /* 시험 범위 안에서 몇 개 — 약한 리프 먼저. 사상가(K)는 배우는 단원(sroot)으로 본다 */
   function 범위에서(T, 몇, 뺄) {
+    if (!고1인가(T)) return [];
     var K = window.KEYWORD;
     if (!K || !K.items) return [];
     뺄 = 뺄 || {};
@@ -243,5 +250,5 @@
     return { input: inp, submit: 내기 };
   }
 
-  window.KWASK = { render: render, 리프에서: 리프에서, 범위에서: 범위에서, 찾기: 찾기, 기록: 기록 };
+  window.KWASK = { render: render, 리프에서: 리프에서, 범위에서: 범위에서, 찾기: 찾기, 기록: 기록, 고1인가: 고1인가 };
 })();

@@ -11,8 +11,8 @@
 <meta name="theme-color" content="#FAF8F3">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=b6f4b519">
-<link rel="stylesheet" href="css/question.css?v=4e44febc">
+<link rel="stylesheet" href="css/base.css?v=88c507a4">
+<link rel="stylesheet" href="css/question.css?v=4a1c8f50">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <link rel="stylesheet" href="css/keyword.css?v=e00f83be">
 <style>
@@ -202,18 +202,18 @@
 <script src="js/qbank.js?v=d635cb44"></script>
 <script src="js/lecture.js?v=61963413"></script>
 <script src="js/video.js?v=2ad8e90e"></script>
-<script src="js/qrender.js?v=e2ca6160"></script>
+<script src="js/qrender.js?v=68e2ab00"></script>
 <script src="js/pool.js?v=16af7f80"></script>
 <script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
 <script src="js/cardox.js?v=1f0853ee"></script>
-<script src="js/keyword.js?v=d05831d3"></script>
+<script src="js/keyword.js?v=f010bcb7"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/judge.js?v=43f690d4"></script>
 <script src="js/cards.js?v=c775f0fc"></script>
-<script src="js/store.js?v=06adb02b"></script>
-<script src="js/kwask.js?v=4832b5e4"></script>
+<script src="js/store.js?v=4e2fc57e"></script>
+<script src="js/kwask.js?v=2087ec30"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -237,8 +237,8 @@
     scopeH:"시험 범위", scopeP:"",
     goalH:"하루 공부 시간", goalP:"",
     alarmH:"알림 시각", alarmP:"",
-    checkH:"진단 20문항", checkP:"O·X 20초, 개념어 쓰기 30초, 기출 1분. 시간이 지나면 틀린 것으로 넘어가요.",
-    doneH:"준비됐어요.", doneP:"오늘 할 것은 이거예요. 누르면 바로 시작해요."
+    checkH:"진단 20문항", checkP:"",   /* 제한 시간은 설명 문장 대신 초시계 마크로(2026-09-22) */
+    doneH:"준비됐어요.", doneP:""
   };
 
   /* ── 답 모음 ── */
@@ -322,7 +322,9 @@
         '<div class="field"><input id="dt" type="date" value="'+esc(A.examDate)+'"></div>'+
         '<p class="note" id="dnote"></p>';
       function note(){ var d=A.examDate?T.dday(A.examDate):null;
-        el("dnote").innerHTML=d?'<b>'+esc(cur.name)+'</b> '+esc(d.label)+' — '+(d.days<=10?"열흘 안이라 매일 모의고사부터 해요.":"그전까지는 하루 15분씩 약한 곳을 채워요."):"날짜를 모르면 건너뛰어도 돼요."; }
+        /* 설명 문장 대신 D-day 와 마크만(2026-09-22) */
+        var e2={}; for(var k in cur) e2[k]=cur[k]; if(A.examDate!==cur.date){ e2.date=A.examDate; e2.note="직접"; delete e2.auto; }
+        el("dnote").innerHTML=d?'<b>'+esc(cur.name)+'</b> '+esc(d.label)+' '+(T.일정마크?T.일정마크(e2):""):""; }
       note();
       st.querySelectorAll(".chips button").forEach(function(b){ b.onclick=function(){
         A.examId=b.dataset.ex; cur=list.filter(function(e){return e.id===A.examId;})[0]; A.examDate=cur.date||""; el("dt").value=A.examDate;
@@ -336,14 +338,14 @@
       if(!A.scope){ var sc=T.scope?T.scope():null; A.scope=(sc&&sc.length)?sc.slice():(B.s2mid?(B.s2mid.mids||B.s2mid.roots).slice():[]); }
       /* ★ 고2 REWIND 는 고1 통합사회 **전 범위**를 되감는다 — 내신 범위로 좁히지 않는다 */
       if(A.grade==="고2" && !A.scope고2){ A.scope=roots.map(function(r){return r.code;}); A.scope고2=1; }
-      var presets=["s1mid","s1fin","s2mid","s2fin"].filter(function(k){return B[k];});
+      var presets=A.grade==="고1"?["s1mid","s1fin","s2mid","s2fin"].filter(function(k){return B[k];}):[];   /* 내신 범위 단추는 고1만 — 고2·3은 내신을 겨누지 않는다(2026-09-22) */
       function rootIn(rc){ return A.scope.some(function(x){ return x.charAt(0)===rc; }); }   /* 대영역이든 그 중단원이든 들어 있으면 켜짐 */
       function same(a,b){ return a.slice().sort().join()===b.slice().sort().join(); }
-      st.innerHTML=머리("4 / 7",esc(MSG.scopeH),esc(MSG.scopeP))+
+      st.innerHTML=머리("4 / 7",esc(A.grade==="고1"?MSG.scopeH:"공부 범위"),esc(MSG.scopeP))+   /* 고2 는 시험 범위가 아니라 모의고사 공부 범위 */
         '<div class="chips">'+presets.map(function(k){ var b=B[k];
           return '<button data-p="'+k+'" aria-pressed="'+same(A.scope,b.mids||b.roots)+'">'+esc(b.name+", "+b.단원)+'</button>'; }).join("")+'</div>'+
         '<div class="ulist" id="ulist"></div>'+
-        (A.grade==="고2"?'<p class="note">고2는 통합사회 전 범위를 다시 봐요. 뺄 단원만 끄세요.</p>':'');
+        '';
       /* 대단원을 누르면 그 아래 중단원이 다 체크된 채 펼쳐진다. 체크를 풀면 그 중단원만 빠진다 */
       function 든중(rc){ var r=T.BY[rc], o={}; A.scope.forEach(function(x){ if(x===rc) r.mids.forEach(function(m){ o[m.code]=1; }); else if(x.charAt(0)===rc) o[x]=1; }); return o; }
       function 넣기(rc, 목록){ var r=T.BY[rc]; A.scope=A.scope.filter(function(x){ return x.charAt(0)!==rc; });
@@ -372,10 +374,10 @@
     },
     goal:function(st){
       A.goal=T.goalMin?T.goalMin():15;
-      var opts=[[10,""],[15,"권해요"],[20,""],[30,""]];
+      var opts=[[10,""],[15,"good"],[20,""],[30,""]];   /* 권장은 글 대신 엄지 마크(2026-09-22) */
       st.innerHTML=머리("5 / 7",esc(MSG.goalH),esc(MSG.goalP))+
         '<div class="tiles two">'+opts.map(function(o){
-          return '<button class="tile" data-m="'+o[0]+'" aria-pressed="'+(A.goal===o[0])+'"><b>'+o[0]+'<small class="u">분</small></b><span>'+o[1]+'</span></button>'; }).join("")+'</div>';
+          return '<button class="tile" style="position:relative" data-m="'+o[0]+'" aria-pressed="'+(A.goal===o[0])+'"><b>'+o[0]+'<small class="u">분</small></b>'+(o[1]?'<i class="bdg bdg-good bdg-pin">추천</i>':'')+'</button>'; }).join("")+'</div>';
       st.querySelectorAll(".tile").forEach(function(b){ b.onclick=function(){ A.goal=+b.dataset.m; 눌림(st,".tile",function(x){return +x.dataset.m===A.goal;}); }; });
       단추("다음");
     },
@@ -384,7 +386,7 @@
       A.alarmOn=!!(N&&N.on&&N.on());
       st.innerHTML=머리("6 / 7",esc(MSG.alarmH),esc(MSG.alarmP))+
         '<div class="field"><input id="tm" type="time" value="'+esc(A.alarm)+'"></div>'+
-        '<div class="toggle"><div><b>알림 켜기</b><span>정한 시각에 이 앱에서 알려요.</span></div>'+
+        '<div class="toggle"><div><b>알림 켜기</b></div>'+
         '<button class="sw" id="sw" role="switch" aria-checked="'+A.alarmOn+'" aria-label="알림 켜기"></button></div>'+
         '<p class="note">'+esc(N&&N.status?(N.status().say||""):"")+'</p>';
       el("tm").onchange=function(){ A.alarm=el("tm").value||"21:00"; };
@@ -422,12 +424,14 @@
         }
       };
       var 큐 = [], li = 0;
+      /* 고2·고3 은 단답형을 안 낸다 — 그 자리를 O·X 로(2026-09-22) */
+      if(A.grade!=="고1") 차례=차례.map(function(k){ return k==="kw"?"ox":k; });
       차례.forEach(function(kind){
         for(var t=0; t<리프들.length; t++){ var l=리프들[(li++)%리프들.length]; var it=뽑기[kind](l); if(it){ 큐.push(it); return; } }
       });
       if(!큐.length){ i++; return 그리기(); }
       var k=0; A.check=[]; A.checkSkipped=false;
-      st.innerHTML=머리("7 / 7",MSG.checkH,esc(MSG.checkP))+
+      st.innerHTML=머리("7 / 7",MSG.checkH,'<span class="bdgs"><i class="bdg bdg-time">O·X 20초</i>'+(A.grade==="고1"?'<i class="bdg bdg-time">개념어 30초</i>':'')+'<i class="bdg bdg-time">기출 1분</i></span>')+
         '<div class="pt"><div class="ptbar"><i id="ptfill"></i></div><div class="ptrow"><span id="ptleft"></span>'+
         '<span class="skipwrap"><button type="button" class="skipbtn" id="skipq" aria-describedby="skiptip">건너뛰기</button>'+
         '<span class="tip" id="skiptip" role="tooltip">건너뛰면 어디가 약한지 몰라서 처음 며칠은 오늘 할 것이 덜 정확해요.</span></span></div></div>'+

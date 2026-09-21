@@ -15,7 +15,7 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/login.css?v=bcda8ea1">
-<link rel="stylesheet" href="css/base.css?v=b6f4b519">
+<link rel="stylesheet" href="css/base.css?v=88c507a4">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -322,7 +322,7 @@
 <script src="js/packs.js?v=c8a92afc"></script>
 <script src="js/drills.js?v=2cfc3459"></script>
 <script src="js/cards.js?v=c775f0fc"></script>
-<script src="js/store.js?v=06adb02b"></script>
+<script src="js/store.js?v=4e2fc57e"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -414,10 +414,10 @@
     var goal=T.goalMin(), R=T.routine();
     document.getElementById("rtset").innerHTML=
       '<div class="mins">'+MINS.map(function(v){
-        return '<button data-min="'+v+'" aria-pressed="'+(v===goal)+'">'+
-          '<b>'+v+'<small class="u">분</small></b><small>'+
-          (v<=15&&v>10?"권해요":"")+
-          '</small></button>'; }).join("")+'</div>'+
+        return '<button data-min="'+v+'" aria-pressed="'+(v===goal)+'" style="position:relative">'+
+          '<b>'+v+'<small class="u">분</small></b>'+
+          (v===15?'<i class="bdg bdg-good bdg-pin">추천</i>':'')+
+          '</button>'; }).join("")+'</div>'+
       '<div class="rt-what">'+R.items.map(function(it){
         return '<span class="r"><i></i>'+esc(it.title)+' — '+esc(it.say)+
           '<span class="m2">'+it.min+'분</span></span>'; }).join("")+'</div>'+
@@ -531,11 +531,11 @@
         '<div class="d'+(d&&d.days<=30&&d.days>=0?" soon":"")+'">'+
         (d?d.label:"—")+'</div>'+
         '<input type="date" value="'+(e.date||"")+'" data-ex="'+e.id+'">'+
-        '<p class="note" style="border:0;padding:0;margin-top:8px">'+esc(e.note||"")+'</p></div>';
+        '<p class="note" style="border:0;padding:0;margin-top:8px">'+(T.일정마크?T.일정마크(e):"")+'</p></div>';
     }).join("")+
     '<div class="ex" style="display:flex;flex-direction:column;justify-content:center">'+
     '<div class="k">일정 추가</div>'+
-    '<p class="note" style="border:0;padding:0;margin:8px 0 12px">수행평가·모의고사도 넣어 두면 함께 셉니다</p>'+
+    '<p style="margin:8px 0 0"></p>'+
     '<button class="btn ghost sm" id="addex">+ 추가</button></div>';
     document.querySelectorAll("[data-ex]").forEach(function(inp){
       inp.onchange=function(){ T.setExam(inp.dataset.ex,{date:inp.value}); paintExams(); };

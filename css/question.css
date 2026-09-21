@@ -136,3 +136,9 @@
 
 /* 끊을 자리 없는 긴 글(주소·점줄)이 상자를 뚫고 나가지 않게 */
 .data,.boki,.picks .pick .t,.opts5 .t{ overflow-wrap:anywhere; }
+
+/* 꺾쇠 제목 자료 — 〈사례〉〈○○적 관점〉 이 제 줄에 서게(2026-09-22) */
+.data .dlead{ margin:0 0 12px; padding-bottom:12px; border-bottom:1px dashed var(--line-2); }
+.data .dsec + .dsec{ margin-top:12px; }
+.data .dsh{ margin:0 0 4px; font-weight:800; color:var(--ink); }
+.data .dsb > p:first-child{ margin-top:0; }
