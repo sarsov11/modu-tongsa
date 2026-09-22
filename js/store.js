@@ -956,15 +956,15 @@
   /* ── 스킨 ──
      내용은 그대로 두고 옷만 갈아입는다. 고른 값은 이 브라우저에 남는다.
      화면이 뜨기 전에 <head> 안 한 줄이 먼저 입혀 준다(깜빡임 방지). */
-  var SKINS = [{id: "jelly", name: "젤리", dot: "#FFC2DC"},   /* 기본(2026-09-19) */
+  var SKINS = [{id: "white", name: "화이트", dot: "#FFFFFF"},   /* ★ 기본(2026-09-22 대표님 「기본을 화이트 디자인으로」) */
+               {id: "jelly", name: "젤리", dot: "#FFC2DC"},
                {id: "paper", name: "종이", dot: "#FAF8F3"},
                {id: "", name: "밤", dot: "#0B1120"},
-               {id: "note", name: "모눈 노트", dot: "#F0EBDA"},
-               {id: "white", name: "화이트", dot: "#FFFFFF"}];
+               {id: "note", name: "모눈 노트", dot: "#F0EBDA"}];
   function skin() {
     try {
       var v = localStorage.getItem("terra.skin");
-      if (v === null || v === "") v = "jelly";   // ★ 기본은 젤리(분홍) — 서문여고 학생들이 먼저 쓴다(2026-09-19 대표님). 고른 적 있는 학생의 값은 그대로
+      if (v === null || v === "") v = "white";   // ★ 기본은 화이트(2026-09-22 대표님, 전에는 젤리 0919). 고른 적 있는 학생의 값은 그대로
       if (v === "night") v = "";              // 밤을 직접 고른 학생은 "night" 로 남겨 둔다
       if (v === "diary") { v = "jelly"; localStorage.setItem("terra.skin", v); }  // 옛 값 이사
       if (v && !SKINS.some(function (k) { return k.id === v; })) v = "";

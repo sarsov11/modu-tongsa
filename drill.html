@@ -16,7 +16,7 @@
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=88c507a4">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
-<script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="jelly";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .page{max-width:var(--wrap);margin:0 auto;padding:0 var(--s3) var(--s6)}
 
@@ -48,21 +48,21 @@
 
   :root{--citydim:#20313C;--axis:#333C47;--axis-ink:#545B64}
   .clabt{fill:#EAF6F8}
-  :root[data-skin="paper"]{--citydim:#B9C4D0;--axis:#C9C3B5;--axis-ink:#8A8F9C}
-  :root[data-skin="paper"] .clabt{fill:#1F2430}
-  :root[data-skin="paper"] .passage:before{color:#C9C3B5}
+  :root[data-skin="paper"], :root[data-skin="white"]{--citydim:#B9C4D0;--axis:#C9C3B5;--axis-ink:#8A8F9C}
+  :root[data-skin="paper"] .clabt, :root[data-skin="white"] .clabt{fill:#1F2430}
+  :root[data-skin="paper"] .passage:before, :root[data-skin="white"] .passage:before{color:#C9C3B5}
   .mapbg{fill:#05070A}
   .city.off{fill:#18222C}
   /* ── 종이 스킨: 어두운 판을 밝게 (2026-09-16) ── */
-  :root[data-skin="paper"] .mapwrap{background:#EDF1F5}
-  :root[data-skin="paper"] .mapbg{fill:#EDF1F5}
-  :root[data-skin="paper"] .land{fill:#D7DEE6;stroke:#B5C0CC}
-  :root[data-skin="paper"] .city.dim{fill:#B9C4D0}
-  :root[data-skin="paper"] .city.off{fill:#C9D2DB}
-  :root[data-skin="paper"] .clab{fill:#1F2430;stroke:#EDF1F5}
-  :root[data-skin="paper"] .passage{background:var(--surface-2);border-color:var(--line-2);color:var(--ink)}
-  :root[data-skin="paper"] .qimg{background:var(--surface-2)}
-  :root[data-skin="paper"] .ppc{background:var(--surface-2)}
+  :root[data-skin="paper"] .mapwrap, :root[data-skin="white"] .mapwrap{background:#EDF1F5}
+  :root[data-skin="paper"] .mapbg, :root[data-skin="white"] .mapbg{fill:#EDF1F5}
+  :root[data-skin="paper"] .land, :root[data-skin="white"] .land{fill:#D7DEE6;stroke:#B5C0CC}
+  :root[data-skin="paper"] .city.dim, :root[data-skin="white"] .city.dim{fill:#B9C4D0}
+  :root[data-skin="paper"] .city.off, :root[data-skin="white"] .city.off{fill:#C9D2DB}
+  :root[data-skin="paper"] .clab, :root[data-skin="white"] .clab{fill:#1F2430;stroke:#EDF1F5}
+  :root[data-skin="paper"] .passage, :root[data-skin="white"] .passage{background:var(--surface-2);border-color:var(--line-2);color:var(--ink)}
+  :root[data-skin="paper"] .qimg, :root[data-skin="white"] .qimg{background:var(--surface-2)}
+  :root[data-skin="paper"] .ppc, :root[data-skin="white"] .ppc{background:var(--surface-2)}
   .maplegend{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;font-size:14.5px;color:var(--ink-4)}
   .maplegend i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:5px;
     vertical-align:-1px}
@@ -397,9 +397,10 @@
 </div>
 
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/tree.js?v=3ac9c724"></script>
+<script src="js/tree.js?v=cf241056"></script>
+<script src="js/qrender.js?v=68e2ab00"></script>
 <script src="js/atlas.js?v=b77a2dac"></script>
-<script src="js/thinker.js?v=aef759cc"></script>
+<script src="js/thinker.js?v=08620881"></script>
 <script src="js/subkiller.js?v=f46246fe"></script>
 <script src="js/laborcase.js?v=8bad3cdb"></script>
 <script src="js/econcase.js?v=19e274b7"></script>
@@ -410,9 +411,9 @@
 <script src="js/peace.js?v=718d7cae"></script>
 <script src="js/disobey.js?v=52983959"></script>
 <script src="js/justice.js?v=7e9430a4"></script>
-<script src="js/pool.js?v=16af7f80"></script>
-<script src="js/cards.js?v=c775f0fc"></script>
-<script src="js/store.js?v=4e2fc57e"></script>
+<script src="js/pool.js?v=92a27f17"></script>
+<script src="js/cards.js?v=1b4d9904"></script>
+<script src="js/store.js?v=3180799e"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -1446,7 +1447,7 @@
       '<div style="margin-top:14px;display:flex;gap:9px;flex-wrap:wrap;align-items:center">'+
       '<span class="hits">'+it.ln+'</span>'+
       '<span class="hits">이 갈래 기출 '+(T.BY[it.leaf]?T.BY[it.leaf].n:0)+'문항</span></div>'+
-      '<span class="src">'+it.g+' '+it.d+' '+it.n+'번'+(it.lb?', '+it.lb:'')+'</span></div>';
+      '<span class="src">'+(window.QRENDER?QRENDER.시험이름(it.g,it.d):it.g+' '+it.d)+' '+it.n+'번'+(it.lb?', '+it.lb:'')+'</span></div>';   /* 날짜 대신 시험 이름 — 저장된 시행일이 틀린 문항이 있다(코덱스 0922) */
     bindNext();
   }
 
