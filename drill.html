@@ -404,10 +404,11 @@
 <script src="js/laborcase.js?v=8bad3cdb"></script>
 <script src="js/econcase.js?v=19e274b7"></script>
 <script src="js/consticase.js?v=84ea84d0"></script>
-<script src="js/drills.js?v=2cfc3459"></script>
+<script src="js/drills.js?v=f1bd4428"></script>
 <script src="js/rights.js?v=988ebb69"></script>
 <script src="js/power.js?v=4fc54a2a"></script>
 <script src="js/peace.js?v=718d7cae"></script>
+<script src="js/disobey.js?v=52983959"></script>
 <script src="js/justice.js?v=7e9430a4"></script>
 <script src="js/pool.js?v=16af7f80"></script>
 <script src="js/cards.js?v=c775f0fc"></script>
@@ -1306,9 +1307,10 @@
      제시문을 원문 그대로 띄우는 이유는 같다 — 학생이 읽어서 풀게 하려고. */
   var CASEDATA = {
     peace:   window.PEACE   || {cases:[]},
+    disobey: window.DISOBEY || {cases:[]},   /* 시민불복종 — 롤스·싱어(2026-09-22) */
     justice: window.JUSTICE || {cases:[]}
   };
-  var qseen = {peace:[], justice:[]};
+  var qseen = {peace:[], justice:[], disobey:[]};
   function makeCaseSet(kind){
     var all=(CASEDATA[kind]||{cases:[]}).cases;
     var seen=qseen[kind]||(qseen[kind]=[]);
@@ -1801,7 +1803,7 @@
       if(!rset){ st.innerHTML='<p class="note">자료를 아직 못 불러왔습니다.</p>'; return; }
       cur={kind:"rights"}; st.innerHTML=renderRights(); setHead();
     }
-    else if(mode==="peace"||mode==="justice"){
+    else if(mode==="peace"||mode==="justice"||mode==="disobey"){
       if(!qset||qset.kind!==mode) qset=makeCaseSet(mode);
       if(!qset){ st.innerHTML='<p class="note">자료를 아직 못 불러왔습니다.</p>'; return; }
       cur={kind:"case"}; st.innerHTML=renderCase(); setHead();
