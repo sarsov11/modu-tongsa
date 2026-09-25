@@ -14,9 +14,9 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=88c507a4">
+<link rel="stylesheet" href="css/base.css?v=8f90f959">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
-<link rel="stylesheet" href="css/question.css?v=4a1c8f50">
+<link rel="stylesheet" href="css/question.css?v=1cc290e8">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:900px;margin:0 auto;padding:0 var(--s3) calc(var(--s6) + 120px)}   /* 아래 선생님 띠 자리 */
@@ -80,7 +80,7 @@
     padding:var(--s4);margin-bottom:var(--s3)}
   .res .big{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
   .res .sc{font-size:52px;font-weight:900;letter-spacing:-.04em;color:var(--ink);line-height:1}
-  .res .sc small{font-size:20px;color:var(--ink-4);font-weight:400}
+  .res .sc small{font-size:20px;color:var(--ink-4);font-weight:500}
   .res .gr{font-size:16px;color:var(--ink-3)}
   .res .rows{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
     gap:10px;margin-top:18px}
@@ -132,14 +132,14 @@
 <script src="js/pool.js?v=92a27f17"></script>
 <script src="js/drills.js?v=f1bd4428"></script>
 <script src="js/cards.js?v=1b4d9904"></script>
-<script src="js/store.js?v=3180799e"></script>
+<script src="js/store.js?v=531993fd"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/coach.js?v=47a0f4c5"></script>
+<script src="js/coach.js?v=fce5041b"></script>
 <script src="js/qrender.js?v=68e2ab00"></script>
 <script src="js/exam.js?v=224a59ac"></script>
-<script src="js/notify.js?v=dee63408"></script>
+<script src="js/notify.js?v=ba65297e"></script>
 <script>
 (function(){
   var T=TERRA, E=window.TERRA_EXAM, Q=window.QBANK||{};
@@ -325,7 +325,7 @@
   function 등급말(pct){
     /* 등급 예언·「킬러만 잡으면」·위로 문구는 뺐다(2026-09-19 멘트 조사) — 사실과 권유만 */
     if(pct>=100) return "다 맞았어요.";
-    return "틀린 것부터 다시 볼까요?";
+    return "오답 모아풀기";
   }
 
   function 결과그리기(res){

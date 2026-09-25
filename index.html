@@ -14,9 +14,9 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=88c507a4">
+<link rel="stylesheet" href="css/base.css?v=8f90f959">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
-<link rel="stylesheet" href="css/question.css?v=4a1c8f50">
+<link rel="stylesheet" href="css/question.css?v=1cc290e8">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:1240px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -523,12 +523,12 @@
 <script src="js/drills.js?v=f1bd4428"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/cards.js?v=1b4d9904"></script>
-<script src="js/store.js?v=3180799e"></script>
+<script src="js/store.js?v=531993fd"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/coach.js?v=47a0f4c5"></script>
-<script src="js/notify.js?v=dee63408"></script>
+<script src="js/coach.js?v=fce5041b"></script>
+<script src="js/notify.js?v=ba65297e"></script>
 <script>
 (function(){
   var T=TERRA, Q=window.QBANK||{};
@@ -876,7 +876,7 @@
       : '<b>'+esc(target.mid.m.name)+'</b>'+
         (bat(target.mid.m.name)?"은":"는")+' 아직 안 풀어봤어요.';
     host.innerHTML='<h2>세 문항으로 확인해요</h2>'+
-      '<p class="lead">'+say+' 세 문제만 풀어볼까요?</p>'+
+      '<p class="lead">'+say+' 세 문제 확인</p>'+
       '<div class="acts"><button class="btn" id="go3">세 문항으로 확인</button>'+
       '<a class="btn ghost" href="study.html?leaf='+target.leaf.code+'">이 단원 풀기</a>'+
       '<span class="hint">'+esc(target.leaf.name)+'</span></div><div id="quizhost"></div>';
@@ -982,8 +982,8 @@
     var say = got===n
       ? "세 문항 다 맞았어요. 리포트를 고쳤어요."
       : got===0
-        ? "이 단원부터 다시 볼까요?"
-        : "틀린 문항부터 다시 볼까요?";
+        ? '이 단원 다시 <i class="gc">강추</i>'
+        : "오답 모아풀기";
     document.getElementById("quizhost").innerHTML=
       '<div class="quiz"><div class="verdict"><div class="big">'+got+
       '<small> / '+n+'</small></div><p>'+say+'</p>'+
@@ -1033,7 +1033,7 @@
     var 고른=틀린것.filter(function(x){ return 후보.indexOf(x.l)>=0; })
       .sort(function(a,b){ return b.bad-a.bad; })[0];
     if(고른) todo.push({t:꼬리표("틀린 것만 다시",고른.l.code),
-      h:고른.l.name, p:"여기서 "+고른.bad+"문제 틀렸어요. 다시 풀어볼까요?",
+      h:고른.l.name, p:"여기서 "+고른.bad+"문제 틀림 → 다시 풀기",
       href:"study.html?leaf="+고른.l.code+"&mode=wrong"});
 
     /* 이어서 — 마지막으로 보던 곳이 범위 밖이면 밀지 않는다 */
@@ -1169,20 +1169,20 @@
     var CARDS=window.CARDS||{};
     var 후보=(T.오늘의리프?T.오늘의리프({전부:true}):[]).filter(function(c){ return CARDS[c.code]; });
     var 리프=후보[0]?후보[0].leaf:null;
-    if(!리프){ host.innerHTML='<div class="bub">시험 범위부터 정해볼까요?</div><div class="ans"><a href="settings.html#scope">범위 정하기</a></div>'; return; }
+    if(!리프){ host.innerHTML='<div class="bub">시험 범위 미설정</div><div class="ans"><a href="settings.html#scope">범위 정하기</a></div>'; return; }
     var 개념=(CARDS[리프.code].cards[0]||{}).title||리프.name;
     /* 오늘 O·X 를 얼마나 했나 — 말이 달라진다 */
     var 오늘=T.dayKey(), ox=S.ox||{}, 한=0, 맞=0;
     Object.keys(ox).forEach(function(k){ var x=ox[k]; if(x&&x.at&&T.dayKey(new Date(x.at))===오늘){ 한++; if(x.ok) 맞++; } });
     var 부름=(S.student&&S.student.name)?esc(S.student.name)+', ':'';
-    var 말 = 한===0 ? 부름+'오늘은 <b>'+esc(개념)+'</b> O·X부터 해볼까요?'
-           : 한<30  ? '오늘 O·X '+한+'문장 중 '+맞+'개 맞혔어요. <b>'+esc(개념)+'</b> 한 세트 더 해볼까요?'
-                    : '오늘 O·X '+한+'문장 했어요. <b>'+esc(개념)+'</b>도 해 볼까요?';
+    var 말 = 한===0 ? 부름+'오늘은 <b>'+esc(개념)+'</b> O·X <i class="gc">강추</i>'
+           : 한<30  ? '오늘 O·X '+한+'문장 중 '+맞+'개 맞혔어요. <b>'+esc(개념)+'</b> 한 세트 더'
+                    : '오늘 O·X '+한+'문장 했어요. <b>'+esc(개념)+'</b> <i class="gc">강추</i>';
     var 틀린=Object.keys(ox).filter(function(k){ return ox[k]&&ox[k].ok===false; }).length;
     host.innerHTML='<div class="bub">'+말+'</div>'+
       '<div class="ans"><a href="ox.html?leaf='+리프.code+'">좋아요, 시작</a>'+
-      '<a class="lite" href="card.html?leaf='+리프.code+'">개념부터 볼래요</a>'+
-      '<button type="button" class="lite" id="talkmore">다른 거 할래요</button></div>'+
+      '<a class="lite" href="card.html?leaf='+리프.code+'">개념 먼저</a>'+
+      '<button type="button" class="lite" id="talkmore">다른 단원 학습</button></div>'+
       '<div class="askmore" id="askmore" hidden><div class="bub">뭘 연습하고 싶어요?</div><div class="pickl">'+
         '<a href="skilltree.html">단원을 골라서 O·X<span>개념트리</span></a>'+
         (틀린?'<a href="ox.html?wrong=1">틀린 문장만 다시<span>'+틀린+'문장</span></a>':'')+

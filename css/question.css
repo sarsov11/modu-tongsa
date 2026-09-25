@@ -33,7 +33,7 @@
 .data .dhead{ margin:0 0 10px; font-weight:700; }
 .data .gnd{ display:grid; gap:8px; }
 .data .gd{ display:grid; grid-template-columns:36px 1fr; gap:8px; align-items:start; padding:9px 11px; border:1px solid var(--line-2); border-radius:8px; background:var(--surface); }
-.data .glab{ font-weight:900; color:var(--red-2); font-size:15px; padding-top:1px; }
+.data .glab{ font-weight:900; color:var(--ink); font-size:15px; padding-top:1px; }   /* 문항 기호는 검정 굵은 글씨(0921) — 빨강은 오답에만. 2026-09-24 지적검수 P02 */
 .data .gbody p{ margin:0 0 6px; } .data .gbody p:last-child{ margin:0; }
 .data ul.bul{ margin:2px 0 0; padding-left:18px; } .data ul.bul li{ margin:3px 0; line-height:1.6; }
 .data .gbody ul.bul{ padding-left:16px; }

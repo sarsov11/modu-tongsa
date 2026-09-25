@@ -6,6 +6,46 @@
  *
  * 백엔드가 붙으면 그쪽이 정본, 없으면 로컬에 쌓고 화면은 그대로 돈다(소방센세 api.js 와 같은 방식).
  */
+
+/* ── 교과서·교재 쪽수 걷어내기 (2026-09-24 대표님 판정) ──
+ * 「이 앱을 쓰는 사람에게 교재는 없다. 앱이 교재다. 교재 몇 페이지 이딴 말 보는 순간 앱 삭제함.」
+ * 자료(cardox·cards·keyword)는 생성기가 만든 것이고, 쪽수는 개념어_검산 등이 범위 판정에 쓰는 출처라
+ * 자료에서는 지우지 않는다. store.js 는 모든 화면에서 자료 다음에 실리므로 여기서 화면에 나가기 전에 걷는다.
+ * 「(통사1 20쪽)」「(교과서 20쪽)」은 통째로, 「교과서 10쪽.」처럼 쪽수만 남는 문장은 문장째 뺀다.
+ * 기출 출처(「고1 22.09」「(고3 22.06)」)는 건드리지 않는다. 검사: 지적검수.py T12. */
+(function () {
+  var N = "\\d+(?:\\s*[~·,∼-]\\s*\\d+)*\\s*쪽";
+  var R괄호 = new RegExp("\\s*\\([^()]*?" + N + "[^()]*\\)", "g");
+  var R책 = new RegExp("(통합사회\\s?[12]\\s*교과서|통합사회\\s?[12]|통사\\s?[12]|교과서|교재|지도서|B파트 유인물)\\s*" + N, "g");
+  var R맨 = new RegExp("\\s*" + N, "g");
+  var 조사 = { "이": "가", "은": "는", "을": "를", "과": "와" };
+  function 쪽빼기(s) {
+    if (typeof s !== "string" || !/\d\s*쪽/.test(s)) return s;
+    var o = s.replace(R괄호, "")
+      .replace(R책, function (m, w) { return /^통사|^통합사회\s?[12]$/.test(w) ? "교과서" : w; })
+      .replace(R맨, "")
+      .replace(/교과서([이은을과])(?=\s)/g, function (m, j) { return "교과서" + 조사[j]; });
+    var 끝점 = /\.\s*$/.test(s), t = o.split(/(\.\s+|\s+·\s+)/), 남 = [];   // 뒤돌아보기(?<=) 는 옛 사파리가 못 읽어 store.js 가 통째로 죽는다 — 쓰지 않는다
+    for (var i = 0; i < t.length; i += 2) {
+      var u = t[i].replace(/[.\s]+$/, "");
+      if (!u || (/^(통합사회\s?[12]\s*)?(교과서|교재|지도서|B파트 유인물)/.test(u) && u.length <= 16)) continue;   // 「교과서.」「교과서의 정의.」
+      if (남.length) 남.push(t[i - 1]);
+      남.push(t[i]);
+    }
+    o = 남.join("").replace(/\s{2,}/g, " ").replace(/\s+([.,)])/g, "$1").trim();
+    if (o && 끝점 && !/\.$/.test(o)) o += ".";
+    return o;
+  }
+  function 걷기(v, d) {
+    if (d > 8 || !v) return v;
+    if (typeof v === "string") return 쪽빼기(v);
+    if (typeof v === "object") for (var k in v) if (Object.prototype.hasOwnProperty.call(v, k)) v[k] = 걷기(v[k], d + 1);
+    return v;
+  }
+  window.쪽빼기 = 쪽빼기;
+  ["CARDOX", "CARDS", "KEYWORD", "OXBANK", "DRILLS"].forEach(function (g) { try { if (window[g]) 걷기(window[g], 0); } catch (e) {} });
+})();
+
 (function () {
   "use strict";
   var T = window.TREE;
@@ -1536,7 +1576,7 @@
           title: scopeOn() ? (내신킬러 ? "내신 Killer Drill" : "시험 범위 Killer Drill")
                            : ((((S.student && S.student.grade) || "고1") === "고1") ? "오늘의 Killer Drill" : (골라.level === "기초" ? "준킬러부터" : "오늘의 킬러")),   /* 내신 대비(고1)에서 킬러·준킬러라는 말은 어색하다(2026-09-19 대표님) */
           say: 내신킬러 ? "시험 범위에서 헷갈리는 문항" : 하나.name + " 한 세트",
-          why: 내신킬러 ? "헷갈리는 문항부터 풀어볼까요?" : ((((S.student && S.student.grade) || "고1") === "고1") ? "" : (하나.tier ? "준킬러예요. " : "킬러예요. ")) + 까닭,
+          why: 내신킬러 ? "헷갈린 문항 모아풀기" : ((((S.student && S.student.grade) || "고1") === "고1") ? "" : (하나.tier ? "준킬러예요. " : "킬러예요. ")) + 까닭,
           href: 내신킬러 ? "naeshin.html" : "drill.html?type=" + 하나.id, cta: "Killer Drill" });
       } else {
         items.push({ kind: "drill", min: DRILL_MIN,

@@ -61,7 +61,7 @@
         알림 한 줄에서 드러나야 학생이 연다. */
   function line() {
     var T = window.TERRA;
-    if (!T || !T.routine) return { t: "오늘 15분", b: "15분만 해볼까요?" };
+    if (!T || !T.routine) return { t: "오늘 15분", b: "최적화 15분" };
     var r = T.routine();
     var 시 = 다가온시험();
     /* 실전 모드는 알림도 달라야 한다 — "오늘 몇 분" 이 아니라 "오늘 시험" 이다 */

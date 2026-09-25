@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <meta name="theme-color" content="#FAF8F3">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=88c507a4">
+<link rel="stylesheet" href="css/base.css?v=8f90f959">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:820px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -123,7 +123,7 @@
 <script src="js/pool.js?v=92a27f17"></script>
 <script src="js/drills.js?v=f1bd4428"></script>
 <script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/store.js?v=3180799e"></script>
+<script src="js/store.js?v=531993fd"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=72d8dbed"></script>
@@ -193,7 +193,7 @@
     else if(s.dday!=null && s.dday<=10){
       한줄=(s.시험?s.시험.name:"시험")+"까지 "+s.dday+"일, 매일 모의고사를 보는 중입니다";
       부연="지금은 새로 배우는 때가 아니라 <b>실전으로 굳히는 때</b>입니다. 하루 한 회씩 25문항을 시간 재고 풉니다.";
-    } else { 한줄=꾸준.t; 부연=꾸준.d+" 하루 <b>15분</b>이면 그날 몫이 끝나도록 짜여 있습니다."; }
+    } else { 한줄=꾸준.t; 부연=꾸준.d+" 하루 <b>15분</b>이면 그날 공부가 끝나도록 짜여 있습니다."; }
 
     /* 시험까지의 길 — 30일 창. D-10부터 매일 모의고사 */
     var 길="";
@@ -249,7 +249,7 @@
       '</div>'+
 
       '<div class="pcard"><h3>최근 7일</h3><div class="days">'+이레+'</div>'+
-        '<p class="note">색이 찬 날은 그날 몫(15분)을 채운 날입니다. 파란 테두리가 오늘입니다.</p></div>'+
+        '<p class="note">색이 찬 날은 15분을 채운 날입니다. 파란 테두리가 오늘입니다.</p></div>'+
 
       (막대.length
         ? '<div class="pcard"><h3>단원별 정답률</h3><div class="bars">'+막대.map(function(x,i){

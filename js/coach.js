@@ -47,34 +47,34 @@
   /* ── 화면에 나가는 말 — 전부 여기 ─────────────────── */
   var MSG = {
     /* 띠 — 상황별. {n} 숫자, {개념} 리프 이름 자리 */
-    idleStart:    "오늘 {goal}분만 해볼까요?",
-    idleMid:      "{spent}분 했어요. {left}분만 더 해볼까요?",
+    idleStart:    "오늘 {goal}분",
+    idleMid:      "{spent}분 완료 → {left}분 남음",
     idleDone:     "오늘 할 것 다 했어요.",
     upToday:      "오늘 이해도가 오른 곳이 {n}군데예요.",
     streakDay:    "{n}일째 이어 오고 있어요.",
-    cardWait:     "오늘 개념부터 읽어볼까요?",
+    cardWait:     "개념 먼저",
     okOne:        "맞았어요. 오늘 {n}개째예요.",
     okRun3:       "세 문제 연속으로 맞혔어요.",
     okRun5:       "다섯 문제 연속으로 맞혔어요.",
     okRun8:       "여덟 문제 연속으로 맞혔어요.",
     okAfterMiss:  "맞았어요. 방금 틀린 문제는 3일 뒤에 다시 풀어봐요.",
     missOne:      "틀렸어요. 3일 뒤에 다시 풀어봐요.",
-    missSure:     "확실하다고 했는데 틀렸어요. {개념을} 다시 볼까요?",
-    missGuess:    "해설을 읽어 볼까요?",
-    missRun3:     "세 문제 연속으로 틀렸어요. 개념부터 다시 읽어볼까요?",
+    missSure:     "확실했는데 틀림 → {개념을} 다시 확인",
+    missGuess:    "해설 확인",
+    missRun3:     "3문제 연속 틀림 → 개념 다시",
     drillOk:      "맞았어요. 오늘 Killer Drill {n}문제째예요.",
-    drillMiss:    "한 번 더 해볼까요? Killer Drill은 정답률에 안 들어가요.",
+    drillMiss:    "한 번 더 (Killer Drill은 정답률 제외)",
     oxOk:         "맞았어요. 오늘 O·X {n}문제째예요.",
     oxMiss:       "근거만 읽고 넘어가요. O·X는 정답률에 안 들어가요.",
     kwOk:         "맞았어요. 직접 써서 맞혔어요.",
     kwMiss:       "정답을 한 번 읽어봐요. 개념어 쓰기는 정답률에 안 들어가요.",
-    watched:      "강의 다 봤네요. 바로 O·X로 확인해볼까요?",
+    watched:      "강의 완료 → O·X 확인",
     skinNudge:    "화면 색이 마음에 안 들면 바꿔봐요.",
-    examSoon:     "{시험} D-{n}이에요. 오늘은 모의고사부터 풀어볼까요?",
+    examSoon:     "{시험} D-{n} → 모의고사 강추",
     /* 결산 */
     wrapAll:      "전부 맞았어요.",
-    wrapMost:     "거의 다 맞았어요. 틀린 것만 다시 볼까요?",
-    wrapHalf:     "절반 맞았어요. 틀린 것만 다시 풀어볼까요?",
+    wrapMost:     "거의 다 맞음 → 오답 모아풀기",
+    wrapHalf:     "절반 맞음 → 오답 모아풀기",
     wrapLow:      "처음 보는 단원이죠? 틀린 것부터 다시 봐요.",
     wrapUp:       "{개념} 이해도가 {before}에서 {after}로 올랐어요.",
     wrapSame:     "{개념} 이해도는 {after} 그대로예요.",
@@ -84,20 +84,20 @@
     wrapTree:     "개념트리에서 {개념이} {d} 올랐어요.",
     /* 인사 */
     hiFirst:      "처음이죠? 오늘 할 것 하나만 골라 뒀어요.",
-    hiBack:       "{ago} {n}문제 중 {ok}개 맞혔어요. {next}부터 해볼까요?",
+    hiBack:       "{ago} {n}문제 중 {ok}개 맞힘 → {next} 강추",
     hiBackLead:   "{ago} {n}문항 중 {ok}개 맞혔어요. 오늘은 {lead}.",
     hiBackNoQLead: "오늘은 {lead}.",
     hiTodayLead:  "오늘 {n}문항 중 {ok}개 맞혔어요. 이어서 {lead}.",
-    hiBackNoQ:    "{next}부터 해볼까요?",
+    hiBackNoQ:    "{next} 강추",
     hiToday:      "오늘 {n}문항 중 {ok}개 맞혔어요. 다음은 {next}예요.",
     hiTodayDone:  "오늘 {n}문항 중 {ok}개 맞혔어요. 오늘 할 것 다 했어요.",
     hiStreak:     "{n}일째예요.",
     /* 카드 */
     cardSealed:   "오늘 개념",
     cardTap:      "눌러서 열기",
-    cardOpened:   "읽고 바로 확인해볼까요?",
+    cardOpened:   "읽고 바로 O·X",
     cardCount:    "읽은 개념 {n}개",
-    cardNone:     "이 범위에는 읽을 개념이 없어요. 바로 문제로 가볼까요?"
+    cardNone:     "이 범위는 개념 없음 → 바로 문제"
   };
   function fmt(key, v) {
     var s = MSG[key] || "";
@@ -250,7 +250,7 @@
       '<circle cx="20" cy="20" r="16" fill="none" stroke="' + (t.done ? "var(--mint)" : "var(--red)") +
       '" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="' + on + ' ' + (C - on).toFixed(1) + '"/></svg>' +
       '<b>' + t.spent + '</b></span>' +
-      '<span class="tx' + (opts.tone ? " " + opts.tone : "") + '"><b>' + esc(line.b) + '</b>' +
+      '<span class="tx' + (opts.tone ? " " + opts.tone : "") + '"><b>' + esc(line.b).replace(/ 강추$/, ' <i class=\"gc\">강추</i>') + '</b>' +
       (line.s ? '<span>' + esc(line.s) + '</span>' : '') + '</span>' +
       chips(t) +
       '<span class="go">' +
