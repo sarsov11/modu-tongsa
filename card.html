@@ -39,6 +39,11 @@
     background:var(--fam-geo)}
   .card[data-k="조문"]::before{background:var(--fam-soc)}
   .card[data-k="사상가"]::before{background:var(--fam-eth)}
+  /* 개념 보강 — 원고에 없던 개념을 새로 쓴 카드. 띠 색과 점선 테두리·표지로 구분(2026-09-29) */
+  .card[data-k="보강"]{border-style:dashed;border-color:var(--amber)}
+  .card[data-k="보강"]::before{background:var(--amber)}
+  .card[data-k="보강"]::after{content:"개념 보강";position:absolute;top:9px;left:28px;font-size:13.5px;font-weight:800;color:var(--amber);letter-spacing:-.01em}
+  .card[data-k="보강"] h2{margin-top:18px}
   .card .badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--kr);
     font-size:14.5px;font-weight:700;letter-spacing:-.01em;padding:4px 9px;border-radius:5px;
     border:1px solid var(--line-2);color:var(--ink-3)}
@@ -144,6 +149,7 @@
 <script src="js/cardox.js?v=0dbbf4f9"></script>
 <script src="js/conceptq.js?v=d8dabe1e"></script>
 <script src="js/cards.js?v=1b4d9904"></script>
+<script src="js/cards_plus.js?v=b90b17ed"></script>
 <script src="js/keyword.js?v=b233a01c"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/judge.js?v=43f690d4"></script>
@@ -193,7 +199,7 @@
     return;
   }
 
-  var 장들 = 묶음.cards.slice(0,8);   /* 원고 카드는 5~7장 */
+  var 장들 = 묶음.cards.filter(function(c){ return c.k!=="보강"; }).slice(0,8).concat(묶음.cards.filter(function(c){ return c.k==="보강"; }));   /* 원고 카드는 5~7장, 개념 보강 카드는 그 뒤에(2026-09-29) */
   var i=0, 결과=[];
   /* ── 카드 → **핵심 개념어 쓰기** 1~2문항 → 기출 (2026-09-13) ─────────
      방금 읽은 카드의 개념어를 직접 써 본다. 문항은 교과서 정의·카드 문장에서만(개념어만들기.py).
