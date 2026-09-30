@@ -1320,8 +1320,8 @@
           title: XM.exam.name + " " + XM.label,
           say: "오늘의 모의고사 25문항",
           why: XM.days <= 3
-                 ? "시험이 코앞이에요. 실전처럼 한 번에 풀어 보세요."
-                 : "열흘 남았으니 매일 한 회씩. 오늘 틀린 곳이 내일 할 일이 됩니다.",
+                 ? "D-" + XM.days + " → 실전 모의고사"
+                 : "D-" + XM.days + " → 모의고사 1회",
           href: "exam.html", cta: "시험 보기" });
         left -= Math.min(left, 분);
       } else if (지난회차 && (지난회차.wrong || []).length) {
@@ -1512,7 +1512,7 @@
         items.push({ kind: "card", min: CARD몫, leaf: cc.code, n: 장,
           title: 학년3 === "고1" ? "오늘 개념 읽기" : "개념 다시 읽기",
           say: cc.st.name + " " + 장 + "개",
-          why: "읽고 바로 확인해요.",
+          why: "문제로 확인",
           href: "card.html?leaf=" + cc.code, cta: "개념 학습" });   /* 「읽기 7분」 → 「개념 학습」(2026-09-19 대표님) */
         left -= CARD몫; 배움 = true;
       }
@@ -1545,7 +1545,7 @@
           say: "O·X 여덟 문장",
           why: 배움
             ? (강의봄 ? "방금 본 강의를 확인하는 자리예요. 지금이 제일 잘 남습니다."
-                      : "방금 읽은 개념을 O·X로 확인해요.")
+                      : "문제로 확인")
             : "얼마나 확신하는지도 함께 고르면, 틀렸을 때 무엇을 할지 바로 알려 드려요.",
           href: "ox.html", cta: "개념 체크" });
         left -= OX몫;

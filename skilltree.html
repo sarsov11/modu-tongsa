@@ -1121,7 +1121,7 @@
         if(!busy) goFam(fam,LAY.CX,LAY.CY); };
       var lec2=grp.items.reduce(function(s2,x){ return s2+x.lec.length; },0);
       document.getElementById("lede").textContent=
-        "단원 "+grp.items.length+"개, 강의 "+lec2+"개. 하나 눌러 보세요.";
+        "";
       document.getElementById("plateTitle").textContent=grp.name;
       document.getElementById("plateSub").textContent="중영역 "+grp.items.length;
     }else{

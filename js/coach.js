@@ -54,16 +54,16 @@
     streakDay:    "{n}일째 이어 오고 있어요.",
     cardWait:     "개념 먼저",
     okOne:        "맞았어요. 오늘 {n}개째예요.",
-    okRun3:       "세 문제 연속으로 맞혔어요.",
-    okRun5:       "다섯 문제 연속으로 맞혔어요.",
-    okRun8:       "여덟 문제 연속으로 맞혔어요.",
+    okRun3:       "3연속 정답",
+    okRun5:       "5연속 정답",
+    okRun8:       "8연속 정답",
     okAfterMiss:  "맞았어요. 방금 틀린 문제는 3일 뒤에 다시 풀어봐요.",
     missOne:      "틀렸어요. 3일 뒤에 다시 풀어봐요.",
     missSure:     "확실했는데 틀림 → {개념을} 다시 확인",
     missGuess:    "해설 확인",
-    missRun3:     "3문제 연속 틀림 → 개념 다시",
+    missRun3:     "3문제 연속 오답",
     drillOk:      "맞았어요. 오늘 Killer Drill {n}문제째예요.",
-    drillMiss:    "한 번 더 (Killer Drill은 정답률 제외)",
+    drillMiss:    "↻ 재도전",
     oxOk:         "맞았어요. 오늘 O·X {n}문제째예요.",
     oxMiss:       "근거만 읽고 넘어가요. O·X는 정답률에 안 들어가요.",
     kwOk:         "맞았어요. 직접 써서 맞혔어요.",
@@ -75,7 +75,7 @@
     wrapAll:      "전부 맞았어요.",
     wrapMost:     "거의 다 맞음 → 오답 모아풀기",
     wrapHalf:     "절반 맞음 → 오답 모아풀기",
-    wrapLow:      "처음 보는 단원이죠? 틀린 것부터 다시 봐요.",
+    wrapLow:      "오답 모아풀기",
     wrapUp:       "{개념} 이해도가 {before}에서 {after}로 올랐어요.",
     wrapSame:     "{개념} 이해도는 {after} 그대로예요.",
     wrapDone:     "오늘 할 것 다 했어요.",
@@ -83,7 +83,7 @@
     wrapFirst:    "오늘 첫 세트예요.",
     wrapTree:     "개념트리에서 {개념이} {d} 올랐어요.",
     /* 인사 */
-    hiFirst:      "처음이죠? 오늘 할 것 하나만 골라 뒀어요.",
+    hiFirst:      "첫 학습",
     hiBack:       "{ago} {n}문제 중 {ok}개 맞힘 → {next} 강추",
     hiBackLead:   "{ago} {n}문항 중 {ok}개 맞혔어요. 오늘은 {lead}.",
     hiBackNoQLead: "오늘은 {lead}.",
@@ -95,9 +95,9 @@
     /* 카드 */
     cardSealed:   "오늘 개념",
     cardTap:      "눌러서 열기",
-    cardOpened:   "읽고 바로 O·X",
+    cardOpened:   "문제로 확인",
     cardCount:    "읽은 개념 {n}개",
-    cardNone:     "이 범위는 개념 없음 → 바로 문제"
+    cardNone:     ""
   };
   function fmt(key, v) {
     var s = MSG[key] || "";

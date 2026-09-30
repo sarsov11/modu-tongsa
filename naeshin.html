@@ -109,7 +109,7 @@
   /* 머리 — 시험·범위 */
   (function(){
     var nx=T.nextExam?T.nextExam():null, el=document.getElementById("scope");
-    if(!T.scopeOn()){ el.innerHTML='시험 범위를 정하면 그 범위만 연습해요.<a href="settings.html">범위 정하기</a>'; return; }
+    if(!T.scopeOn()){ el.innerHTML='시험 범위 미설정<a href="settings.html">범위 정하기</a>'; return; }
     el.innerHTML=(nx?'<b>'+esc(nx.exam.name)+' '+esc(nx.label)+'</b>, ':'')+'범위 <b>'+esc(T.scopeName())+'</b><a href="settings.html">범위 고치기</a>';
   })();
 

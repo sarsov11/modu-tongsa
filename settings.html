@@ -596,15 +596,11 @@
        전에는 자료에 박아 둔 state 를 그려서, 문항이 있어도 "준비 중" 이었다. */
     var list=T.packList();
     document.getElementById("packs").innerHTML=list.map(function(k){
-      var 상태 = k.state==="ready" ? "쓸 수 있음"
+      var 상태 = k.state==="ready" ? ""
                : (k.state==="thin" ? "문항 적음" : "준비 중");
       /* 옛 과목 이름을 밝힌다 — "세계시민과 지리" 를 고른 학생이 받는 것은
          옛 **세계지리** 기출이다. 알아야 범위를 스스로 가늠한다. */
-      var 밑 = k.n
-        ? ('<span class="pkn">' + k.n.toLocaleString() + '문항' +
-           (k.g3 ? ', 고3 ' + k.g3 : '') + (k.g2 ? ', 고2 ' + k.g2 : '') +
-           (k.was && k.was !== k.name ? ', 옛 ' + k.was : '') + '</span>')
-        : '<span class="pkn dim">문항 준비 중</span>';
+      var 밑 = k.n ? '' : '<span class="pkn dim">문항 준비 중</span>';
       return '<button class="pk'+(k.state==="soon"?" off":"")+
         '" data-pk="'+k.id+'" aria-pressed="'+k.on+'"'+
         (k.state==="soon"?' disabled':'')+'>'+
@@ -660,7 +656,7 @@
       "  지금  " + 사람말(지금) + "\n" +
       "  들어옴 " + 사람말(들어올것) +
       (들어올것.만든때 ? "  (" + 들어올것.만든때.slice(0, 10) + " 에 꺼낸 것)" : "") +
-      "\n\n" + "덮으면 되돌릴 수 없습니다. 계속할까요?");
+      "\n\n" + "덮어쓰기 후 복구 불가");
   }
 
   document.getElementById("kexp").onclick=function(){
@@ -669,7 +665,7 @@
   };
 
   document.getElementById("kcode").onclick=function(){
-    알림("코드를 만드는 중이에요…");
+    알림("⟳");
     /* 압축은 비동기다 — 기다리지 않으면 상자에 "[object Promise]" 가 찍힌다 */
     T.옮기기코드().then(function(코드){
       상자.value=코드;
@@ -683,7 +679,7 @@
     var v=(상자.value||"").trim();
     if(!v){ 알림("먼저 위 칸에 옮기기 코드를 붙여 넣어 주세요.", "no"); return; }
     /* 덮기 전에 **읽어만** 본다 — 깨진 코드면 여기서 멈춘다 */
-    알림("코드를 읽는 중이에요…");
+    알림("⟳");
     T.코드읽기(v).then(function(짐){
       var 들어올것=T.짐요약(짐);
       if(!덮을까(들어올것)) { 알림("그대로 두었어요."); return; }

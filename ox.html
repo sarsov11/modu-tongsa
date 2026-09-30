@@ -439,7 +439,6 @@
       : '<div class="card">'+
           '<div class="tag"><b>'+이름꼴(x.leafName||x.leaf)+'</b>'+
           '<span>'+(i+1)+' / '+세트.length+'</span></div>'+
-          (기출판?'':'<p class="qfall">이 범위는 기출 재료가 모자라 개념 문장으로 확인해요.</p>')+
           '<p class="sent">'+esc(x.t)+'</p>'+
         '</div>';
     document.getElementById("stage").innerHTML=
@@ -595,7 +594,7 @@
     } else if(맞===결과.length){
       할일="전부 맞았어요. 다음 개념으로 넘어가요.";
     } else {
-      할일="틀린 것만 한 번 더 보면 오늘은 끝이에요.";
+      할일="오답 모아풀기";
     }
 
     document.getElementById("stage").innerHTML=
@@ -621,8 +620,7 @@
     if(!세트.length){
       document.getElementById("stage").innerHTML=
         '<div class="card"><p class="sent">낼 수 있는 개념 문장이 없어요.</p>'+
-        '<p style="color:var(--ink-4);font-size:13.5px;margin-top:10px">'+
-        '시험 범위를 좁게 잡았다면 넓혀 보세요.</p></div>';
+        '</div>';
       return;
     }
     if(window.COACH) COACH.begin({kind:"ox"});

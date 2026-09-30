@@ -230,7 +230,7 @@
 
   /* 화면에 나가는 말 — 전부 여기. 존댓말, 판단 없음 */
   var MSG={
-    introH:"매일 <em>15분</em>,<br>오늘 할 것 하나만 알려요.",
+    introH:"<em>최적화 15분</em>",
     introP:"",
     nameH:"이름", nameP:"",
     gradeH:"학년", gradeP:"",
@@ -434,8 +434,7 @@
       var k=0; A.check=[]; A.checkSkipped=false;
       st.innerHTML=머리("7 / 7",MSG.checkH,'<span class="bdgs"><i class="bdg bdg-time">O·X 20초</i>'+(A.grade==="고1"?'<i class="bdg bdg-time">개념어 30초</i>':'')+'<i class="bdg bdg-time">기출 1분</i></span>')+
         '<div class="pt"><div class="ptbar"><i id="ptfill"></i></div><div class="ptrow"><span id="ptleft"></span>'+
-        '<span class="skipwrap"><button type="button" class="skipbtn" id="skipq" aria-describedby="skiptip">건너뛰기</button>'+
-        '<span class="tip" id="skiptip" role="tooltip">건너뛰면 어디가 약한지 몰라서 처음 며칠은 오늘 할 것이 덜 정확해요.</span></span></div></div>'+
+        '<span class="skipwrap"><button type="button" class="skipbtn" id="skipq">건너뛰기</button></span></div></div>'+
         '<div id="qhost"></div>';
       단추("다음", false);
       function 진행판(){
@@ -444,7 +443,7 @@
       }
       /* 건너뛰기 — 손을 대면(마우스·터치·포커스) 안내가 뜨고, 한 번 더 눌러야 실제로 건너뛴다 */
       (function(){
-        var b=el("skipq"), tip=el("skiptip"), 준비=false, t;
+        var b=el("skipq"), tip=el("skiptip")||{classList:{add:function(){},remove:function(){}}}, 준비=false, t;
         function 보이기(){ tip.classList.add("on"); }
         function 숨기기(){ if(!준비) tip.classList.remove("on"); }
         b.addEventListener("mouseenter", 보이기); b.addEventListener("mouseleave", 숨기기);

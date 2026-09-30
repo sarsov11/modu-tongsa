@@ -768,9 +768,8 @@
     if(!b || !host) return;
     host.insertAdjacentHTML("beforebegin",
       '<div class="scopenote">'+
-        '<b>시험 범위가 '+esc(b.학교)+' 기준으로 잡혀 있어요</b>'+
-        '<span>'+esc(b.name)+', '+esc(b.단원)+'. 우리 학교 범위와 다르면 고쳐 주세요.</span>'+
-        '<a href="settings.html#scope">내 학교 범위로 고치기 →</a>'+
+        '<span>'+esc(b.name)+', '+esc(b.단원)+'</span>'+
+        '<a href="settings.html#scope">범위 수정 →</a>'+
       '</div>');
   })();
 
@@ -865,8 +864,6 @@
     var host=document.getElementById("check");
     if(!target){
       host.innerHTML='<h2>세 문항으로 확인해요</h2>'+
-        '<p class="lead">지금은 바로 낼 수 있는 문항이 모자랍니다. '+
-        '문제풀이에서 한 단원을 골라 보세요.</p>'+
         '<div class="acts"><a class="btn" href="study.html">문제 풀러 가기</a></div>';
       return;
     }
@@ -1033,7 +1030,7 @@
     var 후보=골라내기(틀린것.map(function(x){ return x.l; }));
     var 고른=틀린것.filter(function(x){ return 후보.indexOf(x.l)>=0; })
       .sort(function(a,b){ return b.bad-a.bad; })[0];
-    if(고른) todo.push({t:꼬리표("틀린 것만 다시",고른.l.code),
+    if(고른) todo.push({t:꼬리표("오답 모아풀기",고른.l.code),
       h:고른.l.name, p:"여기서 "+고른.bad+"문제 틀림 → 다시 풀기",
       href:"study.html?leaf="+고른.l.code+"&mode=wrong"});
 
@@ -1075,10 +1072,10 @@
         끝냄 = lg.some(function(r){ return r.day===T.dayKey(); });
       }catch(e){}
       todo.unshift(끝냄
-        ? {t:XM.exam.name+" "+XM.label, h:"오늘 회차는 끝냈어요",
-           p:"틀린 것만 다시 풀면 오늘은 끝이에요.", href:"exam.html"}
+        ? {t:XM.exam.name+" "+XM.label, h:"오늘 회차 완료",
+           p:"오답 모아풀기", href:"exam.html"}
         : {t:XM.exam.name+" "+XM.label, h:"오늘의 모의고사",
-           p:"25문항 45분이에요.", href:"exam.html"});
+           p:"25문항 45분", href:"exam.html"});
     })();
 
     /* 트레이닝 — 시험 범위를 정해 뒀으면 그 범위에서 아직 안 한 것을 집어 준다.
@@ -1175,18 +1172,17 @@
     /* 오늘 O·X 를 얼마나 했나 — 말이 달라진다 */
     var 오늘=T.dayKey(), ox=S.ox||{}, 한=0, 맞=0;
     Object.keys(ox).forEach(function(k){ var x=ox[k]; if(x&&x.at&&T.dayKey(new Date(x.at))===오늘){ 한++; if(x.ok) 맞++; } });
-    var 부름=(S.student&&S.student.name)?esc(S.student.name)+', ':'';
-    var 말 = 한===0 ? 부름+'오늘은 <b>'+esc(개념)+'</b> O·X <i class="gc">강추</i>'
-           : 한<30  ? '오늘 O·X '+한+'문장 중 '+맞+'개 맞혔어요. <b>'+esc(개념)+'</b> 한 세트 더'
-                    : '오늘 O·X '+한+'문장 했어요. <b>'+esc(개념)+'</b> <i class="gc">강추</i>';
+    var 말 = 한===0 ? '<b>'+esc(개념)+'</b> O·X <i class="gc">강추</i>'
+           : 한<30  ? 'O·X '+한+' 중 '+맞+' ✓ → <b>'+esc(개념)+'</b> <i class="gc">강추</i>'
+                    : 'O·X '+한+' ✓ → <b>'+esc(개념)+'</b> <i class="gc">강추</i>';
     var 틀린=Object.keys(ox).filter(function(k){ return ox[k]&&ox[k].ok===false; }).length;
     host.innerHTML='<div class="bub">'+말+'</div>'+
       '<div class="ans"><a href="ox.html?leaf='+리프.code+'">좋아요, 시작</a>'+
       '<a class="lite" href="card.html?leaf='+리프.code+'">개념 먼저</a>'+
       '<button type="button" class="lite" id="talkmore">다른 단원 학습</button></div>'+
-      '<div class="askmore" id="askmore" hidden><div class="bub">뭘 연습하고 싶어요?</div><div class="pickl">'+
+      '<div class="askmore" id="askmore" hidden><div class="bub">다른 단원 학습</div><div class="pickl">'+
         '<a href="skilltree.html">단원을 골라서 O·X<span>개념트리</span></a>'+
-        (틀린?'<a href="ox.html?wrong=1">틀린 문장만 다시<span>'+틀린+'문장</span></a>':'')+
+        (틀린?'<a href="ox.html?wrong=1">오답 모아풀기<span>'+틀린+'문장</span></a>':'')+
         '<a href="naeshin.html">어려운 O·X만<span>Killer Drill</span></a>'+
         '<a href="exam.html">시험처럼 풀기<span>모의고사</span></a>'+
         '<a href="skilltree.html?lec='+리프.code+'">강의 보기<span>'+esc(개념)+'</span></a>'+

@@ -276,9 +276,9 @@
       if(b) b.dataset.done = (picks[it.id]===undefined?0:1);
     });
     var f=document.getElementById("ftxt");
-    if(f) f.innerHTML = 끝남 ? '채점을 마쳤어요.'
-      : (푼===n ? '<b>다 풀었어요.</b> 채점해요.'
-               : '아직 <b>'+(n-푼)+'문항</b> 남았어요. 다 안 풀어도 채점할 수 있어요.');
+    if(f) f.innerHTML = 끝남 ? '채점 완료'
+      : (푼===n ? '<b>채점</b>'
+               : '미응답 <b>'+(n-푼)+'문항</b>');
   }
 
   function 안푼곳으로(){
@@ -308,7 +308,7 @@
     if(끝남) return;
     var 푼 = paper.items.filter(function(x){ return picks[x.id]!==undefined; }).length;
     if(!자동 && 푼 < paper.items.length){
-      if(!confirm("아직 "+(paper.items.length-푼)+"문항이 남았어요. 지금 채점할까요?")) return;
+      if(!confirm("미응답 "+(paper.items.length-푼)+"문항 · 채점 후 수정 불가")) return;
     }
     끝남=true;
     var res=E.grade(paper, picks);

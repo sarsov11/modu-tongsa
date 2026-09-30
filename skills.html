@@ -284,7 +284,7 @@
     }
     host.innerHTML=
       '<button class="back" id="back">← 기술 목록</button>'+
-      '<div class="hd" style="padding-top:0"><span class="kicker">'+esc(s.tag)+'</span><h1>'+esc(s.name)+'</h1><p>'+esc(s.one)+'</p></div>'+
+      '<div class="hd" style="padding-top:0"><span class="kicker">'+esc(s.tag)+'</span><h1>'+esc(s.name)+'</h1>'+(s.one?'<p>'+esc(s.one)+'</p>':'')+'</div>'+
       '<div class="sec"><h2>기출 문항</h2><p class="sub">먼저 문제를 봅니다. 아래 단계를 누르면 문제 위에 표시가 붙습니다.</p>'+demo+'</div>'+
       '<div class="sec"><h2>보는 순서</h2><p class="sub">어느 문항에서든 이 차례로 봅니다.</p>'+
       '<div class="steps">'+s.steps.map(function(t){ return '<div class="step"><i></i><p>'+esc(t)+'</p></div>'; }).join("")+'</div></div>'+
@@ -335,7 +335,7 @@
     var r=T.answer?T.answer(q.id,pick):null, ok=r?r.ok:(pick===d.a);
     mark(s.id,q.id,ok);
     document.querySelectorAll("#pstage .opt").forEach(function(b,k){ b.disabled=true; if(k===d.a){ b.dataset.s="ok"; } else if(b===btn) b.dataset.s="no"; });
-    var why=d.x?'<p>'+esc(d.x)+'</p>':'<p>이 문항은 해설이 함께 오지 않았습니다. 보는 순서대로 선지를 하나씩 지워 보세요.</p>';
+    var why=d.x?'<p>'+esc(d.x)+'</p>':'';
     document.getElementById("v").innerHTML='<div class="verdict"><div class="vl"><span class="tag2 '+(ok?"ok":"no")+'">'+(ok?"정답":"오답")+'</span>'+
       '<span style="font-size:14.5px;font-weight:800;color:var(--ink-3)">정답 '+M.charAt(d.a)+(ok?'':', 내가 고른 것 '+M.charAt(pick))+'</span></div>'+why+
       '<div class="gorow"><button class="btn" id="pback">목록으로</button></div></div>';

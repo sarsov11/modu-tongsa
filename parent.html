@@ -189,11 +189,11 @@
     var 막대=단원막대();
 
     var 한줄, 부연;
-    if(s.푼문항===0){ 한줄="아직 시작 전입니다"; 부연="문제를 풀기 시작하면 이 자리에 이번 주 상황이 나옵니다."; }
+    if(s.푼문항===0){ 한줄="시작 전"; 부연=""; }
     else if(s.dday!=null && s.dday<=10){
-      한줄=(s.시험?s.시험.name:"시험")+"까지 "+s.dday+"일, 매일 모의고사를 보는 중입니다";
-      부연="지금은 새로 배우는 때가 아니라 <b>실전으로 굳히는 때</b>입니다. 하루 한 회씩 25문항을 시간 재고 풉니다.";
-    } else { 한줄=꾸준.t; 부연=꾸준.d+" 하루 <b>15분</b>이면 그날 공부가 끝나도록 짜여 있습니다."; }
+      한줄=(s.시험?s.시험.name:"시험")+" D-"+s.dday;
+      부연="모의고사 하루 1회, 25문항";
+    } else { 한줄="연속 "+s.연속+"일"; 부연="최근 7일 중 "+s.최근7+"일"; }
 
     /* 시험까지의 길 — 30일 창. D-10부터 매일 모의고사 */
     var 길="";
@@ -221,13 +221,13 @@
         '<div class="trend">'+최근.map(function(r,i,a){
           var h=Math.max(4,Math.round(r.pct*0.85));
           return '<div class="b'+(i===a.length-1?" now":"")+'" style="height:'+h+'%"><em>'+r.pct+'</em><span>'+(r.day||"").slice(5)+'</span></div>';
-        }).join("")+'</div><p class="note" style="margin-top:28px">최근 '+최근.length+'회차 점수(100점 만점). 한 번의 오르내림보다 <b>흐름</b>을 보시면 됩니다.</p>';
+        }).join("")+'</div><p class="note" style="margin-top:28px">최근 '+최근.length+'회차 점수(100점 만점)</p>';
     } else {
       var 차=(s.주간정답률!=null&&s.정답률!=null)?Math.round(s.주간정답률-s.정답률):null;
       성적='<div class="two">'+
         '<div class="k"><b>'+(s.주간정답률!=null?Math.round(s.주간정답률)+'<small>%</small>':'—')+
-          (차!=null&&차!==0?'<em class="'+(차>0?"up":"dn")+'">'+(차>0?"▲":"▼")+Math.abs(차)+'</em>':'')+'</b><span>이번 주 정답률, '+s.주간문항+'문항</span></div>'+
-        '<div class="k"><b>'+(s.정답률!=null?Math.round(s.정답률)+'<small>%</small>':'—')+'</b><span>전체 정답률, '+s.푼문항+'문항</span></div>'+
+          (차!=null&&차!==0?'<em class="'+(차>0?"up":"dn")+'">'+(차>0?"▲":"▼")+Math.abs(차)+'</em>':'')+'</b><span>이번 주 ('+s.주간문항+'문항)</span></div>'+
+        '<div class="k"><b>'+(s.정답률!=null?Math.round(s.정답률)+'<small>%</small>':'—')+'</b><span>전체 ('+s.푼문항+'문항)</span></div>'+
         '</div><p class="note">'+점수.d.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')+'</p>';
     }
 
@@ -245,11 +245,11 @@
         '<div class="num"><b>'+s.주간문항+'</b><span>이번 주에 푼 문항</span></div>'+
         (s.정답률!=null
           ? '<div class="num'+(s.정답률<55?" warn":"")+'"><b>'+Math.round(s.정답률)+'<small>%</small></b><span>전체 정답률</span></div>'
-          : '<div class="num"><b>—</b><span>정답률 (아직)</span></div>')+
+          : '<div class="num"><b>—</b><span>데이터 부족</span></div>')+
       '</div>'+
 
       '<div class="pcard"><h3>최근 7일</h3><div class="days">'+이레+'</div>'+
-        '<p class="note">색이 찬 날은 15분을 채운 날입니다. 파란 테두리가 오늘입니다.</p></div>'+
+        '<p class="note">15분 달성일 표시</p></div>'+
 
       (막대.length
         ? '<div class="pcard"><h3>단원별 정답률</h3><div class="bars">'+막대.map(function(x,i){
@@ -259,13 +259,10 @@
               '<span class="pc">'+x.pc+'%<small>'+x.n+'문항</small></span></div>'+
               '<div class="tr"><i class="'+cls+'" style="width:'+x.pc+'%"></i></div></div>';
           }).join("")+'</div>'+
-          '<p class="note">푼 문항이 있는 단원만 보여 드립니다. 아직 손대지 않은 단원은 못하는 것이 아니라 <b>아직 안 한 것</b>이라 넣지 않았습니다.</p></div>'
-        : '<div class="pcard"><h3>단원별</h3><p class="say">아직 단원별로 말씀드릴 만큼 풀지 않았습니다.</p></div>')+
+          '<p class="note">푼 문항이 있는 단원만 표시</p></div>'
+        : '<div class="pcard"><h3>단원별</h3><p class="say">데이터 부족</p></div>')+
 
       '<div class="pcard"><h3>성적</h3>'+성적+'</div>'+
-
-      '<div class="todo1"><span class="kick">부모님이 해 주실 수 있는 한 가지</span>'+
-        '<h3>'+esc(할일.t)+'</h3><p>'+할일.d+'</p></div>'+
 
       '<div class="act"><button class="btn" onclick="window.print()">인쇄하기</button>'+
         '<a class="btn ghost" href="index.html">학생 화면으로</a></div>'+
