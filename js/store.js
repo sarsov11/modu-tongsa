@@ -75,11 +75,19 @@
   var S = load();
   function blank() {
     return { v: 1, seeded: false,
-             student: { name: "김서준", grade: "고1" },
+             student: { name: "", grade: "고1" },
              ans: {}, ev: [], exams: null, last: null };
   }
   function load() {
-    try { var raw = localStorage.getItem(KEY); if (raw) return JSON.parse(raw); } catch (e) { }
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) {
+        var v = JSON.parse(raw);
+        /* 옛 판이 심어 둔 가짜 이름(김서준)은 걷는다 — 학생이 직접 적은 이름은 named 표시가 붙는다 */
+        if (v && v.student && v.student.name === "김서준" && !v.student.named && !v.seeded) v.student.name = "";
+        return v;
+      }
+    } catch (e) { }
     return blank();
   }
   var timer = null;
@@ -174,8 +182,16 @@
       leaf: leaf
     };
   }
-  function drill(type, ok) {
-    S.ev.push({ k: "x", d: dayKey(), t: type, ok: !!ok, at: Date.now() }); save();
+  /* 훈련 한 문항. ref 는 문항 id(있으면) — 틀린 훈련 문항을 복습 대기열에 올리려면 id 가 있어야 한다.
+     ref 없이 부르는 화면은 대기열에 못 올린다(훈련 유형만 센다). */
+  function drill(type, ok, ref) {
+    var e = { k: "x", d: dayKey(), t: type, ok: !!ok, at: Date.now() };
+    if (ref != null && ref !== "") {
+      e.r = String(ref);
+      S.dw = S.dw || {};
+      if (ok) delete S.dw[e.r]; else S.dw[e.r] = { t: type, at: e.at };
+    }
+    S.ev.push(e); save();
     tell({ k: "x", t: type, ok: !!ok });
   }
   /* 강의를 본 만큼 적는다. 같은 강의를 이어 보면 분이 쌓인다. */
@@ -233,19 +249,19 @@
 
     /* 아직 적게 했거나, 준킬러가 흔들리면 기초다 */
     if (누적 < 기초누적) return { level: "기초", 준: 준, 킬: 킬, 누적: 누적,
-      why: "아직 " + 누적 + "문항이에요. 준킬러부터 다지고 킬러로 갑니다." };
+      why: "누적 " + 누적 + "문항 → 준킬러부터" };
     if (준.n >= 10 && 준.pct != null && 준.pct < 준킬러선)
       return { level: "기초", 준: 준, 킬: 킬, 누적: 누적,
-        why: "준킬러 정답률이 " + 준.pct + "%예요. 여기가 서면 킬러가 쉬워집니다." };
+        why: "준킬러 정답률 " + 준.pct + "% → 준킬러 먼저" };
 
     /* 킬러를 아직 덜 했거나 흔들리면 도전 단계 */
     if (킬.n < 킬러누적 || (킬.pct != null && 킬.pct < 킬러선))
       return { level: "도전", 준: 준, 킬: 킬, 누적: 누적,
-        why: "준킬러가 섰어요(" + (준.pct == null ? "-" : 준.pct + "%") +
-             "). 이제 킬러를 섞습니다." };
+        why: "준킬러 정답률 " + (준.pct == null ? "-" : 준.pct + "%") +
+             " → 킬러 섞기" };
 
     return { level: "숙련", 준: 준, 킬: 킬, 누적: 누적,
-      why: "킬러 정답률 " + 킬.pct + "%. 약한 갈래만 집어서 갑니다." };
+      why: "킬러 정답률 " + 킬.pct + "% → 약한 갈래만" };
   }
 
   /* ── 무엇을 권할 것인가 ───────────────────────
@@ -346,6 +362,7 @@
     var b = 반응대(kind, ms);
     return b === "빠름" ? 1 : b === "느림" ? 0.6 : 0.85;   // 보통·모름 0.85
   }
+  var 표본하한 = 5;      // 이보다 적게 풀었으면 정답률·탄탄·약함 판정을 내지 않는다
   function 이해도(code) {
     /* 대표님 말대로 "뭘로 하건 문제만 제대로 맞추면 이해도 100" 이다.
        그래서 이해도는 **맞힌 문항 수**로 찬다 — 강의를 봤는지 카드를 봤는지는 안 본다.
@@ -359,8 +376,18 @@
     var ox = S.ox || {};
     for (var id in ox) { var r = ox[id]; if (r && r.leaf === code && r.ok) 맞힘 += 0.4 * 속도무게("ox", r.ms); }
     var 찬것 = Math.min(1, 맞힘 / (목표 || 1));
-    var 정확 = st.pct === null ? 0 : st.pct / 100;
-    return Math.round(찬것 * 100 * (0.55 + 0.45 * 정확));
+    /* ★ 정답률을 그대로 곱한다(2026-10-04 실사용 점검: 11문항 중 2개 맞혀도 이해도 11→39).
+       전에는 0.55 + 0.45×정답률 이라 맞힌 수가 목표만 차면 다 틀려도 절반이 넘었다.
+       O·X 기록(배치 시험 포함)도 정답률에 넣는다 — 틀린 O·X 가 이해도를 안 깎던 것. */
+    var 표 = 이해도표본(code);
+    var 정확 = 표.n ? 표.ok / 표.n : 0;
+    return Math.round(찬것 * 100 * 정확);
+  }
+  /* 그 리프의 정답률 표본 — 문항 + O·X. 표본이 적으면 화면이 「표본 부족」 이라 적는다 */
+  function 이해도표본(code) {
+    var st = leafStat(code), n = st.solved, ok = st.correct, ox = S.ox || {};
+    for (var id in ox) { var r = ox[id]; if (r && r.leaf === code) { n++; if (r.ok) ok++; } }
+    return { n: n, ok: ok, pct: n ? Math.round(ok / n * 100) : null, 부족: n < 표본하한 };
   }
 
   function 오늘의리프(opt) {
@@ -371,9 +398,25 @@
        화면에 없는 것을 오늘 할 일로 주면 학생이 찾아갈 데가 없다. */
     var 보임 = {};
     보이는대영역().forEach(function (r) { 보임[r.code] = 1; });
+    var 학년 = (S.student && S.student.grade) || "고1";
+    var 고른과목 = (학년 === "고2") ? 켠확장팩과목() : {};
+    var 선택켬 = Object.keys(고른과목).length > 0;
+    var 범위켬 = scopeOn() && 학년 !== "고3";   // 고3 은 수능 전 범위 — 예전 학년에서 정한 범위가 남아 있어도 안 쓴다
     LEAVES.forEach(function (l) {
       if (!l.play || !l.play.length) return;
       if (!보임[l.mid.root.code]) return;
+      /* ★ 학년마다 본 문항이 다르다(2026-10-04: 고2·고3 으로 바꿔도 홈 추천이 통합사회 리프였다).
+         고2·고3 은 그 학년의 본 문항이 있는 리프만 오늘 할 곳이 된다 — 고2 는 켠 확장팩 과목, 고3 은 선택과목. */
+      if (학년 !== "고1") {
+        var 본 = 0;
+        for (var qi = 0; qi < l.play.length; qi++) {
+          var qq = l.play[qi];
+          if (!isMain(qq, 학년)) continue;
+          if (선택켬 && 통사표[qq.s]) continue;
+          본++; break;
+        }
+        if (!본) return;
+      }
       var st = leafStat(l.code);
       var u = 이해도(l.code);
       /* ★ 못함과 안댐을 **겹쳐 세지 않는다.** 처음에 안 댄 자리에도 못함 0.55 를
@@ -383,13 +426,18 @@
       var 못함 = st.pct === null ? 0 : (1 - st.pct / 100);
       var 안댐 = st.solved === 0 ? 1.1 : 0;
       var 묵음 = st.lastAt ? Math.min(0.35, (이제 - st.lastAt) / 86400000 / 30 * 0.35) : 0.2;
-      var 범위 = (!scopeOn() || inScopeLeaf(l.code)) ? 1 : 0.25;
+      var 범위 = (!범위켬 || inScopeLeaf(l.code)) ? 1 : 0.25;
       var 잡힘 = u >= 85 ? 0.15 : (u >= 60 ? 0.6 : 1);
       var 양 = Math.min(1, l.play.length / 40);
       var 점수 = (못함 * 2.2 + 안댐 + 묵음) * 범위 * 잡힘 * (0.6 + 0.4 * 양);
       후보.push({ leaf: l, code: l.code, st: st, 이해도: u, 점수: 점수,
                   범위안: 범위 === 1 });
     });
+    /* ★ 시험 범위를 정했으면 범위 안 리프 가운데서만 고른다(가중치로 눌러 두기만 하면 범위가 좁을 때 밖의 것이 뽑혔다) */
+    if (범위켬) {
+      var 안만 = 후보.filter(function (c) { return c.범위안; });
+      if (안만.length) 후보 = 안만;
+    }
     후보.sort(function (a, b) { return b.점수 - a.점수; });
     if (opt.전부) return 후보;
     return 후보[0] || null;
@@ -401,16 +449,16 @@
     var st = c.st;
     if (st.solved === 0)
       return c.범위안
-        ? "시험 범위인데 아직 손을 안 댄 자리예요. 여기부터 열면 점수가 가장 많이 움직여요."
-        : "아직 손을 안 댄 자리예요. 문항이 " + st.play + "개 있어요.";
+        ? "시험 범위, 시작 전"
+        : "시작 전, 문항 " + st.play + "개";
     if (st.pct !== null && st.pct < 60)
-      return "여기서 " + (st.solved - st.correct) + "번 틀렸어요"
-           + (c.범위안 ? " — 시험 범위이기도 하고요." : ".");
+      return "여기서 " + (st.solved - st.correct) + "번 틀림"
+           + (c.범위안 ? ", 시험 범위" : "");
     if (st.lastAt && (Date.now() - st.lastAt) > 12 * 86400000)
       return "마지막으로 푼 지 "
-           + Math.round((Date.now() - st.lastAt) / 86400000) + "일 됐어요. 다시 볼 때예요.";
-    return c.범위안 ? "시험 범위 안에서 지금 가장 값이 큰 자리예요."
-                    : "지금 가장 값이 큰 자리예요.";
+           + Math.round((Date.now() - st.lastAt) / 86400000) + "일";
+    return c.범위안 ? "시험 범위 안 우선순위 1위"
+                    : "우선순위 1위";
   }
 
   function agg(list) {
@@ -529,22 +577,23 @@
          고3 은 공부 회로를 수능 실전으로 통째로 바꾼다. 하루 몫 비율은 js/trend.js 의 GRADE_MIX 가 같은 뜻으로 갈린다. */
     "고1": { key: "고1", subject: "통합사회 1·2",
       re: "REMIND", reKo: "내신 대비형",
-      reSay: "학교에서 배운 개념을 시험 전에 다시 떠올려요.",
-      say: "학교 진도에 맞춰 개념을 다지고, 내신 시험을 겨눕니다.",
+      reSay: "배운 개념 → 시험 전 복습",
+      say: "학교 진도 + 내신 대비",
       focus: "내신", pool: "통합사회 학평", ddayName: "내신 시험",
       sell: { kind: "book", id: "naesin", name: "범위별 내신 모의고사",
               say: "학교에서 나간 범위만 잘라 만든 실전 대비 모의고사" } },
-    "고2": { key: "고2", subject: "통합사회 되감기, 수능 전환",
-      re: "REWIND", reKo: "복습, 수능 전환형",
-      reSay: "고1에 배운 통합사회를 되감아, 수능 문항 꼴로 바꿔 풀어요.",
-      say: "통합사회는 고1에 다 배웠습니다. 잊은 곳을 되감고 수능 꼴로 바꿔 풉니다.",
-      focus: "수능 전환", pool: "통합사회 학평, 예비시행", ddayName: "모의고사",
+    /* 고2 는 통합사회를 팔지 않는다(작업일지 3절 「고2에게 통합사회 팔기 ✗」) — 듣는 선택과목이 축이다(2026-10-04) */
+    "고2": { key: "고2", subject: "사회과 선택과목",
+      re: "REWIND", reKo: "선택과목형",
+      reSay: "듣는 선택과목 기출 → 모의고사",
+      say: "선택과목 확장팩 + 기출 풀이",
+      focus: "선택과목", pool: "선택과목 기출", ddayName: "모의고사",
       sell: { kind: "pack", id: "elective", name: "선택과목 확장팩",
               say: "듣는 과목만 골라 저렴하게 붙이는 확장팩" } },
     "고3": { key: "고3", subject: "수능 사회탐구",
       re: "REWIRE", reKo: "수능 완전 대비형",
-      reSay: "공부 방식을 수능 실전으로 통째로 바꿔요.",
-      say: "기출을 대량으로 돌립니다. 남은 날짜에 맞춰 분량을 잡아 드립니다.",
+      reSay: "수능 실전 전환",
+      say: "기출 대량 풀이, 남은 날짜 기준 분량",
       focus: "수능", pool: "평가원·교육청 기출", ddayName: "수능",
       sell: { kind: "book", id: "silmo", name: "실전 모의고사",
               say: "시간을 재고 푸는 수능 꼴 실전 세트" } }
@@ -722,16 +771,16 @@
       var m3 = 다음모의("고3");
       var su = suneungGuess(), 공식수능 = { "2026-11-19": 1 };   // 교육부 발표 시행일(2027학년도 수능 2026-11-19)
       return [{ id: "su", name: "수능", date: su, auto: 공식수능[su] ? 1 : undefined,
-                note: 공식수능[su] ? "공식" : "예상일이에요. 확정되면 눌러서 바꿔 주세요." },
+                note: 공식수능[su] ? "공식" : "예상일" },
               { id: "mo", name: m3.name, date: m3.date, auto: 1,
-                note: m3.date ? "전국 공통 시행일" : "시행일을 넣으면 함께 표시됩니다" }];
+                note: m3.date ? "전국 공통 시행일" : "시행일 미정" }];
     }
     if (grade === "고2") {
       var m2 = 다음모의("고2");
       return [{ id: "mo", name: m2.name, date: m2.date, auto: 1,
-                note: m2.date ? "전국 공통 시행일" : "시행일을 넣으면 함께 표시됩니다" },
+                note: m2.date ? "전국 공통 시행일" : "시행일 미정" },
               { id: "su", name: "수능", date: 수능예상(1),
-                note: "고3 때 보는 수능 예상일이에요." }];
+                note: "고3 수능 예상일" }];
     }
     /* 처음 온 학생에게는 남의 날짜다. 첫 화면에서 제일 큰 숫자가 남의 것이면 안 된다.
        — 눌러서 고치라고 대놓고 말한다. */
@@ -739,10 +788,10 @@
        2학기에 통합사회 2 를 배운다 — 같은 "중간고사"라도 범위가 통째로 다르므로
        시험 하나에 범위 하나가 붙으려면 학기가 있어야 한다.
        날짜는 지난 학기 것을 비워 둔다 — 남의 날짜를 큰 숫자로 띄우지 않는다. */
-    return [{ id: "s1mid", name: "1학기 중간고사", date: "", note: "눌러서 내 시험일로 바꾸세요" },
-            { id: "s1fin", name: "1학기 기말고사", date: "", note: "눌러서 내 시험일로 바꾸세요" },
-            { id: "s2mid", name: "2학기 중간고사", date: plusDays(18), note: "눌러서 내 시험일로 바꾸세요" },
-            { id: "s2fin", name: "2학기 기말고사", date: plusDays(74), note: "눌러서 내 시험일로 바꾸세요" }];
+    return [{ id: "s1mid", name: "1학기 중간고사", date: "", note: "내 시험일 입력" },
+            { id: "s1fin", name: "1학기 기말고사", date: "", note: "내 시험일 입력" },
+            { id: "s2mid", name: "2학기 중간고사", date: plusDays(18), note: "내 시험일 입력" },
+            { id: "s2fin", name: "2학기 기말고사", date: plusDays(74), note: "내 시험일 입력" }];
   }
 
   /* 옛 판에서 넘어온 학생 — 시험이 mid·fin 둘뿐이었다. 2학기 것으로 옮기고
@@ -757,7 +806,7 @@
     list.forEach(function (e) { 있음[e.id] = 1; });
     [["s1mid", "1학기 중간고사"], ["s1fin", "1학기 기말고사"]].forEach(function (x) {
       if (!있음[x[0]]) {
-        list.unshift({ id: x[0], name: x[1], date: "", note: "눌러서 내 시험일로 바꾸세요" });
+        list.unshift({ id: x[0], name: x[1], date: "", note: "내 시험일 입력" });
         바뀜 = true;
       }
     });
@@ -888,6 +937,18 @@
     });
     flush();
   }
+  /* 첫 설정에서 고른 시험 — 고른 시험에 날짜를 넣고, 날짜를 안 넣어 둔 기본 일정(「내 시험일 입력」)에 미리 들어 있던
+     남의 날짜는 비운다. 안 그러면 1학기 기말을 골라도 가장 가까운 2학기 중간고사가 다음 시험으로 남는다(2026-10-04). */
+  function chooseExam(id, date) {
+    exams().forEach(function (e) {
+      if (e.id === id) return;
+      if (e.date && /내 시험일 입력/.test(e.note || "")) e.date = "";
+    });
+    var 지금 = exams().filter(function (e) { return e.id === id; })[0];
+    if (!(지금 && 지금.date === date && !/내 시험일 입력/.test(지금.note || ""))) setExam(id, { date: date });   // 공식·예상 일정 그대로면 건드리지 않는다
+    S.examPick = id;
+    flush();
+  }
   function addExam(name, date) {
     exams().push({ id: "e" + Date.now(), name: name || "새 일정", date: date || "", note: "직접 입력한 일정" });
     flush();
@@ -919,8 +980,12 @@
     var weak = LEAVES.map(function (l) { return leafStat(l.code); })
       .filter(function (s) { return s.solved >= 2 && s.pct !== null && s.pct < 65; })
       .sort(function (a, b) { return a.pct - b.pct; });
+    var min = 0; keys.forEach(function (k) { min += spentOn(k).min; });
+    /* ★ solved·solvedOk = 문제풀이 + 훈련(킬러 훈련·O·X·개념어·진단)을 한데 센 것.
+       홈·결과창·학부모 리포트가 이 숫자 하나를 쓴다. answers·correct·pct 는 문제풀이만(정답률 기준). */
     return { date: dk, answers: ans, correct: ok, pct: ans ? Math.round(ok / ans * 100) : null,
-             drills: drills, drillOk: dok, leaves: Object.keys(leaves), leafMap: leaves,
+             drills: drills, drillOk: dok, solved: ans + drills, solvedOk: ok + dok, min: min,
+             leaves: Object.keys(leaves), leafMap: leaves,
              wrong: wrong, weak: weak.slice(0, 3), streak: streak(dk) };
   }
   function report(dk) { return aggregate([dk || dayKey()]); }
@@ -930,6 +995,14 @@
     var seen = {}; S.ev.forEach(function (e) { seen[e.d] = 1; });
     r.kind = kind; r.days = n; r.from = keys[0]; r.to = keys[keys.length - 1];
     r.activeDays = keys.filter(function (k) { return seen[k]; }).length;
+    return r;
+  }
+  /* 처음부터 지금까지 — rangeReport 와 같은 aggregate 라 첫날에는 이번 주와 숫자가 같다 */
+  function totalReport() {
+    var seen = {}; S.ev.forEach(function (e) { if (e.d) seen[e.d] = 1; });
+    var keys = Object.keys(seen).sort(); if (!keys.length) keys = [dayKey()];
+    var r = aggregate(keys); r.kind = "all"; r.days = keys.length; r.from = keys[0]; r.to = keys[keys.length - 1];
+    r.activeDays = keys.length;
     return r;
   }
   function streak(dk) {
@@ -943,9 +1016,9 @@
     var out = [], d = new Date(dk + "T12:00:00");
     d.setDate(d.getDate() - 6);
     for (var i = 0; i < 7; i++) {
-      var k = dayKey(d), a = 0, o = 0;
-      S.ev.forEach(function (e) { if (e.d === k && e.k === "a") { a++; if (e.ok) o++; } });
-      out.push({ d: k, ans: a, ok: o,
+      var k = dayKey(d), a = 0, o = 0, x = 0;
+      S.ev.forEach(function (e) { if (e.d === k && e.k === "a") { a++; if (e.ok) o++; } else if (e.d === k && e.k === "x") x++; });
+      out.push({ d: k, ans: a, ok: o, solved: a + x, min: spentOn(k).min,
                  label: ["일", "월", "화", "수", "목", "금", "토"][new Date(k + "T12:00:00").getDay()] });
       d.setDate(d.getDate() + 1);
     }
@@ -957,7 +1030,7 @@
      ══════════════════════════════════════════════ */
   function seedDemo(force) {
     if (S.seeded && !force) return;
-    S = blank(); S.seeded = true;
+    S = blank(); S.seeded = true; S.student.name = "김서준";   /* 시연 표본만 이름이 있다 */
     var now = new Date();
     /* 핵심 등급 리프부터 앞에서 순서대로, 최근일수록 최근 날짜 */
     var order = LEAVES.filter(function (l) { return l.play.length; })
@@ -979,17 +1052,6 @@
       S.last = { leaf: l.code, at: d.getTime() };
     });
     flush();
-  }
-
-  /* ── 백엔드 (있으면) ──────────────────────────── */
-  var BASE = window.TERRA_API ||
-    (location.hostname === "localhost" || location.hostname === "127.0.0.1" ? "http://localhost:4100" : "/api");
-  var alive = null;
-  function available() {
-    if (alive !== null) return Promise.resolve(alive);
-    if (!window.fetch) { alive = false; return Promise.resolve(false); }
-    return fetch(BASE + "/health/live", { credentials: "include" })
-      .then(function (r) { alive = r.ok; return alive; }).catch(function () { alive = false; return false; });
   }
 
   /* ── 공통 네비 ────────────────────────────────── */
@@ -1043,8 +1105,9 @@
   var SPACING = [3, 7, 21];           // 틀린 뒤 며칠에 되돌릴 것인가
   var CAP = 60, FLOOR = 10;           // 하루 상한·하한
 
+  /* 복습 대기 — 틀린 문항은 **바로** 대기열에 든다(2026-10-04: 9개 틀렸는데 홈 「복습할 문항 0개」).
+     전에는 틀린 지 3일이 지나야 들어갔다. step 은 지난 날 수에 따른 간격(0=오늘 오답, 1·2·3=3·7·21일 경과). */
   function dueList() {
-    /* 되돌릴 때가 된 문항 — 틀린 지 3·7·21일이 지났고 그 뒤로 안 푼 것 */
     var out = [], now = Date.now();
     for (var qid in S.ans) {
       var a = S.ans[qid];
@@ -1052,13 +1115,21 @@
       var days = (now - (a.at || now)) / DAY;
       var step = 0;
       for (var i = 0; i < SPACING.length; i++) if (days >= SPACING[i]) step = i + 1;
-      if (!step) continue;
       var q = QOF[qid];
       if (!q) continue;
       out.push({ q: qid, leaf: q.leaf, days: Math.floor(days), step: step });
     }
     out.sort(function (x, y) { return y.days - x.days; });
     return out;
+  }
+  /* 문제풀이 말고 다른 곳(개념 체크 O·X · 개념어 · 진단 · 킬러 훈련)에서 틀린 것까지 한데 센다.
+     홈 「복습할 문항」·학부모 리포트가 이 하나를 쓴다. */
+  function 복습대기() {
+    var q = dueList().length, ox = 0, kw = 0, dr = 0, i;
+    var o = S.ox || {}; for (i in o) if (o[i] && o[i].ok === false) ox++;
+    var k = S.kw || {}; for (i in k) if (k[i] && k[i].ok === false) kw++;
+    var d = S.dw || {}; for (i in d) dr++;
+    return { q: q, ox: ox, kw: kw, drill: dr, total: q + ox + kw + dr };
   }
 
   function quota() {
@@ -1088,9 +1159,8 @@
     if (leaves.length) {
       var l0 = BY[leaves[0]];
       steps.push({ kind: "due", n: byLeaf[leaves[0]].length, leaf: leaves[0],
-        title: "복습할 때가 됐어요",
-        say: (l0 ? l0.name : leaves[0]) + " 에서 틀린 " + byLeaf[leaves[0]].length +
-             "문항이 다시 나올 차례예요.",
+        title: "복습",
+        say: (l0 ? l0.name : leaves[0]) + " 오답 " + byLeaf[leaves[0]].length + "문항",
         href: "study.html?leaf=" + leaves[0] + "&mode=wrong", cta: "복습하기" });
     }
     if (S.last && S.last.leaf && BY[S.last.leaf]) {
@@ -1098,7 +1168,7 @@
       if (ls.solved < ls.play)
         steps.push({ kind: "cont", leaf: S.last.leaf,
           title: "보던 데를 마저",
-          say: BY[S.last.leaf].name + " — " + ls.solved + " / " + ls.play + "문항까지 왔어요.",
+          say: BY[S.last.leaf].name + ", " + ls.solved + " / " + ls.play + "문항",
           href: "study.html?leaf=" + S.last.leaf, cta: "이어서 풀기" });
     }
     var fresh = LEAVES.filter(function (l) {
@@ -1107,14 +1177,14 @@
     if (fresh)
       steps.push({ kind: "new", leaf: fresh.code,
         title: "처음 배우는 개념",
-        say: fresh.name + " — 아직 손 안 댄 곳 가운데 시험에서 제일 무겁습니다.",
+        say: fresh.name + ", 시작 전, 출제 비중 최대",
         href: "study.html?leaf=" + fresh.code, cta: "시작하기" });
     var dr = drillStat();
     steps.push({ kind: "drill",
       title: "하루 한 세트",
-      say: dr.n ? "Killer Drill을 " + dr.n + "문항 풀었어요. 오늘 한 세트 더?"
-                : "킬러 유형은 하루 한 세트씩만 해도 감이 붙어요.",
-      href: "drill.html", cta: "Killer Drill" });
+      say: dr.n ? "킬러 훈련 " + dr.n + "문항 완료, 한 세트 더"
+                : "하루 한 세트",
+      href: "drill.html", cta: "킬러 훈련" });
     return { quota: q, steps: steps, due: due.length };
   }
 
@@ -1138,17 +1208,28 @@
     return v;
   }
 
-  /* 그날 실제로 쓴 분 — 문항·트레이닝·강의를 합친다 */
+  /* 그날 실제로 쓴 분 — 문항·트레이닝은 **기록된 시각의 간격**으로 재고, 강의는 본 분을 더한다.
+     (2026-10-04: 드릴 세트를 몇 초에 끝내도 +3~4분씩 쌓였다 — 문항 수에 고정 초를 곱했기 때문.)
+     · 앞 기록과 간격이 2분 이하면 그 간격만큼(해설을 읽은 시간 포함), 길면 끊긴 것으로 보고 한 문항 몫 25초만
+     · 한 간격은 2분을 넘기지 않는다(자리를 비운 시간이 공부로 잡히지 않게) */
+  var GAP_CAP = 120000, FIRST_MS = 25000;
   function spentOn(dk) {
-    var q = 0, x = 0, l = 0;
+    var q = 0, x = 0, l = 0, ts = [], ms = 0;
     S.ev.forEach(function (e) {
       if (e.d !== dk) return;
-      if (e.k === "a") q++;
-      else if (e.k === "x") x++;
+      if (e.k === "a") { q++; ts.push(e); }
+      else if (e.k === "x") { x++; ts.push(e); }
       else if (e.k === "l") l += (e.m || 0);
     });
-    return { min: Math.round((q * SEC_PER_Q + x * 12) / 60) + l,
-             q: q, drill: x, lec: l };
+    ts.sort(function (a, b) { return (a.at || 0) - (b.at || 0); });
+    var prev = null;
+    ts.forEach(function (e) {
+      var gap = prev == null ? null : (e.at || 0) - (prev.at || 0);
+      if (gap != null && gap >= 0 && gap <= GAP_CAP) ms += gap;
+      else ms += Math.min(e.ms || FIRST_MS, 90000);
+      prev = e;
+    });
+    return { min: Math.round(ms / 60000) + l, q: q, drill: x, lec: l, solved: q + x };
   }
 
   /* 오늘의 15분을 어떻게 채울 것인가 */
@@ -1156,6 +1237,13 @@
      시험 10일 전부터는 매일 한 회씩 실전으로 푼다.
      그 전에는 15분씩 약점을 채운다. 경계는 대표님이 정한 10일. */
   var 실전시작일 = 10;
+
+  /* 기록이 있는 날이 며칠인가 — 「이번 주」 같은 말을 해도 되는지 가른다 */
+  function 기록일수() {
+    var seen = {}, n = 0;
+    S.ev.forEach(function (e) { if (e.d && !seen[e.d]) { seen[e.d] = 1; n++; } });
+    return n;
+  }
 
   function 다가온시험() {
     var best = null;
@@ -1320,8 +1408,8 @@
           title: XM.exam.name + " " + XM.label,
           say: "오늘의 모의고사 25문항",
           why: XM.days <= 3
-                 ? "시험이 코앞이에요. 실전처럼 한 번에 풀어 보세요."
-                 : "열흘 남았으니 매일 한 회씩. 오늘 틀린 곳이 내일 할 일이 됩니다.",
+                 ? "D-3 이내 → 실전처럼 한 번에"
+                 : "D-10부터 매일 1회",
           href: "exam.html", cta: "시험 보기" });
         left -= Math.min(left, 분);
       } else if (지난회차 && (지난회차.wrong || []).length) {
@@ -1331,7 +1419,7 @@
         items.push({ kind: "exwrong", min: 분2, n: 틀린수,
           title: "오늘 시험에서 틀린 것",
           say: 틀린수 + "문항 다시 보기",
-          why: "채점하고 덮으면 남는 게 없어요. 틀린 것만 다시 보는 게 제일 빠릅니다.",
+          why: "오답 모아풀기",
           href: "exam.html", cta: "다시 보기" });
         left -= 분2;
       }
@@ -1353,15 +1441,15 @@
         items.push({ kind: "after", min: 분3, n: 틀,
           title: XM.exam.name + " 오답 다시 보기",
           say: 틀 + "문항 되짚기",
-          why: "시험이 끝난 다음이 가장 잘 남습니다. 답을 아직 기억할 때 보는 게 빠릅니다.",
+          why: "",
           href: "exam.html", cta: "되짚기" });
         left -= 분3;
       }
       if (XM.next) {
         items.push({ kind: "nextscope", min: 1,
           title: "다음은 " + XM.next.name,
-          say: "시험 범위를 새로 정할 때예요",
-          why: "범위를 그대로 두면 이미 끝난 단원을 계속 풉니다.",
+          say: "시험 범위 새로 정하기",
+          why: "",
           href: "settings.html#scope", cta: "범위 정하기" });
         left -= 1;
       }
@@ -1369,12 +1457,14 @@
 
     /* ★ 0-3) 주간 점검 — 일요일에 그 주 가장 약한 영역 하나를 묶어서 본다.
        매일 조금씩만 하면 약점이 정리되지 않는다. */
-    if (주간점검날() && !주간점검함(dk) && XM.mode !== "real") {
+    /* ★ 첫날에는 내지 않는다 — 기록이 사흘 치 쌓이기 전에는 「이번 주」 라 할 것이 없다(2026-10-04: 진단 직후 「이번 주 점검, 정답률 0%」).
+       영역마다 푼 문항이 표본하한을 넘어야 그 영역의 정답률로 약한 곳을 가린다. */
+    if (주간점검날() && !주간점검함(dk) && XM.mode !== "real" && 기록일수() >= 3) {
       var 약한영역 = null, 낮은값 = 2;
       ROOTS.forEach(function (r) {
         if (scopeOn() && !inScope(r.code)) return;
         var st = rootStat(r.code);
-        if (!st || !st.solved) return;
+        if (!st || st.solved < 표본하한) return;
         var p = st.correct / st.solved;
         if (p < 낮은값) { 낮은값 = p; 약한영역 = r; }
       });
@@ -1383,8 +1473,7 @@
         items.push({ kind: "weekly", min: 주분, root: 약한영역.code,
           title: "이번 주 점검",
           say: 약한영역.name + " 집중 정리",
-          why: "이번 주 가장 약한 곳이에요(정답률 " + Math.round(낮은값 * 100) + "%). " +
-               "한 주에 한 번은 묶어서 봐야 정리됩니다.",
+          why: "이번 주 최저 정답률 " + Math.round(낮은값 * 100) + "%",
           href: "study.html?root=" + 약한영역.code, cta: "정리하기" });
         left -= 주분;
       }
@@ -1395,9 +1484,9 @@
     var 낡 = 범위낡음();
     if (낡 && XM.mode !== "real") {
       items.push({ kind: "scopeold", min: 1,
-        title: "시험 범위를 다시 볼 때",
-        say: 낡.days + "일째 그대로예요",
-        why: "학교 진도는 나갔을 텐데 범위가 그대로면 안 배운 데를 풀게 됩니다.",
+        title: "시험 범위 점검",
+        say: 낡.days + "일째 그대로",
+        why: "",
         href: "settings.html#scope", cta: "범위 고치기" });
       left -= 1;
     }
@@ -1408,20 +1497,20 @@
       items.push({ kind: "vacation", min: 1, stage: XM.stage,
         title: XM.stage === "보충" ? "지난 학기 복습"
                                    : "다음 학기 예습",
-        say: XM.stage === "보충" ? "약한 곳부터 복습합니다"
-                                 : "다음 단원을 미리 훑습니다",
-        why: XM.stage === "보충"
-          ? "진도 압박이 없는 유일한 시기예요. 밀린 것을 지금 메웁니다."
-          : "지금 한 번 훑어 두면 개학 뒤 진도가 쉬워집니다.",
+        say: XM.stage === "보충" ? "약한 곳부터 복습"
+                                 : "다음 단원 예습",
+        why: "",
         href: "skilltree.html", cta: "고르기" });
       left -= 1;
     }
 
     /* 1) 되돌리기 — 학년별 몫만큼 */
-    if (due.length) {
+    var 범위안오답 = due.filter(function (d) { return !scopeOn() || 범위안(d.leaf); });
+    if (범위안오답.length) {
       var byLeaf = {};
-      due.forEach(function (d) { (byLeaf[d.leaf] = byLeaf[d.leaf] || []).push(d.q); });
-      var 리프들 = 범위로걸러(Object.keys(byLeaf), function (x) { return x; });
+      범위안오답.forEach(function (d) { (byLeaf[d.leaf] = byLeaf[d.leaf] || []).push(d.q); });
+      /* 범위를 정했으면 범위 안에서 틀린 것만 — 범위 밖 오답이 하루 루틴 맨 앞에 남았다(2026-10-04) */
+      var 리프들 = Object.keys(byLeaf).filter(function (x) { return !scopeOn() || 범위안(x); });
       var top = 리프들.sort(function (a, b) {
         return byLeaf[b].length - byLeaf[a].length; })[0];
       /* ★ 되돌리기 몫도 학년마다 다르다 — 고3은 '틀린 걸 안 보는 것' 으로 실패한다 */
@@ -1430,10 +1519,10 @@
       var take = Math.min(byLeaf[top].length, Math.floor(due분 * 60 / SEC_PER_Q));
       var m = Math.max(1, Math.round(take * SEC_PER_Q / 60));
       items.push({ kind: "due", min: m, n: take, leaf: top,
-        title: "틀린 문제 다시 풀기", lead: "틀린 문제부터 다시 풀어요",
+        title: "틀린 문제 다시 풀기", lead: "오답 모아풀기",
         say: 부제괄호(BY[top] ? BY[top].name : top) + "에서 틀렸던 " + take + "문항",
         sayShort: String(BY[top] ? BY[top].name : top).split(" — ")[0] + " " + take + "문항",
-        why: due[0].days + "일 전에 틀린 문제예요. 잊기 전에 다시 풀어요.",
+        why: 범위안오답[0].days ? 범위안오답[0].days + "일 전 오답" : "오늘 오답",
         href: "study.html?leaf=" + top + "&mode=wrong", cta: "다시 풀기" });
       left -= m;
     }
@@ -1456,6 +1545,8 @@
     }
     /* 시험 범위를 정했으면 그 범위의 강의만 권한다 */
     cand = 범위로걸러(cand, function (c) { return c.v.code; });
+    /* 강의·개념 카드는 통합사회 것이다 — 선택과목을 켠 고2 에게는 내지 않는다(고2 는 통합사회를 팔지 않는다) */
+    if (((S.student && S.student.grade) || "고1") === "고2" && Object.keys(켠확장팩과목()).length) cand = [];
     /* 보던 것이 있으면 그것부터, 없으면 무게 큰 것부터 */
     cand.sort(function (a, b) {
       if ((b.seen > 0) !== (a.seen > 0)) return b.seen > 0 ? 1 : -1;
@@ -1478,7 +1569,7 @@
       items.push({ kind: "lec", min: part, code: c.v.code, mid: c.mid,
         title: 강의제목,
         say: c.title,
-        why: c.seen ? ("전체 " + c.len + "분 가운데 " + c.seen + "분까지 봤어요.")
+        why: c.seen ? ("전체 " + c.len + "분 중 " + c.seen + "분 시청")
                     : (c.sum ? c.sum
                              : c.root + ", " + c.midName + ", " + c.v.grade) +
                       (c.rest > part ? (", 전체 " + c.len + "분 중 오늘 " + part + "분") : ""),
@@ -1502,7 +1593,8 @@
     /* 카드 몫은 강의 몫과 같다 — 학년마다 다르다(고1 절반 · 고2 되짚기 · 고3 0).
        고정 4분으로 두면 고1의 문항 시간이 고2보다 길어져 학년 차이가 뒤집힌다(검산기가 잡았다). */
     var CARD몫 = Math.max(0, Math.min(left - DRILL_MIN, lec몫));
-    if (!강의봄 && window.CARDS && CARD몫 >= 3 && XM.mode !== "real") {
+    var 선택과목고2 = (((S.student && S.student.grade) || "고1") === "고2" && Object.keys(켠확장팩과목()).length > 0);
+    if (!강의봄 && !선택과목고2 && window.CARDS && CARD몫 >= 3 && XM.mode !== "real") {
       var 카드후보 = 오늘의리프({ 전부: true }).filter(function (c) {
         return window.CARDS[c.code] && window.CARDS[c.code].cards.length;
       });
@@ -1512,14 +1604,16 @@
         items.push({ kind: "card", min: CARD몫, leaf: cc.code, n: 장,
           title: 학년3 === "고1" ? "오늘 개념 읽기" : "개념 다시 읽기",
           say: cc.st.name + " " + 장 + "개",
-          why: "읽고 바로 확인해요.",
+          why: "읽고 바로 O·X",
           href: "card.html?leaf=" + cc.code, cta: "개념 학습" });   /* 「읽기 7분」 → 「개념 학습」(2026-09-19 대표님) */
         left -= CARD몫; 배움 = true;
       }
     }
 
     var OX몫 = 3;
-    if (left >= OX몫 && (배움 || !due.length) && XM.mode !== "real") {
+    /* O·X 은행은 고1 통합사회 학평에서 뽑은 것이다 — 고2·고3 에게는 내지 않는다(2026-10-04: 고3 도 고1 O·X 가 나왔다) */
+    var 고1인가 = (((S.student && S.student.grade) || "고1") === "고1");
+    if (left >= OX몫 && 고1인가 && (배움 || !due.length) && XM.mode !== "real") {
       /* ★ 홈은 **개수만** 알면 된다 — "여덟 문장이 되는가".
          그 한 가지 때문에 800KB 짜리 전문을 첫 화면에 싣지 않는다.
          `js/oxindex.js` 가 단원별 개수표(0.4KB)다. 전문이 이미 실려 있으면
@@ -1541,12 +1635,12 @@
       })();
       if (몇개 >= 8) {
         items.push({ kind: "ox", min: OX몫, n: 8,
-          title: 배움 ? "O·X로 바로 확인" : "개념 체크",
+          title: 배움 ? "문제로 확인" : "개념 체크",
           say: "O·X 여덟 문장",
           why: 배움
-            ? (강의봄 ? "방금 본 강의를 확인하는 자리예요. 지금이 제일 잘 남습니다."
-                      : "방금 읽은 개념을 O·X로 확인해요.")
-            : "얼마나 확신하는지도 함께 고르면, 틀렸을 때 무엇을 할지 바로 알려 드려요.",
+            ? (강의봄 ? "강의 직후 확인"
+                      : "읽은 개념 → O·X")
+            : "확신도와 함께",
           href: "ox.html", cta: "개념 체크" });
         left -= OX몫;
       }
@@ -1568,21 +1662,21 @@
         /* ★ **왜 이것이 나왔는지** 말해 준다. 수준과 약점으로 골랐으므로
            "안 해 본 것" 한 마디로는 설명이 안 된다 — 학생이 납득해야 한다. */
         var 까닭 = st9.n === 0
-          ? "아직 안 해 본 Killer Drill이에요."
+          ? "처음 하는 킬러 훈련"
           : (st9.pct != null && st9.pct < 60
-              ? "지난번 정답률이 " + st9.pct + "%였어요. 여기가 지금 제일 약합니다."
-              : "해 둔 지 좀 됐어요. 잊기 전에 한 번 돌립니다.");
+              ? "지난 정답률 " + st9.pct + "%, 최저"
+              : "오래전에 푼 훈련");
         items.push({ kind: "drill", min: DRILL_MIN, drill: 하나.id,
-          title: scopeOn() ? (내신킬러 ? "내신 Killer Drill" : "시험 범위 Killer Drill")
-                           : ((((S.student && S.student.grade) || "고1") === "고1") ? "오늘의 Killer Drill" : (골라.level === "기초" ? "준킬러부터" : "오늘의 킬러")),   /* 내신 대비(고1)에서 킬러·준킬러라는 말은 어색하다(2026-09-19 대표님) */
+          title: scopeOn() ? (내신킬러 ? "범위 킬러" : "범위 킬러 훈련")
+                           : ((((S.student && S.student.grade) || "고1") === "고1") ? "오늘의 킬러 훈련" : (골라.level === "기초" ? "준킬러부터" : "오늘의 킬러")),   /* 내신 대비(고1)에서 킬러·준킬러라는 말은 어색하다(2026-09-19 대표님) */
           say: 내신킬러 ? "시험 범위에서 헷갈리는 문항" : 하나.name + " 한 세트",
-          why: 내신킬러 ? "헷갈린 문항 모아풀기" : ((((S.student && S.student.grade) || "고1") === "고1") ? "" : (하나.tier ? "준킬러예요. " : "킬러예요. ")) + 까닭,
-          href: 내신킬러 ? "naeshin.html" : "drill.html?type=" + 하나.id, cta: "Killer Drill" });
+          why: 내신킬러 ? "헷갈린 문항 모아풀기" : ((((S.student && S.student.grade) || "고1") === "고1") ? "" : (하나.tier ? "준킬러. " : "킬러. ")) + 까닭,
+          href: 내신킬러 ? "naeshin.html" : "drill.html?type=" + 하나.id, cta: 내신킬러 ? "범위 킬러" : "킬러 훈련" });
       } else {
         items.push({ kind: "drill", min: DRILL_MIN,
-          title: "마무리 한 세트", say: "Killer Drill 5문제",
-          why: "짧게 매일 하는 게 몰아서 하는 것보다 오래 남아요.",
-          href: "drill.html", cta: "Killer Drill" });
+          title: "마무리 한 세트", say: "킬러 훈련 5문제",
+          why: "",
+          href: "drill.html", cta: "킬러 훈련" });
       }
       left -= DRILL_MIN;
     }
@@ -1593,6 +1687,9 @@
          새 단원 61문항을 시키는 것은 나쁜 조언이다. */
     if (left >= 2) {
       var tgt = null, 왜 = "", 제목 = "";
+      /* 그 학년 지도에 보이는 단원만 — 고1·고2 에게 사상가(K) 축이 「처음 배우는 개념」 으로 나갔다(2026-10-04) */
+      var 허용 = {}; 오늘의리프({ 전부: true }).forEach(function (c) { 허용[c.code] = 1; });
+      var 학년4 = (S.student && S.student.grade) || "고1";
       if (XM.mode === "real") {
         /* 범위 안에서 이미 풀어 봤고 정답률이 낮은 곳 — 굳힐 자리다 */
         var 약한 = 범위로걸러(LEAVES.filter(function (l) {
@@ -1602,21 +1699,20 @@
           .sort(function (a, b) { return leafStat(a.code).pct - leafStat(b.code).pct; })[0];
         tgt = 약한;
         제목 = "약한 곳 굳히기";
-        왜 = 약한 ? ("여기 정답률이 " + leafStat(약한.code).pct + "%예요. " +
-                    "시험 전에는 새로 벌이는 것보다 이걸 메우는 게 빠릅니다.") : "";
+        왜 = 약한 ? ("정답률 " + leafStat(약한.code).pct + "%") : "";
         if (!tgt && S.last && BY[S.last.leaf]) {
           tgt = BY[S.last.leaf]; 제목 = "보던 데 마저";
-          왜 = "시험이 가까우니 새로 열지 말고 보던 것부터 끝냅시다.";
+          왜 = "시험 임박 → 보던 것부터";
         }
       } else {
         var fresh = 범위로걸러(LEAVES.filter(function (l) {
-          return leafStat(l.code).solved === 0 && l.play.length >= 5;
+          return 허용[l.code] && leafStat(l.code).solved === 0 && l.play.length >= 5;
         }), function (l) { return l.code; })
           .sort(function (a, b) { return (b.vol || 0) - (a.vol || 0); })[0];
         tgt = fresh || (S.last && BY[S.last.leaf]);
-        제목 = fresh ? "처음 배우는 개념" : "보던 데 마저";
-        왜 = fresh ? "아직 손 안 댄 곳 가운데 시험에서 제일 무거워요."
-                   : "여기까지 하면 오늘은 끝이에요.";
+        제목 = fresh ? (학년4 === "고1" ? "처음 배우는 개념" : "안 푼 단원") : "보던 데 마저";
+        왜 = fresh ? "시작 전, 출제 비중 최대"
+                   : "오늘 마지막";
       }
       if (tgt) {
         var nq = Math.max(2, Math.floor(left * 60 / SEC_PER_Q));
@@ -1708,9 +1804,18 @@
     return out;
   }
 
+  var G3SUBJ = { g3life: ["L"], g3idea: ["E"], g3kgeo: ["K"], g3wgeo: ["G"], g3eco: ["C"], g3pol: ["P"], g3cul: ["S"] };
   function 본과목표(g) {
     g = g || (S.student && S.student.grade) || "고1";
-    if (g === "고3") return null;              // null = 통합사회를 뺀 나머지 전부
+    if (g === "고3") {
+      /* 설정에서 고른 수능 탐구 과목(js/packs.js PACKG3 의 id)만 — 문항 없는 과목은 뺀다. 하나도 안 골랐으면 null = 선택과목 전부 */
+      var 표3 = {}, 켠3 = packs(), 있음 = false;
+      (window.PACKG3 || []).forEach(function (k) {
+        if (켠3.indexOf(k.id) < 0 || !k.n) return;
+        (k.subj || G3SUBJ[k.id] || []).forEach(function (c) { 표3[c] = 1; 있음 = true; });
+      });
+      return 있음 ? 표3 : null;
+    }
     if (g === "고2") {
       var 더 = 켠확장팩과목();
       var t = { "T": 1, "V": 1 };
@@ -1756,6 +1861,8 @@
      정의(G)나 행복(B)이 범위에 들면 사상가도 따라 든다. */
   var 사상가딸림 = { "B": 1, "G": 1, "K": 1 };
   function scope() {
+    /* 고3 은 수능 전 범위 — 이전 학년에서 정한 범위가 남아 있어도 무시한다(2026-10-04) */
+    if (S && S.student && S.student.grade === "고3") return [];
     try {
       var v = JSON.parse(localStorage.getItem("terra.scope") || "[]");
       return Array.isArray(v) ? v : [];
@@ -1857,8 +1964,8 @@
        학생이 찾아갈 자리가 있어야 한다. 강의(개념트리) 바로 뒤에 둔다. */
     /* ★ 나비는 넷(2026-09-06 대표님: "개념카드, 문제풀이, 어쩌구 존나 많아서 더 정신없음").
        개념 카드·문제풀이·개념 체크는 홈의 '지금 할 것' 과 개념트리에서 간다. */
-    var items = [["index.html", "홈"], ["skilltree.html", "개념트리"], ["skills.html", "스킬트리"],
-                 ["drill.html", "Killer Drill"], ["settings.html", "설정"]];
+    var items = [["index.html", "홈"], ["skilltree.html", "개념트리"], ["skills.html", "푸는 기술"],
+                 ["drill.html", "킬러 훈련"], ["settings.html", "설정"]];   /* 모의고사 탭은 375px 에서 6칸이 넘쳐 넣지 않았다(설정이 잘림) */
     return '<nav class="nav"><div class="wrap">' +
       '<a class="logo" href="index.html"><span class="dot"></span>모두의 통사<small>테라러닝</small></a>' +
       '<div class="navlinks">' + items.map(function (it) {
@@ -1898,7 +2005,7 @@
         (full ? "var(--mint)" : "var(--red)") + '" stroke-width="3.5" stroke-linecap="round"' +
         ' stroke-dasharray="' + on + ' ' + (C - on).toFixed(1) + '"/></svg>' +
       '<b>' + done + '</b></span>' +
-      '<span class="tx"><b>' + (full ? "오늘 할 것 다 했어요"
+      '<span class="tx"><b>' + (full ? "오늘 할 것 완료"
           : step.title + " " + step.min + "분") + '</b>' +
       '<span>' + step.say + '</span></span>' +
       '<span class="go"><a class="btn" href="' + step.href + '">' + step.cta + '</a>' +
@@ -1950,10 +2057,6 @@
     }, 500);
     var el = document.getElementById("navstreak");
     if (el) { var 연 = report().streak; el.textContent = 연 + "일 연속"; el.style.display = 연 ? "" : "none"; }   // 0일 연속은 숨긴다 (.chip 의 display 가 hidden 을 덮는다)
-    available().then(function (ok) {
-      var f = document.getElementById("srcflag");
-      if (f) f.textContent = ok ? "실데이터 연결됨" : "시연 데이터";
-    });
   }
 
   /* ── 기록 꺼내기·되돌리기 ─────────────────────────────
@@ -1984,7 +2087,7 @@
   }
 
   function 기록되돌리기(짐) {
-    if (!짐 || !짐.값 || !짐.값[KEY]) throw new Error("학습 기록이 없는 파일이에요");
+    if (!짐 || !짐.값 || !짐.값[KEY]) throw new Error("학습 기록 없는 파일");
     JSON.parse(짐.값[KEY]);               // 깨진 파일이면 여기서 멈춘다 — 덮기 전에
     저장키들.forEach(function (k) {
       try {
@@ -2036,7 +2139,7 @@
     var b = 글자를바이트로(atob(v));
     if (!압축) return Promise.resolve(JSON.parse(new TextDecoder().decode(b)));
     if (typeof DecompressionStream !== "function")
-      return Promise.reject(new Error("이 브라우저는 압축된 코드를 못 읽어요"));
+      return Promise.reject(new Error("압축 코드 미지원 브라우저"));
     var ds = new DecompressionStream("gzip");
     var w2 = ds.writable.getWriter(); w2.write(b); w2.close();
     return new Response(ds.readable).arrayBuffer().then(function (buf) {
@@ -2069,20 +2172,20 @@
     판정거리: 판정거리, 연속오답: 연속오답,
     leafStat: leafStat, midStat: midStat, rootStat: rootStat, overall: overall,
     rank: rank, forecast: forecast, bandOf: bandOf, setGrade: setGrade, LADDER: LADDER,
-    exams: exams, setExam: setExam, addExam: addExam, dday: dday,
-    report: report, rangeReport: rangeReport, weekSeries: weekSeries,
-    dayKey: dayKey, mins: mins, ago: ago, seed: seed, available: available, mountNav: mountNav,
+    exams: exams, setExam: setExam, chooseExam: chooseExam, addExam: addExam, dday: dday,
+    report: report, rangeReport: rangeReport, totalReport: totalReport, weekSeries: weekSeries,
+    dayKey: dayKey, mins: mins, ago: ago, seed: seed, mountNav: mountNav,
     skin: skin, setSkin: setSkin, SKINS: SKINS,
     GRADES: GRADES, PACKS: PACKS, BOOKS: BOOKS, gradeInfo: gradeInfo,
     packs: packs, togglePack: togglePack, plan: plan, setPlan: setPlan,
     packList: packList, packCount: packCount, packState: packState,
     본과목표: 본과목표, 켠확장팩과목: 켠확장팩과목,
     suneungGuess: suneungGuess,
-    quota: quota, dueList: dueList, prescribe: prescribe, mountNext: mountNext,
+    quota: quota, dueList: dueList, 복습대기: 복습대기, prescribe: prescribe, mountNext: mountNext,
     isMain: isMain, splitPool: splitPool, mainCount: mainCount,
     scope: scope, setScope: setScope, scopeOn: scopeOn,
     /* 고1 흐름 — 보이는 대영역 · 서문여고 기본 범위 */
-    오늘의리프: 오늘의리프, 오늘의까닭: 오늘의까닭, 이해도: 이해도, 반응대: 반응대,
+    오늘의리프: 오늘의리프, 오늘의까닭: 오늘의까닭, 이해도: 이해도, 이해도표본: 이해도표본, 표본하한: 표본하한, 반응대: 반응대,
     보이는대영역: 보이는대영역, 스킬트리대영역: 스킬트리대영역,
     기본범위: 기본범위, 기본범위지금: 기본범위지금, 범위_시험별: 범위_시험별,
     범위기본값채우기: 범위기본값채우기, 범위자동인가: 범위자동인가,
@@ -2096,7 +2199,7 @@
     /* 주기 — 방학·고3 시기·주간 점검·범위 낡음 */
     방학인가: 방학인가, 방학단계: 방학단계, 고3시기: 고3시기,
     주간점검날: 주간점검날, 주간점검함: 주간점검함, 주간점검끝: 주간점검끝,
-    범위낡음: 범위낡음, 오늘몫표: 오늘몫표, 지나간시험: 지나간시험,
+    범위낡음: 범위낡음, 오늘몫표: 오늘몫표, 기록일수: 기록일수, 지나간시험: 지나간시험,
     /* 기록 꺼내기·되돌리기 — 계정이 생기기 전까지의 안전장치 */
     기록모으기: 기록모으기, 짐요약: 짐요약, 기록되돌리기: 기록되돌리기,
     옮기기코드: 옮기기코드, 코드읽기: 코드읽기, 코드로되돌리기: 코드로되돌리기,

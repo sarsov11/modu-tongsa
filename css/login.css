@@ -14,7 +14,7 @@
 .lgbtn.naver{background:#03C75A;color:#fff}
 .lgbtn[disabled]{opacity:.45;cursor:default}
 .lgbtn[disabled]:hover{filter:none}
-.lgbtn em{position:absolute;right:14px;font-style:normal;font-size:13px;font-weight:700;opacity:.9}
+.lgbtn em{position:absolute;right:14px;font-style:normal;font-size:14px;font-weight:700}
 .lgskip{align-self:center;margin-top:6px;font-size:14.5px;font-weight:600;color:var(--ink-3);
   text-decoration:underline;text-underline-offset:3px}
 .lgwho{font-size:16px;color:var(--ink-2);margin:0 0 6px}

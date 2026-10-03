@@ -19,14 +19,27 @@
     opt = opt || {};
     var A = window.AUTH;
     if (!host) return;
-    if (!A || !A.on) {
-      host.innerHTML = '<div class="lgbox"><p class="lgnote">로그인은 준비 중이에요. 지금은 기록이 이 폰에만 남아요.</p></div>';
-      return;
+    function 준비중() {
+      host.innerHTML = '<div class="lgbox">' + (opt.title ? '<h3 class="lgtitle">' + esc(opt.title) + '</h3>' : '') + '<p class="lgnote">로그인 준비 중 — 기록은 이 기기에 저장, <a href="settings.html#savesec">기록 옮기기</a>로 백업</p></div>';
     }
+    if (!A || !A.on) { 준비중(); return; }
+    /* 서버 건강 확인이 실패하면 단추를 감춘다. 30초마다 다시 확인해 살아나면 단추가 나온다. */
+    A.서버확인().then(function (ok) {
+      if (!ok) {
+        준비중();
+        if (!host._lgRetry) host._lgRetry = setTimeout(function () {
+          host._lgRetry = null;
+          A.서버확인(true).then(function () { draw(host, opt); });
+        }, 30000);
+        return;
+      }
+      그리기();
+    });
+    function 그리기() {
     A.사용자().then(function (u) {
       if (u) {
         var nm = (u.user_metadata && (u.user_metadata.name || u.user_metadata.full_name || u.user_metadata.preferred_username)) || u.email || "로그인됨";
-        host.innerHTML = '<div class="lgbox"><p class="lgwho"><b>' + esc(nm) + '</b>으로 저장하고 있어요.</p>' +
+        host.innerHTML = '<div class="lgbox"><p class="lgwho"><b>' + esc(nm) + '</b> 계정에 저장 중</p>' +
           '<button type="button" class="lgout" id="lgOut">로그아웃</button></div>';
         host.querySelector("#lgOut").onclick = function () { A.로그아웃().then(function () { draw(host, opt); }); };
         return;
@@ -38,11 +51,12 @@
         '<button type="button" class="lgbtn google" id="lgGoogle">' + G + '<span>Google 계정으로 계속하기</span></button>' +
         (opt.naver === false ? '' :
           '<button type="button" class="lgbtn naver" disabled aria-disabled="true">' + N + '<span>네이버로 시작하기</span><em>준비 중</em></button>') +
-        (opt.skip ? '<a class="lgskip" href="' + esc(opt.skip) + '">나중에 할게요</a>' : '') +
+        (opt.skip ? '<a class="lgskip" href="' + esc(opt.skip) + '">나중에</a>' : '') +
         '</div>';
       host.querySelector("#lgKakao").onclick = function () { A.로그인("kakao"); };
       host.querySelector("#lgGoogle").onclick = function () { A.로그인("google"); };
     });
+    }
   }
 
   window.LOGINUI = { draw: draw };

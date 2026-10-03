@@ -96,8 +96,44 @@
     return s.replace(/\s{2,}/g, " ").replace(/\s+([::,.])/g, "$1").trim();
   }
 
+  /* 「(분자 / 분모) × 100」 → 쌓은 분수 (1004 모의고사 1번 — 산출식이 「노년 인구 × 100 유소년 인구」로 뭉개져 있었다).
+     문항은행.py 가 뭉갠 식을 「(분자 / 분모) × 100」 꼴로 되돌려 두었다. 괄호 짝을 세어 분자·분모를 가른다.
+     분자·분모에 「인구」가 있을 때만 — (75/25)×100 같은 숫자식은 그대로 둔다. */
+  function 분수꼴(s) {
+    var 끝 = /\s*×\s*100/g, m, out = "", 지난 = 0;
+    while ((m = 끝.exec(s))) {
+      var 닫 = m.index - 1;
+      while (닫 >= 0 && s.charAt(닫) === " ") 닫--;
+      var ch = s.charAt(닫);
+      if (ch !== ")" && ch !== "}" && ch !== "]") continue;
+      var 쌍 = { ")": "(", "}": "{", "]": "[" }[ch], 깊 = 0, 열 = -1;
+      for (var k = 닫; k >= 지난; k--) {
+        var c = s.charAt(k);
+        if (c === ch) 깊++; else if (c === 쌍) { 깊--; if (깊 === 0) { 열 = k; break; } }
+      }
+      if (열 < 0) continue;
+      var 속 = s.slice(열 + 1, 닫), 가름 = -1; 깊 = 0;
+      for (var q = 0; q < 속.length; q++) {
+        var d = 속.charAt(q);
+        if (d === "(" || d === "{" || d === "[") 깊++;
+        else if (d === ")" || d === "}" || d === "]") 깊--;
+        else if (d === "/" && 깊 === 0) { 가름 = q; break; }
+      }
+      if (가름 < 0) continue;
+      var 분자 = 속.slice(0, 가름).trim(), 분모 = 속.slice(가름 + 1).trim();
+      if (!/인구/.test(분자) || !/인구/.test(분모)) continue;
+      if (분자.charAt(0) === "(" && 분자.charAt(분자.length - 1) === ")" && /[+＋]/.test(분자)) 분자 = 분자.slice(1, -1).trim();
+      out += s.slice(지난, 열) +
+        '<span class="fr"><span class="fn">' + 분자 + '</span><span class="fd">' + 분모 + '</span></span> × 100';
+      지난 = m.index + m[0].length;
+      끝.lastIndex = 지난;
+    }
+    return out + s.slice(지난);
+  }
+
   function 본문(t) {
     var s = esc(쓰레기빼기(t));
+    if (s.indexOf("× 100") >= 0 || s.indexOf("×100") >= 0) s = 분수꼴(s);
     /* 점줄(········ ㉠)은 시험지의 줄 맞춤용이다 — 끊을 자리가 없어 폰에서 자료 상자가 화면 두 배로 넘쳤다(2026-09-19). 짧게 줄인다 */
     s = s.replace(/[·.…‥]{4,}/g, ' … ');
     s = s.replace(/([㉠-㉭ⓐ-ⓩ])/g, '<b class="mk box">$1</b>');
@@ -345,7 +381,8 @@
     if (q.ff) {
       몸 += '<figure class="qfig qfull">' +
         '<img src="assets/qfull/' + esc(String(q.ff).replace(/\.png$/, ".webp")) +
-        '" alt="문항 자료와 선지" loading="lazy">' +
+        '" alt="문항 자료와 선지" loading="lazy" data-zoom="1">' +
+        '<button type="button" class="qzbtn" data-zoom-btn="1">확대</button>' +
         '<figcaption>자료와 선지 원본</figcaption>' +
         '</figure>';
       return 몸;                     // 선지는 그림 안에 있다 — 글로 또 내지 않는다
@@ -388,7 +425,8 @@
     if (그림쓴다) {
       몸 += '<figure class="qfig">' +
         '<img src="assets/qfig/' + esc(String(q.fig).replace(/\.png$/, ".webp")) +
-        '" alt="문항 자료" loading="lazy">' +
+        '" alt="문항 자료" loading="lazy" data-zoom="1">' +
+        '<button type="button" class="qzbtn" data-zoom-btn="1">확대</button>' +
         '<figcaption>자료 원본</figcaption>' +
         '</figure>';
     }
@@ -532,7 +570,41 @@
     if (g === "고3" && (mo === 6 || mo === 9)) return (y + 1) + "학년도 " + mo + "월 모의평가";
     return [g, y + "년 " + mo + "월 학력평가"].filter(Boolean).join(" ");
   }
+  /* ── 그림 확대(전체화면) — 폰에서 범례·눈금이 안 읽혔다(1004). 그림이나 「확대」를 누르면 전체화면, 다시 누르면 2.4배(가로 스크롤) ── */
+  function 확대열기(src, alt) {
+    var 이전 = document.getElementById("qzoom");
+    if (이전) 이전.remove();
+    var box = document.createElement("div");
+    box.id = "qzoom"; box.className = "qzoom"; box.setAttribute("role", "dialog"); box.setAttribute("aria-label", "그림 확대");
+    box.innerHTML = '<button type="button" class="qzx" aria-label="닫기">닫기</button>' +
+      '<div class="qzscroll"><img src="' + esc(src) + '" alt="' + esc(alt || "") + '"></div>';
+    document.body.appendChild(box);
+    document.body.classList.add("qz-open");
+    function 닫기() { box.remove(); document.body.classList.remove("qz-open"); document.removeEventListener("keydown", 키); }
+    function 키(e) { if (e.key === "Escape") 닫기(); }
+    document.addEventListener("keydown", 키);
+    box.querySelector(".qzx").onclick = 닫기;
+    var img = box.querySelector("img");
+    img.onclick = function () { box.classList.toggle("z2"); };
+    box.querySelector(".qzscroll").onclick = function (e) { if (e.target === this) 닫기(); };
+  }
+  if (typeof document !== "undefined") document.addEventListener("click", function (e) {
+    var t = e.target;
+    if (!t || !t.closest) return;
+    var fig = t.closest("figure.qfig");
+    if (!fig || !(t.matches("img[data-zoom]") || t.matches("button[data-zoom-btn]"))) return;
+    var im = fig.querySelector("img");
+    if (im) 확대열기(im.currentSrc || im.src, im.alt);
+  });
+
+  /* 자료 상자 한 칸 — 갈래·화자·◦ 항목을 나눠 그린다. 개념 체크(ox.html)의 「갑: … 을: …」 제시문이 한 문단으로 붙던 것을 같은 처리로(1004) */
+  function 자료HTML(t) {
+    var s = 아이콘글자빼기(String(t || ""));
+    return 꺾쇠나누기(s) || 갈래나누기(s) || 화자나누기(s) || 항목나누기(s);
+  }
+
   window.QRENDER = {
+    자료: 자료HTML,
     출처: 출처, 시험이름: 시험이름,
     html: 문항HTML, picks: 선지단추, ok: 텍스트로되나,
     esc: esc, body: 본문, MARK: 동그라미

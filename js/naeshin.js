@@ -21,6 +21,7 @@
           var 문항 = (l.play || []).filter(function (q) {
             var d = Q[q.id]; return d && q.id.charAt(0) === "T" && (!window.QRENDER || window.QRENDER.ok(d, q));
           });
+          if (!문항.length) return;                                   // 풀 수 있는 문항이 0 인 자리는 목록에 안 올린다(2026-10-04 「0문제 풀기」 9곳)
           var 어려운 = 문항.filter(function (q) { return (q.p || 0) >= 2.5; });
           if (!어려운.length && l.grade !== "심화") return;          // 어렵게 나온 적이 없는 자리는 안 싣는다
           var st = T.leafStat ? T.leafStat(l.code) : { solved: 0, pct: null };
@@ -37,5 +38,11 @@
     out.sort(function (a, b) { return b.점수 - a.점수; });
     return out;
   }
-  window.NAESHIN = { 포인트들: 포인트들 };
+  /* 리프·중영역 이름의 ★ 는 글자로 안 쓴다 — 이름과 「심화」 표지로 가른다(0925 결정: 마크는 .bdg) */
+  function 이름표(n) {
+    n = String(n || "");
+    var 심화 = /★/.test(n);
+    return { name: n.replace(/\s*★\s*심화?/g, "").replace(/\s*★/g, "").trim(), deep: 심화 };
+  }
+  window.NAESHIN = { 포인트들: 포인트들, 이름표: 이름표 };
 })();

@@ -49,53 +49,56 @@
     /* 띠 — 상황별. {n} 숫자, {개념} 리프 이름 자리 */
     idleStart:    "오늘 {goal}분",
     idleMid:      "{spent}분 완료 → {left}분 남음",
-    idleDone:     "오늘 할 것 다 했어요.",
-    upToday:      "오늘 이해도가 오른 곳이 {n}군데예요.",
-    streakDay:    "{n}일째 이어 오고 있어요.",
-    cardWait:     "개념 먼저",
-    okOne:        "맞았어요. 오늘 {n}개째예요.",
-    okRun3:       "세 문제 연속으로 맞혔어요.",
-    okRun5:       "다섯 문제 연속으로 맞혔어요.",
-    okRun8:       "여덟 문제 연속으로 맞혔어요.",
-    okAfterMiss:  "맞았어요. 방금 틀린 문제는 3일 뒤에 다시 풀어봐요.",
-    missOne:      "틀렸어요. 3일 뒤에 다시 풀어봐요.",
-    missSure:     "확실했는데 틀림 → {개념을} 다시 확인",
+    idleDone:     "오늘 목표 완료",
+    upToday:      "오늘 이해도 상승 {n}곳",
+    streakDay:    "{n}일 연속",
+    cardWait:     "개념 보기",
+    okOne:        "정답. 오늘 {n}개째",
+    okRun3:       "3문제 연속 정답",
+    okRun5:       "5문제 연속 정답",
+    okRun8:       "8문제 연속 정답",
+    okAfterMiss:  "정답. 앞 오답은 3일 뒤 복습",
+    missOne:      "오답 → 3일 뒤 복습",
+    missSure:     "다시 확인",
     missGuess:    "해설 확인",
     missRun3:     "3문제 연속 틀림 → 개념 다시",
-    drillOk:      "맞았어요. 오늘 Killer Drill {n}문제째예요.",
-    drillMiss:    "한 번 더 (Killer Drill은 정답률 제외)",
-    oxOk:         "맞았어요. 오늘 O·X {n}문제째예요.",
-    oxMiss:       "근거만 읽고 넘어가요. O·X는 정답률에 안 들어가요.",
-    kwOk:         "맞았어요. 직접 써서 맞혔어요.",
-    kwMiss:       "정답을 한 번 읽어봐요. 개념어 쓰기는 정답률에 안 들어가요.",
+    drillOk:      "정답. 오늘 킬러 훈련 {n}문제째",
+    drillMiss:    "한 번 더 (킬러 훈련은 정답률 제외)",
+    oxOk:         "정답. 오늘 O·X {n}문제째",
+    oxMiss:       "근거 확인 (O·X는 정답률 제외)",
+    kwOk:         "정답",
+    kwMiss:       "정답 확인 (개념어 쓰기는 정답률 제외)",
     watched:      "강의 완료 → O·X 확인",
-    skinNudge:    "화면 색이 마음에 안 들면 바꿔봐요.",
+    skinNudge:    "화면 색 바꾸기",
     examSoon:     "{시험} D-{n} → 모의고사 강추",
     /* 결산 */
-    wrapAll:      "전부 맞았어요.",
+    wrapAll:      "전부 정답",
     wrapMost:     "거의 다 맞음 → 오답 모아풀기",
     wrapHalf:     "절반 맞음 → 오답 모아풀기",
-    wrapLow:      "처음 보는 단원이죠? 틀린 것부터 다시 봐요.",
-    wrapUp:       "{개념} 이해도가 {before}에서 {after}로 올랐어요.",
-    wrapSame:     "{개념} 이해도는 {after} 그대로예요.",
-    wrapDone:     "오늘 할 것 다 했어요.",
-    wrapLeft:     "{left}분만 더 하면 오늘은 끝이에요.",
-    wrapFirst:    "오늘 첫 세트예요.",
-    wrapTree:     "개념트리에서 {개념이} {d} 올랐어요.",
+    wrapLow:      "오답 모아풀기",
+    wrapUp:       "{개념} 이해도 {before} → {after}",
+    wrapSame:     "{개념} 이해도 {after} 유지",
+    wrapDown:     "{개념} 이해도 {before} → {after}",
+    wrapDone:     "오늘 목표 완료",
+    wrapLeft:     "{left}분 남음",
+    wrapFirst:    "오늘 첫 세트",
+    wrapTree:     "개념트리 {개념} {d}",
     /* 인사 */
-    hiFirst:      "처음이죠? 오늘 할 것 하나만 골라 뒀어요.",
-    hiBack:       "{ago} {n}문제 중 {ok}개 맞힘 → {next} 강추",
-    hiBackLead:   "{ago} {n}문항 중 {ok}개 맞혔어요. 오늘은 {lead}.",
+    hiFirst:      "오늘 할 것 하나",
+    /* ★★ 2026-09-29 판정소 5차 — 「직전 결과 → 추천」을 한 줄에 다 적지 않는다.
+         화면엔 단원명 + 강추 배지만. 직전 결과는 title(마우스 오버·탭)로 뺀다(greetWhy). */
+    hiBack:       "{next} 강추",
+    hiBackLead:   "{ago} {n}문항 중 {ok}개 맞힘 → 오늘은 {lead}",
     hiBackNoQLead: "오늘은 {lead}.",
-    hiTodayLead:  "오늘 {n}문항 중 {ok}개 맞혔어요. 이어서 {lead}.",
+    hiTodayLead:  "오늘 {n}문항 중 {ok}개 맞힘 → 이어서 {lead}",
     hiBackNoQ:    "{next} 강추",
-    hiToday:      "오늘 {n}문항 중 {ok}개 맞혔어요. 다음은 {next}예요.",
-    hiTodayDone:  "오늘 {n}문항 중 {ok}개 맞혔어요. 오늘 할 것 다 했어요.",
-    hiStreak:     "{n}일째예요.",
+    hiToday:      "오늘 {n}문항 중 {ok}개 맞힘 → {next}",
+    hiTodayDone:  "오늘 {n}문항 중 {ok}개 맞힘 → 오늘 목표 완료",
+    hiStreak:     "{n}일째",
     /* 카드 */
     cardSealed:   "오늘 개념",
     cardTap:      "눌러서 열기",
-    cardOpened:   "읽고 바로 O·X",
+    cardOpened:   "문제로 확인",
     cardCount:    "읽은 개념 {n}개",
     cardNone:     "이 범위는 개념 없음 → 바로 문제"
   };
@@ -156,7 +159,9 @@
   /* ── 오늘 수치 — 어디서든 같은 숫자 ─────────────────── */
   function tally() {
     var r = T.report(), R = T.routine();
-    return { ans: r.answers, ok: r.correct, pct: r.pct, drills: r.drills, drillOk: r.drillOk,
+    /* ★ ans·ok = 문제풀이 + 훈련(킬러 훈련·O·X·개념어)을 한데 센 오늘 총합 — 홈·결산·띠가 같은 숫자를 쓴다(2026-10-04).
+       q·qok 는 문제풀이만(정답률 기준). */
+    return { ans: r.solved, ok: r.solvedOk, q: r.answers, qok: r.correct, pct: r.pct, drills: r.drills, drillOk: r.drillOk,
              spent: R.spent, goal: R.goal, left: Math.max(0, R.goal - R.spent),
              done: R.done, streak: r.streak, up: todayDelta().up, items: R.items };
   }
@@ -200,6 +205,14 @@
     }
     /* 연속일은 머리띠에, 오른 곳은 바로 밑 칸에 있다 — 여기서 또 말하면 네 문장이 된다 */
     return out.join(" ");
+  }
+
+  /* ★ greeting() 에서 뺀 「직전 결과」 — 단원 추천 옆 title(마우스 오버·탭)로 붙인다 */
+  function greetWhy() {
+    var t = tally();
+    if (t.ans) return "";
+    var lv = lastVisit();
+    return (lv && lv.n) ? (lv.ago + " " + lv.n + "문제 중 " + lv.ok + "개 맞힘") : "";
   }
 
   /* ── 띠 ─────────────────────────────────────────── */
@@ -254,7 +267,7 @@
       (line.s ? '<span>' + esc(line.s) + '</span>' : '') + '</span>' +
       chips(t) +
       '<span class="go">' +
-      (opts.html ? opts.html : (step ? '<a class="btn" href="' + step.href + '">' +
+      (opts.html ? opts.html : (step && !t.done ? '<a class="btn" href="' + step.href + '">' +
         esc(step.cta || "하기") + (step.kind === "card" ? '' : ' ' + step.min + '분') + '</a>' : '')) +
       '<button class="x" aria-label="닫기">✕</button></span></div>';
     bar.querySelector(".x").onclick = function () {
@@ -375,6 +388,7 @@
     var head = total ? (ratio === 1 ? fmt("wrapAll") : ratio >= .8 ? fmt("wrapMost")
                        : ratio >= .5 ? fmt("wrapHalf") : fmt("wrapLow")) : "";
     var uline = leaf ? (after > before ? fmt("wrapUp", { 개념: 개념, before: before, after: after })
+                       : after < before ? fmt("wrapDown", { 개념: 개념, before: before, after: after })
                                        : fmt("wrapSame", { 개념: 개념, after: after })) : "";
     var md = midDelta(), m = leaf && midOf(leaf), tline = "";
     if (m && md[m.code] && md[m.code].d > 0) tline = fmt("wrapTree", { 개념: m.name, d: "+" + md[m.code].d });
@@ -389,14 +403,14 @@
       var cls = R0.spent >= acc0 ? "done" : (step && it0.href === step.href ? "next" : "");
       bars += '<span class="seg ' + cls + '" style="flex:' + Math.max(1, it0.min) + ' 1 0"></span>';
     }
-    var autoNext = !!(step && !t.done);
+    var autoNext = false;   // 자동 이동 없음 — 단추로만 간다(2026-10-04: 결산 창이 2~3초 뒤 저절로 넘어갔다)
     var ov = document.createElement("div");
     ov.className = "wrapov";
     ov.innerHTML =
       '<div class="wrapbox" role="dialog" aria-label="결산">' +
       '<div class="conf" aria-hidden="true"></div>' +
-      '<div class="flowbar" aria-label="오늘 15분 진행">' + bars + '</div>' +
-      '<span class="eb">' + esc(opts.kind === "ox" ? "개념 체크 끝" : opts.kind === "drill" ? "Killer Drill 한 세트 끝"
+      '<div class="flowbar" aria-label="오늘 ' + t.goal + '분 진행">' + bars + '</div>' +
+      '<span class="eb">' + esc(opts.kind === "ox" ? "개념 체크 끝" : opts.kind === "drill" ? "킬러 훈련 한 세트 끝"
                                  : opts.kind === "card" ? "개념 끝" : "한 세트 끝") + '</span>' +
       (total ? '<div class="big"><b class="n">0</b><span> / ' + total + '</span></div>' : '') +
       (head ? '<p class="head">' + esc(head) + '</p>' : '') +
@@ -412,11 +426,11 @@
       '<div><b>' + t.streak + '</b><span>일 연속</span></div>' +
       (t.up ? '<div class="up"><b>+' + t.up + '</b><span>오른 곳</span></div>' : '') + '</div>' +
       '<p class="dline">' + esc(dline) + '</p>' +
-      (autoNext ? '<p class="autonext">이제 ' + esc(step.title) + ', ' + step.min + '분이에요. ' +
-                  '<b class="cnt">3</b>초 뒤 저절로 넘어가요.</p>' : '') +
+      (autoNext ? '<p class="autonext">다음 ' + esc(step.title) + ' ' + step.min + '분, ' +
+                  '<b class="cnt">3</b>초 뒤 이동</p>' : '') +
       '<div class="act">' +
       (opts.retry ? '<button class="btn" data-act="retry">' + esc(opts.retry.label) + '</button>' : '') +
-      (step ? '<a class="btn' + (opts.retry ? " ghost" : "") + '" href="' + step.href + '">다음, ' +
+      (step && !t.done ? '<a class="btn' + (opts.retry ? " ghost" : "") + '" href="' + step.href + '">다음, ' +
               esc(step.title) + ' ' + step.min + '분 →</a>' : '') +
       (opts.more ? '<button class="btn ghost" data-act="more">' + esc(opts.more.label) + '</button>' : '') +
       '<button class="btn ghost" data-act="close">닫기</button></div></div>';
@@ -539,7 +553,7 @@
     var 비교 = "";
     if (lv && lv.n && t.ans) {
       var p0 = Math.round(lv.ok / lv.n * 100), p1 = t.pct == null ? 0 : t.pct, df = p1 - p0;
-      비교 = df > 0 ? lv.ago + "보다 정답률이 " + df + "%p 올랐어요." : df < 0 ? lv.ago + " 정답률은 " + p0 + "%였어요." : lv.ago + "와 같은 정답률이에요.";
+      비교 = df > 0 ? lv.ago + "보다 정답률 +" + df + "%p" : df < 0 ? lv.ago + " 정답률 " + p0 + "%" : lv.ago + "와 정답률 같음";
     }
     var tops = d.list.filter(function (x) { return x.d > 0; }).slice(0, 3);
     host.innerHTML =
@@ -551,7 +565,7 @@
       '</div>' +
       '<p class="tline">' +
       (tops.length ? "오늘 오른 곳 — " + tops.map(function (x) { return esc(x.name) + " <b>+" + x.d + "</b>"; }).join(", ") + ". "
-                   : (t.ans ? "" : "오늘은 아직 시작 전이에요. ")) +
+                   : (t.ans ? "" : "시작 전. ")) +
       esc(비교) + '</p>';
   }
 
@@ -572,7 +586,7 @@
 
   window.COACH = {
     MSG: MSG, fmt: fmt, mount: mount, say: say, paint: function () { paint(idleLine()); },
-    begin: begin, wrap: wrap, tally: tally, greeting: greeting, lastVisit: lastVisit,
+    begin: begin, wrap: wrap, tally: tally, greeting: greeting, greetWhy: greetWhy, lastVisit: lastVisit,
     nextStep: nextStep, snap: snap, takeSnap: takeSnap, todayDelta: todayDelta, midDelta: midDelta,
     cardToday: cardToday, openCard: openCard, cardOpenedToday: cardOpenedToday, cardCount: cardCount,
     mountCard: mountCard, mountToday: mountToday, mountTreeDelta: mountTreeDelta,

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>개념트리</title>
+<title>개념트리 — 모두의 통사</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=8f90f959">
+<link rel="stylesheet" href="css/base.css?v=1a817d13">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -213,7 +213,10 @@
     .wrapx{display:flex;flex-direction:column}
     .phead{order:0} .board{order:1} .treelist{order:2} #scopeband{order:3;margin-top:var(--s3)} #deltahost{order:4} #pickhost{order:5} .legend{order:6} .note{order:7}
     .phead .sub{display:none}
-    .board .stage{min-height:0}
+    /* 폰은 궤도 그림 대신 목록(작업일지 6절) — 그림은 라벨 9px·잘림 때문에 폰에서 못 읽는다. 자리는 남겨 폭 계산만 쓴다 */
+    .board .stage{min-height:0;height:0;overflow:hidden;visibility:hidden}
+    .board{border:0;background:none;box-shadow:none}
+    .board .plate{padding:6px 0 0}
     .treelist{display:block;margin-top:var(--s3)}
     .board .plate{padding:16px 18px 8px}
     .board .plate h2{font-size:22px}
@@ -351,19 +354,20 @@
   </div>
 </div>
 
-<script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/tree.js?v=cf241056"></script>
-<script src="js/lecture.js?v=8faa86a9"></script>
+<script src="js/trend.js?v=77dea921"></script>
+<script src="js/tree.js?v=70df12a1"></script>
+<script src="js/lecture.js?v=878e128c"></script>
 <script src="js/video.js?v=2ad8e90e"></script>
 <script src="js/lecprac.js?v=704d9a6e"></script>
-<script src="js/pool.js?v=92a27f17"></script>
-<script src="js/drills.js?v=f1bd4428"></script>
-<script src="js/cards.js?v=1b4d9904"></script>
-<script src="js/store.js?v=531993fd"></script>
+<script src="js/pool.js?v=c0d187ff"></script>
+<script src="js/drills.js?v=3f81d010"></script>
+<script src="js/cards.js?v=82bdc620"></script>
+<script src="js/packs.js?v=9e67e178"></script>
+<script src="js/store.js?v=4ece5289"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
-<script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/coach.js?v=fce5041b"></script>
+<script src="js/auth.js?v=dca5fb29"></script>
+<script src="js/coach.js?v=76c10e1b"></script>
 <script>
 (function(){
   var T=TERRA, L=window.LECT||{};
@@ -403,9 +407,9 @@
       keys:["지리","일반사회","윤리"],
       label:{"지리":"지리","일반사회":"일반사회","윤리":"윤리"},
       key:{"지리":"--fam-geo","일반사회":"--fam-soc","윤리":"--fam-eth"},
-      sub:{"지리":"세계지리·한국지리에서 다시 만나는 것",
-           "일반사회":"정치와법·경제·사회문화에서 다시 만나는 것",
-           "윤리":"생활과윤리·윤리와사상에서 다시 만나는 것"},
+      sub:{"지리":"세계지리, 한국지리",
+           "일반사회":"정치와 법, 경제, 사회·문화",
+           "윤리":"생활과 윤리, 윤리와 사상"},
       of:function(r){ return r.fam||"윤리"; }
     }
   };
@@ -414,6 +418,14 @@
     try{ v=localStorage.getItem("terra.axis")||""; }catch(e){}
     if(v==="교과서"||v==="수능") return v;
     return ((T.state().student||{}).grade==="고3") ? "수능" : "교과서";
+  }
+  /* 이름의 ★ 는 글자로 안 쓴다 — 이름과 「심화」 표지로 가른다(0925 마크 결정, 2026-10-04) */
+  function 별뗌(n){ return String(n||"").replace(/\s*★\s*(심화)?/g,"").trim(); }
+  /* 고2·고3 의 목표는 내신이 아니라 학력평가·수능이다 — 제목에 「2학기 중간고사」 를 쓰지 않는다(2026-10-04) */
+  function 시험명(b){
+    var g=(T.state().student||{}).grade;
+    if(g==="고2"||g==="고3"){ var nx=T.nextExam&&T.nextExam(); if(nx&&nx.exam&&nx.exam.name) return nx.exam.name; }
+    return (b&&b.name)||"";
   }
   var AX=AXES[axisName()];
 
@@ -426,17 +438,23 @@
     if((new URLSearchParams(location.search)).get("scope")==="all") return;
     var rs=(T.스킬트리대영역?T.스킬트리대영역():[]);
     if(rs.length<2 || rs.length>6) return;      /* 하나뿐이면 층이 의미 없다 */
-    var keys=[],label={},key={},sub={};
+    var keys=[],label={},key={},sub={},full={};
     var 색=["--fam-geo","--fam-soc","--fam-eth"];
+    var 책이름={"통합사회1":"통합사회 1","통합사회2":"통합사회 2"};
+    var 책들={}; rs.forEach(function(r){ if(책이름[r.book]) 책들[r.book]=1; });
+    var 두권=Object.keys(책들).length>1;
+
     rs.forEach(function(r,i){
       keys.push(r.code);
       label[r.code]=(r.unit? r.unit+"단원" : r.name);
+      /* 칩·목록 머리에는 단원 이름까지 적는다. 통합사회 1·2 가 섞인 범위면 책 이름도 붙인다 */
+      full[r.code]=(두권&&책이름[r.book]?책이름[r.book]+" ":"")+(r.unit? r.unit+"단원 "+r.name : r.name);
       key[r.code]=색[i%3];
       sub[r.code]=r.name+" — "+(r.mids||[]).map(function(m){return m.name;})
                                             .slice(0,4).join(", ");
     });
     AX={ name:"시험 범위", say:"이번 시험에 나오는 단원만",
-         keys:keys, label:label, key:key, sub:sub,
+         keys:keys, label:label, key:key, sub:sub, full:full,
          of:function(r){ return r.code; }, 단원축:true };
   })();
   var FAM={};
@@ -462,7 +480,7 @@
   });
   if(!FAMS.length) FAMS=AX.keys.slice();   // 한 묶음도 안 남으면 원래대로
   FAMS.forEach(function(k,i){
-    FAM[k]={no:i+1, key:AX.key[k], sub:AX.sub[k], label:AX.label[k]};
+    FAM[k]={no:i+1, key:AX.key[k], sub:AX.sub[k], label:AX.label[k], full:(AX.full&&AX.full[k])||AX.label[k]};
   });
   var GOLD,STAR,SLINE,SINK,SINK2,SBG,SBG2,ACC,CORE;
   function paint(){
@@ -502,19 +520,17 @@
   function tierOf(a,played){ return !played?"L":a>=80?"S":a>=60?"A":a>=30?"B":"C"; }
   /* 학생에게 하는 말은 지적이 아니라 권유다. 판단은 학생이 한다. */
   function howFar(st){
-    if(!st.play) return "문항을 준비하고 있어요";
-    if(!st.solved) return "아직 시작 전이에요";
-    if(st.achieve<30) return "이제 막 시작했어요";
-    if(st.achieve<60) return "절반쯤 왔어요";
-    if(st.achieve<80) return "감이 잡히고 있어요";
-    return "여기는 탄탄해요";
+    /* 2026-09-28 판정소 4차 — 기분 말 대신 사실(푼 문항 수)만. 성취도 %는 옆에 붙는다 */
+    if(!st.play) return "문항 준비 중";
+    if(!st.solved) return "시작 전";
+    return st.solved+"문항 풂";
   }
   function bat(w){ w=String(w||""); var c=w.charCodeAt(w.length-1);
     return (c>=0xAC00&&c<=0xD7A3)?((c-0xAC00)%28)!==0:/[013678lmnr]$/i.test(w); }
   function nudge(n){
-    if(!n.st.solved) return n.name+(bat(n.name)?"은":"는")+" 아직 시작 전이에요";
+    if(!n.st.solved) return n.name+", 시작 전";
     if(n.st.achieve<40) return n.name+'\u0001';   /* 자리표 — plateSub 가 「강추」 배지로 바꾼다(0925) */
-    return n.name+(bat(n.name)?"을":"를")+" 한 번 더 풀어요.";
+    return n.name+", 한 번 더";
   }
 
   /* ══════ 모델 ══════ */
@@ -543,7 +559,7 @@
           // 이 학년이 **본 문항으로** 풀 수 있는 수(고1·고2 는 통합사회 학평)
           var mine=0;
           m.leaves.forEach(function(lf){ mine+=T.mainCount(lf); });
-          return {code:m.code,name:m.name,full:m.full||m.name,ref:m,root:r,st:st,fam:f,mine:mine,
+          return {code:m.code,name:별뗌(m.name),deep:/★/.test(m.name),full:별뗌(m.full||m.name),ref:m,root:r,st:st,fam:f,mine:mine,
                   wt:lc.wt||0,own:lc.own||0,vol:lc.vol||0,eff:lc.eff||0,
                   lec:lc.lectures||[],mins:lc.sumMin||0,
                   tier:tierOf(st.achieve,st.solved>0)};
@@ -786,7 +802,7 @@
     });
     /* 가운데는 「2학기 중간」처럼 지금 범위의 시험 이름(2026-09-18 대표님 "2학기 중간이라도 써놔야지"). 범위가 없으면 통합사회 */
     var 시험=(T.scopeOn&&T.scopeOn()&&T.기본범위지금&&T.기본범위지금())||null;
-    var 가운데=시험?String(시험.name||"").replace(/고사$/,""):"통합사회";
+    var 가운데=시험?String(시험명(시험)).replace(/고사$/,""):"통합사회";
     coreOrb(g,CORE,가운데,"",null);
   }
 
@@ -1097,10 +1113,9 @@
     var c=document.getElementById("crumb");
     if(level===0){
       c.innerHTML='<span class="swapin">통합사회</span>';
-      document.getElementById("lede").textContent=
-        (AX.name==="시험 범위" ? "이번 시험에 나오는 단원만 모았어요." : AX.name+(bat(AX.name)?"으로":"로")+" 묶었어요 — "+AX.say+".");
+      document.getElementById("lede").textContent="";   /* 묶는 축 설명 문장은 뺐다 — 위 칩과 제목이 이미 말한다(2026-09-28 판정소 4차) */
       var 시험0=(T.scopeOn&&T.scopeOn()&&T.기본범위지금&&T.기본범위지금())||null;
-      document.getElementById("plateTitle").textContent=시험0?(시험0.name+" 범위"):"통합사회";
+      document.getElementById("plateTitle").textContent=시험0?(시험명(시험0)+" 범위"):"통합사회";
       /* 위 칩이 이미 단원을 보여 준다 — 같은 이름을 부제로 되풀이하지 않는다(2026-09-21) */
       document.getElementById("plateSub").textContent=시험0?"":AX.name;
     }else if(level===2&&grp&&narrow()){
@@ -1108,7 +1123,7 @@
       c.innerHTML='<span class="swapin">'+grp.name+'</span>';
       document.getElementById("lede").textContent="";
       document.getElementById("plateTitle").textContent=grp.name;
-      document.getElementById("plateSub").textContent="원을 누르면 강의와 문제가 열려요";
+      document.getElementById("plateSub").textContent="";
     }else if(level===2&&grp){
       c.innerHTML='<button class="up" id="upbtn">통합사회</button>'+
         '<span class="sep">›</span>'+
@@ -1120,7 +1135,7 @@
         if(!busy) goFam(fam,LAY.CX,LAY.CY); };
       var lec2=grp.items.reduce(function(s2,x){ return s2+x.lec.length; },0);
       document.getElementById("lede").textContent=
-        "단원 "+grp.items.length+"개, 강의 "+lec2+"개. 하나 눌러 보세요.";
+        "단원 "+grp.items.length+"개, 강의 "+lec2+"개";
       document.getElementById("plateTitle").textContent=grp.name;
       document.getElementById("plateSub").textContent="중영역 "+grp.items.length;
     }else{
@@ -1167,7 +1182,7 @@
     FAMS.forEach(function(f){
       var b=document.createElement("button");
       b.className="seg"; b.dataset.fam=f;
-      b.innerHTML='<span class="dot" style="background:'+(FAM[f].hex||"#888")+'"></span>'+(FAM[f].label||f);
+      b.innerHTML='<span class="dot" style="background:'+(FAM[f].hex||"#888")+'"></span>'+esc(FAM[f].full||FAM[f].label||f);
       b.onclick=function(){
         if(busy||fam===f) return;
         if(level===0) goFam(f,LAY.CX,LAY.CY-LAY.rHub);
@@ -1198,7 +1213,7 @@
       /* 들을 게 없다 — 영상이 아예 없으면 '다 들었다'고 하지 않는다 */
       host.innerHTML='<div class="pick done"><span class="dot2">✓</span>'+
         '<span class="tx2"><span class="lbl">오늘</span>'+
-        (HASV?'<h3>이번 범위 강의를 다 들었어요</h3><p>이제 문제로 다질 차례예요.</p>':'<h3>오늘은 문제로 다져요</h3><p>이 범위의 기출을 풀어요.</p>')+'</span>'+
+        (HASV?'<h3>이번 범위 강의 완강</h3>':'<h3>오늘은 기출</h3>')+'</span>'+
         '<span class="act"><a class="btn" href="study.html">문제 풀기</a></span></div>';
       return;
     }
@@ -1231,7 +1246,7 @@
     }
     if(!node){ /* 층이 달라 모델에 없으면 만들어 쓴다 */
       var lc=L[mk];
-      node={code:mk,full:lc.full||lc.name,fam:lc.fam,
+      node={code:mk,full:별뗌(lc.full||lc.name),fam:lc.fam,
             root:{code:lc.root,name:lc.rootName},
             lec:lc.lectures||[],mins:lc.sumMin||0,
             own:lc.own||0,wt:lc.wt||0,eff:lc.eff||0,
@@ -1253,7 +1268,7 @@
     var 지금 = 학년!=="고3"
       ? '<span class="fact"'+(n.mine?'':' style="color:var(--red-2)"')+'>'+
         (n.mine ? '지금 풀 수 있는 <b>'+n.mine+'</b>문항'
-                : '학교에서 아직 안 배웠어요')+'</span>'
+                : '학교에서 아직 안 배움')+'</span>'
       : '';
     document.getElementById("shFacts").innerHTML= 지금 +
       /* 「N강」은 강의 영상 기준이었다 — 뺐다(2026-09-21) */
@@ -1332,7 +1347,7 @@
     var vd=body.querySelector("video");
     vd.onerror=function(){
       body.innerHTML='<div class="vmiss"><b>'+V.title+'</b> ('+V.min+'분, '+V.mb+'MB)<br><br>'+
-        V.sum+'<br><br>이 화면에서는 영상 파일을 못 찾았습니다.</div>';
+        V.sum+'<br><br>영상 파일 없음</div>';
     };
     vwrap.hidden=false; requestAnimationFrame(function(){ vwrap.classList.add("on"); });
     document.body.style.overflow="hidden";
@@ -1367,10 +1382,11 @@
     clearTimeout(peekTimer);
     var svg=g.ownerSVGElement; if(svg) svg.classList.add("dim");
     var M=MODEL[f];
-    document.getElementById("pkEyebrow").textContent="갈래";
+    /* 갈래 코드(F·K)와 「들어가기」 칩은 안 쓴다 — 아래 「눌러서 들어가기」 와 겹치고 코드는 학생이 모른다(2026-10-04) */
+    document.getElementById("pkEyebrow").textContent="";
     var tc=document.getElementById("pkTier");
-    tc.textContent="들어가기"; tc.style.background=FAM[f].hex; tc.style.color=SBG;
-    document.getElementById("pkTitle").textContent=f;
+    tc.style.display="none";
+    document.getElementById("pkTitle").textContent=FAM[f].full||FAM[f].label||f;
     document.getElementById("pkQ").textContent=FAM[f].sub;
     document.getElementById("pkBody").innerHTML=
       '<div class="pk-stats"><div><b>'+M.lec+'</b><span>강</span></div>'+
@@ -1422,8 +1438,8 @@
       host.innerHTML=FAMS.map(function(f){
         var M=MODEL[f];
         return '<div class="grp"><div class="gh">'+
-          '<span class="cd" style="color:'+FAM[f].hex+'">'+FAM[f].no+'</span>'+
-          '<h3>'+esc(FAM[f].label||f)+'</h3></div>'+
+          '<span class="cd" style="color:'+FAM[f].hex+';color:color-mix(in srgb,'+FAM[f].hex+' 55%,var(--ink))">'+FAM[f].no+'</span>'+
+          '<h3>'+esc(FAM[f].full||FAM[f].label||f)+'</h3></div>'+
           M.groups.map(function(g){
             return '<div class="mrow" data-gofam="'+f+'">'+
               '<span class="bul" style="background:'+FAM[f].hex+';opacity:.7"></span>'+
@@ -1446,7 +1462,7 @@
           return '<div class="mrow'+((T.inScopeMid&&!T.inScopeMid(x.code))?' out':'')+'" data-mid="'+x.code+'">'+
             '<span class="bul" style="background:'+col+';opacity:'+
             (x.tier==="L"?.55:1)+'"></span>'+
-            '<span class="nm">'+x.name+'</span>'+
+            '<span class="nm">'+x.name+(x.deep?'<i class="bdg bdg-hard">심화</i>':'')+'</span>'+
             '<span class="pc">'+x.lec.length+'강, '+
             (x.tier==="L"?"아직 안 함":x.st.achieve+"%")+'</span></div>';
         }).join("")+'</div>';
@@ -1504,14 +1520,15 @@
     var 자동 = T.범위자동인가 && T.범위자동인가();
     var 이름 = 안.map(function(r){ return r.name; }).join(", ");
     var 꼬리 = "";
-    if(자동 && b){
-      꼬리 = ". <em>" + (b.학교||"") + " " + (b.name||"") + " 기준이에요"
+    var 내신학년=((T.state().student||{}).grade==='고1');
+    if(자동 && b && 내신학년){
+      꼬리 = ". <em>" + (b.학교||"") + " " + (b.name||"") + " 기준"
            + (b.근거==="추정" ? "(1학기 범위는 추정)" : "")
            + ". 우리 학교와 다르면 설정에서 고쳐 주세요.</em>";
     }
     host.hidden=false;
     host.innerHTML =
-            '<span class="tx"><b>' + (b&&b.name ? b.name : "시험") + ' 범위</b>, ' +
+            '<span class="tx"><b>' + (시험명(b)||"시험") + ' 범위</b>, ' +
         이름 + 꼬리 + '</span>' +
       '<span class="act">' +
         (범위풀기
@@ -1527,7 +1544,7 @@
       document.getElementById("note").innerHTML =
         '' +
         (bq&&bq.근거==="추정"
-          ? ' 1학기 범위는 추정이에요. 우리 학교와 다르면 설정에서 고쳐 주세요.'
+          ? ' 1학기 범위는 추정. 우리 학교와 다르면 설정에서 고쳐 주세요.'
           : '') +
         '';
       return;
@@ -1593,7 +1610,7 @@
     }
     if(!node && L[mk]){
       var lc=L[mk];
-      node={code:mk,full:lc.full||lc.name,fam:lc.fam,
+      node={code:mk,full:별뗌(lc.full||lc.name),fam:lc.fam,
             root:{code:lc.root,name:lc.rootName},
             lec:lc.lectures||[],mins:lc.sumMin||0,
             own:lc.own||0,wt:lc.wt||0,eff:lc.eff||0,

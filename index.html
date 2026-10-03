@@ -14,9 +14,9 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=8f90f959">
+<link rel="stylesheet" href="css/base.css?v=1a817d13">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
-<link rel="stylesheet" href="css/question.css?v=1cc290e8">
+<link rel="stylesheet" href="css/question.css?v=4cea4076">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:1240px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -106,7 +106,7 @@
   .scopenote b{display:block;font-size:16px;margin-bottom:5px;color:var(--ink)}
   .scopenote span{display:block;font-size:15px;color:var(--ink-3);line-height:1.6}
   .scopenote a{display:inline-block;margin-top:10px;font-size:15.5px;font-weight:600;
-    color:var(--amber);text-decoration:none}
+    color:var(--amber);color:color-mix(in srgb,var(--amber) 62%,var(--ink));text-decoration:none}
   .scopenote a:hover{text-decoration:underline}
   .band{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;
     background:var(--line);border:1px solid var(--line);border-radius:var(--r2);
@@ -513,22 +513,23 @@
 
 </div>
 
-<script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/tree.js?v=cf241056"></script>
-<script src="js/qbank.js?v=df944cc8"></script>
-<script src="js/lecture.js?v=8faa86a9"></script>
+<script src="js/trend.js?v=77dea921"></script>
+<script src="js/tree.js?v=70df12a1"></script>
+<script src="js/qbank.js?v=7b68ff94"></script>
+<script src="js/lecture.js?v=878e128c"></script>
 <script src="js/video.js?v=2ad8e90e"></script>
-<script src="js/qrender.js?v=68e2ab00"></script>
-<script src="js/pool.js?v=92a27f17"></script>
-<script src="js/drills.js?v=f1bd4428"></script>
+<script src="js/qrender.js?v=749818a6"></script>
+<script src="js/pool.js?v=c0d187ff"></script>
+<script src="js/drills.js?v=3f81d010"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/cards.js?v=1b4d9904"></script>
-<script src="js/store.js?v=531993fd"></script>
+<script src="js/cards.js?v=82bdc620"></script>
+<script src="js/packs.js?v=9e67e178"></script>
+<script src="js/store.js?v=4ece5289"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
-<script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/coach.js?v=fce5041b"></script>
-<script src="js/notify.js?v=ba65297e"></script>
+<script src="js/auth.js?v=dca5fb29"></script>
+<script src="js/coach.js?v=76c10e1b"></script>
+<script src="js/notify.js?v=f6ea0991"></script>
 <script>
 (function(){
   var T=TERRA, Q=window.QBANK||{};
@@ -543,12 +544,10 @@
 
   /* 학생에게 하는 말은 판정이 아니라 권유다. 판단은 학생이 한다. */
   function howFar(st){
-    if(!st.play) return "문항을 준비하고 있어요";
-    if(!st.solved) return "아직 시작 전이에요";
-    if(st.achieve<30) return "이제 막 시작했어요";
-    if(st.achieve<60) return "절반쯤 왔어요";
-    if(st.achieve<80) return "감이 잡히고 있어요";
-    return "여기는 탄탄해요";
+    /* 2026-09-28 판정소 4차 — 「감이 잡히고 있어요」 같은 기분 말 대신 사실(푼 문항 수)만 */
+    if(!st.play) return "문항 준비 중";
+    if(!st.solved) return "시작 전";
+    return st.solved+"문항 풂";
   }
   /* 개념 이름이 데이터에서 오므로 조사도 받침을 보고 골라야 한다 */
   function bat(w){ w=String(w||""); var c=w.charCodeAt(w.length-1);
@@ -621,7 +620,9 @@
   document.getElementById("lede").textContent=
     (window.COACH ? COACH.greeting()
       : ((S.student&&S.student.grade)||"고1")+" "+T.gradeInfo().subject+
-        ". 오늘 할 것을 골라 뒀어요. 위에서부터 누르면 돼요.");
+        ", 오늘 할 것");
+  /* ★ 직전 학습 결과는 문장에 안 적고 title(마우스 오버·탭)로만 준다(2026-09-29 판정소 5차) */
+  if(window.COACH&&COACH.greetWhy){ var why=COACH.greetWhy(); if(why) document.getElementById("lede").title=why; }
   if(window.COACH){
     COACH.mountToday(document.getElementById("tstat"));
     COACH.mountCard(document.getElementById("tcard"));
@@ -640,15 +641,14 @@
     var bits=[];
     if(sp.q) bits.push("문제 "+sp.q+"개");
     if(sp.lec) bits.push("강의 "+sp.lec+"분");
-    if(sp.drill) bits.push("Killer Drill "+sp.drill+"문항");
+    if(sp.drill) bits.push("킬러 훈련 "+sp.drill+"문항");
 
     var said = R.done
-      ? "오늘 할 것 다 했어요"+(bits.length?". "+bits.join(", ")+".":".")+
-        " 더 풀 수 있어요."
+      ? "오늘 목표 완료"+(bits.length?" ("+bits.join(", ")+")":"")
       : R.spent
-        ? "지금까지 <b>"+R.spent+"분</b>"+(bits.length?" ("+bits.join(", ")+")":"")+
-          ". <b>"+Math.max(1,R.goal-R.spent)+"분</b>만 더 하면 끝나요."
-        : "<b>"+R.goal+"분</b>이면 끝나요. 위에서부터 차례로 누르세요.";
+        ? "<b>"+R.spent+"분</b> 완료"+(bits.length?" ("+bits.join(", ")+")":"")+
+          " → <b>"+Math.max(1,R.goal-R.spent)+"분</b> 남음"
+        : "<b>"+R.goal+"분</b>";
 
     /* 남은 시간을 조각에 나눠 어디까지 왔는지 표시한다.
        ★ 첫 미완 항목 하나를 크게 내민다(hero). 넷을 같은 크기로 늘어놓으면 또 고르게 된다. */
@@ -668,7 +668,7 @@
         (heroIt.why?'<p class="why">'+esc(heroIt.why)+'</p>':'')+'</span>'+
         '<span class="btn">'+esc(heroIt.cta)+(heroIt.kind==="card"?'':' '+heroIt.min+'분')+' →</span></a>'
       : '<div class="hero ok"><span class="tx"><span class="lbl">오늘 끝</span>'+
-        '<h3>오늘 할 것을 다 했어요</h3><p>더 풀 수 있어요.</p></span>'+
+        '<h3>오늘 목표 완료</h3></span>'+
         '<a class="btn" href="study.html">더 풀기 →</a></div>';
     var steps=R.items.map(function(it,k){
       var before=acc; acc+=it.min;
@@ -721,7 +721,7 @@
     }).join("");
     document.getElementById("cal").innerHTML=
       '<div class="chd"><h3>'+C.m+'월</h3>'+
-      '<span class="cap2">하루 '+C.goal+'분을 채우면 칠해집니다</span></div>'+
+      '<span class="cap2">색칠 = 하루 '+C.goal+'분</span></div>'+
       '<div class="cgrid">'+DW.map(function(d,i){
         return '<span class="dw'+(i===0?" sun":"")+'">'+d+'</span>'; }).join("")+
       cells+'</div>'+
@@ -737,7 +737,7 @@
     var host=document.getElementById("dday");
     if(!list.length){
       host.innerHTML='<a class="dd add" href="settings.html">'+
-        G.ddayName+' 날짜를 넣으면 남은 날이 여기 뜹니다 →</a>';
+        G.ddayName+' 날짜 입력 →</a>';
       return;
     }
     list.sort(function(a,b){ return (a.date||"").localeCompare(b.date||""); });
@@ -757,7 +757,10 @@
        실제 내신 등급은 그 학교 응시자 분포로 갈린다 — 우리는 그 분포를 모른다.
        모르는 것을 숫자로 내면 거짓말이 된다.
        대신 **우리가 아는 값**을 넣는다 — 되돌릴 때가 된 문항 수. */
-  var 되돌릴 = (T.dueList ? T.dueList().length : 0);
+  /* 복습 대기 = 문제풀이·진단·개념 체크 O·X·개념어·Killer Drill 에서 틀린 것 전부(2026-10-04: 9개 틀렸는데 0개) */
+  var 전체R = T.totalReport ? T.totalReport() : {pct:o.pct, answers:o.solved};
+  var 대기 = T.복습대기 ? T.복습대기() : {total:(T.dueList?T.dueList().length:0), q:0, ox:0, kw:0, drill:0};
+  var 되돌릴 = 대기.total;
   /* ── 시험 범위 안내 ──
      ★ 기본값은 **서문여고 기준**이다. 감추면 학생이 남의 학교 범위로 공부한다. */
   (function(){
@@ -767,7 +770,7 @@
     if(!b || !host) return;
     host.insertAdjacentHTML("beforebegin",
       '<div class="scopenote">'+
-        '<b>시험 범위가 '+esc(b.학교)+' 기준으로 잡혀 있어요</b>'+
+        '<b>'+esc(b.학교)+' 기준 범위</b>'+
         '<span>'+esc(b.name)+', '+esc(b.단원)+'. 우리 학교 범위와 다르면 고쳐 주세요.</span>'+
         '<a href="settings.html#scope">내 학교 범위로 고치기 →</a>'+
       '</div>');
@@ -776,13 +779,16 @@
   document.getElementById("band").innerHTML=
     tile("전체 진도", o.progress+'<small>%</small>',
          "")+
-    tile("정답률", (o.pct==null?"—":o.pct+'<small>%</small>'),
-         "지금까지 푼 것 기준")+
-    tile("지금 성적대", (f.now.band==null?"—":f.now.band+'<small>등급</small>'),
-         "내신 5등급 기준 <b>가늠</b>이에요")+
+    /* 정답률은 학부모 리포트와 같은 집계(전체 풀이 기록)에서 — 한 문항이 여러 개념에 걸려 개념별 합계로 세면 숫자가 어긋났다(2026-10-04) */
+    tile("정답률", (전체R.pct==null?"—":전체R.pct+'<small>%</small>'),
+         "문제풀이 "+전체R.answers+"문항 기준")+
+    /* 등급 가늠은 푼 문제가 50개를 넘기 전에는 내지 않는다 — 진도 1% 에서 「5등급」 이 나갔다(2026-10-04) */
+    (전체R.answers>=50 && T.bandOf(전체R.pct)!=null
+      ? tile("지금 성적대", T.bandOf(전체R.pct)+'<small>등급</small>', "내신 5등급 기준 <b>가늠</b>")
+      : "")+
     tile("복습할 문항", 되돌릴+'<small>개</small>',
-         되돌릴 ? "틀린 지 3·7·21일이 지나 다시 볼 때가 됐어요"
-                : "지금은 복습할 것이 없어요", 되돌릴>0);
+         되돌릴 ? [대기.q?"문제 "+대기.q:"", 대기.ox?"O·X "+대기.ox:"", 대기.kw?'<a href="ox.html?kwwrong=1">개념어 '+대기.kw+'</a>':"", 대기.drill?"킬러 훈련 "+대기.drill:""].filter(Boolean).join(", ")
+                : "없음", 되돌릴>0);
   /* 네 칸은 접힌 '단원별' 첫머리에 둔다 — 열면 먼저 보인다 */
   (function(){ var b=document.getElementById("band"), m=document.querySelector("#more-stat .mbody");
     if(b&&m) m.insertBefore(b, m.firstChild); })();
@@ -794,7 +800,7 @@
   /* ── 갈래 카드 ── */
   document.getElementById("fams").innerHTML=FAMS.map(function(x){
     var st=FAMSTAT[x];
-    var say = !st.solved ? "아직 안 풀었어요" : "진도 "+Math.round(st.prog)+"%";
+    var say = !st.solved ? "시작 전" : "진도 "+Math.round(st.prog)+"%";
     return '<a class="fam" href="skilltree.html?area='+st.roots[0].code+'" '+
       'style="--c:'+st.col+'">'+
       '<span style="position:absolute;left:0;top:0;bottom:0;width:3px;background:'+st.col+'"></span>'+
@@ -818,24 +824,28 @@
     var st=T.midStat(m.code);
     mids.push({m:m,root:rt,st:st,fam:rt.fam||"윤리"});
   }); });
-  var solvedMids=mids.filter(function(x){ return x.st.solved>=3; });
-  var good=solvedMids.slice().sort(function(a,b){ return b.st.achieve-a.st.achieve; }).slice(0,4);
-  var thin=solvedMids.slice().sort(function(a,b){ return a.st.achieve-b.st.achieve; }).slice(0,4);
+  /* 탄탄·약함은 서로 겹치지 않는다 — 푼 문항이 표본하한(5)을 넘고 정답률이 70% 이상이면 탄탄, 미만이면 약함.
+     표본이 모자라면 어느 쪽에도 안 넣고 「표본 부족」 이라 적는다(2026-10-04: 같은 단원이 양쪽에 동시에 올랐다). */
+  var 하한=T.표본하한||5;
+  var 충분=mids.filter(function(x){ return x.st.solved>=하한 && x.st.pct!==null; });
+  var good=충분.filter(function(x){ return x.st.pct>=70; }).sort(function(a,b){ return b.st.pct-a.st.pct; }).slice(0,4);
+  var thin=충분.filter(function(x){ return x.st.pct<70; }).sort(function(a,b){ return a.st.pct-b.st.pct; }).slice(0,4);
   // 아직 아무것도 안 푼 곳도 약한 쪽에 함께 보인다
   var untouched=mids.filter(function(x){ return x.st.play>0 && x.st.solved===0; })
     .sort(function(a,b){ return b.st.play-a.st.play; }).slice(0,2);
   thin=thin.concat(untouched).slice(0,5);
+  var 표본적음=mids.some(function(x){ return x.st.solved>0 && x.st.solved<하한; });
 
-  document.getElementById("goodTag").textContent=good.length?"성취도 높은 순":"";
-  document.getElementById("badTag").textContent=thin.length?"먼저 볼 만한 순":"";
-  document.getElementById("good").innerHTML=good.map(rowOf).join("")||empty("아직 판단할 만큼 풀지 않았어요");
-  document.getElementById("bad").innerHTML=thin.map(rowOf).join("")||empty("아직 판단할 만큼 풀지 않았어요");
+  document.getElementById("goodTag").textContent=good.length?"정답률 높은 순":"";
+  document.getElementById("badTag").textContent=thin.length?"정답률 낮은 순":"";
+  document.getElementById("good").innerHTML=good.map(rowOf).join("")||empty(표본적음?"표본 부족":"데이터 부족");
+  document.getElementById("bad").innerHTML=thin.map(rowOf).join("")||empty(표본적음?"표본 부족":"데이터 부족");
   function rowOf(x){
     var col=FAMSTAT[x.fam]?FAMSTAT[x.fam].col:"var(--lv2)";
     return '<div class="row" data-area="'+x.root.code+'">'+
       '<span class="dot" style="background:'+col+';opacity:'+(x.st.solved?1:.4)+'"></span>'+
       '<span class="nm"><b>'+esc(x.m.name)+'</b><span>'+x.root.name+', '+howFar(x.st)+'</span></span>'+
-      '<span class="pc">'+(x.st.solved?x.st.achieve+"%":"—")+'</span></div>';
+      '<span class="pc">'+(x.st.solved>=(T.표본하한||5)?x.st.pct+"%":(x.st.solved?"표본 부족":"—"))+'</span></div>';
   }
   function empty(t){ return '<div class="row"><span class="nm"><b>'+t+'</b></span></div>'; }
   document.querySelectorAll("[data-area]").forEach(function(b){
@@ -863,20 +873,17 @@
     target=pickTarget();
     var host=document.getElementById("check");
     if(!target){
-      host.innerHTML='<h2>세 문항으로 확인해요</h2>'+
-        '<p class="lead">지금은 바로 낼 수 있는 문항이 모자랍니다. '+
-        '문제풀이에서 한 단원을 골라 보세요.</p>'+
+      host.innerHTML='<h2>세 문항 확인</h2>'+
+        '<p class="lead">문항 부족</p>'+
         '<div class="acts"><a class="btn" href="study.html">문제 풀러 가기</a></div>';
       return;
     }
     var st=T.midStat(target.mid.m.code);
     var say = st.solved
-      ? '지금까지 푼 것만 보면 <b>'+esc(target.mid.m.name)+'</b>'+
-        (bat(target.mid.m.name)?"이":"가")+' 아직 약해 보여요.'
-      : '<b>'+esc(target.mid.m.name)+'</b>'+
-        (bat(target.mid.m.name)?"은":"는")+' 아직 안 풀어봤어요.';
-    host.innerHTML='<h2>세 문항으로 확인해요</h2>'+
-      '<p class="lead">'+say+' 세 문제 확인</p>'+
+      ? '<b>'+esc(target.mid.m.name)+'</b>: 정답률 낮음'
+      : '<b>'+esc(target.mid.m.name)+'</b>: 시작 전';
+    host.innerHTML='<h2>세 문항 확인</h2>'+
+      '<p class="lead">'+say+'</p>'+
       '<div class="acts"><button class="btn" id="go3">세 문항으로 확인</button>'+
       '<a class="btn ghost" href="study.html?leaf='+target.leaf.code+'">이 단원 풀기</a>'+
       '<span class="hint">'+esc(target.leaf.name)+'</span></div><div id="quizhost"></div>';
@@ -930,8 +937,7 @@
     if(!d.w){
       return d.x
         ? '<p>'+esc(d.x)+'</p>'
-        : '<p style="color:var(--ink-4)">이 문항은 해설이 함께 오지 않았어요. '+
-          '선지를 하나씩 지워 가며 왜 남는지를 적어 두세요.</p>';
+        : '<p style="color:var(--ink-4)">해설 없음</p>';
     }
     var out='';
     if(!ok && d.w[String(pick+1)])
@@ -941,11 +947,11 @@
     var why=d.c||d.w[String(d.a+1)]||"";
     if(why)
       out+='<div class="whyrow right"><span class="no">'+M.charAt(d.a)+'</span>'+
-        '<span class="tt"><b>'+(ok?"이래서 맞았어요":"이게 정답인 이유")+'</b>'+
+        '<span class="tt"><b>'+"정답 근거"+'</b>'+
         '<span>'+esc(why)+'</span></span></div>';
     else if(ok)
       out+='<div class="whyrow right"><span class="no">'+M.charAt(d.a)+'</span>'+
-        '<span class="tt"><b>맞았어요</b><span>나머지 선지가 왜 아닌지는 아래에서 볼 수 있어요.</span>'+
+        '<span class="tt"><b>정답</b>'+
         '</span></div>';
     var rest=Object.keys(d.w).filter(function(k){
       return (+k-1)!==d.a && (ok || (+k-1)!==pick); });
@@ -967,7 +973,7 @@
     });
     document.getElementById("qv").innerHTML=
       '<div class="why"><b style="display:block;margin-bottom:10px">'+
-      (ok?"맞았어요.":"틀렸어요.")+'</b>'+
+      (ok?"정답":"오답")+'</b>'+
       whyHtml(b,pick,ok)+
       '<span class="src">'+esc(q.g||"")+' '+esc(q.d||"")+' '+(q.n||"")+'번, '+
       esc(q.lb||"")+'</span></div>'+
@@ -980,7 +986,7 @@
     var got=quiz.marks.filter(Boolean).length, n=quiz.list.length;
     var st=T.midStat(target.mid.m.code);
     var say = got===n
-      ? "세 문항 다 맞았어요. 리포트를 고쳤어요."
+      ? "리포트 갱신"
       : got===0
         ? '이 단원 다시 <i class="gc">강추</i>'
         : "오답 모아풀기";
@@ -988,8 +994,8 @@
       '<div class="quiz"><div class="verdict"><div class="big">'+got+
       '<small> / '+n+'</small></div><p>'+say+'</p>'+
       '<p style="font-size:13px;color:var(--ink-4);margin-top:10px">'+
-      esc(target.mid.m.name)+' 성취도가 이제 <b style="color:var(--ink-2)">'+
-      st.achieve+'%</b> 입니다.</p>'+
+      esc(target.mid.m.name)+' 성취도 <b style="color:var(--ink-2)">'+
+      st.achieve+'%</b></p>'+
       '<div class="acts"><a class="btn" href="study.html?leaf='+target.leaf.code+
       '">이 단원 이어서 풀기</a>'+
       '<button class="btn ghost" id="again3">다른 곳도 확인</button>'+
@@ -1040,7 +1046,7 @@
     if(S3.last&&S3.last.leaf&&T.BY[S3.last.leaf]&&
        (!T.scopeOn()||범위안(S3.last.leaf)))
       todo.push({t:"이어서",h:T.BY[S3.last.leaf].name,
-        p:"마지막으로 보던 곳이에요.",href:"study.html?leaf="+S3.last.leaf});
+        p:"마지막으로 본 곳",href:"study.html?leaf="+S3.last.leaf});
 
     /* 새로 시작 — 범위 안에서, 손대지 않은 곳 가운데 문항이 가장 많은 곳 */
     var 안한것=T.LEAVES.filter(function(l){
@@ -1048,7 +1054,7 @@
     var start=골라내기(안한것)
       .sort(function(a,b){ return playable(b).length-playable(a).length; })[0];
     if(start) todo.push({t:꼬리표("새로 시작",start.code),h:start.name,
-      p:"아직 안 풀어본 단원이에요.",href:"study.html?leaf="+start.code});
+      p:"시작 전",href:"study.html?leaf="+start.code});
     /* 채우기 모드 — 실전이 열리는 날을 미리 알려 준다.
        지금 하는 15분이 어디로 가는지 보여야 계속한다. */
     (function(){
@@ -1056,10 +1062,9 @@
       if(XM.mode!=="fill" || XM.untilReal===null || XM.untilReal===undefined) return;
       if(XM.untilReal>21) return;               // 너무 멀면 말하지 않는다
       todo.push({t:"앞으로",
-        h: XM.untilReal===0 ? "내일부터 모의고사예요"
+        h: XM.untilReal===0 ? "내일부터 매일 모의고사"
                             : XM.untilReal+"일 뒤부터 매일 모의고사",
-        p:(XM.exam?XM.exam.name+" ":"")+"열흘 전부터는 25문항 45분을 매일 한 회씩 풉니다. "+
-          "그때까지는 약한 곳을 채워요.",
+        p:(XM.exam?XM.exam.name+" ":"")+"D-10부터 매일 25문항, 45분",
         href:"settings.html"});
     })();
 
@@ -1074,10 +1079,10 @@
         끝냄 = lg.some(function(r){ return r.day===T.dayKey(); });
       }catch(e){}
       todo.unshift(끝냄
-        ? {t:XM.exam.name+" "+XM.label, h:"오늘 회차는 끝냈어요",
-           p:"틀린 것만 다시 풀면 오늘은 끝이에요.", href:"exam.html"}
+        ? {t:XM.exam.name+" "+XM.label, h:"오늘 회차 완료",
+           p:"오답 모아풀기", href:"exam.html"}
         : {t:XM.exam.name+" "+XM.label, h:"오늘의 모의고사",
-           p:"25문항 45분이에요.", href:"exam.html"});
+           p:"25문항, 45분", href:"exam.html"});
     })();
 
     /* 트레이닝 — 시험 범위를 정해 뒀으면 그 범위에서 아직 안 한 것을 집어 준다.
@@ -1090,14 +1095,14 @@
       if(T.scopeOn() && 안.length){
         var 못한=안.filter(function(d){ return T.drillStat(d.id).n===0; });
         var 하나=(못한.length?못한:안)[0];
-        todo.push({t:"이번 시험 범위",h:하나.name+" Killer Drill",
+        todo.push({t:"이번 시험 범위",h:하나.name+" 킬러 훈련",
           p:하나.desc,href:"drill.html?type="+하나.id});
-        if(범위썼나) todo.push({t:"알림",h:"시험 범위 안은 여기까지예요",
-          p:"위쪽 몇 줄은 범위 밖입니다. 범위 안에서 더 풀 것이 없어 채웠어요.",
+        if(범위썼나) todo.push({t:"알림",h:"시험 범위 안 문항 끝",
+          p:"위쪽은 범위 밖",
           href:"settings.html"});
       }else{
-        todo.push({t:"Killer Drill",h:"Killer Drill",
-          p:D.map(function(d){ return d.name; }).join(", ")+" — 오늘 바로 됩니다.",
+        todo.push({t:"킬러 훈련",h:"킬러 훈련",
+          p:D.map(function(d){ return d.name; }).join(", "),
           href:"drill.html"});
       }
     })();
@@ -1121,7 +1126,7 @@
       cards.push({eb:"확장팩",name:"선택과목 확장팩",
         p:"고2 는 통합사회를 듣지 않습니다. 세계시민과 지리·사회와 문화 같은 "+
           "선택과목을 하나 단위로 붙여, 같은 개념트리와 문제풀이를 그 과목 범위로 씁니다."+
-          (got.length?" 지금 "+got.length+"과목을 골라 두셨어요.":""),
+          (got.length?" 선택 "+got.length+"과목":""),
         btn:"과목 고르기",href:"settings.html",st:"값 미정, 준비 중"});
     }else{
       var bk=T.BOOKS.filter(function(b){ return b.grade===grade; })[0];
@@ -1131,7 +1136,7 @@
     var base=T.BOOKS.filter(function(b){ return b.grade==="*"; })[0];
     if(base) cards.push({eb:"기본서",name:base.name,p:base.say,
       btn:"준비 중",href:"settings.html",st:"값·출간일 미정",dim:true});
-    cards.push({eb:"지금 되는 것",name:"Killer Drill",
+    cards.push({eb:"지금 되는 것",name:"킬러 훈련",
       p:(window.DRILLS||[]).map(function(d){ return d.name; }).join(", ")+
         ". 오늘 바로 쓸 수 있습니다.",
       btn:"들어가기",href:"drill.html",st:"무료"});
@@ -1147,17 +1152,17 @@
 
   /* ── 최근 7일 ── */
   var ws=T.weekSeries();
-  var mx=Math.max(1,Math.max.apply(null,ws.map(function(x){ return x.ans; })));
+  var mx=Math.max(1,Math.max.apply(null,ws.map(function(x){ return x.solved; })));
   document.getElementById("week").innerHTML=ws.map(function(x,i){
-    var h=Math.round(x.ans/mx*100);
+    var h=Math.round(x.solved/mx*100);
     return '<span class="d'+(i===ws.length-1?" now":"")+'" title="'+x.d+
-      ', '+x.ans+'문항">'+
+      ', '+x.solved+'문항">'+
       '<i style="height:'+Math.max(3,h)+'%"></i>'+
       '<span>'+x.label+'</span></span>';
   }).join("");
-  var total7=ws.reduce(function(s,x){ return s+x.ans; },0);
+  var total7=ws.reduce(function(s,x){ return s+x.solved; },0);
   document.getElementById("weekCap").innerHTML=
-    total7 ? "7일 동안 "+total7+"문항" : "이번 주는 아직 조용해요";
+    total7 ? "7일 동안 "+total7+"문항" : "기록 없음";
 
   /* 아래 빈 문단(foot)은 2026-09-21 에 지웠다 — 만든 사람 메모 자리였다 */
 
@@ -1167,26 +1172,49 @@
     document.body.classList.add("home");
     var host=document.getElementById("talk"); if(!host) return;
     var CARDS=window.CARDS||{};
+    var grade=(S.student&&S.student.grade)||"고1";
+    var 오늘=T.dayKey();
+
+    /* ★ 고2·고3 은 고1 통합사회 O·X 를 풀지 않는다 — 오늘 할 단원의 기출 풀이로 보낸다(2026-10-04: 고3 도 고1 학평 O·X 가 나왔다) */
+    if(grade!=="고1"){
+      var c=T.오늘의리프?T.오늘의리프():null;
+      if(!c){ host.innerHTML='<div class="bub">'+(grade==="고2"?"선택과목 미설정":"문항 없음")+'</div><div class="ans"><a href="settings.html">'+(grade==="고2"?"선택과목 고르기":"설정")+'</a></div>'; return; }
+      var 단원=c.leaf, 오늘r=T.report(), 단원명=String(단원.name).split(" — ")[0];
+      var 말2 = 오늘r.solved
+        ? '오늘 '+오늘r.solved+'문항 '+오늘r.solvedOk+'개 정답 → <b>'+esc(단원.name)+'</b> <i class="gc">강추</i>'
+        : '오늘은 <b>'+esc(단원명)+'</b> 기출 <i class="gc">강추</i>';
+      var 틀린q=T.dueList?T.dueList():[];
+      host.innerHTML='<div class="bub">'+말2+'</div>'+
+        '<div class="ans"><a href="study.html?leaf='+단원.code+'">시작</a>'+
+        (CARDS[단원.code]?'<a class="lite" href="card.html?leaf='+단원.code+'">개념 보기</a>':'')+
+        '<button type="button" class="lite" id="talkmore">다른 단원 학습</button></div>'+
+        '<div class="askmore" id="askmore" hidden><div class="pickl">'+
+          '<a href="skilltree.html">단원별 기출<span>개념트리</span></a>'+
+          (틀린q.length?'<a href="study.html?leaf='+틀린q[0].leaf+'&mode=wrong">오답 모아풀기<span>'+틀린q.length+'문항</span></a>':'')+
+          '<a href="exam.html">시험처럼 풀기<span>모의고사</span></a>'+
+        '</div></div>';
+      document.getElementById("talkmore").onclick=function(){ var m=document.getElementById("askmore"); m.hidden=!m.hidden; if(!m.hidden) m.scrollIntoView({block:"nearest",behavior:"smooth"}); };
+      return;
+    }
+
     var 후보=(T.오늘의리프?T.오늘의리프({전부:true}):[]).filter(function(c){ return CARDS[c.code]; });
     var 리프=후보[0]?후보[0].leaf:null;
     if(!리프){ host.innerHTML='<div class="bub">시험 범위 미설정</div><div class="ans"><a href="settings.html#scope">범위 정하기</a></div>'; return; }
     var 개념=(CARDS[리프.code].cards[0]||{}).title||리프.name;
-    /* 오늘 O·X 를 얼마나 했나 — 말이 달라진다 */
-    var 오늘=T.dayKey(), ox=S.ox||{}, 한=0, 맞=0;
+    /* 오늘 O·X 를 얼마나 했나 — 말이 달라진다. 숫자 앞에 무엇의 몇 개인지를 적는다(2026-10-04: 「O·X 10 중 6」) */
+    var ox=S.ox||{}, 한=0, 맞=0;
     Object.keys(ox).forEach(function(k){ var x=ox[k]; if(x&&x.at&&T.dayKey(new Date(x.at))===오늘){ 한++; if(x.ok) 맞++; } });
-    var 부름=(S.student&&S.student.name)?esc(S.student.name)+', ':'';
-    var 말 = 한===0 ? 부름+'오늘은 <b>'+esc(개념)+'</b> O·X <i class="gc">강추</i>'
-           : 한<30  ? '오늘 O·X '+한+'문장 중 '+맞+'개 맞혔어요. <b>'+esc(개념)+'</b> 한 세트 더'
-                    : '오늘 O·X '+한+'문장 했어요. <b>'+esc(개념)+'</b> <i class="gc">강추</i>';
+    var 말 = 한===0 ? '오늘은 <b>'+esc(개념)+'</b> O·X <i class="gc">강추</i>'
+                    : '오늘 O·X '+한+'문항 '+맞+'개 정답 → <b>'+esc(개념)+'</b> <i class="gc">강추</i>';
     var 틀린=Object.keys(ox).filter(function(k){ return ox[k]&&ox[k].ok===false; }).length;
     host.innerHTML='<div class="bub">'+말+'</div>'+
-      '<div class="ans"><a href="ox.html?leaf='+리프.code+'">좋아요, 시작</a>'+
-      '<a class="lite" href="card.html?leaf='+리프.code+'">개념 먼저</a>'+
+      '<div class="ans"><a href="ox.html?leaf='+리프.code+'">시작</a>'+
+      '<a class="lite" href="card.html?leaf='+리프.code+'">개념 보기</a>'+
       '<button type="button" class="lite" id="talkmore">다른 단원 학습</button></div>'+
-      '<div class="askmore" id="askmore" hidden><div class="bub">뭘 연습하고 싶어요?</div><div class="pickl">'+
-        '<a href="skilltree.html">단원을 골라서 O·X<span>개념트리</span></a>'+
-        (틀린?'<a href="ox.html?wrong=1">틀린 문장만 다시<span>'+틀린+'문장</span></a>':'')+
-        '<a href="naeshin.html">어려운 O·X만<span>Killer Drill</span></a>'+
+      '<div class="askmore" id="askmore" hidden><div class="pickl">'+
+        '<a href="skilltree.html">단원별 O·X<span>개념트리</span></a>'+
+        (틀린?'<a href="ox.html?wrong=1">오답 모아풀기<span>'+틀린+'문장</span></a>':'')+
+        '<a href="naeshin.html">어려운 O·X만<span>범위 킬러</span></a>'+
         '<a href="exam.html">시험처럼 풀기<span>모의고사</span></a>'+
         '<a href="skilltree.html?lec='+리프.code+'">강의 보기<span>'+esc(개념)+'</span></a>'+
       '</div></div>';

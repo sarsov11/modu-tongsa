@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Killer Drill</title>
+<title>킬러 훈련</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
@@ -14,7 +14,7 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=8f90f959">
+<link rel="stylesheet" href="css/base.css?v=1a817d13">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -361,7 +361,7 @@
 <div class="page">
   <div class="phead">
     <div>
-      <div><h1 id="ktitle">Killer Drill</h1>   <!-- 「다들 여기서 막힙니다」 → 제목은 이름만(2026-09-19 대표님 선택). 위 작은 꼬리표는 같은 말이라 뺐다 -->
+      <div><h1 id="ktitle">킬러 훈련</h1>   <!-- 「다들 여기서 막힙니다」 → 제목은 이름만(2026-09-19 대표님 선택). 위 작은 꼬리표는 같은 말이라 뺐다 -->
       <p class="sub" id="kdesc"></p></div>
     </div>
     <div class="pheadact"><div class="segs" id="modes"></div></div>
@@ -396,29 +396,30 @@
   </div>
 </div>
 
-<script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/tree.js?v=cf241056"></script>
-<script src="js/qrender.js?v=68e2ab00"></script>
+<script src="js/trend.js?v=77dea921"></script>
+<script src="js/tree.js?v=70df12a1"></script>
+<script src="js/qrender.js?v=749818a6"></script>
 <script src="js/atlas.js?v=b77a2dac"></script>
-<script src="js/thinker.js?v=08620881"></script>
-<script src="js/subkiller.js?v=f46246fe"></script>
-<script src="js/laborcase.js?v=8bad3cdb"></script>
-<script src="js/econcase.js?v=19e274b7"></script>
+<script src="js/thinker.js?v=eb764825"></script>
+<script src="js/subkiller.js?v=b2e8e74d"></script>
+<script src="js/laborcase.js?v=fd515dab"></script>
+<script src="js/econcase.js?v=7e2ce3e2"></script>
 <script src="js/consticase.js?v=84ea84d0"></script>
-<script src="js/drills.js?v=f1bd4428"></script>
-<script src="js/rights.js?v=988ebb69"></script>
-<script src="js/power.js?v=4fc54a2a"></script>
-<script src="js/peace.js?v=718d7cae"></script>
-<script src="js/disobey.js?v=52983959"></script>
-<script src="js/justice.js?v=7e9430a4"></script>
-<script src="js/pool.js?v=92a27f17"></script>
-<script src="js/cards.js?v=1b4d9904"></script>
-<script src="js/store.js?v=531993fd"></script>
+<script src="js/drills.js?v=3f81d010"></script>
+<script src="js/rights.js?v=9b5ee374"></script>
+<script src="js/power.js?v=f994cb83"></script>
+<script src="js/peace.js?v=027b0125"></script>
+<script src="js/disobey.js?v=5268e39b"></script>
+<script src="js/justice.js?v=4375db26"></script>
+<script src="js/pool.js?v=c0d187ff"></script>
+<script src="js/cards.js?v=82bdc620"></script>
+<script src="js/packs.js?v=9e67e178"></script>
+<script src="js/store.js?v=4ece5289"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
-<script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/coach.js?v=fce5041b"></script>
-<script src="js/notify.js?v=ba65297e"></script>
+<script src="js/auth.js?v=dca5fb29"></script>
+<script src="js/coach.js?v=76c10e1b"></script>
+<script src="js/notify.js?v=f6ea0991"></script>
 <script>
 (function(){
   var T=TERRA, A=ATLAS;
@@ -475,7 +476,7 @@
 
   (function(){ var g=(T.state().student||{}).grade||"고1"; if(g!=="고1"||!T.scopeOn()) return;
     var ph=document.querySelector(".phead"); if(!ph) return;
-    ph.insertAdjacentHTML("afterend",'<a class="naeshin" href="naeshin.html"><b>내신 Killer Drill</b><span>헷갈리는 문항만 집중 연습할 수 있어요.</span><i>→</i></a>');
+    ph.insertAdjacentHTML("afterend",'<a class="naeshin" href="naeshin.html"><b>범위 킬러</b><i>→</i></a>');
   })();
   /* ★ 내신 대비(고1)에서는 킬러·준킬러로 가르지 않는다 — 수능 말이라 어색하다(2026-09-19 대표님) */
   var _고1=((T.state().student||{}).grade||"고1")==="고1";
@@ -498,8 +499,8 @@
     document.getElementById("kdesc").textContent=m.desc;   /* 단원 알파벳은 학생에게 안 보인다(2026-09-16) */
     var _bs=document.getElementById("basis"); if(_bs) _bs.innerHTML="<b>"+m.name+"</b><br>"+m.basis;
   }
-  function grade(ok){
-    answered=true; session.push(ok); T.drill(mode,ok); side();
+  function grade(ok,ref){
+    answered=true; session.push(ok); T.drill(mode,ok,ref);   /* 세 번째 인자 = 문항·단계 id → 틀리면 복습 대기열(S.dw) */ side();
     /* ★ 기후 말고 다른 훈련은 세트 경계가 없다(사례 3단계짜리). 열 문항마다 결산을 띄운다 */
     if(mode!=="climate" && window.COACH && session.length && session.length%10===0){
       var 열=session.slice(-10), 맞=열.filter(Boolean).length;
@@ -647,7 +648,7 @@
     var rg=q.city.rg||"";
     wrap.insertAdjacentHTML("beforeend",
       '<div class="count"><span class="n" id="cdn">3</span>'+
-      '<span class="cap">잠시 뒤 지도가 들어갑니다</span></div>');
+      '<span class="cap">지도 준비 중</span></div>');
     var n=3;
     function tick(){
       n--;
@@ -774,7 +775,7 @@
     document.getElementById("qmeta").textContent=(set.i+1)+" / "+SET_NOW;
     return mapSvg(false,q.city,WORLD)+
       '<div id="cityline" style="margin-top:14px;font-size:15px;color:var(--ink-3)">'+
-      '<span style="opacity:.55">곧 한 도시가 반짝입니다</span></div>'+
+      '<span style="opacity:.55">&nbsp;</span></div>'+
       '<div class="opts c5 wait">'+q.options.map(function(k,i){
         return '<button class="opt" data-v="'+i+'"><span class="k">'+"①②③④⑤".charAt(i)+'</span>'+
           '<span><b>'+kc(k)+'</b> '+A.koppen[k].name+'</span></button>';
@@ -813,7 +814,7 @@
       (last?"결과 보기":"다음 문제")+'</button>'+
       '<span class="gohint">'+(set.i+1)+' / '+SET_N+' 째</span></div>'+
       '<div class="why"><b>'+q.city.n+' — '+kc(q.city.k)+' '+A.koppen[q.city.k].name+'</b>'+
-      (over?" 시간이 지났습니다.":(ok?" 맞았습니다.":" 다시 봅시다."))+'<br>'+
+      '<br>'+
       hintFor(q.city)+
       '<div style="margin-top:12px;display:flex;gap:9px;flex-wrap:wrap;align-items:center">'+
       (q.city.hit
@@ -830,7 +831,7 @@
         ? '<div class="gnote">'+q.city.gnote+'</div>'
         : '')+
       (q.city.note
-        ? '<div class="amb"><b>'+(q.city.g==="F"?"판독을 바로잡았습니다.":"분류가 갈리는 곳입니다.")+
+        ? '<div class="amb"><b>'+(q.city.g==="F"?"판독 정정":"분류 갈림")+
           '</b> '+q.city.note+'</div>'
         : '')+
       '</div>'+
@@ -842,23 +843,21 @@
   }
   /* 해설 한 줄 — 기후형마다 다른 말을 한다. 같은 문장을 다섯 번 보면 안 읽는다. */
   var HINT={
-    Af:"적도 가까이, 연중 비가 옵니다. 건기가 뚜렷하면 Af 가 아닙니다.",
-    Am:"우기가 몰아치고 짧은 건기가 있습니다. Af 와 Aw 사이입니다.",
-    Aw:"건기와 우기가 뚜렷합니다. 위도 5~20도 언저리를 먼저 의심하세요.",
-    BW:"연 강수량이 250mm 안팎입니다. 위도 20~30도대와 한류 연안을 보세요.",
-    BS:"사막 가장자리입니다. BW 와 붙어 있는지부터 확인하세요.",
-    Cs:"여름에 마르고 겨울에 젖습니다. 대륙 서안 30~40도대입니다.",
-    Cfa:"대륙 동안, 여름이 덥고 습합니다. 계절풍인지 아닌지가 Cw 와 갈립니다.",
-    Cfb:"대륙 서안, 편서풍과 난류로 연중 고릅니다. 여름이 서늘합니다.",
-    Cw:"겨울에 뚜렷이 마릅니다. 동아시아 계절풍대가 대표입니다.",
-    AH:"저위도인데 서늘합니다. 고도가 기온을 끌어내린 자리입니다."
+    /* 2026-09-28 판정소 4차 — 해설은 단계 기호로. 「한류 연안」은 시험 범위 밖이라 뺐다(대표님) */
+    Af:"적도 부근, 연중 강수. 건기 뚜렷 → Af 아님",
+    Am:"우기 + 짧은 건기 → Af와 Aw 사이",
+    Aw:"건기와 우기 뚜렷, 위도 5~20도 부근",
+    BW:"연 강수량 250mm 미만, 위도 20~30도 부근",
+    BS:"사막 가장자리 → BW와 맞닿음",
+    Cs:"여름 건조, 겨울 습윤. 대륙 서안 30~40도",
+    Cfa:"대륙 동안, 여름 고온 다습. 계절풍 여부 → Cw와 구분",
+    Cfb:"대륙 서안, 편서풍 + 난류 → 연중 고른 강수. 여름 서늘",
+    Cw:"겨울 건조 뚜렷. 동아시아 계절풍 지역",
+    AH:"저위도인데 서늘 → 고도 영향"
   };
   function hintFor(c){
     var h=HINT[c.k];
-    var side=(c.x>=0?"동":"서")+"경 "+Math.abs(Math.round(c.x))+"도, "+
-             (c.y>=0?"북":"남")+"위 "+Math.abs(Math.round(c.y))+"도";
-    return (h||"위도와 대륙의 어느 쪽인지를 함께 보세요.")+
-           ' <span style="color:var(--ink-4)">('+side+')</span>';
+    return h||"위도 + 대륙 동안·서안";
   }
 
   /* 결과 지도 — 그 기출 문항에 나왔던 도시만 빛낸다 */
@@ -910,15 +909,11 @@
             n+' <b>'+kc(c.k)+'</b> '+A.koppen[c.k].name+'</span>';
         }).join("")+'</div>'+
         '<p class="rvq">'+an.quote+'</p>'+
-        '<p class="rvnote">이 '+inQ.length+'개 도시가 한 문항에서 서로 견주어 나왔습니다. '+
-        '나머지 '+(SET_NOW-inQ.length)+'문항은 연습으로 섞은 도시입니다.</p></div>';
+        '<p class="rvnote">기출 도시 '+inQ.length+'개 + 연습 도시 '+(SET_NOW-inQ.length)+'개</p></div>';
     }
     document.getElementById("stage").innerHTML=
       '<div class="result"><div class="big">'+got+'<span> / '+SET_NOW+'</span></div>'+
-      '<div class="cap">'+(got===SET_NOW?"전부 맞혔습니다.":
-        got>=4?"오답 모아풀기":
-        got>=2?"헷갈리는 기후가 남아 있습니다.":
-        "여기서 갈리는 것을 찾았습니다. 틀린 것만 다시 가면 됩니다.")+'</div>'+
+      '<div class="cap">'+(got===SET_NOW?"전부 정답":"오답 모아풀기")+'</div>'+
       (miss?'<div class="missed">'+miss+'</div>':'')+review+
       '<div style="display:flex;gap:10px;margin-top:26px;justify-content:center;flex-wrap:wrap">'+
       (set.miss.length
@@ -969,6 +964,7 @@
             lo:Math.min(oa,ob), hi:Math.max(oa,ob), aHasX:aHasX};
   }
   function r2(v){ return Math.round(v*100)/100; }
+  function 서로다른(a){ var seen={}, out=[]; a.forEach(function(x){ if(!seen[x]){ seen[x]=1; out.push(x); } }); return out; }
 
   function makeEconSet(){
     var q=makeEcon(), t=q.t, X=q.G[0], Y=q.G[1], A=q.C[0], B=q.C[1];
@@ -976,23 +972,23 @@
 
     /* 1) 기회비용 — 식을 보여 주면 고르기가 된다. 값만 놓는다. */
     st.push({k:"oc", show:"table",
-      q:IGA(A)+' '+X+' 1개를 더 만들려면 '+EL(Y)+' 몇 개 포기해야 할까요?',
-      o:[r2(q.oa)+'개', r2(1/q.oa)+'개'], a:0,
-      hint:EL(X)+' 다 만들면 '+NEUN(Y)+' 0개, '+EL(Y)+' 다 만들면 '+NEUN(X)+' 0개예요.',
-      why:'포기하는 것이 <b>기회비용</b>이에요. '+A+'은 '+X+' '+t.ax+'개 아니면 '+
-          Y+' '+t.ay+'개를 만들 수 있으니, '+X+' 1개의 값은 '+
-          '<b>'+t.ay+' ÷ '+t.ax+' = '+r2(q.oa)+'</b>개예요.'});
+      q:A+'에서 '+X+' 1개를 더 만들 때 포기하는 '+Y+'의 양은?',
+      o:서로다른([r2(q.oa)+'개', r2(1/q.oa)+'개', r2(q.ob)+'개', t.ay+'개']), a:0,
+      hint:X+' 전부 → '+Y+' 0개, '+Y+' 전부 → '+X+' 0개',
+      why:'포기한 양 = <b>기회비용</b>. '+A+': '+X+' '+t.ax+'개 또는 '+
+          Y+' '+t.ay+'개 → '+X+' 1개의 기회비용 '+
+          '<b>'+t.ay+' ÷ '+t.ax+' = '+r2(q.oa)+'</b>개'});
 
     /* 2) 비교우위 — 두 나라 기회비용을 나란히 놓고 고른다 */
     st.push({k:"comp", show:"line",
-      q:'그럼 '+NEUN(X)+' 어느 나라가 맡는 게 나을까요?',
-      o:[A,B], a:q.aHasX?0:1,
-      hint:'포기하는 게 적은 쪽이 더 싸게 만드는 거예요.',
-      why:X+' 1개를 만들려고 포기하는 양이 '+A+' <b>'+r2(q.oa)+'</b>, '+
-          B+' <b>'+r2(q.ob)+'</b>예요. <b>적게 포기하는 쪽</b>이 '+
-          '<b>비교우위</b>가 있고, 그 나라가 '+X+'를 맡습니다. '+
+      q:X+' 생산을 맡을 나라는?',
+      o:[A,B,'두 나라가 절반씩 나누어 맡는다','기회비용이 같으므로 어느 쪽이든 같다'], a:q.aHasX?0:1,
+      hint:'기회비용 작은 쪽 → 비교우위',
+      why:X+' 1개의 기회비용: '+A+' <b>'+r2(q.oa)+'</b>, '+
+          B+' <b>'+r2(q.ob)+'</b> → <b>작은 쪽</b>이 '+
+          '<b>비교우위</b> → '+X+' 특화. '+
           (t.ax>t.bx&&!q.aHasX ? ''+
-             A+'이 '+X+'를 더 많이 만들지만('+t.ax+'개 대 '+t.bx+'개), 맡는 쪽은 '+B+'예요. '
+             X+' 생산량은 '+A+' 쪽이 많음('+t.ax+'개 대 '+t.bx+'개) → 그래도 특화는 '+B
            : '')});
 
     /* 3) 교역조건 — 한 번만 묻는다. 범위 안이면 이득, 밖이면 손해. */
@@ -1000,14 +996,18 @@
     var inb=Math.random()<0.5;
     var val = inb ? r2(lo+(hi-lo)*(0.3+Math.random()*0.4))
                   : r2(Math.random()<0.5 ? Math.max(0.05,lo*0.6) : hi*1.5);
+    /* 범위 밖이면 정확히 한 나라가 손해 — 어느 쪽인지까지 고르게 한다(2지선다 → 4지선다).
+       X 특화국(기회비용 lo)은 val > lo 일 때만, Y 특화국(기회비용 hi)은 val < hi 일 때만 이득이다. */
+    var xN=q.aHasX?A:B, yN=q.aHasX?B:A;
+    var 답=inb?0:(val<lo?(yN===A?1:2):(xN===A?1:2));
     st.push({k:"term", show:"both", term:val,
-      q:X+' 1개를 '+Y+' <b>'+val+'</b>개와 바꾸자고 합니다. 두 나라 다 이득일까요?',
-      o:["둘 다 이득이에요","한쪽은 손해라 안 해요"], a:inb?0:1,
-      hint:'각 나라가 혼자 만들 때 드는 값과 견줘 보세요.',
-      why:'바꾸는 값이 두 나라의 기회비용 <b>'+r2(lo)+' ~ '+r2(hi)+'</b> 사이에 있어야 '+
-          '둘 다 이득이에요. '+NEUN(val)+' '+
-          (inb?'그 안에 있으니 서로 남는 장사예요.'
-              :'그 밖이라, 그 값이면 한 나라는 차라리 혼자 만드는 게 나아요.')});
+      q:X+' 1개를 '+Y+' <b>'+val+'</b>개와 교환할 때 이득을 보는 나라는?',
+      o:["둘 다 이득", A+"만 이득", B+"만 이득", "둘 다 손해"], a:답,
+      hint:'나라별 기회비용 비교',
+      why:'교환 비율이 두 나라 기회비용 <b>'+r2(lo)+' ~ '+r2(hi)+'</b> 사이 → '+
+          '둘 다 이득. '+val+': '+
+          (inb?'범위 안 → 둘 다 이득'
+              :'범위 밖 → '+(val<lo?xN+'은 자급이 유리, '+yN+'만 이득':yN+'은 자급이 유리, '+xN+'만 이득'))});
     return {q:q, steps:st, i:0, marks:[]};
   }
 
@@ -1059,8 +1059,8 @@
     return '<table class="dtable"><tr><th></th><th>'+q.G[0]+'</th><th>'+q.G[1]+'</th></tr>'+
       '<tr><td class="lab">'+q.C[0]+'</td><td>'+t.ax+'</td><td>'+t.ay+'</td></tr>'+
       '<tr><td class="lab">'+q.C[1]+'</td><td>'+t.bx+'</td><td>'+t.by+'</td></tr></table>'+
-      '<p class="tnote">두 나라가 <b>똑같은 양의 생산요소</b>를 한 재화에만 모두 '+
-      '투입했을 때의 최대 생산량입니다.</p>';
+      '<p class="tnote">두 나라가 <b>같은 양의 생산 요소</b>를 한 재화에만 모두 '+
+      '투입할 때의 최대 생산량</p>';
   }
   /* ★ 선지 차례 — 자료가 정답을 늘 첫 칸(a:0)에 둔다(권력분립 21·정의 15·평화 11단계 전부, 2026-09-19 실측).
      화면에서 섞지 않으면 맨 위만 눌러도 맞는다. 단계마다 한 번 섞어 붙여 둔다(다시 그려도 안 바뀜).
@@ -1086,7 +1086,7 @@
     else if(st.show==="both") side=lineSvg(q,st.term,true)+
       '<div style="margin-top:16px">'+gainSvg(q,st.term)+'</div>';
     var left='<div>'+tableHtml(q)+
-      (st.hint?'<div class="ehint"><b>이렇게 생각해요</b>'+st.hint+'</div>':'')+'</div>';
+      (st.hint?'<div class="ehint"><b>힌트</b>'+st.hint+'</div>':'')+'</div>';
     /* 그림이 없는 단계는 한 칸으로 쓴다 — 빈 상자가 선지를 화면 밖으로 밀어낸다 */
     return (side ? '<div class="econgrid">'+left+'<div id="side">'+side+'</div></div>'
                  : '<div class="econone">'+left+'<div id="side" hidden></div></div>')+
@@ -1108,9 +1108,9 @@
     var last=(eset.i+1>=eset.steps.length);
     document.getElementById("v").innerHTML=
       '<div class="gorow"><button class="btn big" id="next">'+
-      (last?"그래서 어떻게 되나 보기":"다음 단계")+'</button>'+
+      (last?"결론 보기":"다음 단계")+'</button>'+
       '<span class="gohint">'+(eset.i+1)+' / '+eset.steps.length+' 단계</span></div>'+
-      '<div class="why"><b>'+(ok?"맞았습니다.":"틀렸습니다.")+'</b> '+st.why+'</div>';
+      '<div class="why"><b>'+(ok?"정답":"오답")+'</b> '+st.why+'</div>';
     document.getElementById("next").onclick=function(){
       if(last){ econEnd(); return; }
       eset.i++;
@@ -1132,16 +1132,16 @@
     var gainX=r1(xMax-selfX), gainY=r1(yMax-selfY);
     var okm=eset.marks.filter(Boolean).length;
 
-    document.getElementById("qtext").textContent="세 번 다 물었습니다";
+    document.getElementById("qtext").textContent="무역 결과";
     document.getElementById("qmeta").textContent="결론";
     var st0=document.getElementById("stage");
     st0.innerHTML=
       '<div class="edone"><h3>' +
-      (gainX>0&&gainY>0 ? '무역을 하면 둘 다 늘어납니다' : '나눠 맡는 편이 낫습니다') + '</h3>'+
-      '<p class="lead">'+IGA(xN)+' <b>'+X+'</b>에, '+IGA(yN)+' <b>'+Y+'</b>에 특화해서 '+
-      '서로 바꾸면, 각자 절반씩 만들 때보다 '+
+      (gainX>0&&gainY>0 ? '무역 → 두 재화 모두 증가' : '특화 + 교환 → 유리') + '</h3>'+
+      '<p class="lead">'+xN+' <b>'+X+'</b> 특화 + '+yN+' <b>'+Y+'</b> 특화 → 교환 시 '+
+      '각자 절반 생산보다 '+
       '<b>'+X+' '+(gainX>0?'+'+gainX:gainX)+'개</b>, '+
-      '<b>'+Y+' '+(gainY>0?'+'+gainY:gainY)+'개</b>가 더 생깁니다.</p>'+
+      '<b>'+Y+' '+(gainY>0?'+'+gainY:gainY)+'개</b></p>'+
       '<div class="ecomp">'+
         '<div class="ecol"><span class="cap3">각자 절반씩 만들면</span>'+
         '<div class="big2">'+X+' '+selfX+', '+Y+' '+selfY+'</div>'+
@@ -1152,19 +1152,17 @@
         '<div class="sub3">'+NEUN(xN)+' '+X+'만, '+NEUN(yN)+' '+Y+'만 만든 뒤 교환</div></div>'+
       '</div>'+
       '<p class="lead" style="margin-top:18px;font-size:13.5px">'+
-      '이게 <b>비교우위에 따른 국제 분업</b>이에요. 더 잘 만드는 나라가 다 만드는 게 아니라, '+
-      '<b>포기하는 게 적은 쪽</b>이 맡을 때 전체가 커집니다.</p>'+
+      '<b>비교우위에 따른 국제 분업</b>: <b>기회비용 작은 쪽</b>이 생산 → 전체 생산량 증가</p>'+
       '<div class="gorow" style="justify-content:center;margin-top:22px">'+
       '<button class="btn big" id="enew">새 자료로 한 번 더</button>'+
       '<a class="btn ghost" href="study.html?leaf=H4.1">이 단원 문제 풀기</a></div>'+
-      '<p class="gohint" style="margin-top:12px">세 단계 가운데 '+okm+'개 맞혔어요</p>'+
+      '<p class="gohint" style="margin-top:12px">세 단계 중 '+okm+'개 정답</p>'+
       '</div>';
     document.getElementById("enew").onclick=function(){ eset=null; next(); };
   }
 
   /* ══════════════ 권력분립 ══════════════
-     조문을 화면에 원문 그대로 띄운다. 답의 근거가 화면에 있어야
-     학생이 외우지 않고 **읽어서** 푼다. */
+     조문 원문은 **답한 뒤**에 해설 아래로 띄운다(1004: 먼저 보이면 정답이 샌다). */
   var PW = window.POWER || {cases:[]};
   var pseen = [];
   function makePowerSet(){
@@ -1184,8 +1182,8 @@
     document.getElementById("qmeta").textContent="단계 "+(S2.i+1)+" / "+c.steps.length;
     return '<h4 class="casetitle">'+esc(c.title)+'</h4>'+
       '<div class="sitbox">'+c.sit+'</div>'+
-      조문블록(c.art, c.text)+
-      (st.text2 ? 조문블록(st.art2, st.text2) : '')+
+      /* ★ 1004 실사용 점검 — 선지 위에 조문 원문이 펼쳐져 1·2단계 정답을 그대로 알려 줬다.
+         조문은 답한 뒤 해설 아래에만 보인다(judgePower). */
       '<div class="opts c2" style="margin-top:18px">'+선지단추(st)+'</div><div id="v"></div>';
   }
   function judgePower(btn){
@@ -1195,15 +1193,17 @@
       b.disabled=true;
       if(+b.dataset.v===st.a) b.dataset.s="ok"; else if(b===btn) b.dataset.s="no";
     });
-    grade(ok); pset.marks.push(ok); setHead();
+    grade(ok,"power:"+c.id+":"+(pset.i+1)); pset.marks.push(ok); setHead();
     var last=(pset.i+1>=c.steps.length);
     document.getElementById("v").innerHTML=
       '<div class="gorow"><button class="btn big" id="next">'+
       (last?"새 사례로":"다음 단계")+'</button>'+
       '<span class="gohint">'+(pset.i+1)+' / '+c.steps.length+' 단계</span></div>'+
-      '<div class="why"><b>'+(ok?"맞았습니다.":"틀렸습니다.")+'</b> '+st.why+
+      '<div class="why"><b>'+(ok?"정답":"오답")+'</b> '+st.why+
       (last&&c.trap?'<div class="trapline">'+c.trap+'</div>':'')+
-      '<span class="src">'+esc(c.art)+' 원문, 국가법령정보센터</span></div>';
+      '<span class="src">'+esc(c.art)+' 원문, 국가법령정보센터</span></div>'+
+      조문블록(c.art, c.text)+
+      (st.text2 ? 조문블록(st.art2, st.text2) : '');
     document.getElementById("next").onclick=function(){
       pset.i++;
       if(pset.i>=c.steps.length) pset=null;
@@ -1230,32 +1230,32 @@
     /* ① 어떤 기본권인가 */
     var 갈래=[c.rightKind].concat(c.rightAlt||[]);
     st.push({
-      q:"이 사례에서 문제 되는 것은 어떤 기본권입니까?",
+      q:"기본권 유형",
       o:shuffle(갈래.slice()),
       ans:c.rightKind,
       why:"<b>"+esc(c.right)+"</b>. "+c.rightWhy});
     /* ② 제한할 수 있는 목적인가 */
     st.push({
-      q:"제37조 제2항이 든 목적(국가안전보장·질서유지·공공복리)에 드는 제한입니까?",
-      o:["그렇다", "아니다"],
-      ans:(c.purposeOk ? "그렇다" : "아니다"),
+      q:"목적의 정당성 (제37조 제2항: 국가안전보장, 질서유지, 공공복리)",
+      o:["정당하다", "정당하지 않다"],
+      ans:(c.purposeOk ? "정당하다" : "정당하지 않다"),
       why:c.purposeWhy});
     /* ③ 어느 단계에서 걸리는가 */
     var 단계이름=(RG.steps4||[]).map(function(x){ return x.k; });
     st.push({
-      q:"과잉금지 네 단계 가운데 <b>어디에서 걸립니까?</b>",
+      q:"과잉금지 원칙 <b>위반 단계</b>",
       o:단계이름.concat(["걸리지 않는다"]),
       ans:(c.failAt || "걸리지 않는다"),
       why:c.failWhy});
     /* ④ 결론 */
     st.push({
-      q:"그래서 이 제한은 기본권을 침해합니까?",
+      q:"결론",
       o:["침해한다", "침해하지 않는다"],
       ans:(c.failAt ? "침해한다" : "침해하지 않는다"),
       why:(c.failAt
-        ? "네 단계 가운데 <b>"+esc(c.failAt)+"</b>에서 걸렸으므로 침해입니다."
-        : "네 단계를 모두 넘었으므로 침해가 아닙니다. "+
-          "헌법은 <b>필요한 경우에 한하여 법률로써</b> 제한할 수 있다고 정합니다.")});
+        ? "<b>"+esc(c.failAt)+"</b> 위반 → 침해"
+        : "네 단계 모두 통과 → 침해 아님. "+
+          "헌법 제37조 제2항: <b>필요한 경우에 한하여 법률로써</b> 제한")});
     return st;
   }
   function renderRights(){
@@ -1269,9 +1269,6 @@
       (실재?(c.court?"실재, "+esc(c.court):"실재 헌재 결정")
            :"연습 사례")+'</span></h4>'+
       '<div class="sitbox">'+c.facts+'</div>'+
-      '<div class="arti"><div class="ah">근거 <b>헌법 제37조 제2항</b>'+
-        '<span style="margin-left:auto">국가법령정보센터 원문</span></div>'+
-        '<pre>'+esc(RG.law["제37조"]||"")+'</pre></div>'+
       '<div class="opts c2" style="margin-top:18px">'+st.o.map(function(o,i){
         return '<button class="opt" data-v="'+i+'">'+o+'</button>';
       }).join("")+'</div><div id="v"></div>';
@@ -1284,15 +1281,18 @@
       b.disabled=true;
       if(st.o[k]===st.ans) b.dataset.s="ok"; else if(b===btn) b.dataset.s="no";
     });
-    grade(ok); rset.marks.push(ok); setHead();
+    grade(ok,"rights:"+c.id+":"+(rset.i+1)); rset.marks.push(ok); setHead();
     var last=(rset.i+1>=rset.steps.length);
     document.getElementById("v").innerHTML=
       '<div class="gorow"><button class="btn big" id="next">'+
       (last?"새 사례로":"다음 단계")+'</button>'+
       '<span class="gohint">'+(rset.i+1)+' / '+rset.steps.length+' 단계</span></div>'+
-      '<div class="why"><b>'+(ok?"맞았습니다.":"틀렸습니다.")+'</b> '+st.why+
+      '<div class="why"><b>'+(ok?"정답":"오답")+'</b> '+st.why+
       (last&&c.trap?'<div class="trapline">'+esc(c.trap)+'</div>':'')+
-      '<span class="src">'+esc(c.src)+'</span></div>';
+      '<span class="src">'+esc(c.src)+'</span></div>'+
+      '<div class="arti"><div class="ah">근거 <b>헌법 제37조 제2항</b>'+
+        '<span style="margin-left:auto">국가법령정보센터 원문</span></div>'+
+        '<pre>'+esc(RG.law["제37조"]||"")+'</pre></div>';
     document.getElementById("next").onclick=function(){
       rset.i++;
       if(rset.i>=rset.steps.length) rset=null;
@@ -1341,7 +1341,7 @@
       b.disabled=true;
       if(+b.dataset.v===st.a) b.dataset.s="ok"; else if(b===btn) b.dataset.s="no";
     });
-    grade(ok); qset.marks.push(ok); setHead();
+    grade(ok,mode+":"+c.id+":"+(qset.i+1)); qset.marks.push(ok); setHead();
     /* 답한 뒤에야 누구 말인지 드러낸다 — 먼저 보이면 1단계 답이 샌다 */
     var wb=document.getElementById("whobox");
     if(wb) wb.textContent=c.who;
@@ -1350,7 +1350,7 @@
       '<div class="gorow"><button class="btn big" id="next">'+
       (last?"새 사례로":"다음 단계")+'</button>'+
       '<span class="gohint">'+(qset.i+1)+' / '+c.steps.length+' 단계</span></div>'+
-      '<div class="why"><b>'+(ok?"맞았습니다.":"틀렸습니다.")+'</b> '+st.why+
+      '<div class="why"><b>'+(ok?"정답":"오답")+'</b> '+st.why+
       (last&&c.trap?'<div class="trapline">'+esc(c.trap)+'</div>':'')+
       '<span class="src">'+esc(st.src||c.src)+'</span></div>';
     document.getElementById("next").onclick=function(){
@@ -1384,21 +1384,27 @@
     var it=pick(pool); tseen.push(it.id);
     /* 오답 후보도 범위 안 사람으로 — 「칸트 vs 벤담」처럼 이번 범위에 없는 이름은 안 낸다 */
     var 안이름={}; 안.forEach(function(x){ 안이름[x.w]=1; });
-    var rv=(TK.rival[it.w]||[]).filter(function(w){ return w!==it.w && 안이름[w]; });
-    if(!rv.length) rv=Object.keys(안이름).filter(function(w){ return w!==it.w; });
-    if(!rv.length) rv=(TK.rival[it.w]||[]).filter(function(w){ return w!==it.w; });
-    var other=rv.length?pick(rv):Object.keys(TK.people).filter(function(w){return w!==it.w;})[0];
-    var opts=shuffle([it.w, other]);
-    return {kind:"thinker", it:it, right:it.w, other:other,
+    /* ★ 1004 — 둘 중 하나라 찍어도 50%였다. 같은 쪽·같은 시대를 먼저, 모자라면 같은 쪽 → 아무나로 채워
+       오답 선지를 최대 3개(전체 4칸)까지. 사람은 TK.people(교과서에 나오는 사상가)뿐이다. */
+    function 후보(f){ return Object.keys(안이름).filter(function(w){ return w!==it.w && TK.people[w] && f(TK.people[w]); }); }
+    var me0=TK.people[it.w]||{};
+    var near=후보(function(q){ return q.ori===me0.ori && q.era===me0.era; });
+    var same=후보(function(q){ return q.ori===me0.ori && q.era!==me0.era; });
+    var rest=후보(function(q){ return q.ori!==me0.ori; });
+    var 짝=[]; [near,same,rest].forEach(function(g){ shuffle(g.slice()).forEach(function(w){ if(짝.length<3) 짝.push(w); }); });
+    if(!짝.length) 짝=(TK.rival[it.w]||[]).filter(function(w){ return w!==it.w; }).slice(0,3);
+    if(!짝.length) 짝=Object.keys(TK.people).filter(function(w){return w!==it.w;}).slice(0,1);
+    var opts=shuffle([it.w].concat(짝));
+    return {kind:"thinker", it:it, right:it.w, other:짝[0], others:짝,
             options:opts, answer:opts.indexOf(it.w), hints:0};
   }
   function renderThinker(t){
     document.getElementById("qtext").textContent="이 주장을 편 사람은?";
-    document.getElementById("qmeta").textContent=t.it.ln;
+    document.getElementById("qmeta").textContent=t.it.mn||t.it.ln;   /* 리프 이름(「평화 — 칸트 vs 갈퉁」)은 정답 범위를 흘린다 — 중영역 이름(1004) */
     var p=TK.people[t.right]||{};
     return '<div class="passage">'+t.it.t+
-      '<span class="src">기출 제시문, 뒤에서 출처를 밝힙니다</span></div>'+
-      '<div class="hintrow"><span class="lab">막히면</span>'+
+      '<span class="src">기출 제시문, 출처는 채점 뒤</span></div>'+
+      '<div class="hintrow"><span class="lab">힌트</span>'+
       '<button class="hint" data-h="ori">동양과 서양</button>'+
       '<button class="hint" data-h="era">시대</button>'+
       '<button class="hint" data-h="field">주제</button></div>'+
@@ -1410,14 +1416,15 @@
     document.querySelectorAll(".hint").forEach(function(b){
       b.onclick=function(){
         if(b.dataset.open==="1") return;
-        var p=TK.people[t.right]||{}, q=TK.people[t.other]||{}, k=b.dataset.h, txt="";
-        if(k==="ori") txt = (p.ori===q.ori)
-          ? "둘 다 "+ORI[p.ori]+" 사람입니다."
-          : ORI[p.ori]+" 사람입니다";
-        if(k==="era") txt = (p.era===q.era)
-          ? "둘 다 "+p.era+"입니다."
-          : p.era+" 사람입니다";
-        if(k==="field") txt = t.it.ln;
+        var p=TK.people[t.right]||{}, k=b.dataset.h, txt="";
+        var 전원=t.options.map(function(w){ return TK.people[w]||{}; });
+        if(k==="ori") txt = 전원.every(function(q){ return q.ori===p.ori; })
+          ? "모두 "+ORI[p.ori]
+          : ORI[p.ori];
+        if(k==="era") txt = 전원.every(function(q){ return q.era===p.era; })
+          ? "모두 "+p.era
+          : p.era;
+        if(k==="field") txt = t.it.mn||t.it.ln;
         b.textContent=txt; b.dataset.open="1"; t.hints++;
       };
     });
@@ -1430,12 +1437,14 @@
       if(k===t.answer) b.dataset.s="ok"; else if(b===btn) b.dataset.s="no";
     });
     document.querySelectorAll(".hint").forEach(function(b){ b.disabled=true; });
-    grade(ok);
-    var me=TK.people[t.right]||{}, ot=TK.people[t.other]||{};
+    grade(ok,"thinker:"+t.it.id);
+    var 고른=t.options[i];
+    var 비교=(ok||!TK.people[고른]) ? t.other : 고른;
+    var me=TK.people[t.right]||{}, ot=TK.people[비교]||{};
     var it=t.it;
     document.getElementById("v").innerHTML=
       '<div class="gorow"><button class="btn big" id="next">다음 문제</button>'+
-      '<span class="gohint">'+(ok?"맞았습니다":"다시 봅시다")+
+      '<span class="gohint">'+(ok?"정답":"오답")+
       (t.hints?', 힌트 '+t.hints+'개':'')+'</span></div>'+
       '<div class="why">'+
       '<div class="whocard"><span class="av">'+t.right.charAt(0)+'</span>'+
@@ -1443,7 +1452,7 @@
       '<p>'+(ok?"":"아래 두 줄 비교")+
       '</p></span></div>'+
       '<div class="vs"><div class="col me"><h5>'+t.right+'</h5><p>'+(me.one||"")+'</p></div>'+
-      '<div class="col"><h5>'+t.other+'</h5><p>'+(ot.one||"")+'</p></div></div>'+
+      '<div class="col"><h5>'+비교+'</h5><p>'+(ot.one||"")+'</p></div></div>'+
       '<div style="margin-top:14px;display:flex;gap:9px;flex-wrap:wrap;align-items:center">'+
       '<span class="hits">'+it.ln+'</span>'+
       '<span class="hits">이 갈래 기출 '+(T.BY[it.leaf]?T.BY[it.leaf].n:0)+'문항</span></div>'+
@@ -1452,7 +1461,7 @@
   }
 
   /* ══════════════ 4. 헌법재판 (준킬러) ══════════════ */
-  /* 사실관계를 주고 기본권 → 심판 종류 → 목적 → 침해의 최소성 → 결론을
+  /* 사실관계를 주고 기본권 → 심판 종류 → 목적 → 피해의 최소성 → 결론을
      차례로 묻는다. 마지막 답만 맞히는 것은 훈련이 아니다. */
   var SK=window.SUBK||{consti:{real:[],drill:[]},labor:{law:{}}};
   var cset=null;
@@ -1465,20 +1474,20 @@
        ⇒ 1단계는 5유형을 고르고, 세부 이름은 설명에만 둔다. */
     var 유형5=["자유권","평등권","참정권","청구권","사회권"];
     var 답유형=c.rightKind||"자유권";
-    st.push({q:"이 사건에서 문제 된 기본권은 어느 유형인가요? (자유·평등·참정·청구·사회)", show:"facts",
+    st.push({q:"기본권 유형", show:"facts",
       o:shuffle([답유형].concat(shuffle(유형5.filter(function(k){return k!==답유형;})).slice(0,3))),
       a:답유형,
       why:"<b>"+c.right+"</b> → <b>"+답유형+"</b>. "+(c.rightWhy||"")});
-    st.push({q:"이 사건은 어떤 심판인가요?", show:"facts",
+    st.push({q:"심판 구분", show:"facts",
       o:shuffle([c.kind, c.kind==="위헌법률심판"?"헌법소원심판":"위헌법률심판"]), a:c.kind,
       why:c.kindWhy});
-    st.push({q:"이 제한의 목적은 정당한가요?", show:"facts",
+    st.push({q:"목적의 정당성", show:"facts",
       o:["정당하다","정당하지 않다"], a:c.purposeOk?"정당하다":"정당하지 않다",
       why:c.purpose});
-    st.push({q:"덜 제한하는 수단이 있었나요? (침해의 최소성)", show:"facts",
-      o:["있다","없다"],
-      a:c.lessOk?"있다":"없다", why:c.less});
-    st.push({q:"결론은?", show:"facts",
+    st.push({q:"피해의 최소성", show:"facts",
+      o:["덜 제한하는 수단 있음","덜 제한하는 수단 없음"],
+      a:c.lessOk?"덜 제한하는 수단 있음":"덜 제한하는 수단 없음", why:c.less});
+    st.push({q:"결론", show:"facts",
       o:shuffle([c.result].concat(c.resultAlt.slice(0,2))), a:c.result, why:c.resultWhy});
     return {c:c, real:real, steps:st, i:0, marks:[]};
   }
@@ -1487,7 +1496,7 @@
     document.getElementById("qtext").textContent=st.q;
     document.getElementById("qmeta").textContent="단계 "+(S2.i+1)+" / "+S2.steps.length;
     return '<div class="caseflag '+(S2.real?"real":"prac")+'">'+
-      (S2.real?"실재 결정, "+c.court:"연습 사례, 실제 결정이 아닙니다")+'</div>'+
+      (S2.real?"실재 결정, "+c.court:"연습 사례(실제 결정 아님)")+'</div>'+
       '<h4 class="casetitle">'+c.title+'</h4>'+
       '<div class="passage">'+c.facts+'</div>'+
       '<div class="opts c2" style="margin-top:16px">'+st.o.map(function(o,i){
@@ -1500,13 +1509,13 @@
       b.disabled=true;
       if(st.o[k]===st.a) b.dataset.s="ok"; else if(b===btn) b.dataset.s="no";
     });
-    grade(ok); S2.marks.push(ok);
+    grade(ok,"consti:"+(S2.c.id||S2.c.title)+":"+(S2.i+1)); S2.marks.push(ok);
     var last=(S2.i+1>=S2.steps.length);
     document.getElementById("v").innerHTML=
       '<div class="gorow"><button class="btn big" id="next">'+
       (last?"다음 사건":"다음 단계")+'</button>'+
       '<span class="gohint">'+(S2.i+1)+' / '+S2.steps.length+' 단계</span></div>'+
-      '<div class="why">'+(ok?"<b>맞았습니다.</b> ":"<b>다시 봅시다.</b> ")+st.why+
+      '<div class="why">'+(ok?"<b>정답</b> ":"<b>오답</b> ")+st.why+
       '<span class="src">'+S2.c.cite+'</span></div>';
     document.getElementById("next").onclick=function(){
       S2.i++; if(last){ cset=null; } next();
@@ -1564,7 +1573,7 @@
           문법 검사는 이걸 못 잡는다. */
     return '<div class="lcflag '+(c.real?'realcase':'praccase')+'">'+
       (c.real ? '실재 결정, '+esc(c.real.court)
-              : (L.practice===false ? '연습 사례, 실제 결정이 아닙니다'
+              : (L.practice===false ? '연습 사례(실제 결정 아님)'
                                     : '상황 판단, 근거는 법령 원문'))+'</div>'+
       '<div class="passage">'+c.facts+'</div>'+
       '<ul class="lcitems">'+S2.items.map(function(it,k){
@@ -1587,7 +1596,7 @@
     document.querySelectorAll(".lcitems li").forEach(function(li,k){
       li.dataset.s=S2.items[k].ok?"ok":"no";
     });
-    grade(ok);
+    grade(ok,mode+":"+c.id);
     /* 본 사례를 적어 둔다 — 다음에는 안 본 것부터 낸다 */
     var S3=T.state(); if(!S3.lcSeen) S3.lcSeen={}; S3.lcSeen[c.id]=1; T.save();
 
@@ -1599,7 +1608,7 @@
     });
     document.getElementById("v").innerHTML=
       '<div class="gorow"><button class="btn big" id="next">다음 사례</button>'+
-      '<span class="gohint">'+(ok?"맞았습니다":"정답은 "+"①②③④⑤".charAt(S2.a))+
+      '<span class="gohint">'+(ok?"정답":"정답 "+"①②③④⑤".charAt(S2.a))+
       (c.trap?'. '+esc(c.trap):(c.answerNote?', '+esc(c.answerNote):''))+'</span></div>'+
       /* 실재 결정은 채점 뒤에 사건명과 결과를 밝힌다 — 풀기 전에는 감춘다 */
       (c.real ? '<div class="lcresult">'+esc(c.real.name)+' — <b>'+
@@ -1634,44 +1643,45 @@
     var rest=day>=8?60:(day>=4?30:0);
     var week=day*days;
     var st=[];
-    st.push({q:nm+"("+age+"세)에게 연소자 특칙이 걸립니까?",
-      o:["걸린다","안 걸린다"],
+    st.push({q:nm+"("+age+"세)에게 적용되는 근로 기준은?",
+      o:["연소자 특칙","일반 규정","학생 특칙(재학 중이면 적용)","특칙과 일반 규정 모두 적용되지 않음"],
       a:minor?0:1,
-      why:"근로기준법의 연소자 특칙은 <b>15세 이상 18세 미만</b>에게 적용됩니다. "+
-          nm+"은(는) 만 "+age+"세이므로 "+(minor?"특칙이 걸립니다.":"일반 규정을 따릅니다.")+
-          " 고등학생인지 아닌지가 아니라 <b>만 나이</b>가 기준입니다."});
-    st.push({q:"하루 법정 근로시간은 몇 시간입니까?",
-      o:["7시간","8시간"], a:minor?0:1,
-      why:minor?"제69조에 따라 15세 이상 18세 미만은 <b>1일 7시간, 1주 35시간</b>을 넘길 수 없습니다. "+
-                "합의해도 1일 1시간, 1주 5시간까지만 늘릴 수 있습니다."
-               :"18세 이상은 <b>1일 8시간, 1주 40시간</b>이 기준입니다."});
-    st.push({q:"하루 "+day+"시간을 일했다면 연장근로는 몇 시간입니까?",
-      o:[over+"시간", (over+1)+"시간"], a:0,
-      why:"법정 "+lawDay+"시간을 넘긴 "+over+"시간이 연장근로입니다. "+
-          (over>0?"제56조에 따라 통상임금의 <b>50%를 가산</b>해 받습니다.":"넘긴 시간이 없습니다.")});
-    st.push({q:"하루 "+day+"시간 일하면 휴게시간을 얼마나 주어야 합니까?",
-      o:[rest+"분", (rest===60?30:60)+"분"], a:0,
-      why:"제54조에 따라 근로시간이 4시간이면 30분 이상, <b>8시간이면 1시간 이상</b>의 휴게시간을 근로시간 도중에 줍니다. "+
-          day+"시간이므로 "+rest+"분입니다. 휴게시간은 근로시간에 들어가지 않습니다."});
+      why:"근로기준법 연소자 특칙: <b>15세 이상 18세 미만</b>. "+
+          nm+" 만 "+age+"세 → "+(minor?"특칙 적용.":"일반 규정.")+
+          " 기준은 고등학생 여부가 아니라 <b>만 나이</b>."});
+    st.push({q:"하루 법정 근로시간은?",
+      o:["7시간","8시간","6시간","9시간"], a:minor?0:1,
+      why:minor?"제69조: 15세 이상 18세 미만 → <b>1일 7시간, 1주 35시간</b> 이내. "+
+                "합의 시 1일 1시간, 1주 5시간까지 연장."
+               :"18세 이상 → <b>1일 8시간, 1주 40시간</b>."});
+    st.push({q:"하루 "+day+"시간 일했을 때 연장근로 시간은?",
+      o:[over+"시간", (over+1)+"시간", (over+2)+"시간", (over+3)+"시간"], a:0,
+      why:"법정 "+lawDay+"시간 초과분 "+over+"시간 = 연장근로. "+
+          (over>0?"제56조: 통상임금의 <b>50% 가산</b>.":"초과 시간 없음.")});
+    st.push({q:"하루 "+day+"시간 근로 시 주어야 할 휴게시간은?",
+      o:[rest+"분"].concat([30,60,90,0].filter(function(m){ return m!==rest; }).slice(0,3).map(function(m){ return m+"분"; })), a:0,
+      why:"제54조: 근로시간 4시간 → 30분 이상, <b>8시간 → 1시간 이상</b> 휴게(근로시간 도중). "+
+          day+"시간 → "+rest+"분. 휴게시간은 근로시간에 불포함."});
     if(night){
-      st.push({q:"밤 11시까지 일을 시켰습니다. 이건 됩니까?",
-        o:[minor?"안 된다":"된다", minor?"된다":"안 된다"],
+      st.push({q:"밤 11시까지 근로시키는 것은?",
+        o:minor?["원칙적으로 허용되지 않는다","허용된다(50% 가산)","본인 동의만 있으면 허용된다","보호자 동의가 있어야 허용된다"]
+               :["허용된다(50% 가산)","원칙적으로 허용되지 않는다","본인 동의만 있으면 허용된다","보호자 동의가 있어야 허용된다"],
         a:0,
-        why:minor?"제70조 제2항은 <b>18세 미만자를 오후 10시부터 오전 6시까지 근로시키지 못한다</b>고 정합니다. "+
-                  "본인의 동의와 <b>고용노동부장관의 인가</b>가 있어야 합니다."
-                 :"18세 이상은 야간근로가 금지되지 않습니다. 다만 제56조에 따라 "+
-                  "오후 10시~오전 6시 근로에는 <b>50%를 가산</b>해야 합니다."});
+        why:minor?"제70조 제2항: <b>18세 미만자는 오후 10시부터 오전 6시까지 근로 금지</b>. "+
+                  "예외 → 본인의 동의 + <b>고용노동부장관의 인가</b>."
+                 :"18세 이상은 야간근로 금지 아님. 제56조: "+
+                  "오후 10시~오전 6시 근로 → <b>50% 가산</b>."});
     }
     var base=week*wage;
-    st.push({q:"주 "+days+"일, 하루 "+day+"시간 일했습니다. 주휴수당은?",
-      o:["받는다","못 받는다"], a:0,
-      why:"제55조에 따라 1주에 평균 1회 이상 <b>유급휴일</b>을 주어야 합니다. "+
-          "주 소정근로시간이 15시간 이상이면 아르바이트도 주휴수당을 받습니다. "+
-          "이 사례는 주 "+week+"시간입니다."});
-    st.push({q:"사장이 임금을 부모 계좌로 보내겠다고 합니다.",
-      o:["안 된다","된다"], a:0,
-      why:"제68조는 <b>미성년자는 독자적으로 임금을 청구할 수 있다</b>고 정합니다. "+
-          "임금은 본인에게 직접 지급해야 합니다."});
+    st.push({q:"주 "+days+"일, 하루 "+day+"시간 근로 시 주휴수당은?",
+      o:["받는다","못 받는다","수습 기간에는 받지 못한다","주 40시간 이상이어야 받는다"], a:0,
+      why:"제55조: 1주 평균 1회 이상 <b>유급휴일</b>. "+
+          "주 소정근로시간 15시간 이상 → 아르바이트도 주휴수당. "+
+          "이 사례: 주 "+week+"시간."});
+    st.push({q:"사장이 임금을 부모 계좌로 보내는 것은?",
+      o:["허용되지 않는다(본인에게 직접 지급)","허용된다","부모 동의서가 있으면 허용된다"], a:0,
+      why:"제68조: <b>미성년자는 독자적으로 임금을 청구할 수 있다</b>. "+
+          "임금 → 본인에게 직접 지급."});
     return {nm:nm, job:job, age:age, minor:minor, day:day, days:days, night:night,
             wage:wage, week:week, steps:st, i:0, marks:[]};
   }
@@ -1698,7 +1708,7 @@
       '<div class="gorow"><button class="btn big" id="next">'+
       (last?"새 사례":"다음 단계")+'</button>'+
       '<span class="gohint">'+(L.i+1)+' / '+L.steps.length+' 단계</span></div>'+
-      '<div class="why">'+(ok?"<b>맞았습니다.</b> ":"<b>다시 봅시다.</b> ")+st.why+
+      '<div class="why">'+(ok?"<b>정답</b> ":"<b>오답</b> ")+st.why+
       '<span class="src">'+(SK.labor.cite||"")+'</span></div>';
     document.getElementById("next").onclick=function(){
       L.i++; if(last){ lset=null; } next();
@@ -1720,39 +1730,39 @@
     }
     var R=[region("가"),region("나"),region("다")];
     var st=[];
-    st.push({k:"table", q:"생산 연령 인구는 몇 세부터 몇 세까지입니까?",
-      o:["15~64세","20~64세"], a:0,
-      why:"유소년 <b>0~14세</b>, 생산 연령 <b>15~64세</b>, 노년 <b>65세 이상</b>입니다. "+
-          "부양비는 모두 <b>생산 연령 인구를 분모</b>로 놓습니다."});
+    st.push({k:"table", q:"생산 연령 인구의 나이 범위는?",
+      o:["15~64세","20~64세","15~59세","18~64세"], a:0,
+      why:"유소년 <b>0~14세</b>, 생산 연령 <b>15~64세</b>, 노년 <b>65세 이상</b>. "+
+          "부양비의 분모는 모두 <b>생산 연령 인구</b>."});
     var t=pick(R);
     st.push({k:"table", q:t.n+" 지역의 유소년 부양비는?",
-      o:[t.yd+"", r1(t.y/(t.y+t.o)*100)+""], a:0,
+      o:서로다른([t.yd+"", r1(t.y/(t.y+t.o)*100)+"", t.y+"", t.od+""]), a:0,
       why:"유소년 부양비 = 유소년 ÷ <b>생산 연령</b> × 100 = "+t.y+" ÷ "+t.p+" × 100 = <b>"+
-          t.yd+"</b>. 분모는 전체 인구가 아니라 생산 연령 인구입니다."});
+          t.yd+"</b>. 분모 = 생산 연령 인구(전체 인구 아님)."});
     var t2=pick(R);
     st.push({k:"table", q:t2.n+" 지역의 노령화지수는?",
-      o:[t2.ai+"", t2.od+""], a:0,
+      o:서로다른([t2.ai+"", t2.od+"", t2.yd+"", t2.td+""]), a:0,
       why:"노령화지수 = 노년 ÷ <b>유소년</b> × 100 = "+t2.o+" ÷ "+t2.y+" × 100 = <b>"+t2.ai+"</b>. "+
-          "노년 부양비("+t2.od+")는 분모가 생산 연령이라 다릅니다. "+
-          "<b>노령화지수만 분모가 유소년</b>입니다."});
+          "노년 부양비("+t2.od+")는 분모가 생산 연령 → 다름. "+
+          "<b>노령화지수만 분모가 유소년</b>."});
     var top=R.slice().sort(function(a,b){ return b.td-a.td; })[0];
     var topAi=R.slice().sort(function(a,b){ return b.ai-a.ai; })[0];
     st.push({k:"table", q:"총부양비가 가장 높은 지역은?",
       o:shuffle(R.map(function(x){ return x.n; })), a:top.n, byName:true,
       why:"총부양비 = (유소년 + 노년) ÷ 생산 연령 × 100. "+
           R.map(function(x){ return x.n+" "+x.td; }).join(", ")+
-          " 이므로 <b>"+top.n+"</b> 입니다."});
+          " → <b>"+top.n+"</b>"});
     st.push({k:"table", q:"노령화지수가 가장 높은 지역은?",
       o:shuffle(R.map(function(x){ return x.n; })), a:topAi.n, byName:true,
       why:R.map(function(x){ return x.n+" "+x.ai; }).join(", ")+
-          " 이므로 <b>"+topAi.n+"</b> 입니다."+
+          " → <b>"+topAi.n+"</b>."+
           (top.n!==topAi.n
-            ? " 총부양비가 가장 높은 곳("+top.n+")과 <b>다릅니다</b>. 분모가 다르기 때문입니다."
-            : " 이번에는 총부양비가 가장 높은 곳과 같습니다. 늘 같지는 않습니다.")});
-    st.push({k:"table", q:"세 지역 가운데 고령화가 가장 앞선 곳은 어디로 읽습니까?",
-      o:["노령화지수가 가장 높은 곳","유소년 부양비가 가장 높은 곳"], a:0,
-      why:"고령화의 정도는 <b>노년 대비 유소년</b>으로 봅니다. "+
-          "유소년 부양비가 높다는 것은 오히려 <b>어린 인구가 많다</b>는 뜻입니다."});
+            ? " 총부양비 최고("+top.n+")와 <b>다름</b> ← 분모 차이."
+            : " 이번에는 총부양비 최고와 같음(늘 같지는 않음).")});
+    st.push({k:"table", q:"세 지역 가운데 고령화가 가장 앞선 곳을 가리는 지표는?",
+      o:["노령화지수가 가장 높은 곳","유소년 부양비가 가장 높은 곳","총부양비가 가장 높은 곳","생산 연령 인구 비율이 가장 높은 곳"], a:0,
+      why:"고령화의 정도 = <b>유소년 대비 노년</b>(노령화지수). "+
+          "유소년 부양비가 높음 → 오히려 <b>어린 인구가 많음</b>."});
     return {R:R, steps:st, i:0, marks:[]};
   }
   function demoTable(R){
@@ -1761,7 +1771,7 @@
       '<tr><td>0~14세 (%)</td>'+R.map(function(x){ return '<td>'+x.y+'</td>'; }).join("")+'</tr>'+
       '<tr><td>15~64세 (%)</td>'+R.map(function(x){ return '<td>'+x.p+'</td>'; }).join("")+'</tr>'+
       '<tr><td>65세 이상 (%)</td>'+R.map(function(x){ return '<td>'+x.o+'</td>'; }).join("")+'</tr>'+
-      '</tbody></table><p class="dnote">세 지역의 연령층별 인구 구성비입니다. 각 열의 합은 100입니다.</p></div>';
+      '</tbody></table><p class="dnote">세 지역의 연령층별 인구 구성비(각 열의 합 100)</p></div>';
   }
   function renderDemo(){
     var D=dset, st=D.steps[D.i];
@@ -1769,16 +1779,14 @@
     document.getElementById("qmeta").textContent="단계 "+(D.i+1)+" / "+D.steps.length;
     return '<div class="caseflag prac">연습 자료</div>'+
       demoTable(D.R)+
-      '<div class="opts c2" style="margin-top:16px">'+st.o.map(function(o,i){
-        return '<button class="opt" data-v="'+i+'">'+o+'</button>';
-      }).join("")+'</div><div id="v"></div>';
+      '<div class="opts c2" style="margin-top:16px">'+선지단추(st)+'</div><div id="v"></div>';   /* 섞어 붙인다 — 부양비 단계 넷이 정답을 늘 첫 칸에 두고 있었다(1004) */
   }
   function judgeDemo(btn){
     var D=dset, st=D.steps[D.i], i=+btn.dataset.v;
     var ok = st.byName ? (st.o[i]===st.a) : (i===st.a);
     document.querySelectorAll(".opt").forEach(function(b,k){
       b.disabled=true;
-      var isA = st.byName ? (st.o[k]===st.a) : (k===st.a);
+      var vv=+b.dataset.v, isA = st.byName ? (st.o[vv]===st.a) : (vv===st.a);
       if(isA) b.dataset.s="ok"; else if(b===btn) b.dataset.s="no";
     });
     grade(ok); D.marks.push(ok);
@@ -1787,7 +1795,7 @@
       '<div class="gorow"><button class="btn big" id="next">'+
       (last?"새 자료":"다음 단계")+'</button>'+
       '<span class="gohint">'+(D.i+1)+' / '+D.steps.length+' 단계</span></div>'+
-      '<div class="why">'+(ok?"<b>맞았습니다.</b> ":"<b>다시 봅시다.</b> ")+st.why+
+      '<div class="why">'+(ok?"<b>정답</b> ":"<b>오답</b> ")+st.why+
       '<span class="src">부양비 = 피부양 인구 ÷ 생산 연령 인구 × 100, 노령화지수만 분모가 유소년</span></div>';
     document.getElementById("next").onclick=function(){
       D.i++; if(last){ dset=null; } next();
@@ -1801,12 +1809,12 @@
     var st=document.getElementById("stage");
     if(mode==="rights"){
       if(!rset) rset=makeRightsSet();
-      if(!rset){ st.innerHTML='<p class="note">자료를 아직 못 불러왔습니다.</p>'; return; }
+      if(!rset){ st.innerHTML='<p class="note">자료 없음</p>'; return; }
       cur={kind:"rights"}; st.innerHTML=renderRights(); setHead();
     }
     else if(mode==="peace"||mode==="justice"||mode==="disobey"){
       if(!qset||qset.kind!==mode) qset=makeCaseSet(mode);
-      if(!qset){ st.innerHTML='<p class="note">자료를 아직 못 불러왔습니다.</p>'; return; }
+      if(!qset){ st.innerHTML='<p class="note">자료 없음</p>'; return; }
       cur={kind:"case"}; st.innerHTML=renderCase(); setHead();
     }
     else if(mode==="power"){
@@ -1917,27 +1925,27 @@
     var host=document.getElementById("push");
     if(!host) return;                       /* 알림 설정은 설정 화면에만(2026-09-17) */
     if(!N){ host.innerHTML='<p style="font-size:12.5px;color:var(--ink-4)">'+
-      '알림을 쓸 수 없는 브라우저예요.</p>'; return; }
+      '알림 미지원 브라우저</p>'; return; }
     var st=N.status();
     host.innerHTML=
       '<div class="pushrow"><span class="tx"><b>매일 알려 주기</b>'+
-      '<span>그날 할 것을 짧게 알려 드려요</span></span>'+
+      '<span>그날 할 것</span></span>'+
       '<button class="sw" role="switch" id="ntog" aria-checked="'+(st.on&&st.granted)+'"></button></div>'+
       '<div class="pushrow"><span class="tx"><b>알림 시각</b>'+
-      '<span>학교 가기 전이나 자기 전이 좋아요</span></span>'+
+      '</span>'+
       '<input type="time" id="ntime" value="'+st.at+'" style="font-family:var(--mono);'+
       'font-size:14px;padding:7px 10px;border-radius:9px;border:1px solid var(--line-2);'+
       'background:var(--surface);color:var(--ink)"></div>'+
       '<p style="font-size:11.5px;color:var(--ink-4);margin-top:12px;line-height:1.65">'+
       st.say+'</p>'+
       (st.granted?'<button class="btn ghost" id="ntest" style="margin-top:10px;'+
-        'font-size:12.5px;padding:7px 12px">지금 한 번 보내 보기</button>':'');
+        'font-size:12.5px;padding:7px 12px">시험 발송</button>':'');
     document.getElementById("ntog").onclick=function(){
       var b=this;
       if(b.getAttribute("aria-checked")==="true"){ N.disable(); renderPush(); return; }
       N.enable().then(function(r){
-        if(r!=="granted") alert("브라우저에서 알림을 막고 있어요.\n"+
-          "주소창 왼쪽 자물쇠를 눌러 알림을 허용해 주세요.");
+        if(r!=="granted") alert("알림 차단됨\n"+
+          "주소창 왼쪽 자물쇠 → 알림 허용");
         renderPush();
       });
     };

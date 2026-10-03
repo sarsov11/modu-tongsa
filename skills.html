@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>스킬트리 — 모두의 통사</title>
+<title>푸는 기술 — 모두의 통사</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;700;900&display=swap">
@@ -13,9 +13,9 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=8f90f959">
+<link rel="stylesheet" href="css/base.css?v=1a817d13">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
-<link rel="stylesheet" href="css/question.css?v=1cc290e8">
+<link rel="stylesheet" href="css/question.css?v=4cea4076">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .page{max-width:860px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -87,6 +87,7 @@
   .pi small{font-size:13.5px;color:var(--ink-3);font-weight:600}
   .basis{margin-top:22px;font-size:14px;color:var(--ink-3);font-weight:500;line-height:1.6}
 
+  .skc.off{opacity:.55}
   /* 순서도 — 시험지 그림과 같은 SVG. 글자색·선색은 본문색 */
   .flow{margin:14px 0 6px;padding:10px 6px;border:1px solid var(--line);border-radius:var(--r1);background:#fff;color:#111}
   .flow .flowsvg{display:block;width:100%;max-width:760px;height:auto;margin:0 auto;font-family:var(--kr)}
@@ -113,36 +114,36 @@
 <body>
 <div class="page">
   <div class="hd">
-    <span class="kicker">스킬트리</span>
+    <span class="kicker">문제 푸는 법</span>
     <h1>푸는 기술</h1>
-    <p>단원과 상관없이 문제를 여는 기술입니다. 기술마다 보는 순서를 익히고, 실제 기출로 따라 한 뒤, 같은 기술을 쓰는 문항을 풉니다.</p>
   </div>
   <div id="host"></div>
 </div>
 
-<script src="js/tree.js?v=cf241056"></script>
-<script src="js/qbank.js?v=df944cc8"></script>
+<script src="js/tree.js?v=70df12a1"></script>
+<script src="js/qbank.js?v=7b68ff94"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
-<script src="js/cardox.js?v=0dbbf4f9"></script>
-<script src="js/conceptq.js?v=d8dabe1e"></script>
-<script src="js/cards.js?v=1b4d9904"></script>
+<script src="js/cardox.js?v=2b83481d"></script>
+<script src="js/conceptq.js?v=7e53efff"></script>
+<script src="js/cards.js?v=82bdc620"></script>
 <script src="js/keyword.js?v=b233a01c"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
-<script src="js/judge.js?v=43f690d4"></script>
-<script src="js/pool.js?v=92a27f17"></script>
-<script src="js/drills.js?v=f1bd4428"></script>
-<script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/store.js?v=531993fd"></script>
-<script src="js/qrender.js?v=68e2ab00"></script>
-<script src="js/skills.js?v=977fed69"></script>
+<script src="js/judge.js?v=eb358ca6"></script>
+<script src="js/pool.js?v=c0d187ff"></script>
+<script src="js/drills.js?v=3f81d010"></script>
+<script src="js/trend.js?v=77dea921"></script>
+<script src="js/packs.js?v=9e67e178"></script>
+<script src="js/store.js?v=4ece5289"></script>
+<script src="js/qrender.js?v=749818a6"></script>
+<script src="js/skills.js?v=f8e45fb5"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
-<script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/coach.js?v=fce5041b"></script>
+<script src="js/auth.js?v=dca5fb29"></script>
+<script src="js/coach.js?v=76c10e1b"></script>
 <script>
 (function(){
   var T=window.TERRA, Q=window.QBANK||{}, SK=window.SKILLS||[];
-  T.mountNav && T.mountNav("skills");
+  T.mountNav && T.mountNav("skills.html");
   var host=document.getElementById("host");
   var M="①②③④⑤";
   function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
@@ -158,15 +159,35 @@
 
   function src(q){ return esc(QRENDER.출처(q)); }
 
+  /* 시험 범위 안인가 — 고3 은 수능 전 범위라 안 따진다. 단원을 모르는 문항(skills.js 가 직접 든 것)은 범위 안으로 본다 */
+  function 범위안(id){
+    var g=(T.state().student||{}).grade;
+    if(g==="고3"||!T.scopeOn||!T.scopeOn()) return true;
+    var q=item(id);
+    if(!q||!q.leaf) return true;
+    return !!T.inScopeItem(q);
+  }
+  function 연습(s){ return s.practice.filter(usable); }
+
   function list(){
     var p=prog();
-    host.innerHTML='<div class="sk">'+SK.map(function(s,i){
-      var pr=s.practice.filter(usable), done=pr.filter(function(id){ return p[s.id] && p[s.id][id]!=null; }).length;
-      return '<button class="skc'+(pr.length&&done===pr.length?' done':'')+'" data-id="'+s.id+'">'+
+    /* 풀 수 있는 문항이 하나도 없는 기술은 목록에 안 올린다. 있어도 시험 범위 밖뿐이면 「범위 밖」 으로 따로 둔다 */
+    var 안=[], 밖=[];
+    SK.forEach(function(s){
+      var all=연습(s); if(!all.length) return;
+      (all.filter(범위안).length?안:밖).push(s);
+    });
+    function 카드(s,i,off){
+      var pr=연습(s); if(!off) pr=pr.filter(범위안);
+      var done=pr.filter(function(id){ return p[s.id] && p[s.id][id]!=null; }).length;
+      return '<button class="skc'+(pr.length&&done===pr.length?' done':'')+(off?' off':'')+'" data-id="'+s.id+'">'+
         '<span class="no">'+(i+1)+'</span>'+
         '<span><b>'+esc(s.name)+'</b><span>'+esc(s.one)+'</span></span>'+
-        '<span class="st"><em>'+done+'</em>/ '+pr.length+'</span></button>';
-    }).join("")+'</div>';
+        (off?'<span class="st"><i class="bdg bdg-lock">범위 밖</i></span>':'<span class="st"><em>'+done+'</em>/ '+pr.length+'</span>')+'</button>';
+    }
+    host.innerHTML=(안.length||밖.length?'':'<div class="note">문항 없음</div>')+
+      (안.length?'<div class="sk">'+안.map(function(s,i){ return 카드(s,i,false); }).join("")+'</div>':'')+
+      (밖.length?'<div class="sk" style="margin-top:14px">'+밖.map(function(s,i){ return 카드(s,안.length+i,true); }).join("")+'</div>':'');
     host.querySelectorAll(".skc").forEach(function(b){ b.onclick=function(){ location.hash=b.dataset.id; }; });
   }
 
@@ -265,7 +286,7 @@
   function detail(s){
     var p=prog()[s.id]||{};
     var dq=item(s.demo), dd=bank(s.demo);
-    var pr=s.practice.filter(usable);
+    var pr=연습(s).filter(범위안);
     var walk=(s.walk||[]).map(function(w){ return typeof w==="string"?{t:w}:w; });
     var demo='';
     if(dq&&dd){
@@ -284,14 +305,14 @@
     host.innerHTML=
       '<button class="back" id="back">← 기술 목록</button>'+
       '<div class="hd" style="padding-top:0"><span class="kicker">'+esc(s.tag)+'</span><h1>'+esc(s.name)+'</h1><p>'+esc(s.one)+'</p></div>'+
-      '<div class="sec"><h2>기출 문항</h2><p class="sub">먼저 문제를 봅니다. 아래 단계를 누르면 문제 위에 표시가 붙습니다.</p>'+demo+'</div>'+
-      '<div class="sec"><h2>보는 순서</h2><p class="sub">어느 문항에서든 이 차례로 봅니다.</p>'+
+      '<div class="sec"><h2>기출 문항</h2>'+demo+'</div>'+
+      '<div class="sec"><h2>보는 순서</h2>'+
       '<div class="steps">'+s.steps.map(function(t){ return '<div class="step"><i></i><p>'+esc(t)+'</p></div>'; }).join("")+'</div></div>'+
-      '<div class="sec"><h2>같은 기술로 풀기</h2><p class="sub">'+pr.length+'문항입니다. 하나씩 눌러 풉니다.</p>'+
+      (pr.length?'<div class="sec"><h2>같은 기술로 풀기</h2><p class="sub">'+pr.length+'문항</p>'+
       '<div class="plist">'+pr.map(function(id,i){
         var q=item(id), st=p[id]==null?"":(p[id]?"ok":"no");
         return '<button class="pi '+st+'" data-q="'+id+'"><span class="k">'+(i+1)+'</span><span class="t">'+esc(q.lb||bank(id).q)+'</span><small>'+src(q)+'</small></button>';
-      }).join("")+'</div><div id="pstage"></div></div>'+
+      }).join("")+'</div><div id="pstage"></div></div>':'')+
       '';   /* 출처 설명문(basis) 은 학생 화면에서 뺐다 — 2026-09-19 멘트 조사 */
     document.getElementById("back").onclick=function(){ location.hash=""; };
     host.querySelectorAll(".pi").forEach(function(b){ b.onclick=function(){ solve(s,b.dataset.q); }; });
@@ -334,7 +355,7 @@
     var r=T.answer?T.answer(q.id,pick):null, ok=r?r.ok:(pick===d.a);
     mark(s.id,q.id,ok);
     document.querySelectorAll("#pstage .opt").forEach(function(b,k){ b.disabled=true; if(k===d.a){ b.dataset.s="ok"; } else if(b===btn) b.dataset.s="no"; });
-    var why=d.x?'<p>'+esc(d.x)+'</p>':'<p>이 문항은 해설이 함께 오지 않았습니다. 보는 순서대로 선지를 하나씩 지워 보세요.</p>';
+    var why=d.x?'<p>'+esc(d.x)+'</p>':'<p>해설 없음</p>';
     document.getElementById("v").innerHTML='<div class="verdict"><div class="vl"><span class="tag2 '+(ok?"ok":"no")+'">'+(ok?"정답":"오답")+'</span>'+
       '<span style="font-size:14.5px;font-weight:800;color:var(--ink-3)">정답 '+M.charAt(d.a)+(ok?'':', 내가 고른 것 '+M.charAt(pick))+'</span></div>'+why+
       '<div class="gorow"><button class="btn" id="pback">목록으로</button></div></div>';

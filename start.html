@@ -11,10 +11,10 @@
 <meta name="theme-color" content="#FAF8F3">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=8f90f959">
-<link rel="stylesheet" href="css/question.css?v=1cc290e8">
+<link rel="stylesheet" href="css/base.css?v=1a817d13">
+<link rel="stylesheet" href="css/question.css?v=4cea4076">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
-<link rel="stylesheet" href="css/keyword.css?v=e00f83be">
+<link rel="stylesheet" href="css/keyword.css?v=7a3b2060">
 <style>
   /* ── 처음 오는 학생을 위한 화면 — 한 화면에 질문 하나, 단추 하나 ──
      (2026-09-06 대표님: "처음 들어가면 세팅창부터 정갈하게. 헤이링의 첫 UX")
@@ -184,6 +184,11 @@
   .tmbar{flex:1;height:8px;border-radius:99px;background:var(--surface-3);overflow:hidden} .tmbar i{display:block;height:100%;width:100%;background:var(--cta);transition:width .1s linear}
   .tmbar i.low{background:var(--red)} .tm b{font-size:16px;font-weight:800;min-width:38px;text-align:right;color:var(--ink-2);font-variant-numeric:tabular-nums}
   .oxq .ox button:disabled{cursor:default}
+  .opt[data-s="pick"]{border-color:var(--cta);background:var(--cta-soft);color:var(--ink)}
+  .opt[data-s="pick"] .k{background:var(--cta);color:#fff}
+  .oxq .ox button[data-s="pick"]{border-color:var(--cta);background:var(--cta-soft);color:var(--ink)}
+  .oxq .ox button[data-s="ok"]{border-color:var(--mint);background:rgba(47,224,206,.10);color:var(--ink)}
+  .oxq .ox button[data-s="no"]{border-color:var(--red);background:var(--red-soft);color:var(--ink)}
 </style>
 </head>
 <body>
@@ -197,27 +202,28 @@
 </div>
 <div class="obfoot"><div class="in" id="foot"></div></div>
 
-<script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/tree.js?v=cf241056"></script>
-<script src="js/qbank.js?v=df944cc8"></script>
-<script src="js/lecture.js?v=8faa86a9"></script>
+<script src="js/trend.js?v=77dea921"></script>
+<script src="js/tree.js?v=70df12a1"></script>
+<script src="js/qbank.js?v=7b68ff94"></script>
+<script src="js/lecture.js?v=878e128c"></script>
 <script src="js/video.js?v=2ad8e90e"></script>
-<script src="js/qrender.js?v=68e2ab00"></script>
-<script src="js/pool.js?v=92a27f17"></script>
-<script src="js/drills.js?v=f1bd4428"></script>
+<script src="js/qrender.js?v=749818a6"></script>
+<script src="js/pool.js?v=c0d187ff"></script>
+<script src="js/drills.js?v=3f81d010"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
-<script src="js/cardox.js?v=0dbbf4f9"></script>
+<script src="js/cardox.js?v=2b83481d"></script>
 <script src="js/keyword.js?v=b233a01c"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
-<script src="js/judge.js?v=43f690d4"></script>
-<script src="js/cards.js?v=1b4d9904"></script>
-<script src="js/store.js?v=531993fd"></script>
-<script src="js/kwask.js?v=2087ec30"></script>
+<script src="js/judge.js?v=eb358ca6"></script>
+<script src="js/cards.js?v=82bdc620"></script>
+<script src="js/packs.js?v=9e67e178"></script>
+<script src="js/store.js?v=4ece5289"></script>
+<script src="js/kwask.js?v=2c27c2c1"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
-<script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/notify.js?v=ba65297e"></script>
+<script src="js/auth.js?v=dca5fb29"></script>
+<script src="js/notify.js?v=f6ea0991"></script>
 <script>
 (function(){
   var T=window.TERRA, Q=window.QBANK||{}, N=window.TERRA_NOTIFY;
@@ -229,16 +235,16 @@
 
   /* 화면에 나가는 말 — 전부 여기. 존댓말, 판단 없음 */
   var MSG={
-    introH:"매일 <em>15분</em>,<br>오늘 할 것 하나만 알려요.",
-    introP:"",
+    introH:"하루 <em>15분</em>",
+    introP:"통합사회 기출로 내신 대비",
     nameH:"이름", nameP:"",
     gradeH:"학년", gradeP:"",
     examH:"다음 시험", examP:"",
     scopeH:"시험 범위", scopeP:"",
-    goalH:"하루 공부 시간", goalP:"",
+    goalH:"하루 15분 (기본)", goalP:"",
     alarmH:"알림 시각", alarmP:"",
-    checkH:"진단 20문항", checkP:"",   /* 제한 시간은 설명 문장 대신 초시계 마크로(2026-09-22) */
-    doneH:"준비됐어요.", doneP:""
+    checkH:"진단 {n}문항", checkP:"",   /* 제한 시간은 설명 문장 대신 초시계 마크로(2026-09-22) */
+    doneH:"준비 완료", doneP:""
   };
 
   /* ── 답 모음 ── */
@@ -262,9 +268,9 @@
 
   /* 답을 저장소에 적는다 — 화면마다 바로 적어야 중간에 나가도 남는다 */
   function 저장(step){
-    if(step==="name"){ var v=(el("nm")||{}).value; if(v&&v.trim()){ A.name=v.trim(); S.student.name=A.name; T.flush(); } }
+    if(step==="name"){ var v=(el("nm")||{}).value; if(v&&v.trim()){ A.name=v.trim(); S.student.name=A.name; S.student.named=true; T.flush(); } }
     if(step==="grade"){ T.setGrade(A.grade); }
-    if(step==="exam" && A.examId && A.examDate){ T.setExam(A.examId,{date:A.examDate}); }
+    if(step==="exam" && A.examId && A.examDate){ T.chooseExam(A.examId, A.examDate); }
     if(step==="scope" && A.scope && A.scope.length){ T.setScope(A.scope.slice()); Object.keys(A.deep||{}).forEach(function(k){ T.setDeep && T.setDeep(k, A.deep[k]!==false); }); }
     if(step==="goal"){ T.setGoalMin(A.goal); }
     if(step==="alarm" && N){ N.setAt(A.alarm); if(A.alarmOn){ try{ N.enable(); }catch(e){} } }
@@ -295,9 +301,8 @@
       st.querySelectorAll(".skinb").forEach(function(b){ b.onclick=function(){ T.setSkin(b.dataset.skin);
         눌림(st,".skinb",function(x){ return x.dataset.skin===T.skin(); }); }; });
       var inp=el("nm"); inp.focus();
-      inp.oninput=function(){ el("next").disabled=!inp.value.trim(); };
-      inp.onkeydown=function(e){ if(e.key==="Enter"&&inp.value.trim()) 다음(); };
-      단추("다음", !!A.name);
+      inp.onkeydown=function(e){ if(e.key==="Enter") 다음(); };
+      단추("다음");
     },
     grade:function(st){
       var G=T.GRADES;
@@ -313,31 +318,48 @@
     },
     exam:function(st){
       var list=T.exams()||[];
-      if(!A.examId){ var nx=T.nextExam?T.nextExam():null; A.examId=nx?nx.exam.id:(list[0]||{}).id; }
+      /* 날짜를 안 넣은 시험은 빈 칸이다 — 「내 시험일 입력」 자리에 남의 날짜(기본값)를 미리 채우지 않는다(2026-10-04) */
+      function 날짜(e){ return (e && e.date && !/내 시험일 입력/.test(e.note||"")) ? e.date : ""; }
+      if(!A.examId){ var nx=T.nextExam?T.nextExam():null; A.examId=nx?nx.exam.id:(list[0]||{}).id; A.examDate=""; A.examDateTouched=false; }
       var cur=list.filter(function(e){return e.id===A.examId;})[0]||list[0]||{};
-      if(!A.examDate) A.examDate=cur.date||"";
+      if(!A.examDate && !A.examDateTouched) A.examDate=날짜(cur);
       st.innerHTML=머리("3 / 7",esc(MSG.examH),esc(MSG.examP))+
         '<div class="chips">'+list.map(function(e){
           return '<button data-ex="'+e.id+'" aria-pressed="'+(e.id===A.examId)+'">'+esc(e.name)+'</button>'; }).join("")+'</div>'+
-        '<div class="field"><input id="dt" type="date" value="'+esc(A.examDate)+'"></div>'+
+        '<div class="field"><input id="dt" type="date" value="'+esc(A.examDate)+'" aria-label="시험 날짜"></div>'+
         '<p class="note" id="dnote"></p>';
-      function note(){ var d=A.examDate?T.dday(A.examDate):null;
+      /* 날짜가 비었거나 이미 지났으면 다음으로 못 간다 */
+      function 상태(){
+        var d=A.examDate?T.dday(A.examDate):null;
+        var 막힘=!d||d.past;
+        if(el("next")) el("next").disabled=막힘;
+        return {d:d, 막힘:막힘};
+      }
+      function note(){
+        var s2=상태(), d=s2.d;
         /* 설명 문장 대신 D-day 와 마크만(2026-09-22) */
-        var e2={}; for(var k in cur) e2[k]=cur[k]; if(A.examDate!==cur.date){ e2.date=A.examDate; e2.note="직접"; delete e2.auto; }
-        el("dnote").innerHTML=d?'<b>'+esc(cur.name)+'</b> '+esc(d.label)+' '+(T.일정마크?T.일정마크(e2):""):""; }
+        var e2={}; for(var k in cur) e2[k]=cur[k]; if(A.examDate!==날짜(cur)){ e2.date=A.examDate; e2.note="직접"; delete e2.auto; }
+        el("dnote").innerHTML= !A.examDate ? '<b>'+esc(cur.name)+'</b> 날짜 입력'
+          : d.past ? '<b>'+esc(cur.name)+'</b> 이미 지난 날짜'
+          : '<b>'+esc(cur.name)+'</b> '+esc(d.label)+' '+(T.일정마크?T.일정마크(e2):""); }
+      단추("다음", false);
       note();
       st.querySelectorAll(".chips button").forEach(function(b){ b.onclick=function(){
-        A.examId=b.dataset.ex; cur=list.filter(function(e){return e.id===A.examId;})[0]; A.examDate=cur.date||""; el("dt").value=A.examDate;
+        A.examId=b.dataset.ex; cur=list.filter(function(e){return e.id===A.examId;})[0]; A.examDate=날짜(cur); A.examDateTouched=false; el("dt").value=A.examDate;
         눌림(st,".chips button",function(x){return x.dataset.ex===A.examId;}); note(); }; });
-      el("dt").onchange=function(){ A.examDate=el("dt").value; note(); };
-      단추("다음");
+      el("dt").onchange=el("dt").oninput=function(){ A.examDate=el("dt").value; A.examDateTouched=true; note(); };
     },
     scope:function(st){
-      if(A.grade==="고3"){ i++; return 그리기(); }        // 고3은 범위가 없다 — 수능 전 범위
+      if(A.grade!=="고1"){ i++; return 그리기(); }        // 고2·고3은 시험 범위가 없다 — 고2 는 선택과목, 고3 은 수능 전 범위
       var B=T.기본범위||{}, roots=T.ROOTS.filter(function(r){ return /^[A-J]$/.test(r.code); });
-      if(!A.scope){ var sc=T.scope?T.scope():null; A.scope=(sc&&sc.length)?sc.slice():(B.s2mid?(B.s2mid.mids||B.s2mid.roots).slice():[]); }
-      /* ★ 고2 REWIND 는 고1 통합사회 **전 범위**를 되감는다 — 내신 범위로 좁히지 않는다 */
-      if(A.grade==="고2" && !A.scope고2){ A.scope=roots.map(function(r){return r.code;}); A.scope고2=1; }
+      /* 기본 범위는 앞 단계에서 고른 시험에 맞춘다(2026-10-04: 1학기 기말을 골라도 2학기 중간 범위가 들어갔다).
+         학생이 범위를 손댄 뒤에는 시험을 다시 골라도 덮지 않는다 */
+      var 프리셋=B[A.examId]||B.s2mid;
+      if(!A.scope || (A.scopeAutoFor && A.scopeAutoFor!==A.examId && !A.scopeTouched)){
+        var sc=T.scope?T.scope():null;
+        A.scope=(sc&&sc.length&&!A.scopeAutoFor&&!S.scopeAuto)?sc.slice():(프리셋?(프리셋.mids||프리셋.roots).slice():[]);
+        A.scopeAutoFor=A.examId;
+      }
       var presets=A.grade==="고1"?["s1mid","s1fin","s2mid","s2fin"].filter(function(k){return B[k];}):[];   /* 내신 범위 단추는 고1만 — 고2·3은 내신을 겨누지 않는다(2026-09-22) */
       function rootIn(rc){ return A.scope.some(function(x){ return x.charAt(0)===rc; }); }   /* 대영역이든 그 중단원이든 들어 있으면 켜짐 */
       function same(a,b){ return a.slice().sort().join()===b.slice().sort().join(); }
@@ -359,15 +381,16 @@
                 return '<label><input type="checkbox" data-mid="'+m.code+'"'+(든[m.code]?' checked':'')+'><span>'+esc(String(m.name).replace(/\s*★.*$/,""))+'</span></label>'; }).join("")+'</div>':'')+
               '</div>'; }).join(""); }).join("");
         el("ulist").querySelectorAll(".u").forEach(function(b){ b.onclick=function(){ var c=b.dataset.r;
+          A.scopeTouched=true;
           if(rootIn(c)) A.scope=A.scope.filter(function(x){ return x.charAt(0)!==c; }); else A.scope.push(c); paint(); }; });
         el("ulist").querySelectorAll("[data-mid]").forEach(function(cb){ cb.onchange=function(){
-          var mc=cb.dataset.mid, rc=mc.charAt(0), 든=든중(rc);
+          var mc=cb.dataset.mid, rc=mc.charAt(0), 든=든중(rc); A.scopeTouched=true;
           if(cb.checked) 든[mc]=1; else delete 든[mc];
           넣기(rc, T.BY[rc].mids.map(function(m){ return m.code; }).filter(function(c){ return 든[c]; })); paint(); }; });
         눌림(st,".chips button",function(b){return same(A.scope,B[b.dataset.p].mids||B[b.dataset.p].roots);});
         if(el("next")) el("next").disabled=!A.scope.length;
       }
-      st.querySelectorAll(".chips button").forEach(function(b){ b.onclick=function(){ A.scope=(B[b.dataset.p].mids||B[b.dataset.p].roots).slice(); paint(); }; });
+      st.querySelectorAll(".chips button").forEach(function(b){ b.onclick=function(){ A.scopeTouched=true; A.scope=(B[b.dataset.p].mids||B[b.dataset.p].roots).slice(); paint(); }; });
       단추("다음", A.scope.length>0);
       paint();
 
@@ -413,7 +436,8 @@
           var x = 풀[0]; 쓴OX[x.id] = 1; return { kind:"ox", x:x, leaf:l };
         },
         q:function(l){
-          var qs=(l.play||[]).filter(function(q){ var d=Q[q.id]; return d && !쓴Q[q.id] && q.id.charAt(0)==="T" && !d.g && !q.ff && !q.fig && d.o && d.o.length>=4 && (!window.QRENDER||QRENDER.ok(d,q)) && !S.ans[q.id] && 깔끔한가(d); });
+          var qs=(l.play||[]).filter(function(q){ var d=Q[q.id]; return d && !쓴Q[q.id] && (A.grade==="고1" ? q.id.charAt(0)==="T" : T.isMain(q, A.grade)) && !d.g && !q.ff && !q.fig && d.o && d.o.length>=4 && (!window.QRENDER||QRENDER.ok(d,q)) && !S.ans[q.id] && 깔끔한가(d); });
+          if(A.grade==="고3"){ var 고삼=qs.filter(function(q){ return q.g==="고3"; }); if(고삼.length) qs=고삼; }   /* 고3 진단은 고3 기출(평가원·교육청)로 */
           if(!qs.length) return null;
           var q=qs[Math.floor(T.seed("ob"+T.dayKey()+l.code)*qs.length)%qs.length]; 쓴Q[q.id]=1; return { kind:"q", q:q, leaf:l };
         },
@@ -425,17 +449,19 @@
       };
       var 큐 = [], li = 0;
       /* 고2·고3 은 단답형을 안 낸다 — 그 자리를 O·X 로(2026-09-22) */
-      if(A.grade!=="고1") 차례=차례.map(function(k){ return k==="kw"?"ox":k; });
+      /* O·X 은행은 고1 통합사회 학평에서 뽑은 것이다 — 고2·고3 은 본 과목 기출 10문항으로 */
+      if(A.grade!=="고1") 차례=["q","q","q","q","q","q","q","q","q","q"];
       차례.forEach(function(kind){
         for(var t=0; t<리프들.length; t++){ var l=리프들[(li++)%리프들.length]; var it=뽑기[kind](l); if(it){ 큐.push(it); return; } }
       });
       if(!큐.length){ i++; return 그리기(); }
       var k=0; A.check=[]; A.checkSkipped=false;
-      st.innerHTML=머리("7 / 7",MSG.checkH,'<span class="bdgs"><i class="bdg bdg-time">O·X 20초</i>'+(A.grade==="고1"?'<i class="bdg bdg-time">개념어 30초</i>':'')+'<i class="bdg bdg-time">기출 1분</i></span>')+
+      st.innerHTML=머리("7 / 7",MSG.checkH.replace("{n}",큐.length),'<span class="bdgs">'+(큐.some(function(z){return z.kind==="ox";})?'<i class="bdg bdg-time">O·X 20초</i>':'')+(큐.some(function(z){return z.kind==="kw";})?'<i class="bdg bdg-time">개념어 30초</i>':'')+'<i class="bdg bdg-time">기출 1분</i></span>')+
         '<div class="pt"><div class="ptbar"><i id="ptfill"></i></div><div class="ptrow"><span id="ptleft"></span>'+
         '<span class="skipwrap"><button type="button" class="skipbtn" id="skipq" aria-describedby="skiptip">건너뛰기</button>'+
-        '<span class="tip" id="skiptip" role="tooltip">건너뛰면 어디가 약한지 몰라서 처음 며칠은 오늘 할 것이 덜 정확해요.</span></span></div></div>'+
+        '<span class="tip" id="skiptip" role="tooltip" style="display:none"></span></span></div></div>'+
         '<div id="qhost"></div>';
+      /* 아래 「다음」 단추 하나로 통일 — 선택(바꿀 수 있음) → 다음(확정, 정오 표시) → 다음(넘어감). 저절로 넘어가지 않는다(2026-10-04) */
       단추("다음", false);
       function 진행판(){
         el("ptfill").style.width=Math.round(k/큐.length*100)+"%";
@@ -470,9 +496,12 @@
         return { 걸림:function(){ return Date.now()-시작; } };
       }
       function 멈춤(){ if(시계){ clearInterval(시계); 시계=null; } }
+      A.stopClock=멈춤;      // 앞 단계로 돌아갈 때 초시계가 뒤에서 계속 도는 것을 막는다
       function 시계칸(kind){ return '<div class="tm"><div class="tmbar"><i id="tbar"></i></div><b id="tsec">'+제한[kind]+'초</b></div>'; }
-      function 끝내기(){ 멈춤(); el("qhost").innerHTML=''; el("next").disabled=false; A.checkSkipped = k<큐.length; 다음(); }
-      function 다음문항(ms){ 멈춤(); setTimeout(function(){ k++; one(); }, ms); }
+      function 끝내기(){ 멈춤(); el("qhost").innerHTML=''; el("next").disabled=false; el("next").onclick=다음; A.checkSkipped = k<큐.length; 다음(); }
+      /* 다음 단추를 이 문항 몫으로 바꾼다 — go() 는 단추를 눌렀을 때 하는 일 */
+      function 다음단추(켬, go){ var nb=el("next"); nb.disabled=!켬; nb.onclick=go; }
+      function 넘기기(){ 멈춤(); k++; one(); }
       function 리프이름(l){ return esc(l.name.replace(/\s*★\s*$/,"")); }
       function 머리줄(it, 표){ return '<div class="qn">'+표+', '+리프이름(it.leaf)+'</div>'; }
       function 적기(it, ok, ms, 초과){
@@ -493,54 +522,67 @@
         el("qhost").innerHTML='<div class="qwrap">'+머리줄(it,"기출")+시계칸("q")+
           '<div class="qsrc">'+esc(window.QRENDER&&QRENDER.출처?QRENDER.출처(q):"")+'</div>'+
           '<div class="qbody">'+몸.replace(/<ol class="opts5">[\s\S]*?<\/ol>/,'')+'</div>'+
-          '<div class="opts">'+d.o.map(function(o,z){ return '<button class="opt" data-v="'+z+'"><span class="k">'+"①②③④⑤".charAt(z)+'</span><span>'+(window.QRENDER?QRENDER.body(o):esc(o))+'</span></button>'; }).join("")+'</div>'+
+          '<div class="opts">'+d.o.map(function(o,z){ return '<button class="opt" data-v="'+z+'" aria-pressed="false"><span class="k">'+"①②③④⑤".charAt(z)+'</span><span>'+(window.QRENDER?QRENDER.body(o):esc(o))+'</span></button>'; }).join("")+'</div>'+
           '<div id="qsay"></div></div>';
-        var 끝남=false;
-        function 마감(b, 초과){
-          if(끝남) return; 끝남=true;
-          var ms=시계.걸림(), 고른=b?+b.dataset.v:-1;
-          var r=T.answer(q.id, 고른, {ms:ms, conf:"sure"}), ok=r?r.ok:(고른===d.a);
-          적기(it, ok, ms, 초과);
-          el("qhost").querySelectorAll(".opt").forEach(function(x,z){ x.disabled=true; if(z===d.a){ x.dataset.s="ok"; if(!ok) try{ x.scrollIntoView({block:"center",behavior:"smooth"}); }catch(e){} } else if(x===b) x.dataset.s="no"; });
-          el("qsay").innerHTML='<p class="qsay'+(ok?" good":"")+'">'+(ok?"정답이에요.":(초과?"시간이 다 됐어요. ":"")+"정답은 "+"①②③④⑤".charAt(d.a)+"이에요.")+'</p>';
-          다음문항(ok?700:1600);
+        var 끝남=false, 고른=null;
+        function 마감(초과){
+          if(끝남) return; 끝남=true; 멈춤();
+          var ms=시계.걸림(), v=고른?+고른.dataset.v:-1;
+          var r=T.answer(q.id, v, {ms:ms, conf:"sure"}), ok=r?r.ok:(v===d.a);
+          적기(it, ok, ms, !!초과 && !고른);
+          el("qhost").querySelectorAll(".opt").forEach(function(x,z){ x.disabled=true; x.removeAttribute("data-s"); if(z===d.a){ x.dataset.s="ok"; if(!ok) try{ x.scrollIntoView({block:"center",behavior:"smooth"}); }catch(e){} } else if(x===고른) x.dataset.s="no"; });
+          el("qsay").innerHTML='<p class="qsay'+(ok?" good":"")+'">'+(ok?"정답":(초과&&!고른?"시간 초과. ":"")+"정답 "+"①②③④⑤".charAt(d.a))+'</p>';
+          다음단추(true, 넘기기);
         }
-        var 시계=초읽기("q", function(){ 마감(null, true); });
-        el("qhost").querySelectorAll(".opt").forEach(function(b){ b.onclick=function(){ 마감(b, false); }; });
+        var 시계=초읽기("q", function(){ 마감(true); });
+        el("qhost").querySelectorAll(".opt").forEach(function(b){ b.onclick=function(){
+          if(끝남) return; 고른=b;
+          el("qhost").querySelectorAll(".opt").forEach(function(x){ x.dataset.s=(x===b)?"pick":""; x.setAttribute("aria-pressed", x===b?"true":"false"); });
+          다음단추(true, function(){ 마감(false); }); }; });
+        다음단추(false, null);
         window.scrollTo({top:0,behavior:"smooth"});
       }
       function 오엑스(it){
         var x=it.x;
         el("qhost").innerHTML='<div class="qwrap">'+머리줄(it,"O·X")+시계칸("ox")+
           '<div class="oxq">'+(x.who?'<span class="who">'+esc(x.who)+'의 입장</span>':'')+'<p class="oxstem">'+esc(x.t)+'</p>'+
-          '<div class="ox"><button type="button" class="o" data-v="1">O</button><button type="button" class="x" data-v="0">X</button></div>'+
+          '<div class="ox"><button type="button" class="o" data-v="1" aria-pressed="false">O</button><button type="button" class="x" data-v="0" aria-pressed="false">X</button></div>'+
           '<div id="qsay"></div></div></div>';
-        var 끝남=false;
-        function 마감(b, 초과){
-          if(끝남) return; 끝남=true;
-          var ms=시계.걸림(), 고른=b?(b.dataset.v==="1"):null, ok=(고른!==null && !!x.a===고른);
-          S.ox=S.ox||{}; S.ox[x.id]={ok:ok,c:초과?null:"sure",ms:ms,n:1,at:Date.now(),leaf:x.leaf,to:!!초과}; T.drill && T.drill("ox", ok); T.save && T.save();
-          적기(it, ok, ms, 초과);
-          el("qhost").querySelectorAll(".ox button").forEach(function(z){ z.disabled=true; if((z.dataset.v==="1")===!!x.a) z.dataset.s="ok"; else if(z===b) z.dataset.s="no"; });
-          el("qsay").innerHTML='<p class="qsay'+(ok?" good":"")+'">'+(ok?"정답이에요.":(초과?"시간이 다 됐어요. ":"")+(x.a?"맞는 문장이에요. ":"틀린 문장이에요. ")+esc(String(x.why||"").slice(0,90)))+'</p>';
-          다음문항(ok?600:1900);
+        var 끝남=false, 고른=null;
+        function 마감(초과){
+          if(끝남) return; 끝남=true; 멈춤();
+          var ms=시계.걸림(), v=고른?(고른.dataset.v==="1"):null, ok=(v!==null && !!x.a===v);
+          var 시간넘김=!!초과 && !고른;
+          S.ox=S.ox||{}; S.ox[x.id]={ok:ok,c:시간넘김?null:"sure",ms:ms,n:1,at:Date.now(),leaf:x.leaf,to:시간넘김}; T.drill && T.drill("ox", ok); T.save && T.save();
+          적기(it, ok, ms, 시간넘김);
+          el("qhost").querySelectorAll(".ox button").forEach(function(z){ z.disabled=true; z.removeAttribute("data-s"); if((z.dataset.v==="1")===!!x.a) z.dataset.s="ok"; else if(z===고른) z.dataset.s="no"; });
+          el("qsay").innerHTML='<p class="qsay'+(ok?" good":"")+'">'+(ok?"정답":(시간넘김?"시간 초과. ":"")+(x.a?"맞는 문장. ":"틀린 문장. ")+esc(String(x.why||"").slice(0,90)))+'</p>';
+          다음단추(true, 넘기기);
         }
-        var 시계=초읽기("ox", function(){ 마감(null, true); });
-        el("qhost").querySelectorAll(".ox button").forEach(function(b){ b.onclick=function(){ 마감(b, false); }; });
+        var 시계=초읽기("ox", function(){ 마감(true); });
+        el("qhost").querySelectorAll(".ox button").forEach(function(b){ b.onclick=function(){
+          if(끝남) return; 고른=b;
+          el("qhost").querySelectorAll(".ox button").forEach(function(z){ z.dataset.s=(z===b)?"pick":""; z.setAttribute("aria-pressed", z===b?"true":"false"); });
+          다음단추(true, function(){ 마감(false); }); }; });
+        다음단추(false, null);
         window.scrollTo({top:0,behavior:"smooth"});
       }
       function 개념어(it){
         el("qhost").innerHTML='<div class="qwrap">'+머리줄(it,"개념어 쓰기")+시계칸("kw")+'<div id="kwhost"></div></div>';
         var 초과=false, 끝남=false;
-        KWASK.render(el("kwhost"), it.x, { idx:k+1, total:큐.length, next:"다음 →",
-          onDone:function(res){ if(끝남) return; 끝남=true; 멈춤(); 적기(it, !!res.ok, res.ms, 초과); },
-          onNext:function(){ k++; one(); } });
+        다음단추(false, null);
+        KWASK.render(el("kwhost"), it.x, { idx:k+1, total:큐.length, next:"다음 →", noTag:true,
+          onDone:function(res){ if(끝남) return; 끝남=true; 멈춤();
+            /* 시간이 넘어 자동으로 낸 것은 확신도를 「시간 초과」(모름)로 남긴다 — 「찍었어요」 가 아니다 */
+            if(초과){ var r=(S.kw||{})[it.x.id]; if(r){ r.c=null; r.to=true; T.save&&T.save(); } }
+            적기(it, !!res.ok, res.ms, 초과); 다음단추(true, 넘기기); },
+          onNext:function(){ 넘기기(); } });
         초읽기("kw", function(){
           if(끝남) return; 초과=true;
-          /* 시간이 다 되면 「찍었어요」로 낸다 — 빈 답도 그 단추로는 채점되고 기록이 남는다 */
-          var g=el("kwhost").querySelector('#kwconf button[data-c="guess"]');
-          if(g){ g.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true})); g.click(); }
-          var lab=el("kwhost").querySelector("#kwlab"); if(lab) lab.textContent="시간이 다 됐어요.";
+          /* 빈 답을 「모르겠어요」 로 내서 채점과 기록을 남긴다 — 기록 뒤 onDone 에서 확신도를 시간 초과로 고친다 */
+          var g=el("kwhost").querySelector('#kwskip');
+          if(g){ g.click(); }
+          var lab=el("kwhost").querySelector("#kwlab"); if(lab) lab.textContent="시간 초과";
         });
         var inp=el("kwhost").querySelector("#kwin"); if(inp) setTimeout(function(){ try{ inp.focus(); }catch(e){} }, 120);
         window.scrollTo({top:0,behavior:"smooth"});
@@ -559,25 +601,25 @@
       var 순=Object.keys(셈).sort(function(a,b){ return 셈[b]-셈[a]; }).slice(0,2).map(function(c){ return T.BY[c]?T.BY[c].name.replace(/\s*★\s*$/,""):c; });
       var 말=(빠름?"빠르게 맞힌 것 "+빠름+"개":"")+(빠름&&느림?", ":"")+(느림?"느리게 맞힌 것 "+느림+"개":"");
       if(말) 말+=". ";
-      if(A.checkSkipped && !순.length) return 말+"건너뛴 만큼은 풀면서 잡아 갈게요.";
-      return 말+(순.length ? "여기서부터 잡아 드려요. "+순.join(", ")+"." : "지금은 다 맞았어요. 오늘 할 것으로 더 넓게 봐요.");
+      if(A.checkSkipped && !순.length) return 말;
+      return 말+(순.length ? "약한 곳 "+순.join(", ") : "약한 곳 없음");
     },
     done:function(st){
       try{ localStorage.setItem("terra.onboarded","1"); }catch(e){}
       var R=T.routine(), first=R.items[0]||null, 맞=A.check.filter(function(r){return r.ok;}).length;
       var nm=A.name||(S.student&&S.student.name)||"";
       var G=T.GRADES[A.grade]||{}, nx=T.nextExam?T.nextExam():null;
-      st.innerHTML='<div class="done">'+머리("",esc(MSG.doneH)+(nm?" "+esc(nm)+" 학생.":""),esc(MSG.doneP))+
-        (A.check.length?'<p class="note" style="margin:0 0 6px">'+A.check.length+'문항 중 <b>'+맞+'개</b> 맞았어요. '+화면.약한자리()+'</p>':'')+
+      st.innerHTML='<div class="done">'+머리("",(nm?esc(nm)+" ":"")+esc(MSG.doneH),esc(MSG.doneP))+
+        (A.check.length?'<p class="note" style="margin:0 0 6px">'+A.check.length+'문항 중 <b>'+맞+'개</b> 정답. '+화면.약한자리()+'</p>':'')+
         (first?'<a class="todayone" href="'+first.href+'"><span class="lbl">오늘 할 것</span><h3>'+esc(first.title)+'</h3><p>'+esc(first.say)+'</p>'+
           (first.why?'<p class="why">'+esc(first.why)+'</p>':'')+'</a>':'')+
         '<div class="summ">'+
           '<div><b>'+esc(A.grade)+', '+esc(G.subject||"")+'</b><span>학년</span></div>'+
           '<div><b>'+(nx?esc(nx.exam.name)+" "+esc(nx.label):"시험 날짜 없음")+'</b><span>다음 시험</span></div>'+
           '<div><b>하루 '+(T.goalMin?T.goalMin():A.goal)+'분</b><span>목표</span></div>'+
-          '<div><b>'+(A.alarmOn?A.alarm+" 알림":"알림 끔")+'</b><span>'+(A.alarmOn?"매일 이 시각에":"설정에서 켤 수 있어요")+'</span></div>'+
+          '<div><b>'+(A.alarmOn?A.alarm+" 알림":"알림 끔")+'</b><span>'+(A.alarmOn?"매일 이 시각에":"설정에서 켜기")+'</span></div>'+
         '</div></div>';
-      el("foot").innerHTML='<a class="btn" href="'+(first?first.href:"index.html")+'">'+(first?esc(first.cta)+', '+first.min+'분 →':'홈으로 →')+'</a>';
+      el("foot").innerHTML='<a class="btn" href="'+(first?first.href:"index.html")+'">'+(first?esc(first.cta)+' →':'홈으로 →')+'</a>';
       el("back").classList.remove("on"); el("skip").style.visibility="hidden";
     }
   };
@@ -607,6 +649,7 @@
   }
 
   function 그리기(){
+    if(A.stopClock){ A.stopClock(); A.stopClock=null; }
     진행();
     var st=el("stage"); st.classList.remove("in"); void st.offsetWidth; st.classList.add("in");
     화면[steps[i]](st);

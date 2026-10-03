@@ -13,7 +13,7 @@
  */
 (function () {
   "use strict";
-  var K_TIME = "terra.notify.at";     // "08:00"
+  var K_TIME = "terra.notify.at";     // "21:00"
   var K_ON = "terra.notify.on";       // "1"
   var K_LAST = "terra.notify.last";   // 마지막으로 띄운 날 "2026-08-31"
   var timer = null;
@@ -22,7 +22,7 @@
   function set(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} }
 
   function on() { return get(K_ON, "") === "1"; }
-  function at() { return get(K_TIME, "08:00"); }
+  function at() { return get(K_TIME, "21:00"); }   /* 기본은 저녁 — 8시는 등교 시간이다(2026-10-04) */
   function today() {
     var d = new Date();
     return new Date(d.getTime() - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
@@ -34,7 +34,7 @@
   function whenToday() {
     var p = at().split(":");
     var d = new Date();
-    d.setHours(+p[0] || 8, +p[1] || 0, 0, 0);
+    d.setHours(isNaN(+p[0]) || p[0] === "" ? 21 : +p[0], +p[1] || 0, 0, 0);
     return d;
   }
 
@@ -71,8 +71,8 @@
         t: (r.exam ? r.exam.name + " " + r.ddayLabel + ", " : "") +
            (첫.kind === "exam" ? "오늘의 모의고사" : "오늘 시험에서 틀린 것"),
         b: 첫.kind === "exam"
-             ? "25문항 45분이에요."
-             : (첫.n || "") + "문항을 다시 풀어요."
+             ? "25문항, 45분"
+             : "오답 " + (첫.n || "") + "문항"
       };
     }
     /* 머리말 — 시험이 2주 안이면 시험 이름과 남은 날을 앞에 둔다 */
@@ -80,10 +80,10 @@
       ? (시.e.name + " " + 시.d.label + ", ") : "";
 
     if (r.done) {
-      return { t: 앞 + "오늘 할 것 다 했어요",
+      return { t: 앞 + "오늘 할 것 완료",
                b: 시 && 시.d.days <= 시험알림일수
-                    ? "시험까지 " + 시.d.days + "일 남았어요."
-                    : "더 풀 수 있어요." };
+                    ? "시험까지 " + 시.d.days + "일"
+                    : "" };
     }
     var left = Math.max(1, r.goal - r.spent);
     var it = r.items[0];
@@ -103,7 +103,7 @@
     return {
       t: 앞 + "오늘 " + left + "분",
       b: (it ? (짧게(it.title, 12) + ". " + 짧게(it.sayShort || it.say, 34))
-             : "지금 시작해요.") + 범위
+             : "최적화 " + r.goal + "분") + 범위
     };
   }
 
@@ -183,11 +183,11 @@
       installed: !!installed, ios: ios,
       background: !!(navigator.serviceWorker && "periodicSync" in
         (window.ServiceWorkerRegistration ? ServiceWorkerRegistration.prototype : {})),
-      say: !supported() ? "이 브라우저는 알림을 지원하지 않아요."
-        : !granted() ? "알림을 켜면 정한 시각에 알려요."
-        : ios ? "아이폰은 앱을 켤 때 알려 드려요. (사파리 제한)"
-        : installed ? "폰에 설치돼 있어서 앱을 닫아도 알림이 갑니다."
-        : "지금은 앱을 켜 두거나 다시 열 때 알림이 갑니다. 홈 화면에 추가하면 닫아도 갑니다."
+      say: !supported() ? "알림 미지원 브라우저"
+        : !granted() ? "알림 꺼짐"
+        : ios ? "아이폰: 앱을 켤 때 알림(사파리 제한)"
+        : installed ? "설치됨: 앱을 닫아도 알림"
+        : "앱을 열 때 알림(홈 화면에 추가 → 닫아도 알림)"
     };
   }
 

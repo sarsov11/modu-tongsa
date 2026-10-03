@@ -14,9 +14,9 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=8f90f959">
+<link rel="stylesheet" href="css/base.css?v=1a817d13">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
-<link rel="stylesheet" href="css/keyword.css?v=e00f83be">
+<link rel="stylesheet" href="css/keyword.css?v=7a3b2060">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .page{max-width:820px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -112,10 +112,14 @@
     background:var(--bg-2);padding:var(--s4);margin-bottom:var(--s4)}
   .qwrap .qtag{display:flex;gap:8px;align-items:center;flex-wrap:wrap;
     font-size:14.5px;color:var(--ink-3);margin-bottom:var(--s3)}
-  .qwrap .qtag b{color:var(--mint);font-weight:700}
+  .qwrap .qtag b{color:var(--mint);color:color-mix(in srgb,var(--mint) 62%,var(--ink));font-weight:700}
   .qwrap .qtag .src{margin-left:auto;font-variant-numeric:tabular-nums}
   .qstem{font-size:16px;line-height:1.6;font-weight:600;margin:0 0 10px}
   /* 카드 안에 상자를 또 두지 않는다 — 자료는 왼쪽 선 하나로 구분한다(2026-09-21) */
+  .qdata .say{display:flex;gap:10px;align-items:baseline;margin:0 0 7px}
+  .qdata .say .who{flex:0 0 auto;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--line-2);font-size:13px;font-weight:700}
+  .qdata .say .bt{flex:1 1 0;min-width:0}
+  .qdata p{margin:0 0 6px} .qdata .mk{font-weight:800}
   .qdata{border-left:3px solid var(--line-2);padding:2px 0 2px 14px;
     font-size:15.5px;line-height:1.72;white-space:pre-wrap;color:var(--ink-3);margin-bottom:14px}
   .qpick{display:flex;gap:10px;align-items:flex-start;
@@ -168,32 +172,33 @@
 <div class="page">
   <div class="hd">
     <h1>개념 체크</h1>
-    <p id="lede">문장이 맞는지 O·X 로 답합니다. <b>얼마나 확신하는지</b>를 먼저 고르면
-      틀렸을 때 무엇을 해야 하는지 정확히 짚어 드려요.</p>
+    <p id="lede" hidden></p>
   </div>
   <div class="prog" id="prog"></div>
   <div id="stage"></div>
 </div>
 
-<script src="js/tree.js?v=cf241056"></script>
-<script src="js/qbank.js?v=df944cc8"></script>
+<script src="js/tree.js?v=70df12a1"></script>
+<script src="js/qbank.js?v=7b68ff94"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
-<script src="js/cardox.js?v=0dbbf4f9"></script>
-<script src="js/judge.js?v=43f690d4"></script>
-<script src="js/pool.js?v=92a27f17"></script>
-<script src="js/drills.js?v=f1bd4428"></script>
-<script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/conceptq.js?v=d8dabe1e"></script>
+<script src="js/cardox.js?v=2b83481d"></script>
+<script src="js/judge.js?v=eb358ca6"></script>
+<script src="js/pool.js?v=c0d187ff"></script>
+<script src="js/drills.js?v=3f81d010"></script>
+<script src="js/trend.js?v=77dea921"></script>
+<script src="js/conceptq.js?v=7e53efff"></script>
 <script src="js/lecprac.js?v=704d9a6e"></script>
-<script src="js/cards.js?v=1b4d9904"></script>
+<script src="js/cards.js?v=82bdc620"></script>
 <script src="js/keyword.js?v=b233a01c"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
-<script src="js/store.js?v=531993fd"></script>
+<script src="js/packs.js?v=9e67e178"></script>
+<script src="js/store.js?v=4ece5289"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
-<script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/coach.js?v=fce5041b"></script>
-<script src="js/kwask.js?v=2087ec30"></script>
+<script src="js/auth.js?v=dca5fb29"></script>
+<script src="js/coach.js?v=76c10e1b"></script>
+<script src="js/qrender.js?v=749818a6"></script>
+<script src="js/kwask.js?v=2c27c2c1"></script>
 <script>
 (function(){
   var T=window.TERRA, J=window.JUDGE, BANK=window.OXBANK||[];
@@ -205,6 +210,10 @@
   T.mountNav && T.mountNav("ox");
 
   /* ★ → «빈출» 딱지 · 출처는 «2023년 7월 고3 학력평가» 꼴로 (2026-09-13) */
+  function 중영역이름(leaf){
+    try{ var code=String(leaf||"").split(".")[0], R=(window.TREE&&TREE.roots)||[];
+      for(var a=0;a<R.length;a++) for(var b=0;b<R[a].mids.length;b++) if(R[a].mids[b].code===code) return R[a].mids[b].name;
+    }catch(e){} return ""; }
   function 이름꼴(n){ n=String(n||""); var hot=/\s*★\s*$/.test(n); n=n.replace(/\s*★\s*$/,"");
     return esc(n)+(hot?' <span class="hot">빈출</span>':''); }
   function 출처꼴(x){ if(window.QRENDER&&QRENDER.시험이름) return QRENDER.시험이름(x.g||"", x.dt||"");   /* 공통 출처 이름(2026-09-21) */
@@ -336,13 +345,26 @@
     기출판 = true;   /* 「기출 재료가 모자라 개념 문장으로」 안내를 띄우지 않는다 — 강의 연습은 원래 두 재료를 섞는다 */
     try{
       var _h=document.getElementById('lede');
-      if(_h) _h.innerHTML='방금 들은 강의 <b>'+esc(P.제목)+'</b>에서 나온 내용이에요. O·X로 답하세요.';
+      if(_h){ _h.innerHTML='강의 <b>'+esc(P.제목)+'</b>'; _h.hidden=false; }
       var _t=_h && _h.parentNode ? _h.parentNode.querySelector('h1') : null;
       if(_t) _t.textContent='강의 연습';
     }catch(e){}
     return 뽑;
   }
+  /* ★ 개념어 오답 다시(ox.html?kwwrong=1) — 틀린 개념어(S.kw ok:false)만 오래된 것부터. 홈 복습 타일에서 온다(1004) */
+  var 개념어오답 = /[?&]kwwrong=1/.test(location.search);
+  function 개념어오답고르기(){
+    var kw=(T.state().kw)||{}, 풀=[];
+    Object.keys(kw).forEach(function(id){
+      if(!kw[id] || kw[id].ok!==false || !window.KWASK) return;
+      var it=KWASK.찾기(id); if(it) 풀.push({kw:true, id:it.id, leaf:it.leaf, root:it.root, sroot:it.sroot, item:it, at:kw[id].at||0});
+    });
+    풀.sort(function(a,b){ return a.at-b.at; });
+    기출판=true;
+    return 풀.slice(0,세트수);
+  }
   function 고르기(){
+    if(개념어오답){ var 오=개념어오답고르기(); if(오.length) return 오; }
     if(강의표){ var 강=강의고르기(); if(강&&강.length) return 강; }
     if(틀린것만){ var 틀=틀린고르기(); if(틀.length) return 틀; }
     var 기 = 기출고르기();
@@ -388,7 +410,7 @@
      카드에서 넘어왔으면(리프표) 그 리프 것만, 아니면 시험 범위 안 약한 리프에서.
      방금(10분 안) 푼 것은 다시 안 낸다 — 카드 뒤에서 쓴 개념어가 곧바로 되풀이되지 않게. */
   function 개념어섞기(세트){
-    if(!window.KWASK || !세트 || 세트.length < 4 || 강의표) return 세트;   /* 강의 연습에는 다른 리프 개념어를 섞지 않는다 */
+    if(!window.KWASK || !세트 || 세트.length < 4 || 강의표 || 개념어오답) return 세트;   /* 강의 연습에는 다른 리프 개념어를 섞지 않는다 */
     var 몇 = 세트.length >= 8 ? 2 : 1;
     var 뽑 = 리프표 ? KWASK.리프에서(T, 리프표, 몇) : KWASK.범위에서(T, 몇);
     var 자리 = [2, 6];
@@ -426,25 +448,25 @@
        「방금 본 개념 하나로 판단」 이라는 목적이 흐려진다 (대표님 2026-09-12). */
     var 머리 = x.q
       ? '<div class="qwrap">'+
-          '<div class="qtag"><b>'+이름꼴(x.leafName||x.leaf)+'</b>'+
+          '<div class="qtag"><b>'+이름꼴(중영역이름(x.leaf)||x.leafName||x.leaf)+'</b>'+   /* 리프 이름(「자유주의적 정의관」)은 갑·을 판별 힌트가 된다 → 중영역 이름(1004) */
           '<span>'+(i+1)+' / '+세트.length+'</span>'+
           (x.dt?'<span class="src">'+esc(출처꼴(x))+'</span>':'')+
           '</div>'+
           '<p class="qstem">'+esc(x.stem||"")+'</p>'+
-          (x.d?'<div class="qdata">'+esc(x.d)+'</div>':'')+
+          (x.d?'<div class="qdata">'+(window.QRENDER&&QRENDER.자료?QRENDER.자료(x.d):esc(x.d))+'</div>':'')+   /* 갑:·을: 은 화자별 줄로(1004) */
           '<div class="qpick"><span class="no">'+"①②③④⑤".charAt(x.i||0)+'</span>'+
-          '<span class="tx">'+esc(x.t)+'</span></div>'+
+          '<span class="tx">'+esc(String(x.t||"").replace(/^\s*[①-⑤]\s*/,""))+'</span></div>'+   /* 원 선지 번호는 떼고(1004) */
         '</div>'
       : '<div class="card">'+
           '<div class="tag"><b>'+이름꼴(x.leafName||x.leaf)+'</b>'+
           '<span>'+(i+1)+' / '+세트.length+'</span></div>'+
-          (기출판?'':'<p class="qfall">이 범위는 기출 재료가 모자라 개념 문장으로 확인해요.</p>')+
+          (기출판?'':'<p class="qfall">기출 부족 → 개념 문장</p>')+
           '<p class="sent">'+esc(x.t)+'</p>'+
         '</div>';
     document.getElementById("stage").innerHTML=
       머리+
       '<div class="step">'+
-        '<h3>얼마나 확신하나요?</h3>'+
+        '<h3>확신도</h3>'+
         '<div class="conf" id="conf">'+
           J.확신단계.map(function(c,k){
             return '<button type="button" data-c="'+c.v+'" aria-pressed="false">'+esc(c.name)+'</button>';
@@ -508,9 +530,9 @@
 
     document.getElementById("stage").insertAdjacentHTML("beforeend",
       '<div class="verdict '+v.tone+'">'+
-        '<div class="top"><span class="mark">'+(ok?"○ 맞았어요":"✕ 아니에요")+'</span>'+
+        '<div class="top"><span class="mark">'+(ok?"○ 정답":"✕ 오답")+'</span>'+
         '<span class="kind">'+esc(v.label||v.kind)+'</span></div>'+
-        '<p class="say">'+esc(v.say)+'</p>'+
+        (v.say ? '<p class="say">'+esc(v.say)+'</p>' : '')+
         (x.why ? '<div class="why"><b>근거</b> — '+esc(x.why)+
                  (x.src?'<span class="src">'+esc(x.src)+'</span>':'')+'</div>' : '')+
         /* ★ 채점한 뒤에야 나머지 선지를 연다 — 풀 때 보이면 소거법이 된다 */
@@ -586,15 +608,15 @@
     /* 무엇을 해야 하는지 한 가지만 짚는다 — 여럿을 주면 아무것도 안 한다 */
     var 할일, 링크="skilltree.html";
     if(오개념){
-      할일="확실하다고 했는데 틀린 게 "+오개념+"개 있어요. 그 개념부터 다시 봅니다.";
+      할일="확신 오답 "+오개념+"개 → 그 개념부터";
       var 첫 = 결과.filter(function(r){return r.kind==="오개념"})[0];
       링크="study.html?leaf="+첫.leaf;
     } else if(찍음>=Math.ceil(결과.length/2)){
-      할일="절반 넘게 찍었어요. 문제보다 강의가 빠른 자리예요.";
+      할일="절반 넘게 찍음 → 강의 먼저";
     } else if(맞===결과.length){
-      할일="전부 맞았어요. 다음 개념으로 넘어가요.";
+      할일="전부 정답 → 다음 개념";
     } else {
-      할일="틀린 것만 한 번 더 보면 오늘은 끝이에요.";
+      할일="오답 모아풀기";
     }
 
     document.getElementById("stage").innerHTML=
@@ -619,9 +641,7 @@
     세트=개념어섞기(고르기()); i=0; 결과=[];
     if(!세트.length){
       document.getElementById("stage").innerHTML=
-        '<div class="card"><p class="sent">낼 수 있는 개념 문장이 없어요.</p>'+
-        '<p style="color:var(--ink-4);font-size:13.5px;margin-top:10px">'+
-        '시험 범위를 좁게 잡았다면 넓혀 보세요.</p></div>';
+        '<div class="card"><p class="sent">개념 문장 없음</p></div>';
       return;
     }
     if(window.COACH) COACH.begin({kind:"ox"});

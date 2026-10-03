@@ -19,9 +19,29 @@
   var 키들 = ["terra.state", "terra.scope", "terra.snap", "terra.cards", "terra.axis", "terra.onboarded"];
   var sb = ON ? window.supabase.createClient(C.url, C.anon) : null;
 
+  /* ── 서버가 살아 있는지 ──────────────────────────────────
+     무료 플랜 프로젝트는 쉬는 동안 도메인이 사라진다(2026-10-04 실측: DNS 조회 실패).
+     그 상태에서 로그인 단추를 보이면 눌러도 아무 일이 없다 — 먼저 건강 확인(auth health)을 하고,
+     실패하면 단추를 감춘다. 서버가 살아나면 다음에 그릴 때 다시 보인다. */
+  var 살아있음 = null;
+  function 서버확인(다시) {
+    if (!ON) return Promise.resolve(false);
+    if (다시) 살아있음 = null;
+    if (!살아있음) 살아있음 = new Promise(function (res) {
+      var 끝 = false;
+      function fin(v) { if (!끝) { 끝 = true; clearTimeout(t); res(v); } }
+      var t = setTimeout(function () { fin(false); }, 5000);
+      try {
+        fetch(C.url + "/auth/v1/health", { headers: { apikey: C.anon } })
+          .then(function (r) { fin(r.ok); }).catch(function () { fin(false); });
+      } catch (e) { fin(false); }
+    });
+    return 살아있음;
+  }
+
   function 사용자() {
     if (!ON) return Promise.resolve(null);
-    return sb.auth.getUser().then(function (r) { return (r.data && r.data.user) || null; })
+    return 서버확인().then(function (ok) { return ok ? sb.auth.getUser() : { data: null }; }).then(function (r) { return (r.data && r.data.user) || null; })
       .catch(function () { return null; });
   }
 
@@ -112,6 +132,6 @@
     });
   });
 
-  window.AUTH = { on: ON, 사용자: 사용자, 로그인: 로그인, 로그아웃: 로그아웃,
+  window.AUTH = { on: ON, 서버확인: 서버확인, 사용자: 사용자, 로그인: 로그인, 로그아웃: 로그아웃,
                   올리기: 올리기, 내려받기: 내려받기, 푸시켜기: 푸시켜기 };
 })();

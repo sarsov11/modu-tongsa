@@ -14,8 +14,8 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/login.css?v=bcda8ea1">
-<link rel="stylesheet" href="css/base.css?v=8f90f959">
+<link rel="stylesheet" href="css/login.css?v=bc2184f2">
+<link rel="stylesheet" href="css/base.css?v=1a817d13">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 
@@ -25,26 +25,26 @@
 <div class="lgpage"><div class="lgbox" id="lg">
   <div class="lgmark">통사</div>
 </div></div>
-<script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/tree.js?v=cf241056"></script>
-<script src="js/lecture.js?v=8faa86a9"></script>
+<script src="js/trend.js?v=77dea921"></script>
+<script src="js/tree.js?v=70df12a1"></script>
+<script src="js/lecture.js?v=878e128c"></script>
 <script src="js/video.js?v=2ad8e90e"></script>
-<script src="js/pool.js?v=92a27f17"></script>
-<script src="js/packs.js?v=e4a7e749"></script>
-<script src="js/drills.js?v=f1bd4428"></script>
-<script src="js/cards.js?v=1b4d9904"></script>
-<script src="js/store.js?v=531993fd"></script>
+<script src="js/pool.js?v=c0d187ff"></script>
+<script src="js/packs.js?v=9e67e178"></script>
+<script src="js/drills.js?v=3f81d010"></script>
+<script src="js/cards.js?v=82bdc620"></script>
+<script src="js/store.js?v=4ece5289"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
-<script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/loginui.js?v=4c82af4a"></script>
-<script src="js/coach.js?v=fce5041b"></script>
-<script src="js/notify.js?v=ba65297e"></script>
+<script src="js/auth.js?v=dca5fb29"></script>
+<script src="js/loginui.js?v=ec50ca43"></script>
+<script src="js/coach.js?v=76c10e1b"></script>
+<script src="js/notify.js?v=f6ea0991"></script>
 <script>
 (function(){
   var T=window.TERRA; T.mountNav && T.mountNav("login");
   var host=document.getElementById("lg");
-  LOGINUI.draw(host,{title:"로그인하고 시작해요", sub:"기록을 저장하고, 정한 시각에 오늘 할 것을 알려요.", naver:true, skip:"index.html"});
+  LOGINUI.draw(host,{title:"로그인", sub:"", naver:true, skip:"index.html"});
   window.addEventListener("terra:synced", function(){
     var done=false; try{ done = localStorage.getItem("terra.onboarded")==="1"; }catch(e){}
     location.href = done ? "index.html?go=1" : "start.html";   /* 기록이 없는 새 학생은 설정부터 */

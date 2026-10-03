@@ -165,6 +165,26 @@
      ★ 텍스트로 낼 수 있는 문항만 담는다. 시험지를 크롭 이미지로 때우지
         않기로 했으므로, 글이 온전하지 않으면 시험지에 못 올린다.
         발문이 "다음 자료를 보고…" 인데 자료가 없으면 못 푸는 문제다. */
+  /* ★ 자료 결손 가드(2026-10-04 실사용 점검: 25문항 중 5문항이 「그래프는·지도는…」 인데 그림이 없었다).
+     발문이 그림·표·지도·자료를 가리키는데 화면에 그려지는 것 중에 그림·표·자료 글이 하나도 없으면 못 푸는 문항이다. */
+  var 결손캐시 = {};
+  function 자료결손(q, d) {
+    if (!d || !window.QRENDER || !window.QRENDER.html) return false;
+    if (결손캐시[q.id] !== undefined) return 결손캐시[q.id];
+    var 발문 = String(d.q || ""), 결 = false;
+    if (/(그래프|지도|그림|사진|도표|표)(는|를|에서|의|와|에|로)|다음 자료|위 자료|다음 (글|표)/.test(발문)) {
+      var 글 = String(d.d || "").trim().length >= 30 || (d.t || []).length || String(d.b || "").trim().length >= 20;
+      if (!글) {
+        try {
+          var h = window.QRENDER.html(d, { img: q.img, fig: q.fig, ff: q.ff, gf: q.gf }, {});
+          결 = !/<img|<table|<svg/.test(h);
+        } catch (e) { 결 = false; }
+      }
+    }
+    return (결손캐시[q.id] = 결);
+  }
+  window.TERRA_EXAM_자료결손 = 자료결손;
+
   function 후보() {
     var T = window.TERRA, TREE = window.TREE, Q = window.QBANK || {};
     if (!TREE) return [];
@@ -186,6 +206,7 @@
                (고2가 확장팩을 켜면 그 과목이 시험지에도 들어와야 한다.) */
             if (!과목맞나(q)) return;
             if (window.QRENDER && !window.QRENDER.ok(Q[q.id], q)) { 버림++; return; }
+            if (자료결손(q, Q[q.id])) { 버림++; return; }
             out.push({ q: q, leaf: l, mid: m, root: r, killer: kill });
           });
         });
@@ -198,7 +219,15 @@
   /* ── 편성 ──────────────────────────────────────
      리프별 기출 수에 비례해 뽑되, 킬러 리프는 가중한다.
      한 리프에서 몰아 뽑으면 시험지가 안 되므로 리프당 상한을 둔다. */
+  /* ★ 고3 은 수능형이다(2026-10-04 대표님) — 사탐 20문항 30분, 문항당 2·3점 합 50점.
+     고1·고2 는 내신형 25문항 45분 100점. */
+  function 수능형() {
+    try { return window.TERRA.state().student.grade === "고3"; } catch (e) { return false; }
+  }
   function 편성(dayKey) {
+    var 고3 = 수능형();
+    문항수 = 고3 ? 20 : 25;
+    제한분 = 고3 ? 30 : 45;
     var all = 후보();
     if (all.length < 5) return null;
 
@@ -429,8 +458,9 @@
        학생에게 "여기가 킬러다" 를 알려 주는 것은 그대로가 낫다) */
     var 오점남 = 킬수, 쉬움남 = 킬수;
     var items = 뽑힘.map(function (x, i) {
-      var 점 = 4;
-      if (x.killer && 오점남 > 0) { 점 = 5; 오점남--; }
+      var 점 = 고3 ? 2 : 4;
+      if (고3) { if (x.killer && 오점남 > 0) { 점 = 3; 오점남--; } }
+      else if (x.killer && 오점남 > 0) { 점 = 5; 오점남--; }
       else if (!x.killer && 쉬움남 > 0) { 점 = 3; 쉬움남--; }
       return {
         no: i + 1, id: x.q.id, leaf: x.leaf.code, leafName: x.leaf.name,
@@ -443,10 +473,11 @@
     /* 합이 100이 아니면(문항이 모자란 회차) 골고루 나눠 맞춘다.
        한 문항에 몰아 주면 배점이 음수가 되거나 12점짜리가 생긴다. */
     var 합 = items.reduce(function (s, x) { return s + x.point; }, 0);
-    for (var g = 0; items.length && 합 !== 100 && g < 400; g++) {
+    var 목표 = 고3 ? 50 : 100, 점상 = 고3 ? 3 : 6, 점하 = 고3 ? 2 : 2;
+    for (var g = 0; items.length && 합 !== 목표 && g < 400; g++) {
       var 위 = g % items.length, it = items[위];
-      if (합 < 100 && it.point < 6) { it.point++; 합++; }
-      else if (합 > 100 && it.point > 2) { it.point--; 합--; }
+      if (합 < 목표 && it.point < 점상) { it.point++; 합++; }
+      else if (합 > 목표 && it.point > 점하) { it.point--; 합--; }
     }
 
     return {

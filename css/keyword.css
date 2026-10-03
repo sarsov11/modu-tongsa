@@ -65,3 +65,4 @@ body.kw-open .nextbar.coach{visibility:hidden}
   .kwq{padding:18px 16px 16px}
   .kwd{font-size:16.5px}
 }
+.kwv .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}   /* 1004 — start.html 에는 .top 규칙이 없어 「✕ 오답」과 「아직 모름」이 붙어 나왔다 */

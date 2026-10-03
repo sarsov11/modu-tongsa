@@ -14,9 +14,9 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=8f90f959">
+<link rel="stylesheet" href="css/base.css?v=1a817d13">
 <link rel="stylesheet" href="css/coach.css?v=57f0f96e">
-<link rel="stylesheet" href="css/question.css?v=1cc290e8">
+<link rel="stylesheet" href="css/question.css?v=4cea4076">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:1360px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -271,18 +271,19 @@
   <div id="root"></div>
 </div>
 
-<script src="js/trend.js?v=53fd8a90"></script>
-<script src="js/tree.js?v=cf241056"></script>
-<script src="js/qbank.js?v=df944cc8"></script>
-<script src="js/pool.js?v=92a27f17"></script>
-<script src="js/drills.js?v=f1bd4428"></script>
-<script src="js/qrender.js?v=68e2ab00"></script>
-<script src="js/cards.js?v=1b4d9904"></script>
-<script src="js/store.js?v=531993fd"></script>
+<script src="js/trend.js?v=77dea921"></script>
+<script src="js/tree.js?v=70df12a1"></script>
+<script src="js/qbank.js?v=7b68ff94"></script>
+<script src="js/pool.js?v=c0d187ff"></script>
+<script src="js/drills.js?v=3f81d010"></script>
+<script src="js/qrender.js?v=749818a6"></script>
+<script src="js/cards.js?v=82bdc620"></script>
+<script src="js/packs.js?v=9e67e178"></script>
+<script src="js/store.js?v=4ece5289"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
-<script src="js/auth.js?v=72d8dbed"></script>
-<script src="js/coach.js?v=fce5041b"></script>
+<script src="js/auth.js?v=dca5fb29"></script>
+<script src="js/coach.js?v=76c10e1b"></script>
 <script>
 (function(){
   var T=TERRA, Q=window.QBANK||{};
@@ -331,8 +332,14 @@
     }
     var 갈래=T.splitPool(all, grade);
     function 신선(a){ return !S2.ans[a.id]; }
+    /* 고3 은 평가원(6·9월 모평·수능) 기출을 교육청 학평보다 앞에 둔다(2026-10-04) — 같은 무리 안에서는 안 푼 것이 먼저 */
+    function 평가원(x){ return x.g==="고3" && /^\d{4}-(06|09|11)/.test(String(x.d||"")); }
+    function 순위(x){ return 평가원(x) ? 0 : (x.g==="고3" ? 1 : 2); }   // 평가원(모평·수능) → 고3 교육청 학평 → 그 밖
     function 줄세우기(arr){
-      return arr.filter(신선).concat(arr.filter(function(x){ return !신선(x); }));
+      var 신=arr.filter(신선), 구=arr.filter(function(x){ return !신선(x); });
+      if(grade!=="고3") return 신.concat(구);
+      function 정렬(a){ return [0,1,2].reduce(function(o,r){ return o.concat(a.filter(function(x){ return 순위(x)===r; })); }, []); }
+      return 정렬(신).concat(정렬(구));
     }
     var 본=줄세우기(갈래.main), 심화=줄세우기(갈래.extra);
     붙임=0;
@@ -360,6 +367,12 @@
     var 후보=(T.오늘의리프?T.오늘의리프({전부:true}):[]).filter(function(c){
       return playable(c.leaf).length>0;
     });
+    /* ?root=F — 주간 점검에서 온 것. 그 대영역 안에서 가장 급한 단원을 낸다(2026-10-04: 「문화와 다양성 집중 정리」 가 「교통 발달과 지역 변화」 로 갔다) */
+    var 영역=P.get("root");
+    if(영역){
+      var 안=후보.filter(function(c){ return c.leaf.mid.root.code===영역; });
+      if(안.length) 후보=안;
+    }
     var 오늘=후보[0];
     if(!오늘){ 목록화면(rows,S,true); return; }
 
@@ -383,12 +396,11 @@
                     - 오늘.이해도 + 100)/범위것.length) : 0;
     var 줄=[];
     if(잘함 && 잘함.이해도>=55 && 잘함.code!==오늘.code)
-      줄.push({k:"good", t:"<b>"+esc(잘함.st.name)+"</b>은 이해도가 "+잘함.이해도+
-                        "예요. 지금은 안 해도 돼요."});
+      줄.push({k:"good", t:"<b>"+esc(잘함.st.name)+"</b> 이해도 "+잘함.이해도});
     if(급함)
       줄.push({k:"bad", t:"다음으로 급한 곳은 <b>"+esc(급함.st.name)+"</b>이에요."});
-    줄.push({k:"", t:"오늘 이걸 다 맞히면 시험 범위 이해도가 <b>"+지금평균+"% → "+
-                     뒤평균+"%</b>로 올라요."});
+    줄.push({k:"", t:"다 맞히면 범위 이해도 <b>"+지금평균+"% → "+
+                     뒤평균+"%</b>"});
 
     document.getElementById("root").innerHTML=
       '<div class="todaywrap">'+
@@ -410,7 +422,7 @@
               '">개념 먼저 읽기</a></div>'+
         '</section>'+
         '<aside class="side">'+
-          '<button class="more" id="moreBtn">다른 단원이 더 필요해요<i>펼치기</i></button>'+
+          '<button class="more" id="moreBtn">다른 단원 학습<i>펼치기</i></button>'+
           '<div class="rep"><h3>지금 상태</h3><ul>'+
             줄.map(function(x){ return '<li class="'+x.k+'"><i></i><span>'+x.t+'</span></li>'; }).join("")+
           '</ul></div>'+
@@ -423,9 +435,9 @@
       var h=document.getElementById("morehost");
       if(!h) return;
       if(h.hidden){ h.hidden=false; h.innerHTML=목록HTML(rows,S);
-        mb.innerHTML='다른 단원이 더 필요해요<i>접기</i>';
+        mb.innerHTML='다른 단원 학습<i>접기</i>';
         묶기(); h.scrollIntoView({behavior:"smooth",block:"start"}); }
-      else { h.hidden=true; mb.innerHTML='다른 단원이 더 필요해요<i>펼치기</i>'; }
+      else { h.hidden=true; mb.innerHTML='다른 단원 학습<i>펼치기</i>'; }
     };
     묶기();
   }
@@ -460,9 +472,7 @@
         '<span class="meta">'+playable(last).length+'문항</span></button></div></section>':"")+
       block("틀린 게 몰린 곳","정답률 낮은 순",wrong)+
       block("풀다 만 곳","푼 문항 많은 순",going)+
-      block("아직 손 안 댄 곳","문항 많은 순",start)+
-      '<p class="note" style="margin-top:var(--s3);font-size:12.5px;color:var(--ink-4)">'+
-      '개념트리에서 단원을 눌러 들어와도 됩니다.</p>';
+      block("아직 손 안 댄 곳","문항 많은 순",start);
   }
   function 목록화면(rows,S){
     document.getElementById("root").innerHTML=목록HTML(rows,S);
@@ -482,7 +492,7 @@
     /* 부제는 단원 이름까지만 — 어느 학년 기출이 섞였는지는 문항마다 출처로 적힌다(2026-09-21) */
     document.getElementById("lede").textContent=
       leaf.mid.root.name+", "+leaf.mid.name+
-      (wrongOnly?". 지난번에 틀린 것만 모았어요.":"");
+      (wrongOnly?", 오답 모아풀기":"");
     document.getElementById("headact").innerHTML=
       '<a class="btn ghost sm" href="skilltree.html?area='+leaf.mid.root.code+'">개념트리</a>'+
       '<a class="btn ghost sm" href="study.html">다른 단원</a>';
@@ -521,7 +531,7 @@
       el.className="lens"; el.id="lens";
       el.innerHTML='<button class="x" type="button">닫기 ✕</button>'+
         '<img alt="문항 자료 크게">'+
-        '<span class="hint2">두 손가락으로 더 키울 수 있어요, 옆으로 밀어서 보세요</span>';
+        '<span class="hint2">두 손가락 확대, 옆으로 밀기</span>';
       document.body.appendChild(el);
       el.onclick=function(e){
         if(e.target===el||e.target.className==="x") el.classList.remove("on");
@@ -617,8 +627,7 @@
     if(!d.w){
       return d.x
         ? '<p>'+esc(d.x)+'</p>'
-        : '<p style="color:var(--ink-4)">이 문항은 해설이 함께 오지 않았어요. '+
-          '선지를 하나씩 지워 가며 왜 남는지를 적어 두세요.</p>';
+        : '<p style="color:var(--ink-4)">해설 없음</p>';
     }
     var out='';
     if(!ok && d.w[String(pick+1)])
@@ -628,11 +637,11 @@
     var why=d.c||d.w[String(d.a+1)]||"";
     if(why)
       out+='<div class="whyrow right"><span class="no">'+M.charAt(d.a)+'</span>'+
-        '<span class="tt"><b>'+(ok?"이래서 맞았어요":"이게 정답인 이유")+'</b>'+
+        '<span class="tt"><b>'+"정답 근거"+'</b>'+
         '<span>'+esc(why)+'</span></span></div>';
     else if(ok)
       out+='<div class="whyrow right"><span class="no">'+M.charAt(d.a)+'</span>'+
-        '<span class="tt"><b>맞았어요</b><span>나머지 선지가 왜 아닌지는 아래에서 볼 수 있어요.</span>'+
+        '<span class="tt"><b>정답</b>'+
         '</span></div>';
     var rest=Object.keys(d.w).filter(function(k){
       return (+k-1)!==d.a && (ok || (+k-1)!==pick); });
@@ -657,13 +666,13 @@
     document.getElementById("v").innerHTML=
       '<div class="verdict"><div class="vl">'+
       '<span class="tag2 '+(ok?"ok":"no")+'">'+(ok?"정답":"오답")+'</span>'+
-      '<span class="mono" style="font-size:13px;color:var(--ink-3)">정답 '+
+      '<span class="mono" style="font-size:13px;color:var(--ink-3)">'+
       "①②③④⑤".charAt(d.a)+(ok?'':', 내가 고른 것 '+"①②③④⑤".charAt(vpick))+'</span></div>'+
       whyHtml(d,vpick,ok)+
       '<span class="src">'+esc(q.g||"")+' '+esc(q.d||"")+' '+(q.n||"")+'번, '+
-      esc(q.lb||"")+'</span></div>'+
+      esc(d.lb||q.lb||"")+'</span></div>'+
       '<div class="gorow"><button class="btn" id="next">'+(last?"결과 보기":"다음 문제")+'</button>'+
-      '<span class="hint">'+(i+1)+' / '+list.length+' 째</span></div>';
+      '<span class="hint">'+(i+1)+' / '+list.length+'</span></div>';
     document.getElementById("next").onclick=function(){ i++; render(); };
   }
 
@@ -677,9 +686,7 @@
       'letter-spacing:-.05em;line-height:1">'+got+
       '<span style="color:var(--ink-4);font-size:34px"> / '+list.length+'</span></div>'+
       '<p style="margin-top:12px;color:var(--ink-3);font-size:15px">'+
-      (got===list.length?"전부 맞혔습니다.":
-       missed.length<=2?"오답 모아풀기":
-       "틀린 것을 모아 두었습니다. 바로 다시 갈 수 있습니다.")+'</p>'+
+      (got===list.length?"전부 정답":"오답 모아풀기")+'</p>'+
       '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px">'+
       (missed.length?'<button class="btn" id="retry">틀린 '+missed.length+'개만 다시</button>':'')+
       '<button class="btn '+(missed.length?"ghost":"")+'" id="more">이 단원 더 풀기</button>'+
@@ -705,9 +712,8 @@
       shell();
       document.getElementById("stage").innerHTML=
         '<div class="empty"><p style="font-size:16px;color:var(--ink-2)">'+
-        (wrongOnly?"이 단원에서 틀린 문항이 없습니다.":"이 단원은 아직 글로 풀 수 있는 문항이 없습니다.")+
-        '</p><p style="margin-top:8px;font-size:14px">도표나 지도가 있어야 읽히는 문항이라 '+
-        '크롭 작업이 끝나야 올라옵니다.</p>'+
+        (wrongOnly?"오답 없음":"풀 수 있는 문항 없음")+
+        '</p>'+
         '<div style="margin-top:22px"><a class="btn" href="study.html">다른 단원 고르기</a></div></div>';
     }else{
       shell(); render();

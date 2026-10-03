@@ -142,3 +142,20 @@
 .data .dsec + .dsec{ margin-top:12px; }
 .data .dsh{ margin:0 0 4px; font-weight:800; color:var(--ink); }
 .data .dsb > p:first-child{ margin-top:0; }
+
+/* ── 쌓은 분수 (1004) ── */
+.fr{ display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle; margin:0 .2em; line-height:1.35; text-align:center; font-size:.94em; }
+.fr .fn{ padding:0 .3em .12em; border-bottom:1.5px solid currentColor; }
+.fr .fd{ padding:.12em .3em 0; }
+
+/* ── 그림 확대 (1004) ── */
+.qfig{ position:relative; }
+.qfig img[data-zoom]{ cursor:zoom-in; }
+.qzbtn{ position:absolute; top:8px; right:8px; appearance:none; border:1px solid var(--line-2); background:var(--surface); color:var(--ink); font:700 14px/1 var(--kr); padding:8px 11px; border-radius:8px; min-height:36px; }
+.qzoom{ position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.94); display:flex; flex-direction:column; }
+.qzx{ position:absolute; top:10px; right:10px; z-index:2; appearance:none; border:0; background:#fff; color:#111; font:800 15px/1 var(--kr); padding:11px 15px; border-radius:9px; min-height:44px; }
+.qzscroll{ flex:1; overflow:auto; -webkit-overflow-scrolling:touch; touch-action:pan-x pan-y pinch-zoom; display:flex; align-items:center; justify-content:center; padding:56px 8px 16px; }
+.qzoom img{ width:100%; max-width:none; height:auto; background:#fff; cursor:zoom-in; }
+.qzoom.z2 .qzscroll{ display:block; }
+.qzoom.z2 img{ width:240%; cursor:zoom-out; }
+body.qz-open{ overflow:hidden; }

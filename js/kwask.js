@@ -116,16 +116,17 @@
 
     host.innerHTML =
       '<div class="kwq" id="kwq">' +
+        (opt.noTag ? '' :   /* opt.noTag — 바깥 화면(start.html 진단)이 이미 머리를 그리면 카드 안에 카드가 된다 */
         '<div class="kwtag"><b>핵심 개념어 쓰기</b>' +
           (opt.total ? '<span>· ' + (opt.idx || 1) + ' / ' + opt.total + '</span>' : '') +
-          '<span class="kwsrc">' + esc(x.how === "개념 카드" ? "개념 문장" : "교과서") + '</span></div>' +
+          '<span class="kwsrc">' + esc(x.how === "개념 카드" ? "개념 문장" : "교과서") + '</span></div>') +
         '<p class="kwd">' + 설명그리기(x) + '</p>' +
-        '<p class="kwhint">빈칸에 들어갈 개념어를 쓰세요, ' + (x.n || "") + '글자, 띄어쓰기는 안 봐요</p>' +
+        '<p class="kwhint">' + (x.n || "") + '글자, 띄어쓰기 무관</p>' +
         '<div class="kwbox" id="kwbox">' +
           '<input class="kwin" id="kwin" type="text" inputmode="text" autocomplete="off" autocorrect="off" ' +
             'autocapitalize="off" spellcheck="false" enterkeyhint="done" maxlength="40" ' +
             'aria-label="개념어 입력" placeholder="개념어 입력">' +
-          '<p class="kwlab" id="kwlab">얼마나 확신하나요? 누르면 채점해요</p>' +
+          '<p class="kwlab" id="kwlab">확신도 → 채점</p>' +
           '<div class="kwconf" id="kwconf">' +
             확신단계.map(function (c) {
               return '<button type="button" data-c="' + c.v + '">' + esc(c.name) + '</button>';
@@ -146,7 +147,7 @@
       if (e.isComposing || 조합중 || e.keyCode === 229) return;     // 조합 중 Enter — 글자 확정일 뿐
       e.preventDefault();
       if (!inp.value.trim()) return;
-      lab.textContent = "확신도를 누르면 채점해요";
+      lab.textContent = "확신도 → 채점";
       lab.classList.remove("pulse"); void lab.offsetWidth; lab.classList.add("pulse");
     });
     /* 폰 키보드 — 입력칸을 누르면 아래 고정 띠·탭을 치우고, 입력칸+단추를 보이는 곳으로 올린다 */
@@ -188,7 +189,7 @@
       if (끝남) return;
       var 입력 = inp.value;
       if (!입력.trim() && conf !== "guess") {
-        lab.textContent = "개념어를 먼저 쓰거나, 모르면 아래 단추를 누르세요";
+        lab.textContent = "개념어 먼저 입력";
         lab.classList.remove("pulse"); void lab.offsetWidth; lab.classList.add("pulse");
         inp.focus();
         return;
@@ -218,28 +219,31 @@
         function (m) { return "<mark>" + m + "</mark>"; });
       var 덧말 = "";
       var 띄어씀 = String(x.a).indexOf(" ") >= 0 && 입력.indexOf(String(x.a)) < 0;
-      if (g.ok && (g.how === "띄어쓰기" || (g.how === "조사" && 띄어씀))) 덧말 = "교과서에서는 「" + esc(x.a) + "」처럼 띄어 써요.";
-      else if (g.ok && g.how === "허용 변형") 덧말 = "교과서 표기는 「" + esc(x.a) + "」예요.";
-      else if (!g.ok && g.near) 덧말 = "한 글자 차이예요.";
-      else if (!g.ok && g.empty) 덧말 = "정답을 보고 가면 다음에 쓸 수 있어요.";
+      if (g.ok && (g.how === "띄어쓰기" || (g.how === "조사" && 띄어씀))) 덧말 = "교과서 띄어쓰기: 「" + esc(x.a) + "」";
+      else if (g.ok && g.how === "허용 변형") 덧말 = "교과서 표기: 「" + esc(x.a) + "」";
+      else if (!g.ok && g.near) 덧말 = "한 글자 차이";
 
+      var 문제글 = G.norm(String(x.d || "").replace(/［[\s　]*？[\s　]*］/g, x.a)), 근거글 = G.norm(x.why);
+      var 근거같음 = !!근거글 && (근거글 === 문제글 || (문제글.indexOf(근거글) >= 0 && 근거글.length >= 문제글.length * 0.85) ||
+                               (근거글.indexOf(문제글) >= 0 && 문제글.length >= 근거글.length * 0.85));
       var 판정칸 = document.createElement("div");
       판정칸.className = "verdict kwv " + v.tone;
       판정칸.innerHTML =
-        '<div class="top"><span class="mark">' + (g.ok ? "○ 맞았어요" : "✕ 아니에요") + '</span>' +
+        '<div class="top"><span class="mark">' + (g.ok ? "○ 정답" : "✕ 오답") + '</span>' +
           '<span class="kind">' + esc(v.kind) + '</span></div>' +
         (v.say ? '<p class="say">' + esc(v.say) + '</p>' : '') +
         '<p class="kwans"><span>정답</span><b>' + esc(x.a) + '</b>' +
-          (x.alt && x.alt.length ? '<em>' + esc(x.alt.join(", ")) + '도 맞아요</em>' : '') + '</p>' +
+          (x.alt && x.alt.length ? '<em>' + esc(x.alt.join(", ")) + '도 정답</em>' : '') + '</p>' +
         (!g.ok && 입력.trim() ? '<p class="kwmine">쓴 답 — ' + esc(입력.trim()) + '</p>' : '') +
         (덧말 ? '<p class="kwnote">' + 덧말 + '</p>' : '') +
-        '<div class="why"><b>근거</b> — ' + 원문 + '<span class="src">' + esc(x.src) + '</span></div>' +
+        (근거같음 ? '<div class="why"><span class="src">' + esc(x.src) + '</span></div>' :   /* 근거가 문제 문장 그대로면 줄을 생략(1004) */
+          '<div class="why"><b>근거</b> — ' + 원문 + '<span class="src">' + esc(x.src) + '</span></div>') +
         '<div class="kwnext"><button type="button" class="kwgo" id="kwgo">' + esc(opt.next || "다음 →") + '</button></div>';
       host.querySelector("#kwq").appendChild(판정칸);
       var 결과 = { ok: g.ok, how: g.how, kind: v.kind, next: v.next, conf: conf, ms: ms, leaf: x.leaf,
                   id: x.id, rec: rec, verdict: v };
       if (!rec) {         // ★ 기록이 안 남았으면 조용히 넘기지 않는다
-        판정칸.insertAdjacentHTML("beforeend", '<p class="kwnote">이 답은 기록에 안 남았어요. 새로고침 뒤 다시 풀어 주세요.</p>');
+        판정칸.insertAdjacentHTML("beforeend", '<p class="kwnote">기록 안 됨 → 새로고침 뒤 다시</p>');
       }
       var go = host.querySelector("#kwgo");
       go.addEventListener("click", function () { opt.onNext && opt.onNext(결과); });
