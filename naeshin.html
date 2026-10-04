@@ -14,7 +14,8 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=1a817d13">
-<link rel="stylesheet" href="css/coach.css?v=57f0f96e">
+<link rel="stylesheet" href="css/cheer.css?v=386af7f8">
+<link rel="stylesheet" href="css/coach.css?v=b87b1187">
 <link rel="stylesheet" href="css/question.css?v=4cea4076">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -83,9 +84,9 @@
 <script src="js/tree.js?v=70df12a1"></script>
 <script src="js/qbank.js?v=7b68ff94"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
-<script src="js/cardox.js?v=2b83481d"></script>
+<script src="js/cardox.js?v=95615dd9"></script>
 <script src="js/conceptq.js?v=7e53efff"></script>
-<script src="js/cards.js?v=82bdc620"></script>
+<script src="js/cards.js?v=89e204f5"></script>
 <script src="js/keyword.js?v=b233a01c"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/judge.js?v=eb358ca6"></script>
@@ -93,13 +94,14 @@
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/trend.js?v=77dea921"></script>
 <script src="js/packs.js?v=9e67e178"></script>
-<script src="js/store.js?v=4ece5289"></script>
+<script src="js/store.js?v=3fd66f8c"></script>
+<script src="js/cheer.js?v=4ef6bd21"></script>
 <script src="js/qrender.js?v=749818a6"></script>
 <script src="js/naeshin.js?v=7a07e790"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=dca5fb29"></script>
-<script src="js/coach.js?v=76c10e1b"></script>
+<script src="js/coach.js?v=c8e4b0fa"></script>
 <script>
 (function(){
   var T=window.TERRA, Q=window.QBANK||{}, M="①②③④⑤";
@@ -141,6 +143,7 @@
   function solve(leafCode){
     var x=P.filter(function(p){ return p.leaf.code===leafCode; })[0]; if(!x) return;
     var list_=x.풀거리.slice(), i=0, marks=[];
+    if(window.COACH) COACH.begin({leaf:leafCode, kind:"q"});
     function render(){
       if(i>=list_.length) return finish();
       var q=list_[i], d=Q[q.id];
@@ -170,15 +173,26 @@
     function finish(){
       var got=marks.filter(Boolean).length;
       if(!list_.length){ list(); return; }                 /* 빈 세트에는 결과 화면을 안 낸다 */
-      host.innerHTML='<button class="back" id="back">← 목록</button><div class="fin"><b>'+got+'<small> / '+list_.length+'</small></b>'+
+      /* ★ 맨 위 행동은 「다음」 하나(오늘 루틴의 다음 항목). 다른 자리·목록은 밑에 작게(2026-10-04 15분 흐름) */
+      if(window.COACH && COACH.flowKinds) COACH.flowKinds({kind:"drill"}).forEach(function(k){ T.flowMark&&T.flowMark(k); });
+      host.innerHTML='<div class="fin"><b>'+got+'<small> / '+list_.length+'</small></b>'+
         '<p>'+(got===list_.length?"전부 정답":"오답 → 오늘 복습")+'</p>'+
-        '<button class="btn" id="again">다른 자리 보기</button></div>';
-      document.getElementById("back").onclick=list; document.getElementById("again").onclick=function(){ P=NAESHIN.포인트들(); list(); };
+        '<div style="text-align:left">'+(window.COACH&&COACH.nextBlock?COACH.nextBlock():'')+'</div>'+
+        '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px">'+
+        '<button class="btn ghost sm" id="again">다른 자리 풀기</button>'+
+        '<button class="btn ghost sm" id="back">← 목록</button></div></div>';
+      document.getElementById("back").onclick=list;
+      document.getElementById("again").onclick=function(){
+        P=NAESHIN.포인트들(); var 다음자리=P.filter(function(p){ return p.leaf.code!==leafCode; })[0];
+        if(다음자리) solve(다음자리.leaf.code); else list(); };
+      if(window.COACH) COACH.wrap({got:got, total:list_.length, leaf:leafCode, kind:"drill",
+        more:{label:"다른 자리 풀기", onclick:function(){ var b=document.getElementById("again"); if(b) b.click(); }}});
       window.scrollTo({top:0,behavior:"smooth"});
     }
     render();
   }
-  list();
+  /* 오늘 루틴에서 왔으면(?auto=1) 목록을 거치지 않고 가장 먼저 풀 자리를 바로 연다 — 스무 곳 가운데 고르게 하지 않는다(2026-10-04 15분 흐름) */
+  if(/[?&]auto=1(&|$)/.test(location.search) && P.length) solve(P[0].leaf.code); else list();
 })();
 </script>
 </body>

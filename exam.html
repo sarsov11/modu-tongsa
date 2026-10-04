@@ -15,7 +15,7 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=1a817d13">
-<link rel="stylesheet" href="css/coach.css?v=57f0f96e">
+<link rel="stylesheet" href="css/coach.css?v=b87b1187">
 <link rel="stylesheet" href="css/question.css?v=4cea4076">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -132,13 +132,13 @@
 <script src="js/qbank.js?v=7b68ff94"></script>
 <script src="js/pool.js?v=c0d187ff"></script>
 <script src="js/drills.js?v=3f81d010"></script>
-<script src="js/cards.js?v=82bdc620"></script>
+<script src="js/cards.js?v=89e204f5"></script>
 <script src="js/packs.js?v=9e67e178"></script>
-<script src="js/store.js?v=4ece5289"></script>
+<script src="js/store.js?v=3fd66f8c"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=dca5fb29"></script>
-<script src="js/coach.js?v=76c10e1b"></script>
+<script src="js/coach.js?v=c8e4b0fa"></script>
 <script src="js/qrender.js?v=749818a6"></script>
 <script src="js/exam.js?v=bf4729f4"></script>
 <script src="js/notify.js?v=f6ea0991"></script>
@@ -406,10 +406,14 @@
     var host=document.querySelector(".exbar");
     if(host) host.insertAdjacentHTML("afterend", head);
     var foot=document.querySelector(".foot .act");
-    if(foot) foot.innerHTML =
-      '<a class="btn ghost" href="index.html">홈으로</a>'+
-      (몰린 ? '<a class="btn" href="study.html?leaf='+esc(몰린)+'&mode=wrong">틀린 단원 다시 풀기</a>'
-            : '<a class="btn" href="drill.html">킬러 훈련</a>');
+    /* ★ 맨 위 행동은 「다음」 하나(오늘 루틴의 다음 항목). 홈은 작게(2026-10-04 15분 흐름) */
+    if(foot){
+      if(window.COACH && COACH.flowKinds) COACH.flowKinds({kind:"exam"}).forEach(function(k){ T.flowMark&&T.flowMark(k); });
+      foot.innerHTML =
+        (window.COACH&&COACH.nextBlock ? '<div style="flex:1 1 100%;text-align:left">'+COACH.nextBlock()+'</div>'
+          : (몰린 ? '<a class="btn" href="study.html?leaf='+esc(몰린)+'&mode=wrong">틀린 단원 다시 풀기</a>' : '<a class="btn" href="drill.html">킬러 훈련</a>'))+
+        '<a class="btn ghost sm" href="index.html">홈으로</a>';
+    }
     갱신();
     window.scrollTo({top:0, behavior:"smooth"});
   }

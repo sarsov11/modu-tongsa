@@ -240,6 +240,7 @@
           '<div class="why"><b>근거</b> — ' + 원문 + '<span class="src">' + esc(x.src) + '</span></div>') +
         '<div class="kwnext"><button type="button" class="kwgo" id="kwgo">' + esc(opt.next || "다음 →") + '</button></div>';
       host.querySelector("#kwq").appendChild(판정칸);
+      try { if (window.CHEER) { if (g.ok) CHEER.ok(판정칸); else CHEER.miss(판정칸); } } catch (e) { }   /* 정답 연출(1004) */
       var 결과 = { ok: g.ok, how: g.how, kind: v.kind, next: v.next, conf: conf, ms: ms, leaf: x.leaf,
                   id: x.id, rec: rec, verdict: v };
       if (!rec) {         // ★ 기록이 안 남았으면 조용히 넘기지 않는다

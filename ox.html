@@ -15,7 +15,8 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=1a817d13">
-<link rel="stylesheet" href="css/coach.css?v=57f0f96e">
+<link rel="stylesheet" href="css/cheer.css?v=386af7f8">
+<link rel="stylesheet" href="css/coach.css?v=b87b1187">
 <link rel="stylesheet" href="css/keyword.css?v=7a3b2060">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -86,14 +87,17 @@
     color:var(--ink-4);font-weight:800}
 
   /* 다음 행동 */
-  .nextbar{display:flex;gap:10px;align-items:center;margin-top:var(--s3);flex-wrap:wrap}
-  .nextbar .lbl{font-size:14.5px;color:var(--ink-4);font-family:var(--mono);font-weight:800}
-  .nextbar button,.nextbar a{appearance:none;text-decoration:none;
+  /* ★ 클래스 이름을 .nextbar 로 두면 css/coach.css 의 「아래 띠 숨김」(.nextbar{display:none!important}) 에 같이 숨어
+     정오 판정 뒤 「이어서 풀기」 가 안 보였다 — 개념 체크가 첫 문장에서 막혔다(2026-10-04 15분 흐름 검토). 이름을 바꿨다. */
+  .oxnext{display:flex;gap:10px;align-items:center;margin-top:var(--s3);flex-wrap:wrap}
+  .oxnext .lbl{font-size:14.5px;color:var(--ink-4);font-family:var(--mono);font-weight:800}
+  .oxnext button,.oxnext a{appearance:none;text-decoration:none;
     border:1px solid var(--line-2);background:var(--surface);color:var(--ink);
     border-radius:var(--r1);padding:11px 17px;font:inherit;font-size:15.5px;
     font-weight:600;cursor:pointer}
-  .nextbar .go{border-color:var(--mint);background:var(--mint);color:#04150E}
-  .nextbar .why2{font-size:14.5px;color:var(--ink-4);flex:1 0 100%}
+  .oxnext .go{border-color:var(--mint);background:var(--mint);color:#04150E;flex:1 1 100%;font-size:17px;padding:15px 17px}
+  .oxnext a.side{border:0;background:transparent;color:var(--ink-3);padding:6px 2px;font-size:14.5px;font-weight:700}
+  .oxnext .why2{font-size:14.5px;color:var(--ink-4);flex:1 0 100%}
 
   /* 끝 화면 */
   .done{text-align:center;padding:var(--s6) var(--s4)}
@@ -181,24 +185,25 @@
 <script src="js/tree.js?v=70df12a1"></script>
 <script src="js/qbank.js?v=7b68ff94"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
-<script src="js/cardox.js?v=2b83481d"></script>
+<script src="js/cardox.js?v=95615dd9"></script>
 <script src="js/judge.js?v=eb358ca6"></script>
 <script src="js/pool.js?v=c0d187ff"></script>
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/trend.js?v=77dea921"></script>
 <script src="js/conceptq.js?v=7e53efff"></script>
 <script src="js/lecprac.js?v=704d9a6e"></script>
-<script src="js/cards.js?v=82bdc620"></script>
+<script src="js/cards.js?v=89e204f5"></script>
 <script src="js/keyword.js?v=b233a01c"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/packs.js?v=9e67e178"></script>
-<script src="js/store.js?v=4ece5289"></script>
+<script src="js/store.js?v=3fd66f8c"></script>
+<script src="js/cheer.js?v=4ef6bd21"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=dca5fb29"></script>
-<script src="js/coach.js?v=76c10e1b"></script>
+<script src="js/coach.js?v=c8e4b0fa"></script>
 <script src="js/qrender.js?v=749818a6"></script>
-<script src="js/kwask.js?v=2c27c2c1"></script>
+<script src="js/kwask.js?v=90f99b76"></script>
 <script>
 (function(){
   var T=window.TERRA, J=window.JUDGE, BANK=window.OXBANK||[];
@@ -541,12 +546,11 @@
                x.o.map(function(s,k){ return '<li'+(k===x.i?' class="mine"':'')+'>'+esc(s)+(k===x.i?'<em class="minetag">방금 푼 문장, '+(x.a?"맞는 문장":"틀린 문장")+'</em>':'')+'</li>'; }).join("")+
                '</ol></details>' : '')+
       '</div>'+
-      '<div class="nextbar">'+
-        '<span class="lbl">다음</span>'+
-        (갈곳 ? '<a href="'+갈곳+'">'+esc(n.t)+' →</a>' : '')+
+      '<div class="oxnext">'+
         '<button type="button" class="go" id="next">'+
           (i+1>=세트.length?"결과 보기":"이어서 풀기")+'</button>'+
         '<span class="why2">'+esc(n.why)+'</span>'+
+        (갈곳 ? '<a class="side" href="'+갈곳+'">'+esc(n.t)+'</a>' : '')+
       '</div>');
 
     /* ★ 판정이 정한 다음 행동을 **실제로 한다.**
@@ -629,9 +633,11 @@
           '<div><b>'+찍음+'</b><span>찍은 것</span></div>'+
           '<div><b>'+평균+'초</b><span>평균</span></div>'+
         '</div>'+
-        '<div class="nextbar" style="justify-content:center">'+
-          '<a href="'+링크+'">이어서 하기 →</a>'+
-          '<button type="button" class="go" id="again">한 세트 더</button>'+
+        /* ★ 맨 위 행동은 「다음」 하나(오늘 루틴의 다음 항목). 한 세트 더·그 개념 풀이는 밑에 작게(2026-10-04 15분 흐름) */
+        '<div style="margin-top:18px;text-align:left">'+(window.COACH&&COACH.flowKinds?(function(){ COACH.flowKinds({kind:"ox"}).forEach(function(k){ T.flowMark&&T.flowMark(k); }); return COACH.nextBlock(); })():'')+'</div>'+
+        '<div class="oxnext" style="justify-content:center">'+
+          (오개념 ? '<a class="side" href="'+링크+'">확신 오답 개념 풀기</a>' : '')+
+          '<button type="button" id="again">한 세트 더</button>'+
         '</div>'+
       '</div>';
     document.getElementById("again").onclick=function(){ 시작하기(); };

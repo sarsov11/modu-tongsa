@@ -15,7 +15,8 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=1a817d13">
-<link rel="stylesheet" href="css/coach.css?v=57f0f96e">
+<link rel="stylesheet" href="css/cheer.css?v=386af7f8">
+<link rel="stylesheet" href="css/coach.css?v=b87b1187">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .page{max-width:var(--wrap);margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -409,16 +410,17 @@
 <script src="js/rights.js?v=9b5ee374"></script>
 <script src="js/power.js?v=f994cb83"></script>
 <script src="js/peace.js?v=027b0125"></script>
-<script src="js/disobey.js?v=5268e39b"></script>
+<script src="js/disobey.js?v=acced5a4"></script>
 <script src="js/justice.js?v=4375db26"></script>
 <script src="js/pool.js?v=c0d187ff"></script>
-<script src="js/cards.js?v=82bdc620"></script>
+<script src="js/cards.js?v=89e204f5"></script>
 <script src="js/packs.js?v=9e67e178"></script>
-<script src="js/store.js?v=4ece5289"></script>
+<script src="js/store.js?v=3fd66f8c"></script>
+<script src="js/cheer.js?v=4ef6bd21"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=dca5fb29"></script>
-<script src="js/coach.js?v=76c10e1b"></script>
+<script src="js/coach.js?v=c8e4b0fa"></script>
 <script src="js/notify.js?v=f6ea0991"></script>
 <script>
 (function(){
@@ -915,12 +917,14 @@
       '<div class="result"><div class="big">'+got+'<span> / '+SET_NOW+'</span></div>'+
       '<div class="cap">'+(got===SET_NOW?"전부 정답":"오답 모아풀기")+'</div>'+
       (miss?'<div class="missed">'+miss+'</div>':'')+review+
-      '<div style="display:flex;gap:10px;margin-top:26px;justify-content:center;flex-wrap:wrap">'+
+      /* ★ 맨 위 행동은 「다음」 하나(오늘 루틴의 다음 항목) — 다시·더·홈은 밑에 작게(2026-10-04 15분 흐름) */
+      '<div style="margin-top:22px;text-align:left">'+(window.COACH&&COACH.flowKinds?(function(){ COACH.flowKinds({kind:"drill"}).forEach(function(k){ T.flowMark&&T.flowMark(k); }); return COACH.nextBlock(); })():'')+'</div>'+
+      '<div style="display:flex;gap:8px;margin-top:12px;justify-content:center;flex-wrap:wrap">'+
       (set.miss.length
-        ? '<button class="btn" id="retry">틀린 '+set.miss.length+'개만 다시</button>'+
-          '<button class="btn ghost" id="again">새로 5문항</button>'
-        : '<button class="btn" id="again">5문항 더</button>')+
-      '<a class="btn ghost" href="index.html">학습 홈</a></div></div>';
+        ? '<button class="btn ghost sm" id="retry">틀린 '+set.miss.length+'개만 다시</button>'+
+          '<button class="btn ghost sm" id="again">새로 5문항</button>'
+        : '<button class="btn ghost sm" id="again">5문항 더</button>')+
+      '<a class="btn ghost sm" href="index.html">학습 홈</a></div></div>';
     var rt=document.getElementById("retry");
     if(rt) rt.onclick=function(){
       // 틀린 도시만 다시 — 오답은 실패가 아니라 재도전이다

@@ -15,7 +15,7 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=1a817d13">
-<link rel="stylesheet" href="css/coach.css?v=57f0f96e">
+<link rel="stylesheet" href="css/coach.css?v=b87b1187">
 <link rel="stylesheet" href="css/question.css?v=4cea4076">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -522,13 +522,13 @@
 <script src="js/pool.js?v=c0d187ff"></script>
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/cards.js?v=82bdc620"></script>
+<script src="js/cards.js?v=89e204f5"></script>
 <script src="js/packs.js?v=9e67e178"></script>
-<script src="js/store.js?v=4ece5289"></script>
+<script src="js/store.js?v=3fd66f8c"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=dca5fb29"></script>
-<script src="js/coach.js?v=76c10e1b"></script>
+<script src="js/coach.js?v=c8e4b0fa"></script>
 <script src="js/notify.js?v=f6ea0991"></script>
 <script>
 (function(){
@@ -1184,8 +1184,14 @@
         ? '오늘 '+오늘r.solved+'문항 '+오늘r.solvedOk+'개 정답 → <b>'+esc(단원.name)+'</b> <i class="gc">강추</i>'
         : '오늘은 <b>'+esc(단원명)+'</b> 기출 <i class="gc">강추</i>';
       var 틀린q=T.dueList?T.dueList():[];
+      /* ★ 큰 단추는 오늘 루틴의 다음 항목(2026-10-04 15분 흐름) */
+      var 걸음2=window.COACH&&COACH.nextStep?COACH.nextStep(false):null, 다했나2=window.COACH&&COACH.allDone?COACH.allDone():false;
+      if(걸음2 && !다했나2) 말2 = (오늘r.solved ? '오늘 '+오늘r.solved+'문항 '+오늘r.solvedOk+'개 정답 → ' : '오늘은 ')+esc(걸음2.title)+', <b>'+esc(걸음2.say)+'</b> <i class="gc">강추</i>';
+      else if(다했나2) 말2 = '오늘 '+오늘r.solved+'문항 '+오늘r.solvedOk+'개 정답, 오늘 목표 완료';
+      var 큰단추2 = (걸음2 && !다했나2) ? '<a href="'+걸음2.href+'">'+esc(COACH.startLabel(걸음2))+'</a>'
+                    : '<a class="lite" href="'+(걸음2?걸음2.href:'study.html?leaf='+단원.code)+'">더 하기</a>';
       host.innerHTML='<div class="bub">'+말2+'</div>'+
-        '<div class="ans"><a href="study.html?leaf='+단원.code+'">시작</a>'+
+        '<div class="ans">'+큰단추2+
         (CARDS[단원.code]?'<a class="lite" href="card.html?leaf='+단원.code+'">개념 보기</a>':'')+
         '<button type="button" class="lite" id="talkmore">다른 단원 학습</button></div>'+
         '<div class="askmore" id="askmore" hidden><div class="pickl">'+
@@ -1207,8 +1213,15 @@
     var 말 = 한===0 ? '오늘은 <b>'+esc(개념)+'</b> O·X <i class="gc">강추</i>'
                     : '오늘 O·X '+한+'문항 '+맞+'개 정답 → <b>'+esc(개념)+'</b> <i class="gc">강추</i>';
     var 틀린=Object.keys(ox).filter(function(k){ return ox[k]&&ox[k].ok===false; }).length;
+    /* ★ 큰 단추는 오늘 루틴의 다음 항목이다(2026-10-04 15분 흐름) — 홈의 O·X 추천과 루틴이 다른 것을 권했다 */
+    var 걸음=window.COACH&&COACH.nextStep?COACH.nextStep(false):null, 다했나=window.COACH&&COACH.allDone?COACH.allDone():false;
+    var 전체=T.report().solved;
+    if(걸음 && !다했나) 말 = (전체 ? '오늘 '+전체+'문항 '+T.report().solvedOk+'개 정답 → ' : '오늘은 ')+esc(걸음.title)+', <b>'+esc(걸음.say)+'</b> <i class="gc">강추</i>';
+    else if(다했나) 말 = '오늘 '+전체+'문항 '+T.report().solvedOk+'개 정답, 오늘 목표 완료';
+    var 큰단추 = (걸음 && !다했나) ? '<a href="'+걸음.href+'">'+esc(COACH.startLabel(걸음))+'</a>'
+                 : '<a href="'+(걸음?걸음.href:'ox.html?leaf='+리프.code)+'" class="lite">더 하기</a>';
     host.innerHTML='<div class="bub">'+말+'</div>'+
-      '<div class="ans"><a href="ox.html?leaf='+리프.code+'">시작</a>'+
+      '<div class="ans">'+큰단추+
       '<a class="lite" href="card.html?leaf='+리프.code+'">개념 보기</a>'+
       '<button type="button" class="lite" id="talkmore">다른 단원 학습</button></div>'+
       '<div class="askmore" id="askmore" hidden><div class="pickl">'+

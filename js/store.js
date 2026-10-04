@@ -1375,6 +1375,15 @@
            { due: 0.3, lec: 0.45, q: 0.05, drill: 0.2 };
   }
 
+  /* ★ 15분 흐름 — 오늘 루틴 항목을 **끝낸 것**을 항목 종류(kind)로 적어 둔다(2026-10-04).
+     시간으로만 가르면 빨리 끝낸 항목이 또 「다음」으로 나왔다. 하루 단위로 비운다. */
+  function flowDone() { var f = S.flow; return (f && f.d === dayKey() && f.k) ? f.k : {}; }
+  function flowMark(kind) {
+    if (!kind) return;
+    if (!S.flow || S.flow.d !== dayKey()) S.flow = { d: dayKey(), k: {} };
+    S.flow.k[kind] = 1; save();
+  }
+
   function routine() {
     var XM = examMode();
     var dk = dayKey();
@@ -1461,7 +1470,9 @@
        영역마다 푼 문항이 표본하한을 넘어야 그 영역의 정답률로 약한 곳을 가린다. */
     if (주간점검날() && !주간점검함(dk) && XM.mode !== "real" && 기록일수() >= 3) {
       var 약한영역 = null, 낮은값 = 2;
+      var 보임 = 보이는대영역().map(function (x) { return x.code; });   /* 고1·고2 에게 사상가(K) 축은 안 보인다 — 주간 점검이 K 로 갔다(2026-10-04) */
       ROOTS.forEach(function (r) {
+        if (보임.indexOf(r.code) < 0) return;
         if (scopeOn() && !inScope(r.code)) return;
         var st = rootStat(r.code);
         if (!st || st.solved < 표본하한) return;
@@ -1545,6 +1556,9 @@
     }
     /* 시험 범위를 정했으면 그 범위의 강의만 권한다 */
     cand = 범위로걸러(cand, function (c) { return c.v.code; });
+    /* ★ 강의는 기본으로 루틴에 안 낀다(2026-10-04 15분 흐름) — 강의는 개념트리 시트에서 고른 뒤 영상 단추를 또 눌러야 열려 「다음」 한 번으로 안 이어진다.
+       강의 자리는 개념 카드가 맡는다. 영상 흐름을 이으면 window.FLOW_LEC = true. */
+    if (!window.FLOW_LEC) cand = [];
     /* 강의·개념 카드는 통합사회 것이다 — 선택과목을 켠 고2 에게는 내지 않는다(고2 는 통합사회를 팔지 않는다) */
     if (((S.student && S.student.grade) || "고1") === "고2" && Object.keys(켠확장팩과목()).length) cand = [];
     /* 보던 것이 있으면 그것부터, 없으면 무게 큰 것부터 */
@@ -1671,7 +1685,7 @@
                            : ((((S.student && S.student.grade) || "고1") === "고1") ? "오늘의 킬러 훈련" : (골라.level === "기초" ? "준킬러부터" : "오늘의 킬러")),   /* 내신 대비(고1)에서 킬러·준킬러라는 말은 어색하다(2026-09-19 대표님) */
           say: 내신킬러 ? "시험 범위에서 헷갈리는 문항" : 하나.name + " 한 세트",
           why: 내신킬러 ? "헷갈린 문항 모아풀기" : ((((S.student && S.student.grade) || "고1") === "고1") ? "" : (하나.tier ? "준킬러. " : "킬러. ")) + 까닭,
-          href: 내신킬러 ? "naeshin.html" : "drill.html?type=" + 하나.id, cta: 내신킬러 ? "범위 킬러" : "킬러 훈련" });
+          href: 내신킬러 ? "naeshin.html?auto=1" : "drill.html?type=" + 하나.id, cta: 내신킬러 ? "범위 킬러" : "킬러 훈련" });
       } else {
         items.push({ kind: "drill", min: DRILL_MIN,
           title: "마무리 한 세트", say: "킬러 훈련 5문제",
@@ -2191,6 +2205,7 @@
     범위기본값채우기: 범위기본값채우기, 범위자동인가: 범위자동인가,
     inScope: inScope, inScopeMid: inScopeMid, inScopeLeaf: inScopeLeaf, inScopeItem: inScopeItem,
     scopeMids: scopeMids, deepOn: deepOn, setDeep: setDeep, scopeName: scopeName,
+    flowDone: flowDone, flowMark: flowMark,
     routine: routine, calendar: calendar, goalMin: goalMin, setGoalMin: setGoalMin,
     examMode: examMode, nextExam: 다가온시험,
     watch: watch, watched: watched, spentOn: spentOn,
@@ -2205,6 +2220,18 @@
     옮기기코드: 옮기기코드, 코드읽기: 코드읽기, 코드로되돌리기: 코드로되돌리기,
     파일로내보내기: 파일로내보내기
   };
+  /* ★ 15분 흐름 — 끝을 알 수 없는 항목(주간 점검·범위 점검·방학·시험 직후)은 그 항목의 단추를 누른 순간 한 것으로 적는다.
+     안 그러면 설정 화면을 다녀와도 「다음」 이 또 같은 항목을 내민다(2026-10-04). */
+  var 통과형 = { weekly: 1, scopeold: 1, nextscope: 1, vacation: 1, after: 1 };
+  try {
+    document.addEventListener("click", function (e) {
+      var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+      if (!a) return;
+      var h = a.getAttribute("href");
+      routine().items.forEach(function (it) { if (통과형[it.kind] && it.href === h) flowMark(it.kind); });
+    }, true);
+  } catch (e) { }
+
   /* ★ 시연 표본은 **명시 플래그**가 있을 때만 (2026-09-17 감사: 새 학생이 "14일 연속·24문항 맞힘" 가짜 기록을 봤다).
      ?demo 로 열면 이 브라우저에 켜지고(terra.demo=1), ?nodemo 로 끈다. 검사기(webdriver·HeadlessChrome)는 그대로 시연을 본다. */
   function 시연켜짐() {

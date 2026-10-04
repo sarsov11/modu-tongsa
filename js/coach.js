@@ -80,6 +80,12 @@
     wrapSame:     "{개념} 이해도 {after} 유지",
     wrapDown:     "{개념} 이해도 {before} → {after}",
     wrapDone:     "오늘 목표 완료",
+    flowNext:     "다음: {title} ({min}분)",
+    flowStart:    "시작: {title} ({min}분)",
+    flowMore:     "더 하기",
+    flowAllDone:  "오늘 목표 완료",
+    flowStrip:    "오늘 {goal}분, {left}분 남음",
+    flowStripDone:"오늘 목표 완료",
     wrapLeft:     "{left}분 남음",
     wrapFirst:    "오늘 첫 세트",
     wrapTree:     "개념트리 {개념} {d}",
@@ -176,18 +182,54 @@
     return { d: k, ago: diff === 1 ? "어제" : diff < 8 ? diff + "일 전에" : k.slice(5).replace("-", "월 ") + "일에",
              n: r.answers, ok: r.correct };
   }
-  /* 지금 할 것 하나 — 루틴에서 아직 안 끝난 첫 항목 */
+  /* 지금 할 것 하나 — 루틴에서 아직 안 끝난 첫 항목.
+     ★ 끝낸 것은 시간이 아니라 **항목 종류 표시**(T.flowDone)로 가른다(2026-10-04) — 빨리 끝낸 항목이 또 「다음」으로 나왔다.
+     다 끝났으면 null. */
   function nextStep(skipHere) {
-    var R = T.routine(), h = here(), qs = location.search, acc = 0;
+    var R = T.routine(), h = here(), qs = location.search, mk = T.flowDone ? T.flowDone() : {};
     for (var i = 0; i < R.items.length; i++) {
-      var it = R.items[i]; acc += it.min;
-      if (R.spent >= acc) continue;                           // 이미 한 조각
+      var it = R.items[i];
+      if (mk[it.kind]) continue;                              // 끝낸 항목
       if (skipHere && it.href === h + qs) continue;            // 지금 보고 있는 그것
       if (skipHere && h === "drill.html" && it.kind === "drill") continue;
       if (skipHere && h === "skilltree.html" && it.kind === "lec") continue;
       return it;
     }
-    return R.items[R.items.length - 1] || null;
+    return null;
+  }
+  /* 오늘 항목을 다 했는가 — 시간이 찼거나, 항목을 다 끝냈거나 */
+  function flowAllDone() { var R = T.routine(); return R.done || !nextStep(false); }
+
+  /* 큰 「다음」 단추 한 개 — 모든 끝 화면이 맨 위에 쓴다.
+     o.next = {href,title,min} 를 주면 그것을(카드 뒤 기출처럼 그 단원에 붙은 다음), 없으면 루틴의 다음 항목.
+     오늘 몫이 끝났으면 「오늘 목표 완료」 + 작은 「더 하기」 만 낸다. 자동 이동은 없다. */
+  function nextBlock(o) {
+    o = o || {};
+    var step = o.next || nextStep(true), done = flowAllDone();
+    if (done || !step) {
+      var more = o.next || nextStep(false);
+      return '<div class="flownext done"><b class="fl">' + esc(fmt("flowAllDone")) + '</b>' +
+        '<a class="btn ghost" href="' + (more ? more.href : "study.html") + '">' + esc(fmt("flowMore")) + '</a></div>';
+    }
+    return '<div class="flownext"><a class="btn flowgo" data-flowgo="1" href="' + step.href + '">' +
+      esc(fmt("flowNext", { title: step.title, min: step.min })) + ' →</a></div>';
+  }
+
+  /* 홈의 큰 단추 — 오늘 아직 아무것도 안 했으면 「시작: ○○ (n분)」, 했으면 「다음: ○○ (n분)」. 끝났으면 null */
+  function startLabel(step) {
+    var started = T.report().solved > 0 || Object.keys(T.flowDone ? T.flowDone() : {}).length > 0;
+    return fmt(started ? "flowNext" : "flowStart", { title: step.title, min: step.min });
+  }
+
+  /* 이 끝 화면이 오늘 루틴의 어느 항목을 채웠는가 — 표시를 남긴다 */
+  function flowKinds(opts) {
+    var h = here(), P = new URLSearchParams(location.search), k = (opts && opts.kind) || "";
+    if (h === "study.html") return P.get("mode") === "wrong" ? ["due"] : ["q"];
+    if (h === "ox.html") return ["ox"];
+    if (h === "card.html") return ["card"];
+    if (h === "drill.html" || h === "naeshin.html") return ["drill"];
+    if (h === "exam.html") return ["exam", "exwrong"];
+    return k === "ox" ? ["ox"] : k === "card" ? ["card"] : k === "drill" ? ["drill"] : [];
   }
 
   /* ── 인사 한 줄 — 홈 머리에 쓴다 ────────────────────── */
@@ -288,7 +330,27 @@
     holdTimer = setTimeout(function () { paint(idleLine()); }, ms || 6000);
   }
 
+  /* ── 진행 띠 — 루틴 화면(문제·개념·O·X·훈련·모의고사) 맨 위에 얇게 (2026-10-04 15분 흐름).
+     다음 항목으로 넘어가도 막대와 남은 분이 이어져 보인다. 아래 띠를 없앤 뒤(0919) 화면 안에 진행이 안 보였다. */
+  var STRIP_PAGES = ["study.html", "card.html", "ox.html", "drill.html", "naeshin.html", "exam.html"];
+  function mountStrip() {
+    if (STRIP_PAGES.indexOf(here()) < 0 || document.querySelector(".flowstrip")) return;
+    var nav = document.querySelector(".nav"); if (!nav) return;
+    var R = T.routine(), mk = T.flowDone ? T.flowDone() : {}, nx = nextStep(false), segs = "";
+    R.items.forEach(function (it) {
+      var cls = mk[it.kind] ? "done" : (nx && nx.kind === it.kind ? "next" : "");
+      segs += '<span class="seg ' + cls + '" style="flex:' + Math.max(1, it.min) + ' 1 0"></span>';
+    });
+    var el = document.createElement("div");
+    el.className = "flowstrip";
+    el.setAttribute("aria-label", "오늘 " + R.goal + "분 진행");
+    el.innerHTML = '<div class="in"><span class="bars">' + segs + '</span><span class="tx">' +
+      esc(flowAllDone() ? fmt("flowStripDone") : fmt("flowStrip", { goal: R.goal, left: Math.max(0, R.goal - R.spent) })) + '</span></div>';
+    nav.insertAdjacentElement("afterend", el);
+  }
+
   function mount(active) {
+    mountStrip();
     var c = setCoach({ visits: (coachState().visits || 0) + 1 });
     snap();                                                    // 오늘 기준을 찍어 둔다
     오늘정답수 = T.report().correct;
@@ -382,6 +444,8 @@
     var before = (시작 && 시작.leaf === leaf && 시작.u != null) ? 시작.u : (leaf ? snap().u[leaf] : null);
     var after = leaf ? T.이해도(leaf) : null;
     if (before == null && after != null) before = after;
+    /* 이 화면이 채운 루틴 항목을 먼저 적는다 — 그래야 아래 「다음」 이 방금 한 것을 또 내지 않는다 */
+    try { flowKinds(opts).forEach(function (kd) { if (T.flowMark) T.flowMark(kd); }); } catch (e) {}
     var t = tally(), step = nextStep(true);
     var 개념 = leaf ? leafName(leaf) : "";
     var ratio = total ? got / total : 0;
@@ -397,10 +461,11 @@
     /* ★ 15분 흐름 (2026-09-15 대표님) — 학생이 고르지 않는다. 결산이 뜨면 오늘 루틴의
        어디까지 왔는지 막대로 보이고, 다음 항목을 한 줄로 알린 뒤 **3초 뒤 저절로** 연다.
        닫기·다시 풀기를 누르면 멈춘다. 오늘 몫이 끝났으면 자동으로 안 넘긴다. */
-    var R0 = T.routine(), acc0 = 0, bars = "";
+    var R0 = T.routine(), mk0 = T.flowDone ? T.flowDone() : {}, bars = "";
+    var nx0 = opts.next || step;
     for (var bi = 0; bi < R0.items.length; bi++) {
-      var it0 = R0.items[bi]; acc0 += it0.min;
-      var cls = R0.spent >= acc0 ? "done" : (step && it0.href === step.href ? "next" : "");
+      var it0 = R0.items[bi];
+      var cls = mk0[it0.kind] ? "done" : (nx0 && (it0.kind === nx0.kind || it0.href === nx0.href) ? "next" : "");
       bars += '<span class="seg ' + cls + '" style="flex:' + Math.max(1, it0.min) + ' 1 0"></span>';
     }
     var autoNext = false;   // 자동 이동 없음 — 단추로만 간다(2026-10-04: 결산 창이 2~3초 뒤 저절로 넘어갔다)
@@ -428,11 +493,16 @@
       '<p class="dline">' + esc(dline) + '</p>' +
       (autoNext ? '<p class="autonext">다음 ' + esc(step.title) + ' ' + step.min + '분, ' +
                   '<b class="cnt">3</b>초 뒤 이동</p>' : '') +
-      '<div class="act">' +
-      (opts.retry ? '<button class="btn" data-act="retry">' + esc(opts.retry.label) + '</button>' : '') +
-      (step && !t.done ? '<a class="btn' + (opts.retry ? " ghost" : "") + '" href="' + step.href + '">다음, ' +
-              esc(step.title) + ' ' + step.min + '분 →</a>' : '') +
-      (opts.more ? '<button class="btn ghost" data-act="more">' + esc(opts.more.label) + '</button>' : '') +
+      /* ★ 맨 위 행동은 「다음」 하나(큰 단추). 다시 풀기·더 풀기·닫기는 그 밑에 작게 — 학생이 고르지 않는다.
+         오늘 목표를 채웠으면 「오늘 목표 완료」 + 가벼운 「더 하기」 만 */
+      (flowAllDone()
+        ? '<div class="flownext done"><b class="fl">' + esc(fmt("flowAllDone")) + '</b></div>'
+        : nextBlock({ next: opts.next })) +
+      '<div class="act sub">' +
+      (flowAllDone() && !opts.more
+        ? '<button class="btn" data-act="more0">' + esc(fmt("flowMore")) + '</button>' : "") +
+      (opts.retry ? '<button class="btn ghost" data-act="retry">' + esc(opts.retry.label) + '</button>' : '') +
+      (opts.more ? '<button class="btn' + (flowAllDone() ? '' : ' ghost') + '" data-act="more">' + esc(opts.more.label) + '</button>' : '') +
       '<button class="btn ghost" data-act="close">닫기</button></div></div>';
     document.body.appendChild(ov);
     confetti(ov.querySelector(".conf"));
@@ -462,6 +532,7 @@
         close();
         if (a === "retry" && opts.retry && opts.retry.onclick) opts.retry.onclick();
         if (a === "more" && opts.more && opts.more.onclick) opts.more.onclick();
+        if (a === "more0") { var mo = opts.next || nextStep(false); location.href = mo ? mo.href : "study.html"; }
       };
     });
     ov.addEventListener("click", function (e) { if (e.target === ov) close(); });
@@ -587,7 +658,7 @@
   window.COACH = {
     MSG: MSG, fmt: fmt, mount: mount, say: say, paint: function () { paint(idleLine()); },
     begin: begin, wrap: wrap, tally: tally, greeting: greeting, greetWhy: greetWhy, lastVisit: lastVisit,
-    nextStep: nextStep, snap: snap, takeSnap: takeSnap, todayDelta: todayDelta, midDelta: midDelta,
+    nextStep: nextStep, nextBlock: nextBlock, startLabel: startLabel, allDone: flowAllDone, flowKinds: flowKinds, snap: snap, takeSnap: takeSnap, todayDelta: todayDelta, midDelta: midDelta,
     cardToday: cardToday, openCard: openCard, cardOpenedToday: cardOpenedToday, cardCount: cardCount,
     mountCard: mountCard, mountToday: mountToday, mountTreeDelta: mountTreeDelta,
     은는: 은는, 이가: 이가, 을를: 을를

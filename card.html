@@ -15,7 +15,8 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=1a817d13">
-<link rel="stylesheet" href="css/coach.css?v=57f0f96e">
+<link rel="stylesheet" href="css/cheer.css?v=386af7f8">
+<link rel="stylesheet" href="css/coach.css?v=b87b1187">
 <link rel="stylesheet" href="css/keyword.css?v=7a3b2060">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -141,9 +142,9 @@
 <script src="js/tree.js?v=70df12a1"></script>
 <script src="js/qbank.js?v=7b68ff94"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
-<script src="js/cardox.js?v=2b83481d"></script>
+<script src="js/cardox.js?v=95615dd9"></script>
 <script src="js/conceptq.js?v=7e53efff"></script>
-<script src="js/cards.js?v=82bdc620"></script>
+<script src="js/cards.js?v=89e204f5"></script>
 <script src="js/keyword.js?v=b233a01c"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/judge.js?v=eb358ca6"></script>
@@ -151,12 +152,13 @@
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/trend.js?v=77dea921"></script>
 <script src="js/packs.js?v=9e67e178"></script>
-<script src="js/store.js?v=4ece5289"></script>
+<script src="js/store.js?v=3fd66f8c"></script>
+<script src="js/cheer.js?v=4ef6bd21"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=dca5fb29"></script>
-<script src="js/coach.js?v=76c10e1b"></script>
-<script src="js/kwask.js?v=2c27c2c1"></script>
+<script src="js/coach.js?v=c8e4b0fa"></script>
+<script src="js/kwask.js?v=90f99b76"></script>
 <script>
 (function(){
   var T=window.TERRA, J=window.JUDGE;
@@ -358,8 +360,13 @@
     if(머리.ttl){ el("eb").textContent=머리.eb; el("ttl").innerHTML=머리.ttl; el("lede").textContent=머리.lede; }
     var u=T.이해도?T.이해도(leaf):0;
     /* 카드는 이해도를 안 움직인다(문항으로만 찬다) — 결산에 이해도 막대를 안 넣는다 */
-    if(window.COACH) COACH.wrap({got:맞+어맞, total:장들.length+개념어결과.length, kind:"card",
-      more:{label:(있나?"기출 풀기":"문제 풀기"), onclick:function(){ location.href=(있나?("ox.html?leaf="+encodeURIComponent(leaf)):("study.html?leaf="+leaf)); }}});
+    /* ★ 카드 뒤에는 그 단원의 기출로 바로 이어진다 — 「이해함 / 다시 읽기」 를 학생이 판단하게 하지 않는다(2026-10-04 15분 흐름).
+       큰 「다음」 이 그 기출이고, 개념 다시 읽기는 밑에 작게. */
+    var 고1만 = (((T.state().student||{}).grade)||"고1")==="고1";   /* O·X 은행은 고1 통합사회 학평에서 뽑았다 — 고2·고3 은 그 단원 기출 풀이로 */
+    var 갈곳 = (있나&&고1만) ? ("ox.html?leaf="+encodeURIComponent(leaf)) : ("study.html?leaf="+leaf);
+    var 다음 = { href:갈곳, title:((있나&&고1만)?"기출 풀기":"문제풀이"), min:3, kind:((있나&&고1만)?"ox":"q") };
+    if(window.COACH) COACH.wrap({got:맞+어맞, total:장들.length+개념어결과.length, kind:"card", next:다음});
+    if(T.flowMark) T.flowMark("card");
     el("stage").innerHTML=
       '<div class="done">'+
         '<h2>개념 완료</h2>'+
@@ -368,24 +375,10 @@
         '<div class="ubar"><div class="lab"><span>이해도</span><b>'+u+' / 100</b></div>'+
           '<span class="track"><i style="width:'+u+'%;background:'+
           (u>=80?"var(--mint)":"var(--lv2)")+'"></i></span></div>'+
-        '<p>문제로 확인</p>'+
-        /* ★ 고르게 하지 않는다 — 묻고, 답하면, 바로 띄운다 (대표님 2026-09-12) */
-        '<div class="ask" id="ask">'+
-          '<h3>이해 확인</h3>'+
-          '<button type="button" class="yes" id="yes">이해함</button>'+
-          '<button type="button" class="no" id="re">개념 다시 읽기</button>'+
-          (있나 ? '' : '<p class="fall">기출 부족 → 문제풀이</p>')+
-        '</div>'+
+        '<div style="margin:18px 0 10px;text-align:left">'+(window.COACH&&COACH.nextBlock?COACH.nextBlock({next:다음}):'<a class="btn" href="'+갈곳+'">기출 풀기 →</a>')+'</div>'+
+        (있나 ? '' : '<p class="fall">기출 부족 → 문제풀이</p>')+
+        '<div style="margin-top:6px"><button type="button" class="btn ghost sm" id="re">개념 다시 읽기</button></div>'+
       '</div>';
-    var 갈곳 = 있나 ? ("ox.html?leaf="+encodeURIComponent(leaf)) : ("study.html?leaf="+leaf);
-    el("yes").onclick=function(){
-      var a=el("ask");
-      a.innerHTML='<h3>'+(있나?"기출 10문제":"문제풀이")+'</h3>'+
-        '<button type="button" class="yes" id="go">기출 풀기 →</button>';
-      el("go").onclick=function(){ location.href=갈곳; };
-      el("go").focus();
-      a.scrollIntoView({block:"center",behavior:"smooth"});
-    };
     el("re").onclick=function(){ i=0; 결과=[]; k=0; 개념어결과=[]; 카드그리기(); window.scrollTo({top:0,behavior:"smooth"}); };
     window.scrollTo({top:0,behavior:"smooth"});
   }

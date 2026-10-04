@@ -16,7 +16,8 @@
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/login.css?v=bc2184f2">
 <link rel="stylesheet" href="css/base.css?v=1a817d13">
-<link rel="stylesheet" href="css/coach.css?v=57f0f96e">
+<link rel="stylesheet" href="css/cheer.css?v=386af7f8">
+<link rel="stylesheet" href="css/coach.css?v=b87b1187">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:1080px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -269,6 +270,12 @@
     <div class="skins" id="skins"></div>
   </section>
 
+  <section class="sec" id="cheersec" data-nm="정답 연출">
+    <div class="sechd"><h2>정답 연출</h2></div>
+    <div class="cheerpick" id="cheerpick"></div>
+    <div class="cheerrow" id="cheerrow"></div>
+  </section>
+
   <section class="sec" hidden>   <!-- 값·출간일 미정 안내는 학생 화면에서 뺀다(2026-09-19) -->
     <div class="sechd"><h2>구독</h2></div>
     <div class="plan" id="plan"></div>
@@ -316,13 +323,14 @@
 <script src="js/pool.js?v=c0d187ff"></script>
 <script src="js/packs.js?v=9e67e178"></script>
 <script src="js/drills.js?v=3f81d010"></script>
-<script src="js/cards.js?v=82bdc620"></script>
-<script src="js/store.js?v=4ece5289"></script>
+<script src="js/cards.js?v=89e204f5"></script>
+<script src="js/store.js?v=3fd66f8c"></script>
+<script src="js/cheer.js?v=4ef6bd21"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=dca5fb29"></script>
 <script src="js/loginui.js?v=ec50ca43"></script>
-<script src="js/coach.js?v=76c10e1b"></script>
+<script src="js/coach.js?v=c8e4b0fa"></script>
 <script src="js/notify.js?v=f6ea0991"></script>
 <script>
 (function(){
@@ -571,6 +579,21 @@
     });
   }
 
+  /* ── 정답 연출 (js/cheer.js) ── */
+  function paintCheer(){
+    if(!window.CHEER) return;
+    var now=CHEER.kind(), names={a:["버스트","색 파티클"],b:["콤보","연속 정답·XP"],c:["도장","정답 도장"]};
+    document.getElementById("cheerpick").innerHTML=CHEER.KINDS.map(function(k){
+      return '<button type="button" data-ck="'+k+'" aria-pressed="'+(k===now)+'">'+names[k][0]+'<small>'+names[k][1]+'</small></button>'; }).join("");
+    document.getElementById("cheerrow").innerHTML=
+      '<button type="button" id="cheersnd" aria-pressed="'+CHEER.sound()+'">소리 '+(CHEER.sound()?"켜짐":"꺼짐")+'</button>'+
+      '<button type="button" id="cheertry">미리 보기</button>';
+    document.querySelectorAll("[data-ck]").forEach(function(b){ b.onclick=function(){ CHEER.kind(b.dataset.ck); paintCheer(); CHEER.ok(null,{combo:1+(CHEER.combo()%6)}); }; });
+    document.getElementById("cheersnd").onclick=function(){ CHEER.sound(!CHEER.sound()); paintCheer(); };
+    document.getElementById("cheertry").onclick=function(){ CHEER.ok(null,{combo:1+(CHEER.combo()%6)}); };
+  }
+  paintCheer();
+
   /* ── 구독 ── */
   function paintPlan(){
     var p=T.plan();
@@ -762,7 +785,7 @@
 <script>
 /* 설정 구획 접기 — 묶음: 공부 / 화면·학년 / 기록 */
 (function(){
-  var 묶음=[["공부",["하루 루틴","이번 시험 범위","목표일","확장팩"]],["화면과 학년",["디자인","학년"]],["기록",["저장","기록 옮기기"]]];
+  var 묶음=[["공부",["하루 루틴","이번 시험 범위","목표일","확장팩"]],["화면과 학년",["디자인","정답 연출","학년"]],["기록",["저장","기록 옮기기"]]];
   var secs=[].slice.call(document.querySelectorAll("section.sec")).filter(function(x){ return !x.hidden; });
   var by={}; secs.forEach(function(x){ var h=x.querySelector(".sechd h2"); if(h) by[x.dataset.nm||h.textContent.trim()]=x; });
   var 자리=secs[0]&&secs[0].parentNode, 앞=secs[0]; if(!자리) return;

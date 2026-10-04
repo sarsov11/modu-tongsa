@@ -15,7 +15,8 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=1a817d13">
-<link rel="stylesheet" href="css/coach.css?v=57f0f96e">
+<link rel="stylesheet" href="css/cheer.css?v=386af7f8">
+<link rel="stylesheet" href="css/coach.css?v=b87b1187">
 <link rel="stylesheet" href="css/question.css?v=4cea4076">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -277,13 +278,14 @@
 <script src="js/pool.js?v=c0d187ff"></script>
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/qrender.js?v=749818a6"></script>
-<script src="js/cards.js?v=82bdc620"></script>
+<script src="js/cards.js?v=89e204f5"></script>
 <script src="js/packs.js?v=9e67e178"></script>
-<script src="js/store.js?v=4ece5289"></script>
+<script src="js/store.js?v=3fd66f8c"></script>
+<script src="js/cheer.js?v=4ef6bd21"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=dca5fb29"></script>
-<script src="js/coach.js?v=76c10e1b"></script>
+<script src="js/coach.js?v=c8e4b0fa"></script>
 <script>
 (function(){
   var T=TERRA, Q=window.QBANK||{};
@@ -687,11 +689,13 @@
       '<span style="color:var(--ink-4);font-size:34px"> / '+list.length+'</span></div>'+
       '<p style="margin-top:12px;color:var(--ink-3);font-size:15px">'+
       (got===list.length?"전부 정답":"오답 모아풀기")+'</p>'+
-      '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px">'+
-      (missed.length?'<button class="btn" id="retry">틀린 '+missed.length+'개만 다시</button>':'')+
-      '<button class="btn '+(missed.length?"ghost":"")+'" id="more">이 단원 더 풀기</button>'+
-      '<a class="btn ghost" href="study.html">다른 단원</a>'+
-      '<a class="btn ghost" href="index.html">학습 홈</a></div></div>';
+      /* ★ 맨 위 행동은 「다음」 하나 — 오늘 루틴의 다음 항목(2026-10-04 15분 흐름). 나머지는 그 밑에 작게 */
+      '<div id="flownext" style="margin-top:26px;text-align:left">'+(window.COACH&&COACH.flowKinds?(function(){ COACH.flowKinds({kind:"q"}).forEach(function(k){ T.flowMark&&T.flowMark(k); }); return COACH.nextBlock(); })():'')+'</div>'+
+      '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px">'+
+      (missed.length?'<button class="btn ghost sm" id="retry">틀린 '+missed.length+'개만 다시</button>':'')+
+      '<button class="btn ghost sm" id="more">이 단원 더 풀기</button>'+
+      '<a class="btn ghost sm" href="study.html">다른 단원</a>'+
+      '<a class="btn ghost sm" href="index.html">학습 홈</a></div></div>';
     function retry(){ list=missed; i=0; marks=[]; done=false;
       if(window.COACH) COACH.begin({leaf:leaf.code, kind:"retry"}); render(); }
     function more(){ buildList(); render(); }
@@ -714,7 +718,8 @@
         '<div class="empty"><p style="font-size:16px;color:var(--ink-2)">'+
         (wrongOnly?"오답 없음":"풀 수 있는 문항 없음")+
         '</p>'+
-        '<div style="margin-top:22px"><a class="btn" href="study.html">다른 단원 고르기</a></div></div>';
+        '<div style="margin-top:22px;text-align:left">'+(window.COACH&&COACH.nextBlock?(function(){ if(wrongOnly&&T.flowMark) T.flowMark("due"); return COACH.nextBlock(); })():'<a class="btn" href="study.html">다른 단원 고르기</a>')+'</div>'+
+        '<div style="margin-top:12px"><a class="btn ghost sm" href="study.html">다른 단원</a></div></div>';
     }else{
       shell(); render();
     }
