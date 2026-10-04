@@ -1,120 +1,166 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" data-skin="white">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>학부모 리포트</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
-<meta name="theme-color" content="#FAF8F3">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap">
+<meta name="theme-color" content="#F4F5F7">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=1a817d13">
-<script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<!-- 학부모 리포트 (2026-10-04 개편, 대표님 A안 확정)
+     일간: 마감 시각까지의 하루 → 다음 날 아침 발송. 주간: 월~일 → 월요일 아침 발송.
+     계산은 js/parent.js(자료), 그리기는 여기, 보내기는 supabase/functions/parent-report.
+     ?k=<토큰> 으로 열면 학부모 폰 보기 — 학생 기기 기록 대신 서버에 올라간 리포트를 그린다. -->
 <style>
-  .wrapx{max-width:820px;margin:0 auto;padding:0 var(--s3) var(--s6)}
-  /* 학부모 화면엔 학생용 선생님 띠·결산이 뜨지 않는다 */
-  .nextbar,.wrapov{display:none!important}
+  .nav,.nextbar,.wrapov,.flowstrip{display:none!important}
+  body.hasnext{padding-bottom:0!important}
+  :root{
+    --pg:#F4F5F7; --cd:#FFFFFF; --ln:#E6E8EC; --ln2:#D5D9DF;
+    --tx:#14171C; --tx2:#3A404A; --tx3:#5E6672; --sf:#F1F3F6;
+    --ac:#E5322D; --ok:#0F8A5F; --bad:#D0342C; --bads:#FCEAE9;
+    --bar:#1F2530; --bar2:#C9CED6; --r:20px; --sh:0 1px 2px rgba(16,24,40,.04),0 4px 16px rgba(16,24,40,.05);
+  }
+  html,body{background:var(--pg)!important;color:var(--tx)}
+  body{font-family:"Noto Sans KR",sans-serif;font-weight:500;-webkit-font-smoothing:antialiased}
+  .pr{max-width:760px;margin:0 auto;padding:0 16px 48px}
+  .n{font-variant-numeric:tabular-nums;letter-spacing:-.03em}
 
-  .pcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);
-    padding:20px;margin-bottom:12px;box-shadow:var(--shadow)}
-  .pcard h3{font-size:13.5px;color:var(--ink-3);font-weight:700;margin:0 0 14px;letter-spacing:.02em}
-  .say{font-size:15.5px;line-height:1.8;color:var(--ink-2)}
-  .say b{color:var(--ink)}
-  .note{font-size:13.5px;color:var(--ink-3);line-height:1.7;margin:12px 0 0}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 0 10px}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;color:var(--tx);text-decoration:none;white-space:nowrap}
+  .brand i{width:10px;height:10px;border-radius:3px;background:var(--ac);display:inline-block}
+  .brand span{color:var(--tx3);font-weight:700}
+  @media(max-width:440px){.brand span{display:none}}
+  .seg{flex:none;display:inline-flex;background:var(--sf);border:1px solid var(--ln);border-radius:99px;padding:3px}
+  .seg button{border:0;background:none;font-size:14px;font-weight:700;color:var(--tx3);padding:7px 15px;border-radius:99px;cursor:pointer;white-space:nowrap}
+  .seg button.on{background:var(--cd);color:var(--tx);box-shadow:0 1px 3px rgba(0,0,0,.12)}
 
-  /* ── 머리 카드: 누구·시험·D-day ── */
-  .hero{background:var(--card);border:1px solid var(--line);border-radius:var(--r3);
-    padding:22px 20px 18px;margin-bottom:12px;box-shadow:var(--shadow)}
-  .hero .who{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-  .hero .nm{font-size:22px;font-weight:800;letter-spacing:-.03em;color:var(--ink);padding-top:4px}
-  .hero .nm small{font-size:14px;color:var(--ink-3);font-weight:600;margin-left:8px}
-  .hero .dd{font-size:34px;font-weight:800;letter-spacing:-.04em;color:var(--cta);line-height:1;text-align:right}
-  .hero .dd small{font-size:14px;color:var(--ink-3);font-weight:600;display:block;margin-top:5px;letter-spacing:0}
-  .hero .exam{font-size:14.5px;color:var(--ink-2);margin:12px 0 16px}
-  .hero .exam b{color:var(--ink)}
-  .track{position:relative;height:8px;border-radius:99px;background:var(--surface-3);margin:6px 8px 0}
-  .track i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:var(--cta)}
-  .track s{position:absolute;top:-4px;width:16px;height:16px;border-radius:50%;background:var(--card);
-    border:3px solid var(--cta);transform:translateX(-50%);text-decoration:none}
-  .track s.m{border-color:var(--amber);width:12px;height:12px;top:-2px}
-  .track s.e{border-color:var(--red)}
-  .marks{display:flex;justify-content:space-between;font-size:14px;color:var(--ink-3);margin-top:10px}
-  .marks b{color:var(--ink-2);font-weight:700}
-  .oneline{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line-2)}
-  .oneline h2{font-size:20px;font-weight:800;letter-spacing:-.03em;color:var(--ink);margin:0 0 6px;line-height:1.35}
-  .oneline p{font-size:15px;line-height:1.75;color:var(--ink-2);margin:0}
-  .oneline p b{color:var(--ink)}
+  /* 날짜 넘기기 */
+  .pager{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 12px}
+  .pager button{flex:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--ln2);background:var(--cd);
+    font-size:17px;font-weight:800;color:var(--tx);cursor:pointer}
+  .pager button:disabled{opacity:.3;cursor:default}
+  .pager .mid{text-align:center;min-width:0}
+  .pager .mid b{display:block;font-size:17px;font-weight:900;letter-spacing:-.02em;color:var(--tx)}
+  .pager .mid span{display:block;font-size:13.5px;font-weight:600;color:var(--tx3);margin-top:2px}
 
-  /* ── 숫자 넷 ── */
-  .nums{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
-  .num{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:14px 14px 12px;box-shadow:var(--shadow)}
-  .num b{display:block;font-size:26px;font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.1}
-  .num b small{font-size:14px;font-weight:700;margin-left:2px}
-  .num span{font-size:14px;color:var(--ink-3);display:block;margin-top:6px}
-  .num.good b{color:var(--mint-2)} .num.warn b{color:var(--red-2)}
-  @media(max-width:560px){.nums{grid-template-columns:1fr 1fr}}
+  .rc{background:var(--cd);border:1px solid var(--ln);border-radius:var(--r);box-shadow:var(--sh);padding:22px 20px;margin-bottom:12px}
+  .rc h3{font-size:16px;font-weight:800;color:var(--tx);margin:0;letter-spacing:-.02em}
+  .rh{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:18px}
+  .rh small{font-size:14px;color:var(--tx3);font-weight:600}
 
-  /* ── 최근 7일 ── */
-  .days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-  .day{text-align:center}
-  .day .dot{width:38px;height:38px;margin:0 auto;border-radius:50%;background:var(--surface-2);border:1px solid var(--line);
-    display:grid;place-items:center;font-size:15px;font-weight:800;color:var(--ink-4)}
-  .day.on .dot{background:var(--mint-2);border-color:var(--mint-2);color:#fff}
-  .day.today .dot{box-shadow:0 0 0 3px var(--cta-soft),0 0 0 5px var(--cta)}
-  .day .wd{font-size:13.5px;color:var(--ink-3);margin-top:7px;font-weight:600}
-  .day .n{font-size:13.5px;color:var(--ink-2);font-weight:700;margin-top:2px}
-  .day.on .n{color:var(--mint-2)}
+  .cover{padding:24px 22px 20px}
+  .eyebrow{font-size:14px;font-weight:700;color:var(--tx3)}
+  .who{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-top:8px}
+  .who h1{font-size:30px;font-weight:900;letter-spacing:-.04em;line-height:1.15;margin:0;color:var(--tx)}
+  .who h1 small{font-size:15px;font-weight:700;color:var(--tx3);margin-left:8px;letter-spacing:0}
+  .dd{text-align:right;flex:none}
+  .dd b{display:block;font-size:34px;font-weight:900;color:var(--ac);line-height:1}
+  .dd span{display:block;font-size:14px;color:var(--tx3);font-weight:700;margin-top:6px}
+  .lead{margin-top:18px;padding-top:16px;border-top:1px solid var(--ln);display:flex;flex-wrap:wrap;gap:8px}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--tx2);
+    background:var(--sf);border:1px solid var(--ln);border-radius:99px;padding:7px 12px}
+  .pill b{color:var(--tx);font-weight:800}
 
-  /* ── 성적 둘 ── */
-  .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .two .k{background:var(--surface-2);border-radius:var(--r1);padding:14px}
-  .two .k b{font-size:28px;font-weight:800;letter-spacing:-.03em;color:var(--ink);display:block;line-height:1.1}
-  .two .k b small{font-size:14px}
-  .two .k span{font-size:14px;color:var(--ink-3);display:block;margin-top:5px}
-  .two .k em{font-style:normal;font-size:14px;font-weight:800;margin-left:6px}
-  .two .k em.up{color:var(--mint-2)} .two .k em.dn{color:var(--red-2)}
-  .trend{display:flex;align-items:flex-end;gap:8px;height:90px;margin-top:22px}
-  .trend .b{flex:1;background:var(--lv2);border-radius:4px 4px 0 0;min-height:4px;position:relative}
-  .trend .b.now{background:var(--cta)}
-  .trend .b em{position:absolute;top:-19px;left:50%;transform:translateX(-50%);font-size:13px;color:var(--ink-2);font-style:normal;font-weight:800}
-  .trend .b span{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:12px;color:var(--ink-3)}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+  .kpi{background:var(--cd);border:1px solid var(--ln);border-radius:var(--r);box-shadow:var(--sh);padding:16px 16px 14px;min-width:0}
+  .kpi .lb{font-size:14px;font-weight:700;color:var(--tx3);display:block}
+  .kpi .v{display:block;font-size:30px;font-weight:900;color:var(--tx);line-height:1.1;margin-top:8px}
+  .kpi .v small{font-size:15px;font-weight:800;margin-left:2px;color:var(--tx2)}
+  .kpi .sub{display:block;font-size:14px;font-weight:600;color:var(--tx3);margin-top:8px;line-height:1.45}
+  .dl{font-weight:800;white-space:nowrap}
+  .dl.up{color:var(--ok)} .dl.dn{color:var(--bad)} .dl.eq{color:var(--tx3)}
+  @media(max-width:600px){.kpis{grid-template-columns:1fr 1fr}.kpi .v{font-size:27px}}
 
-  /* ── 단원별 ── */
-  .bars{display:flex;flex-direction:column;gap:13px}
-  .bar .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
-  .bar .nm{font-size:15px;font-weight:700;color:var(--ink);word-break:keep-all;overflow-wrap:anywhere}
-  .bar .nm .tag{display:inline-block;font-size:13.5px;font-weight:800;padding:2px 7px;border-radius:99px;margin-left:8px;vertical-align:2px}
-  .bar .nm .tag.low{background:var(--red-soft);color:var(--red-2)}
-  .bar .nm .tag.mid{background:rgba(183,121,31,.12);color:var(--amber);color:color-mix(in srgb,var(--amber) 62%,var(--ink))}
-  .bar .pc{font-size:14px;font-weight:800;color:var(--ink-2);white-space:nowrap}
-  .bar .pc small{font-size:14px;font-weight:600;color:var(--ink-3);margin-left:6px}
-  .bar .tr{height:10px;background:var(--surface-3);border-radius:99px;overflow:hidden}
-  .bar .tr i{display:block;height:100%;border-radius:99px;background:var(--mint-2)}
-  .bar .tr i.low{background:var(--red)} .bar .tr i.mid{background:var(--amber)}
+  .chart{display:flex;align-items:flex-end;gap:6px;height:150px;padding-top:22px}
+  .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+  .col .bx{width:100%;max-width:38px;border-radius:7px 7px 3px 3px;background:var(--bar2);position:relative;min-height:3px}
+  .col.on .bx{background:var(--bar)}
+  .col.hi .bx{background:var(--ac)}
+  .col .bx em{position:absolute;top:-21px;left:50%;transform:translateX(-50%);font-style:normal;font-size:13.5px;font-weight:800;color:var(--tx);white-space:nowrap}
+  .col.zero .bx em{color:var(--tx3)}
+  .xax{display:flex;gap:6px;margin-top:9px}
+  .xax div{flex:1;text-align:center;font-size:13.5px;font-weight:700;color:var(--tx3);min-width:0;line-height:1.35}
+  .xax div b{display:block;color:var(--tx2);font-weight:800}
+  .xax div.hi b{color:var(--ac)}
 
-  /* ── 부모가 할 일 ── */
-  .todo1{background:var(--cta-soft);border:1px solid var(--cta-line);border-radius:var(--r2);padding:20px;margin-bottom:12px}
-  .todo1 .kick{font-size:14px;font-weight:800;color:var(--cta-2);letter-spacing:.02em;display:block;margin-bottom:8px}
-  .todo1 h3{font-size:19px;font-weight:800;color:var(--ink);margin:0 0 8px;letter-spacing:-.03em;line-height:1.35}
-  .todo1 p{font-size:15px;line-height:1.75;color:var(--ink-2);margin:0}
+  .lst{display:flex;flex-direction:column}
+  .li{display:grid;grid-template-columns:minmax(0,1fr) auto 60px;gap:12px;align-items:center;padding:11px 0;border-top:1px solid var(--ln)}
+  .li:first-child{border-top:0;padding-top:0}
+  .li .nm{font-size:15px;font-weight:700;color:var(--tx);word-break:keep-all;overflow-wrap:anywhere}
+  .li .ct{font-size:14px;font-weight:600;color:var(--tx3);white-space:nowrap}
+  .li .pc{text-align:right;font-size:16px;font-weight:900;color:var(--tx)}
+  .li .pc.low{color:var(--bad)}
 
-  .foot{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);font-size:13.5px;color:var(--ink-3);line-height:1.8}
-  .foot b{color:var(--ink-2)}
-  .act{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-  @media print{.act,.pnav{display:none} body{background:#fff}}
+  .cov{display:flex;align-items:center;gap:18px;margin-bottom:20px}
+  .ring{flex:none;width:96px;height:96px;position:relative}
+  .ring svg{display:block;transform:rotate(-90deg)}
+  .ring b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:900;color:var(--tx)}
+  .ring b small{font-size:13.5px}
+  .cov p{margin:0;font-size:15px;line-height:1.7;color:var(--tx2);font-weight:600}
+  .cov p b{color:var(--tx);font-weight:800}
+  .grp{margin-top:6px} .grp+.grp{margin-top:18px}
+  .grp h4{font-size:14px;font-weight:800;color:var(--tx3);margin:0 0 10px}
+  .row{display:grid;grid-template-columns:minmax(0,1fr) 92px 64px;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--ln)}
+  .row:first-of-type{border-top:0}
+  .row .nm{font-size:15px;font-weight:700;color:var(--tx);word-break:keep-all;overflow-wrap:anywhere;line-height:1.4}
+  .row .nm small{display:block;font-size:13.5px;font-weight:600;color:var(--tx3);margin-top:2px}
+  .row .tr{height:8px;border-radius:99px;background:var(--sf);border:1px solid var(--ln);overflow:hidden}
+  .row .tr i{display:block;height:100%;background:var(--bar);border-radius:99px}
+  .row .pc{text-align:right;font-size:16px;font-weight:900;color:var(--tx)}
+  .row .pc.low{color:var(--bad)} .row .pc.na{color:var(--tx3);font-size:14px;font-weight:700}
+  .rt{display:inline-block;font-size:13.5px;font-weight:800;padding:2px 8px;border-radius:99px;margin-left:6px;vertical-align:1px;white-space:nowrap}
+  .rt.low{background:var(--bads);color:var(--bad)}
+  .rt.none{background:var(--sf);color:var(--tx3);border:1px solid var(--ln)}
+  .cols{display:grid;grid-template-columns:minmax(0,1fr) 92px 64px;gap:12px;font-size:13.5px;font-weight:700;color:var(--tx3);padding-bottom:6px}
+  .cols span:last-child{text-align:right}
+  .outside{margin-top:16px;padding-top:14px;border-top:1px dashed var(--ln2);font-size:14px;color:var(--tx3);font-weight:600;line-height:1.7}
+  .outside b{color:var(--tx2)}
+  @media(max-width:420px){.row,.cols{grid-template-columns:minmax(0,1fr) 64px 52px;gap:10px}}
+
+  .stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .stat3 div{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:12px 14px}
+  .stat3 b{display:block;font-size:24px;font-weight:900;color:var(--tx);line-height:1.1}
+  .stat3 span{display:block;font-size:14px;color:var(--tx3);font-weight:700;margin-top:4px}
+  .empty{font-size:15px;color:var(--tx3);font-weight:600;line-height:1.7;margin:0}
+  .empty b{color:var(--tx2)}
+
+  /* 발송 설정 */
+  .cfg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .cfg label{display:block;font-size:14px;font-weight:700;color:var(--tx3)}
+  .cfg select{display:block;width:100%;margin-top:6px;font-size:15px;font-weight:700;color:var(--tx);background:var(--sf);
+    border:1px solid var(--ln2);border-radius:12px;padding:10px 12px}
+  .sched{margin-top:14px;font-size:14px;line-height:1.75;color:var(--tx2);font-weight:600}
+  .sched b{color:var(--tx);font-weight:800}
+  .link{margin-top:16px;padding-top:16px;border-top:1px solid var(--ln)}
+  .link .st{font-size:14px;font-weight:600;color:var(--tx3);line-height:1.7;margin:0 0 10px}
+  .link .st b{color:var(--tx2)}
+  .link input{width:100%;font-size:14px;font-weight:600;padding:10px 12px;border:1px solid var(--ln2);border-radius:12px;background:var(--sf);color:var(--tx);margin-bottom:8px}
+
+  .foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:18px}
+  .foot p{margin:0;font-size:14px;color:var(--tx3);font-weight:600}
+  .acts{display:flex;gap:8px;flex-wrap:wrap}
+  .pbtn{display:inline-flex;align-items:center;gap:6px;font-size:14.5px;font-weight:800;padding:11px 16px;border-radius:12px;
+    border:1px solid var(--ln2);background:var(--cd);color:var(--tx);text-decoration:none;cursor:pointer}
+  .pbtn.pri{background:var(--tx);border-color:var(--tx);color:var(--cd)}
+  .pbtn:disabled{opacity:.4;cursor:default}
+
+  @media print{
+    .seg,.acts,.pager button,.cfgcard{display:none!important}
+    html,body{background:#fff!important}
+    .rc,.kpi{box-shadow:none;break-inside:avoid}
+  }
 </style>
 </head>
 <body>
-<div class="wrapx">
-  <div class="phead">
-    <div>
-      <span class="kicker">학부모 리포트</span>
-      <h1 id="ttl">이번 주 학습 리포트</h1>
-      <p class="sub" id="lede"></p>
-    </div>
-    <div class="pheadact" id="headact"></div>
+<div class="pr">
+  <div class="top">
+    <a class="brand" id="brand" href="index.html"><i></i>모두의 통사 <span>학부모 리포트</span></a>
+    <div class="seg" id="seg"><button data-k="day">일간</button><button data-k="week">주간</button></div>
   </div>
+  <div class="pager"><button id="prev" aria-label="이전">‹</button><div class="mid"><b id="pt"></b><span id="ps"></span></div><button id="next" aria-label="다음">›</button></div>
   <div id="root"></div>
 </div>
 
@@ -127,152 +173,243 @@
 <script src="js/store.js?v=3fd66f8c"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
-<script src="js/auth.js?v=dca5fb29"></script>
 <script src="js/exam.js?v=bf4729f4"></script>
 <script src="js/parent.js?v=2548fb32"></script>
+<script src="js/auth.js?v=dca5fb29"></script>
 <script>
 (function(){
-  var T=TERRA, P=window.PARENT, E=window.TERRA_EXAM;
-  T.mountNav("parent.html");
+  var T=TERRA, P=window.PARENT, A=window.AUTH||{on:false};
+  var 토큰=(/[?&]k=([A-Za-z0-9_-]{16,})/.exec(location.search)||[])[1]||"";
+  var 학부모폰=!!토큰;                  // 링크로 연 학부모 폰 — 이 기기 기록이 아니라 서버 리포트를 그린다
+  if(!학부모폰) T.mountNav("parent.html");   // 범위 기본값·처음 설정 이동 때문에 부른다. 학생 나비는 CSS 로 숨긴다.
   function esc(t){ return String(t==null?"":t)
     .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
   var root=document.getElementById("root");
+  var 요일=["일","월","화","수","목","금","토"];
+  function 날(k){ return new Date(k+"T12:00:00"); }
+  function 긴날(k){ var d=날(k); return (d.getMonth()+1)+"월 "+d.getDate()+"일("+요일[d.getDay()]+")"; }
+  function 짧은날(k){ var d=날(k); return (d.getMonth()+1)+"월 "+d.getDate()+"일"; }
+  function 시간(m){ m=Math.round(m||0); return m>=60? Math.floor(m/60)+"시간 "+(m%60)+"분" : m+"분"; }
+  function 시간칸(m){ m=Math.round(m||0); return m>=60? Math.floor(m/60)+'<small>시간</small> '+(m%60)+'<small>분</small>' : m+'<small>분</small>'; }
+  function 차이(지금, 전, 단위, 말){
+    if(지금==null||전==null) return '<span class="dl eq">'+말+' 기록 없음</span>';
+    var d=Math.round(지금-전);
+    if(d===0) return '<span class="dl eq">'+말+'과 같음</span>';
+    return '<span class="dl '+(d>0?"up":"dn")+'">'+(d>0?"▲ ":"▼ ")+Math.abs(d)+단위+'</span> '+말+' 대비';
+  }
+  function 률(o,a){ return a? o/a*100 : null; }
 
-  /* ── 사실을 모은다. 여기서 지어내는 값은 하나도 없다 ──
-     ★ report() 는 오늘 하루만 센다. 기간마다 따로 받아 이름을 붙여 적는다. */
-  function 모으기(){
-    /* ★ 이번 주·전체·오늘 모두 같은 집계(store.js aggregate)에서 온다 — 첫날에는 이번 주와 전체가 같은 숫자다(2026-10-04) */
-    var 오늘=T.report();
-    var 주간R=T.rangeReport("week");
-    var 전체R=T.totalReport();
-    var 누적={풀이:전체R.answers, 맞음:전체R.correct};
-    var W=T.weekSeries();
-    var 최근7=W.filter(function(d){ return d.solved>0; }).length;
-    var 연속=0;
-    for(var i=W.length-1;i>=0;i--){ if(W[i].solved>0) 연속++; else break; }
-    var 시=T.nextExam?T.nextExam():null;
-    var lg=(E&&E.log)?E.log():[];
-    var 회차평균=lg.length? lg.reduce(function(s,r){ return s+r.pct; },0)/lg.length : null;
-    var st=T.state().student||{};
-    return {
-      이름:st.name||"", 학년:st.grade||"고1",
-      오늘문항:오늘.solved||0,
-      주간문항:주간R.solved||0, 주간풀이:주간R.answers||0,
-      주간정답률:주간R.answers? (주간R.correct/주간R.answers*100):null,
-      푼문항:누적.풀이, 정답률:누적.풀이? (누적.맞음/누적.풀이*100):null,
-      주간:W, 최근7:최근7, 연속:연속,
-      시험:시?시.exam:null, dday:시?시.days:null, ddayLabel:시?시.label:"",
-      회차:lg, 회차평균:회차평균,
-      범위:T.scopeOn()?T.scopeName():""
-    };
+  /* ── 지금 보는 리포트 ── */
+  var q=new URLSearchParams(location.search);
+  var 종류=q.get("r")==="week"?"week":(q.get("r")==="day"?"day":null);
+  var 기준=q.get("d")||"";
+  var 서버목록=null;                       // 학부모 폰: {day:[키...], week:[키...]}
+
+  function 기본종류(){
+    var cfg=P.설정(), 오늘=P.지금날(cfg.cut);
+    return 날(오늘).getDay()===1? "week":"day";        // 월요일 아침엔 지난주 주간 리포트부터
   }
-  /* 단원별 성취 — 푼 것이 있는 곳만. 안 푼 단원을 0%로 그리면 부모가 "다 못한다"로 읽는다. */
-  function 단원막대(){
-    var out=[];
-    T.ROOTS.forEach(function(r){
-      var st=T.rootStat?T.rootStat(r.code):null;
-      if(!st||!st.solved) return;
-      out.push({name:r.name, pc:Math.round(st.correct/st.solved*100), n:st.solved});
+  function 끝키(kind){
+    var cfg=P.설정();
+    if(kind==="day") return P.닫힌날(cfg.cut);
+    return P.더하기(P.월요일(P.지금날(cfg.cut)),-7);
+  }
+
+  /* ── 그리기 — r 은 parent.js 가 만든 자료(이 기기) 또는 서버에서 받은 같은 자료 ── */
+  function 막대(cols, hiIdx){
+    var mx=Math.max.apply(null, cols.map(function(c){ return c.solved; }).concat([1]));
+    return '<div class="chart">'+cols.map(function(c,i){
+      var h=c.solved?Math.max(6,Math.round(c.solved/mx*100)):0;
+      return '<div class="col'+(c.solved?" on":" zero")+(i===hiIdx?" hi":"")+'"><div class="bx" style="height:'+(h||2)+'%"><em class="n">'+c.solved+'</em></div></div>';
+    }).join("")+'</div><div class="xax">'+cols.map(function(c,i){
+      return '<div class="'+(i===hiIdx?"hi":"")+'"><b>'+c.wd+'</b>'+(c.min?c.min+"분":"—")+'</div>';
+    }).join("")+'</div>';
+  }
+  function 고리(pct){
+    var C=2*Math.PI*42, on=C*Math.min(1,Math.max(0,pct/100));
+    return '<div class="ring"><svg width="96" height="96" viewBox="0 0 96 96">'+
+      '<circle cx="48" cy="48" r="42" fill="none" stroke="var(--sf)" stroke-width="9"/>'+
+      '<circle cx="48" cy="48" r="42" fill="none" stroke="var(--ac)" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+on.toFixed(1)+' '+(C-on).toFixed(1)+'"/>'+
+      '</svg><b class="n">'+Math.round(pct)+'<small>%</small></b></div>';
+  }
+  function 범위칸(r){
+    var c=r.cov;
+    if(!c) return '<div class="rc"><div class="rh"><h3>시험 범위 진도</h3></div><p class="empty">시험 범위 <b>미설정</b></p></div>';
+    var 진도=c.play?c.solved/c.play*100:0, 정답=c.solved?Math.round(c.correct/c.solved*100):null;
+    var 늘=(r.kind==="week"&&r.covPrev!=null)? c.solved-r.covPrev : null;
+    return '<div class="rc"><div class="rh"><h3>시험 범위 진도</h3><small>'+(r.kind==="week"?짧은날(r.to):짧은날(r.day))+' 마감 누적</small></div>'+
+      '<div class="cov">'+고리(진도)+'<p>범위 문항 <b class="n">'+c.play+'</b>개 중 <b class="n">'+c.solved+'</b>개 풀이'+
+        (늘!=null?'<br>이번 주 <b class="n">+'+늘+'</b>문항':'')+
+        (정답!=null?'<br>범위 정답률 <b class="n">'+정답+'%</b>':'')+'</p></div>'+
+      '<div class="cols"><span>단원</span><span>진도</span><span>정답률</span></div>'+
+      c.groups.map(function(g){
+        return '<div class="grp"><h4>'+esc(g.name)+'</h4>'+g.rows.map(function(x){
+          var 진=x.play?Math.round(x.solved/x.play*100):0;
+          var pc=x.solved?Math.round(x.correct/x.solved*100):null, 적음=x.solved<5;
+          var tag=!x.solved?'<span class="rt none">아직 안 풂</span>':(!적음&&pc<55?'<span class="rt low">보완 필요</span>':'');
+          return '<div class="row"><div class="nm">'+esc(x.name)+(x.deep?'<span class="rt none">심화</span>':'')+tag+'<small class="n">'+x.solved+' / '+x.play+'문항</small></div>'+
+            '<div class="tr"><i style="width:'+진+'%"></i></div>'+
+            '<div class="pc n'+(pc==null||적음?" na":(pc<55?" low":""))+'">'+(pc==null?"—":(적음?"표본 부족":pc+"%"))+'</div></div>';
+        }).join("")+'</div>';
+      }).join("")+
+      (c.outside&&c.outside.n?'<div class="outside">범위 밖에서 푼 문항 <b class="n">'+c.outside.n+'</b>개, '+esc(c.outside.names.join(", "))+'</div>':'')+
+      '</div>';
+  }
+  function 단원칸(r){
+    var 제목=r.kind==="week"?"이번 주 푼 단원":"이날 푼 단원";
+    if(!r.roots.length) return '<div class="rc"><div class="rh"><h3>'+제목+'</h3><small>문제풀이</small></div><p class="empty">문제풀이 기록 없음</p></div>';
+    return '<div class="rc"><div class="rh"><h3>'+제목+'</h3><small>문제풀이</small></div><div class="lst">'+r.roots.map(function(x){
+      var pc=Math.round(x.ok/x.ans*100);
+      return '<div class="li"><span class="nm">'+esc(x.name)+'</span><span class="ct n">'+x.ok+' / '+x.ans+'문항</span><span class="pc n'+(x.ans>=5&&pc<55?" low":"")+'">'+(x.ans<5?'<span style="font-size:14px;color:var(--tx3)">표본 부족</span>':pc+"%")+'</span></div>';
+    }).join("")+'</div></div>';
+  }
+  function 모의칸(r){
+    var m=r.mock;
+    if(!m||!m.all) return '<div class="rc"><div class="rh"><h3>모의고사</h3><small>25문항, 100점 만점</small></div><p class="empty">응시 기록 없음'+
+      (r.exam&&r.exam.dday!=null&&r.exam.dday>10?', <b>D-10</b>부터 매일 1회':'')+'</p></div>';
+    return '<div class="rc"><div class="rh"><h3>모의고사</h3><small>25문항, 100점 만점</small></div>'+
+      '<div class="stat3"><div><b class="n">'+(m.in.length?m.in.map(function(x){return x.pct;}).join(", ")+"점":"—")+'</b><span>'+(r.kind==="week"?"이번 주":"이날")+' 응시 '+m.in.length+'회</span></div>'+
+      '<div><b class="n">'+m.avg+'점</b><span>누적 평균('+m.all+'회)</span></div><div><b class="n">'+m.best+'점</b><span>누적 최고</span></div></div></div>';
+  }
+  function 표지(r, eyebrow, pills){
+    var e=r.exam;
+    return '<div class="rc cover"><div class="eyebrow">'+eyebrow+'</div>'+
+      '<div class="who"><h1>'+esc((r.student&&r.student.name)||"학생")+'<small>'+esc((r.student&&r.student.grade)||"")+'</small></h1>'+
+        (e&&e.dday!=null?'<div class="dd"><b class="n">'+(e.dday===0?"D-DAY":(e.dday>0?"D-"+e.dday:"D+"+(-e.dday)))+'</b><span>'+esc(e.name)+(e.date?', '+esc(짧은날(e.date)):'')+'</span></div>':'')+
+      '</div><div class="lead">'+pills.join("")+'</div></div>';
+  }
+
+  function 일간그리기(r){
+    var 정=률(r.ok,r.ans), 전정=률(r.prev.ok,r.prev.ans), 전있음=(r.prev.solved+r.prev.min)>0;
+    var pills=[];
+    pills.push('<span class="pill">학습 시간대 <b class="n">'+(r.first?r.first+"–"+r.last:"기록 없음")+'</b></span>');
+    pills.push('<span class="pill">이어서 한 날 <b class="n">'+r.streak+'일</b></span>');
+    if(r.cov&&r.cov.play) pills.push('<span class="pill">시험 범위 진도 <b class="n">'+Math.round(r.cov.solved/r.cov.play*100)+'%</b></span>');
+    var 이레=r.week.filter(function(x){return x.solved+x.min>0;}).length;
+    return 표지(r, "일간 리포트, "+긴날(r.day), pills)+
+      '<div class="kpis">'+
+        '<div class="kpi"><span class="lb">학습 시간</span><b class="v n">'+시간칸(r.min)+'</b><span class="sub">'+차이(r.min, 전있음?r.prev.min:null, "분", "전날")+'</span></div>'+
+        '<div class="kpi"><span class="lb">이날 푼 문항</span><b class="v n">'+r.solved+'<small>문항</small></b><span class="sub">'+차이(r.solved, 전있음?r.prev.solved:null, "문항", "전날")+'</span></div>'+
+        '<div class="kpi"><span class="lb">정답률, 문제풀이 '+r.ans+'문항</span><b class="v n">'+(정!=null?Math.round(정)+'<small>%</small>':'—')+'</b><span class="sub">'+(정==null?"데이터 부족":차이(정, 전정, "%p", "전날"))+'</span></div>'+
+        '<div class="kpi"><span class="lb">최근 7일 중 한 날</span><b class="v n">'+이레+'<small>/7</small></b><span class="sub">이어서 한 날 '+r.streak+'일</span></div>'+
+      '</div>'+
+      '<div class="rc"><div class="rh"><h3>최근 7일</h3><small>'+짧은날(r.week[0].d)+' – '+짧은날(r.day)+', 아래는 학습 시간</small></div>'+막대(r.week, 6)+'</div>'+
+      단원칸(r)+범위칸(r)+모의칸(r);
+  }
+  function 주간그리기(r){
+    var 정=률(r.ok,r.ans), 전정=률(r.prev.ok,r.prev.ans), 전있음=(r.prev.solved+r.prev.min)>0;
+    var pills=[];
+    pills.push('<span class="pill">학습한 날 <b class="n">'+r.active+'/7</b></span>');
+    pills.push('<span class="pill">하루 평균 <b class="n">'+시간(r.min/7)+'</b></span>');
+    if(r.cov&&r.cov.play) pills.push('<span class="pill">시험 범위 진도 <b class="n">'+Math.round(r.cov.solved/r.cov.play*100)+'%</b></span>');
+    var 최다=r.days.reduce(function(b,x,i){ return x.solved>r.days[b].solved?i:b; },0);
+    return 표지(r, "주간 리포트, "+짧은날(r.from)+" – "+짧은날(r.to), pills)+
+      '<div class="kpis">'+
+        '<div class="kpi"><span class="lb">이번 주 학습한 날</span><b class="v n">'+r.active+'<small>/7</small></b><span class="sub">이어서 한 날 '+r.streak+'일</span></div>'+
+        '<div class="kpi"><span class="lb">학습 시간</span><b class="v n">'+시간칸(r.min)+'</b><span class="sub">'+차이(r.min, 전있음?r.prev.min:null, "분", "지난주")+'</span></div>'+
+        '<div class="kpi"><span class="lb">이번 주에 푼 문항</span><b class="v n">'+r.solved+'<small>문항</small></b><span class="sub">'+차이(r.solved, 전있음?r.prev.solved:null, "문항", "지난주")+'</span></div>'+
+        '<div class="kpi"><span class="lb">정답률, 문제풀이 '+r.ans+'문항</span><b class="v n">'+(정!=null?Math.round(정)+'<small>%</small>':'—')+'</b><span class="sub">'+(정==null?"데이터 부족":차이(정, 전정, "%p", "지난주"))+'</span></div>'+
+      '</div>'+
+      '<div class="rc"><div class="rh"><h3>요일별 푼 문항</h3><small>월 – 일, 아래는 학습 시간</small></div>'+막대(r.days, r.days[최다].solved?최다:-1)+'</div>'+
+      단원칸(r)+범위칸(r)+모의칸(r);
+  }
+
+  /* ── 발송 설정 + 학부모 폰 연결 (학생 기기에서만) ── */
+  function 설정칸(){
+    if(학부모폰) return '';
+    var c=P.설정(), 마감=[23,24,25,26], 발=["06:30","07:00","07:30","08:00","08:30","09:00"];
+    var 오늘=P.지금날(c.cut), 다음일=P.발송("day", 오늘, c), 월=P.월요일(오늘), 다음주=P.발송("week", 월, c);
+    return '<div class="rc cfgcard"><div class="rh"><h3>마감과 발송</h3><small>이 기기 기준</small></div>'+
+      '<div class="cfg"><label>하루 공부 마감<select id="cut">'+마감.map(function(h){ return '<option value="'+h+'"'+(h===c.cut?" selected":"")+'>'+esc(P.마감말(h))+'</option>'; }).join("")+'</select></label>'+
+      '<label>리포트 발송<select id="send">'+발.map(function(t){ return '<option'+(t===c.send?" selected":"")+'>'+t+'</option>'; }).join("")+'</select></label></div>'+
+      '<div class="sched">일간 리포트: 마감까지의 하루를 <b>다음 날 '+esc(c.send)+'</b> 발송<br>'+
+        '주간 리포트: 월요일부터 일요일까지를 <b>월요일 '+esc(c.send)+'</b> 발송<br>'+
+        '다음 일간 <b>'+esc(긴날(다음일.day))+' '+esc(다음일.at)+'</b>, 다음 주간 <b>'+esc(긴날(다음주.day))+' '+esc(다음주.at)+'</b></div>'+
+      '<div class="link" id="link"><p class="st">학부모 폰 연결 확인 중</p></div></div>';
+  }
+  function 연결칸(){
+    var el=document.getElementById("link"); if(!el) return;
+    if(!A.on){ el.innerHTML='<p class="st">학부모 폰 발송: <b>서버 연결 전</b>. 지금은 이 화면에서 열람과 PDF 저장만 됩니다.</p>'; return; }
+    A.서버확인().then(function(ok){
+      if(!ok){ el.innerHTML='<p class="st">학부모 폰 발송: <b>서버 점검 중</b>. 지금은 이 화면에서 열람과 PDF 저장만 됩니다.</p>'; return; }
+      A.사용자().then(function(u){
+        if(!u){ el.innerHTML='<p class="st">학부모 폰 발송은 학생 계정 로그인 뒤 연결됩니다.</p><a class="pbtn" href="login.html">로그인</a>'; return; }
+        A.학부모링크().then(function(url){
+          if(url){
+            el.innerHTML='<p class="st">학부모 폰 링크: 열고 <b>알림 받기</b>를 누르면 매일 '+esc(P.설정().send)+'에 리포트가 갑니다.</p>'+
+              '<input id="lk" readonly value="'+esc(url)+'"><div class="acts"><button class="pbtn pri" id="cp">링크 복사</button>'+
+              (navigator.share?'<button class="pbtn" id="sh">공유</button>':'')+'</div>';
+            document.getElementById("cp").onclick=function(){ var i=document.getElementById("lk"); i.select(); try{ navigator.clipboard.writeText(url); }catch(e){ document.execCommand("copy"); } this.textContent="복사됨"; };
+            var sh=document.getElementById("sh"); if(sh) sh.onclick=function(){ navigator.share({title:"학부모 리포트", url:url}).catch(function(){}); };
+          } else {
+            el.innerHTML='<p class="st">학부모 폰으로 일간·주간 리포트를 받는 링크</p><button class="pbtn pri" id="mk">학부모 링크 만들기</button>';
+            document.getElementById("mk").onclick=function(){ this.disabled=true; A.학부모링크(true).then(연결칸); };
+          }
+        });
+      });
     });
-    out.sort(function(a,b){ return a.pc-b.pc; });
-    return out;
   }
-  function 날짜말(k){ var d=new Date(String(k).slice(0,10)+"T12:00:00"); return isNaN(d)?"":(d.getMonth()+1)+"월 "+d.getDate()+"일"; }
+  /* 학부모 폰: 알림 받기 */
+  function 알림칸(){
+    if(!학부모폰) return '';
+    return '<div class="rc cfgcard"><div class="rh"><h3>알림</h3></div><p class="empty" id="ntx">일간 리포트는 매일 아침, 주간 리포트는 월요일 아침</p>'+
+      '<div class="acts" style="margin-top:12px"><button class="pbtn pri" id="nt">알림 받기</button></div></div>';
+  }
+
+  /* ── 자료 고르기 ── */
+  function 자료(kind, key){
+    if(!학부모폰) return Promise.resolve(kind==="day"? P.일간(key) : P.주간(key));
+    return A.학부모리포트(토큰, kind, key);
+  }
+  function 범위(kind){            // 넘길 수 있는 끝 — [가장 옛, 가장 최근]
+    if(학부모폰&&서버목록){ var l=서버목록[kind]||[]; return [l[0]||"", l[l.length-1]||""]; }
+    return ["0000-00-00", 끝키(kind)];
+  }
+  function 옮기기(kind, key, n){
+    if(학부모폰&&서버목록){ var l=서버목록[kind]||[], i=l.indexOf(key); return l[i+n]||null; }
+    return P.더하기(key, kind==="week"?7*n:n);
+  }
 
   function 그리기(){
-    var s=모으기();
-    var 꾸준=P.streakSay(s.연속, s.최근7);
-    var 점수=P.scoreSay(s.푼문항, s.정답률, s.회차평균);
-    var 막대=단원막대();
-
-    var 한줄, 부연;
-    if(s.푼문항===0){ 한줄="시작 전"; 부연=""; }
-    else if(s.dday!=null && s.dday<=10){
-      한줄=(s.시험?s.시험.name:"시험")+" D-"+s.dday+", 매일 모의고사";
-      부연="하루 1회, 25문항, 45분";
-    } else { 한줄=꾸준.t; 부연=꾸준.d; }
-
-    /* 시험까지의 길 — 30일 창. D-10부터 매일 모의고사 */
-    var 길="";
-    if(s.dday!=null && s.시험){
-      var 창=30, 남=Math.min(창,s.dday), 진행=Math.round((창-남)/창*100), 모의=Math.round((창-10)/창*100);
-      길='<div class="exam"><b>'+esc(s.시험.name)+'</b>'+(s.시험.date?(', '+esc(날짜말(s.시험.date))):'')+
-         (s.범위?', 범위 '+esc(s.범위):'')+'</div>'+
-         '<div class="track"><i style="width:'+진행+'%"></i><s style="left:'+진행+'%"></s>'+
-         (s.dday>10?'<s class="m" style="left:'+모의+'%"></s>':'')+'<s class="e" style="left:100%"></s></div>'+
-         '<div class="marks"><span><b>오늘</b></span>'+(s.dday>10?'<span><b>D-10</b>부터 매일 모의고사</span>':'')+'<span><b>시험일</b></span></div>';
-    }
-
-    var 이레=s.주간.map(function(d,i){
-      var 오늘=(i===s.주간.length-1);
-      return '<div class="day'+(d.solved>0?" on":"")+(오늘?" today":"")+'">'+
-             '<div class="dot">'+(d.solved>0?"✓":"")+'</div>'+
-             '<div class="wd">'+esc(d.label)+'</div>'+
-             '<div class="n">'+(d.solved>0?(d.solved+"문항"):"—")+'</div></div>';
-    }).join("");
-
-    var 성적;
-    if(s.회차.length){
-      var 최근=s.회차.slice(-8);
-      성적='<p class="say"><b>'+esc(점수.t)+'</b> — '+점수.d.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')+'</p>'+
-        '<div class="trend">'+최근.map(function(r,i,a){
-          var h=Math.max(4,Math.round(r.pct*0.85));
-          return '<div class="b'+(i===a.length-1?" now":"")+'" style="height:'+h+'%"><em>'+r.pct+'</em><span>'+(r.day||"").slice(5)+'</span></div>';
-        }).join("")+'</div><p class="note" style="margin-top:28px">최근 '+최근.length+'회차 점수(100점 만점)</p>';
-    } else {
-      var 차=(s.주간정답률!=null&&s.정답률!=null)?Math.round(s.주간정답률-s.정답률):null;
-      성적='<div class="two">'+
-        '<div class="k"><b>'+(s.주간정답률!=null?Math.round(s.주간정답률)+'<small>%</small>':'—')+
-          (차!=null&&차!==0?'<em class="'+(차>0?"up":"dn")+'">'+(차>0?"▲":"▼")+Math.abs(차)+'</em>':'')+'</b><span>이번 주 정답률, 문제풀이 '+s.주간풀이+'문항</span></div>'+
-        '<div class="k"><b>'+(s.정답률!=null?Math.round(s.정답률)+'<small>%</small>':'—')+'</b><span>전체 정답률, 문제풀이 '+s.푼문항+'문항</span></div>'+
-        '</div><p class="note">'+점수.d.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')+'</p>';
-    }
-
-    root.innerHTML=
-      '<div class="hero">'+
-        '<div class="who"><div class="nm">'+esc(s.이름||"학생")+'<small>'+esc(s.학년)+'</small></div>'+
-        (s.dday!=null&&s.시험?'<div class="dd">D-'+s.dday+'<small>'+esc(s.시험.name)+'</small></div>':'')+'</div>'+
-        길+
-        '<div class="oneline"><h2>'+esc(한줄)+'</h2><p>'+부연+'</p></div>'+
-      '</div>'+
-
-      '<div class="nums">'+
-        '<div class="num'+(s.연속>=3?" good":"")+'"><b>'+s.연속+'<small>일</small></b><span>이어서 한 날</span></div>'+
-        '<div class="num"><b>'+s.최근7+'<small>/7</small></b><span>최근 7일 중 한 날</span></div>'+
-        '<div class="num"><b>'+s.주간문항+'</b><span>이번 주에 푼 문항</span></div>'+
-        (s.정답률!=null
-          ? '<div class="num'+(s.정답률<55?" warn":"")+'"><b>'+Math.round(s.정답률)+'<small>%</small></b><span>전체 정답률</span></div>'
-          : '<div class="num"><b>—</b><span>데이터 부족</span></div>')+
-      '</div>'+
-
-      '<div class="pcard"><h3>최근 7일</h3><div class="days">'+이레+'</div>'+
-        '</div>'+
-
-      (막대.length
-        ? '<div class="pcard"><h3>단원별 정답률</h3><div class="bars">'+막대.map(function(x,i){
-            var cls=x.pc<55?"low":(x.pc<75?"mid":"");
-            var tag=cls==="low"?'<span class="tag low">보완 필요</span>':(cls==="mid"&&i<3?'<span class="tag mid">다시 볼 곳</span>':'');
-            return '<div class="bar"><div class="top"><span class="nm">'+esc(x.name)+tag+'</span>'+
-              '<span class="pc">'+x.pc+'%<small>'+x.n+'문항</small></span></div>'+
-              '<div class="tr"><i class="'+cls+'" style="width:'+x.pc+'%"></i></div></div>';
-          }).join("")+'</div>'+
-          '</div>'
-        : '<div class="pcard"><h3>단원별</h3><p class="say">데이터 부족</p></div>')+
-
-      '<div class="pcard"><h3>성적</h3>'+성적+'</div>'+
-
-
-      '<div class="act"><button class="btn" onclick="window.print()">인쇄하기</button>'+
-        '<a class="btn ghost" href="index.html">학생 화면으로</a></div>'+
-
-      '<div class="foot">시험 범위 '+
-        (s.범위?('<b>'+esc(s.범위)+'</b>'):'미설정')+'</div>';
-
-    document.getElementById("lede").textContent=
-      s.학년+", "+(s.시험? (s.시험.name+" "+s.ddayLabel) : "시험일 미설정");
-    document.getElementById("headact").innerHTML='<a class="btn ghost" href="settings.html">범위·시험일</a>';
+    if(!종류) 종류=기본종류();
+    var 끝=범위(종류);
+    if(!기준||기준>끝[1]) 기준=끝[1];
+    if(종류==="week"&&!학부모폰) 기준=P.월요일(기준);
+    document.querySelectorAll("#seg button").forEach(function(b){ b.classList.toggle("on", b.dataset.k===종류); });
+    if(!기준){ root.innerHTML='<div class="rc"><p class="empty">발송된 리포트 없음</p></div>'; return; }
+    자료(종류, 기준).then(function(r){
+      if(!r){ root.innerHTML='<div class="rc"><p class="empty">리포트 없음</p></div>'; return; }
+      var cfg=P.설정();
+      document.getElementById("pt").textContent= r.kind==="week"? 짧은날(r.from)+" – "+짧은날(r.to) : 긴날(r.day);
+      document.getElementById("ps").textContent="마감 "+P.마감말(r.cut)+", "+긴날(r.send.day)+" "+r.send.at+" 발송";
+      document.getElementById("prev").disabled=!옮기기(종류, 기준, -1)||(학부모폰&&기준<=끝[0]);
+      document.getElementById("next").disabled=기준>=끝[1];
+      root.innerHTML=(r.kind==="week"?주간그리기(r):일간그리기(r))+설정칸()+알림칸()+
+        '<div class="foot"><p>'+(r.kind==="week"?"주간":"일간")+' 리포트, '+esc(r.student&&r.student.name||"학생")+'</p>'+
+          '<div class="acts"><button class="pbtn pri" onclick="window.print()">PDF 저장·인쇄</button>'+
+          (학부모폰?'':'<a class="pbtn" href="index.html">학생 화면</a>')+'</div></div>';
+      document.title="학부모 리포트, "+(r.student&&r.student.name||"학생")+", "+document.getElementById("pt").textContent;
+      var cut=document.getElementById("cut"), send=document.getElementById("send");
+      if(cut) cut.onchange=function(){ P.설정저장({cut:+cut.value}); if(A.학부모설정) A.학부모설정(P.설정()); 기준=""; 그리기(); };
+      if(send) send.onchange=function(){ P.설정저장({send:send.value}); if(A.학부모설정) A.학부모설정(P.설정()); 그리기(); };
+      if(!학부모폰) 연결칸();
+      var nt=document.getElementById("nt");
+      if(nt) nt.onclick=function(){ nt.disabled=true; A.학부모알림(토큰).then(function(ok){ document.getElementById("ntx").textContent= ok?"알림 켜짐":"이 브라우저에서 알림을 켤 수 없음 (홈 화면에 추가한 뒤 다시)"; nt.disabled=!!ok; }); };
+      try{ var u=new URL(location.href); u.searchParams.set("r",종류); u.searchParams.set("d",기준); history.replaceState(null,"",u); }catch(e){}
+    });
   }
-  그리기();
+
+  document.querySelectorAll("#seg button").forEach(function(b){
+    b.onclick=function(){ 종류=b.dataset.k; 기준=""; 그리기(); };
+  });
+  document.getElementById("prev").onclick=function(){ var k=옮기기(종류, 기준, -1); if(k){ 기준=k; 그리기(); } };
+  document.getElementById("next").onclick=function(){ var k=옮기기(종류, 기준, 1); if(k&&k<=범위(종류)[1]){ 기준=k; 그리기(); } };
+
+  if(학부모폰){
+    document.getElementById("brand").removeAttribute("href");
+    if(!A.on||!A.학부모목록){ root.innerHTML='<div class="rc"><p class="empty">서버 점검 중</p></div>'; return; }
+    A.학부모목록(토큰).then(function(l){ 서버목록=l||{day:[],week:[]}; if(!종류) 종류=(서버목록.week.length&&날(new Date().toISOString().slice(0,10)).getDay()===1)?"week":"day"; 그리기(); });
+  } else 그리기();
 })();
 </script>
 </body>

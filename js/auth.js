@@ -78,7 +78,7 @@
       마지막올림 = now;
       return sb.from("records").upsert({
         user_id: u.id, data: 꾸러미(), saved_at: new Date().toISOString()
-      }, { onConflict: "user_id" }).then(function () { return true; });
+      }, { onConflict: "user_id" }).then(function () { 리포트올리기(u); return true; });
     });
   }
   function 내려받기() {
@@ -96,6 +96,82 @@
           return 올리기();
         });
     });
+  }
+
+  /* ── 학부모 리포트 (2026-10-04) ──────────────────────────────
+     일간·주간 리포트 자료(js/parent.js)를 parent_reports 에 올린다. 마감 뒤 사건은 다음 날로 가므로
+     마지막으로 올린 값이 그날의 최종값이다. 발송은 Edge Function parent-report.
+     parent.js 가 안 실린 화면에서는 한 번 불러온다. */
+  var 엔진약속 = null;
+  function 엔진() {
+    if (window.PARENT && window.PARENT.스냅샷) return Promise.resolve(window.PARENT);
+    if (!엔진약속) 엔진약속 = new Promise(function (res) {
+      var s = document.createElement("script");
+      s.src = "js/parent.js"; s.onload = function () { res(window.PARENT || null); }; s.onerror = function () { res(null); };
+      document.head.appendChild(s);
+    });
+    return 엔진약속;
+  }
+  function 리포트올리기(u) {
+    if (!window.TERRA) return Promise.resolve(false);
+    return 엔진().then(function (P) {
+      if (!P || !P.스냅샷) return false;
+      var rows = P.스냅샷().map(function (r) {
+        r.line = P.한줄(r);
+        return { user_id: u.id, kind: r.kind, key: r.kind === "week" ? r.from : r.day, data: r, saved_at: new Date().toISOString() };
+      });
+      return sb.from("parent_reports").upsert(rows, { onConflict: "user_id,kind,key" }).then(function () { return true; });
+    }).catch(function () { return false; });
+  }
+  function 토큰새로() {
+    var a = new Uint8Array(18); crypto.getRandomValues(a);
+    return btoa(String.fromCharCode.apply(null, a)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  function 링크주소(t) { return location.origin + location.pathname.replace(/[^/]*$/, "") + "parent.html?k=" + t; }
+  /* 학생 기기: 학부모 링크를 읽고(만들기=true 면 없을 때 만든다) 주소를 돌려준다 */
+  function 학부모링크(만들기) {
+    if (!ON) return Promise.resolve(null);
+    return 사용자().then(function (u) {
+      if (!u) return null;
+      return sb.from("parent_links").select("token").eq("user_id", u.id).maybeSingle().then(function (r) {
+        if (r.data && r.data.token) return 링크주소(r.data.token);
+        if (!만들기) return null;
+        var c = window.PARENT ? window.PARENT.설정() : { cut: 24, send: "07:30" }, t = 토큰새로();
+        return sb.from("parent_links").insert({ token: t, user_id: u.id, cut: c.cut,
+          send_h: +c.send.split(":")[0], send_m: +c.send.split(":")[1] })
+          .then(function (w) { if (w.error) return null; 리포트올리기(u); return 링크주소(t); });
+      });
+    }).catch(function () { return null; });
+  }
+  function 학부모설정(c) {
+    if (!ON) return Promise.resolve(false);
+    return 사용자().then(function (u) {
+      if (!u) return false;
+      return sb.from("parent_links").update({ cut: c.cut, send_h: +c.send.split(":")[0], send_m: +c.send.split(":")[1] })
+        .eq("user_id", u.id).then(function () { 마지막올림 = 0; return 올리기(); });
+    }).catch(function () { return false; });
+  }
+  /* 학부모 폰: 토큰으로 읽기·알림 받기 (로그인 없음 — security definer 함수만 부른다) */
+  function 학부모목록(t) {
+    if (!ON) return Promise.resolve(null);
+    return 서버확인().then(function (ok) {
+      if (!ok) return null;
+      return sb.rpc("parent_report_list", { p_token: t }).then(function (r) { return r.data || null; });
+    }).catch(function () { return null; });
+  }
+  function 학부모리포트(t, kind, key) {
+    if (!ON) return Promise.resolve(null);
+    return sb.rpc("parent_report_get", { p_token: t, p_kind: kind, p_key: key })
+      .then(function (r) { return r.data || null; }).catch(function () { return null; });
+  }
+  function 학부모알림(t) {
+    if (!ON || !C.vapid || !("serviceWorker" in navigator) || !("PushManager" in window)) return Promise.resolve(false);
+    return navigator.serviceWorker.register("sw.js").then(function () { return navigator.serviceWorker.ready; })
+      .then(function (reg) { return reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64(C.vapid) }); })
+      .then(function (sub) {
+        var j = sub.toJSON();
+        return sb.rpc("parent_sub_add", { p_token: t, p_endpoint: j.endpoint, p_keys: j.keys }).then(function (r) { return !!r.data; });
+      }).catch(function () { return false; });
   }
 
   /* ── 푸시 구독 ─────────────────────────────────────────── */
@@ -133,5 +209,6 @@
   });
 
   window.AUTH = { on: ON, 서버확인: 서버확인, 사용자: 사용자, 로그인: 로그인, 로그아웃: 로그아웃,
-                  올리기: 올리기, 내려받기: 내려받기, 푸시켜기: 푸시켜기 };
+                  올리기: 올리기, 내려받기: 내려받기, 푸시켜기: 푸시켜기,
+                  학부모링크: 학부모링크, 학부모설정: 학부모설정, 학부모목록: 학부모목록, 학부모리포트: 학부모리포트, 학부모알림: 학부모알림 };
 })();
