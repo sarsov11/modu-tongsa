@@ -319,7 +319,7 @@
     if(학부모폰) return '';
     var c=P.설정(), 마감=[23,24,25,26], 발=["06:30","07:00","07:30","08:00","08:30","09:00"];
     var 오늘=P.지금날(c.cut), 다음일=P.발송("day", 오늘, c), 월=P.월요일(오늘), 다음주=P.발송("week", 월, c);
-    return '<div class="rc cfgcard"><div class="rh"><h3>마감과 발송</h3><small>이 기기 기준</small></div>'+
+    return '<div class="rc cfgcard" id="cfg"><div class="rh"><h3>마감과 발송</h3><small>이 기기 기준</small></div>'+
       '<div class="cfg"><label>하루 공부 마감<select id="cut">'+마감.map(function(h){ return '<option value="'+h+'"'+(h===c.cut?" selected":"")+'>'+esc(P.마감말(h))+'</option>'; }).join("")+'</select></label>'+
       '<label>리포트 발송<select id="send">'+발.map(function(t){ return '<option'+(t===c.send?" selected":"")+'>'+t+'</option>'; }).join("")+'</select></label></div>'+
       '<div class="sched">일간 리포트: 마감까지의 하루를 <b>다음 날 '+esc(c.send)+'</b> 발송<br>'+
@@ -387,12 +387,13 @@
       root.innerHTML=(r.kind==="week"?주간그리기(r):일간그리기(r))+설정칸()+알림칸()+
         '<div class="foot"><p>'+(r.kind==="week"?"주간":"일간")+' 리포트, '+esc(r.student&&r.student.name||"학생")+'</p>'+
           '<div class="acts"><button class="pbtn pri" onclick="window.print()">PDF 저장·인쇄</button>'+
-          (학부모폰?'':'<a class="pbtn" href="index.html">학생 화면</a>')+'</div></div>';
+          (학부모폰?'':'<a class="pbtn" href="settings.html#parentsec">설정으로</a>')+'</div></div>';
       document.title="학부모 리포트, "+(r.student&&r.student.name||"학생")+", "+document.getElementById("pt").textContent;
       var cut=document.getElementById("cut"), send=document.getElementById("send");
       if(cut) cut.onchange=function(){ P.설정저장({cut:+cut.value}); if(A.학부모설정) A.학부모설정(P.설정()); 기준=""; 그리기(); };
       if(send) send.onchange=function(){ P.설정저장({send:send.value}); if(A.학부모설정) A.학부모설정(P.설정()); 그리기(); };
       if(!학부모폰) 연결칸();
+      if(location.hash==="#cfg"){ var cf=document.getElementById("cfg"); if(cf) setTimeout(function(){ cf.scrollIntoView({block:"start"}); },50); }
       var nt=document.getElementById("nt");
       if(nt) nt.onclick=function(){ nt.disabled=true; A.학부모알림(토큰).then(function(ok){ document.getElementById("ntx").textContent= ok?"알림 켜짐":"이 브라우저에서 알림을 켤 수 없음 (홈 화면에 추가한 뒤 다시)"; nt.disabled=!!ok; }); };
       try{ var u=new URL(location.href); u.searchParams.set("r",종류); u.searchParams.set("d",기준); history.replaceState(null,"",u); }catch(e){}
