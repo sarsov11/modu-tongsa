@@ -139,6 +139,30 @@
   .link .st b{color:var(--tx2)}
   .link input{width:100%;font-size:14px;font-weight:600;padding:10px 12px;border:1px solid var(--ln2);border-radius:12px;background:var(--sf);color:var(--tx);margin-bottom:8px}
 
+  .tot{font-size:30px;font-weight:900;color:var(--tx);margin:-4px 0 14px}
+  .tot small{font-size:15px;font-weight:800;color:var(--tx2);margin:0 2px}
+  .stack{display:flex;height:14px;border-radius:99px;overflow:hidden;background:var(--sf);gap:2px}
+  .stack i{display:block;height:100%}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:12px;font-size:14.5px;font-weight:700;color:var(--tx2)}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+  .legend b{color:var(--tx);font-weight:800;margin-left:2px}
+  svg.line{display:block;width:100%;height:auto;overflow:visible}
+  svg.line .ax{font-size:13.5px;fill:var(--tx3);font-weight:700}
+  svg.line .pv{font-size:14px;fill:var(--tx);font-weight:900}
+  .note{font-size:14px;color:var(--tx3);font-weight:600;line-height:1.65;margin:10px 0 0}
+  .pts{display:flex;flex-direction:column}
+  .pt{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--ln)}
+  .pt:first-child{border-top:0;padding-top:0}
+  .pt .ic{flex:none;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:13.5px;font-weight:900;background:var(--sf);color:var(--tx3)}
+  .pt.up .ic{background:#E3F4EC;color:var(--ok)} .pt.dn .ic{background:var(--bads);color:var(--bad)}
+  .pt b,.pl b{display:block;font-size:13.5px;font-weight:800;color:var(--tx3);margin-bottom:2px}
+  .pt span,.pl span{display:block;font-size:15.5px;font-weight:700;color:var(--tx);line-height:1.5}
+  .plan{border-color:var(--tx);border-width:1.5px}
+  .pl{margin:0;padding:0;list-style:none;counter-reset:p}
+  .pl li{display:flex;gap:12px;padding:11px 0;border-top:1px solid var(--ln);counter-increment:p}
+  .pl li:first-child{border-top:0;padding-top:0}
+  .pl li:before{content:counter(p);flex:none;width:26px;height:26px;border-radius:50%;background:var(--tx);color:var(--cd);display:grid;place-items:center;font-size:13.5px;font-weight:900}
+  .row .pc small{font-size:13.5px;font-weight:800}
   .foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:18px}
   .foot p{margin:0;font-size:14px;color:var(--tx3);font-weight:600}
   .acts{display:flex;gap:8px;flex-wrap:wrap}
@@ -215,61 +239,42 @@
     return P.더하기(P.월요일(P.지금날(cfg.cut)),-7);
   }
 
-  /* ── 그리기 — r 은 parent.js 가 만든 자료(이 기기) 또는 서버에서 받은 같은 자료 ── */
-  function 막대(cols, hiIdx){
-    var mx=Math.max.apply(null, cols.map(function(c){ return c.solved; }).concat([1]));
-    return '<div class="chart">'+cols.map(function(c,i){
-      var h=c.solved?Math.max(6,Math.round(c.solved/mx*100)):0;
-      return '<div class="col'+(c.solved?" on":" zero")+(i===hiIdx?" hi":"")+'"><div class="bx" style="height:'+(h||2)+'%"><em class="n">'+c.solved+'</em></div></div>';
-    }).join("")+'</div><div class="xax">'+cols.map(function(c,i){
-      return '<div class="'+(i===hiIdx?"hi":"")+'"><b>'+c.wd+'</b>'+(c.min?c.min+"분":"—")+'</div>';
+  /* ── 그리기 — r 은 parent.js 가 만든 자료(이 기기) 또는 서버에서 받은 같은 자료 ──
+     ★ 학부모가 궁금한 것만(2026-10-05 대표님): 학습 시간·과목별, 성취도 추이, 눈에 띄는 포인트,
+       주간은 예상 등급 추이·시험별 추이·원인·다음 주 방향. 문항 수는 앞에 내지 않는다. */
+  var 과목색={"윤리":"#E5322D","지리":"#0F8A5F","일반사회":"#2F5BEA","기타":"#9AA4B2"};
+  function 과목칸(fam, 합, 제목, 비교){
+    if(!합) return '<div class="rc"><div class="rh"><h3>'+제목+'</h3></div><p class="empty">학습 기록 없음</p></div>';
+    return '<div class="rc"><div class="rh"><h3>'+제목+'</h3><small>'+비교+'</small></div>'+
+      '<div class="tot n">'+시간칸(합)+'</div>'+
+      '<div class="stack">'+fam.map(function(f){ return '<i style="width:'+(f.min/합*100).toFixed(1)+'%;background:'+(과목색[f.name]||"#9AA4B2")+'"></i>'; }).join("")+'</div>'+
+      '<div class="legend">'+fam.map(function(f){ return '<span><i style="background:'+(과목색[f.name]||"#9AA4B2")+'"></i>'+esc(f.name)+' <b class="n">'+시간(f.min)+'</b></span>'; }).join("")+'</div></div>';
+  }
+  /* 꺾은선 — pts=[{x 라벨, v 값|null}]. inv=true 면 작은 값이 위(등급) */
+  function 선(pts, o){
+    o=o||{}; var W2=Math.max(280,Math.min(700,(root.clientWidth||640)-42)),H=o.h||170,L=46,R=16,T2=22,B=26;   /* 화면 폭 그대로 — 줄여 그리면 폰에서 글씨가 7px 가 된다 */
+    var vs=pts.map(function(p){return p.v;}).filter(function(v){return v!=null;});
+    var lo=o.lo!=null?o.lo:Math.min.apply(null,vs.concat([0])), hi=o.hi!=null?o.hi:Math.max.apply(null,vs.concat([lo+10]));
+    if(hi===lo) hi=lo+1;
+    function X(i){ return L+(pts.length<2?(W2-L-R)/2:i*(W2-L-R)/(pts.length-1)); }
+    function Y(v){ var t=(v-lo)/(hi-lo); if(o.inv) t=1-t; return T2+(1-t)*(H-T2-B); }
+    var g='', ticks=o.ticks||[lo,Math.round((lo+hi)/2),hi];
+    ticks.forEach(function(t){ g+='<line x1="'+L+'" x2="'+(W2-R)+'" y1="'+Y(t)+'" y2="'+Y(t)+'" stroke="var(--ln)" stroke-width="1"/>'+
+      '<text x="'+(L-8)+'" y="'+(Y(t)+4)+'" text-anchor="end" class="ax">'+(o.tl?o.tl(t):t)+'</text>'; });
+    var path='', 점='', 앞=null;
+    pts.forEach(function(p,i){ if(p.v==null) return; path+=(path?' L':'M')+X(i).toFixed(1)+' '+Y(p.v).toFixed(1);
+      var last=i===pts.length-1, 바뀜=(앞==null||p.v!==앞); 앞=p.v;
+      점+='<circle cx="'+X(i)+'" cy="'+Y(p.v)+'" r="'+(last?5.5:3.5)+'" fill="'+(last?"var(--ac)":"var(--bar)")+'" stroke="var(--cd)" stroke-width="2"/>'+
+        ((last||(o.allv&&(!o.chg||바뀜)))?'<text x="'+X(i)+'" y="'+(Y(p.v)-11)+'" text-anchor="middle" class="pv">'+(o.vl?o.vl(p.v):p.v)+'</text>':''); });
+    var xs=''; pts.forEach(function(p,i){ if(p.x) xs+='<text x="'+X(i)+'" y="'+(H-6)+'" text-anchor="middle" class="ax">'+esc(p.x)+'</text>'; });
+    return '<svg class="line" viewBox="0 0 '+W2+' '+H+'">'+g+
+      (path?'<path d="'+path+'" fill="none" stroke="var(--bar)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>':'')+점+xs+'</svg>';
+  }
+  function 표시(list){
+    return '<div class="pts">'+list.map(function(p){
+      return '<div class="pt '+p.tone+'"><span class="ic">'+(p.tone==="up"?"▲":p.tone==="dn"?"▼":"•")+'</span><div>'+
+        (p.tag?'<b>'+esc(p.tag)+'</b>':'')+'<span>'+esc(p.text)+'</span></div></div>';
     }).join("")+'</div>';
-  }
-  function 고리(pct){
-    var C=2*Math.PI*42, on=C*Math.min(1,Math.max(0,pct/100));
-    return '<div class="ring"><svg width="96" height="96" viewBox="0 0 96 96">'+
-      '<circle cx="48" cy="48" r="42" fill="none" stroke="var(--sf)" stroke-width="9"/>'+
-      '<circle cx="48" cy="48" r="42" fill="none" stroke="var(--ac)" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+on.toFixed(1)+' '+(C-on).toFixed(1)+'"/>'+
-      '</svg><b class="n">'+Math.round(pct)+'<small>%</small></b></div>';
-  }
-  function 범위칸(r){
-    var c=r.cov;
-    if(!c) return '<div class="rc"><div class="rh"><h3>시험 범위 진도</h3></div><p class="empty">시험 범위 <b>미설정</b></p></div>';
-    var 진도=c.play?c.solved/c.play*100:0, 정답=c.solved?Math.round(c.correct/c.solved*100):null;
-    var 늘=(r.kind==="week"&&r.covPrev!=null)? c.solved-r.covPrev : null;
-    return '<div class="rc"><div class="rh"><h3>시험 범위 진도</h3><small>'+(r.kind==="week"?짧은날(r.to):짧은날(r.day))+' 마감 누적</small></div>'+
-      '<div class="cov">'+고리(진도)+'<p>범위 문항 <b class="n">'+c.play+'</b>개 중 <b class="n">'+c.solved+'</b>개 풀이'+
-        (늘!=null?'<br>이번 주 <b class="n">+'+늘+'</b>문항':'')+
-        (정답!=null?'<br>범위 정답률 <b class="n">'+정답+'%</b>':'')+'</p></div>'+
-      '<div class="cols"><span>단원</span><span>진도</span><span>정답률</span></div>'+
-      c.groups.map(function(g){
-        return '<div class="grp"><h4>'+esc(g.name)+'</h4>'+g.rows.map(function(x){
-          var 진=x.play?Math.round(x.solved/x.play*100):0;
-          var pc=x.solved?Math.round(x.correct/x.solved*100):null, 적음=x.solved<5;
-          var tag=!x.solved?'<span class="rt none">아직 안 풂</span>':(!적음&&pc<55?'<span class="rt low">보완 필요</span>':'');
-          return '<div class="row"><div class="nm">'+esc(x.name)+(x.deep?'<span class="rt none">심화</span>':'')+tag+'<small class="n">'+x.solved+' / '+x.play+'문항</small></div>'+
-            '<div class="tr"><i style="width:'+진+'%"></i></div>'+
-            '<div class="pc n'+(pc==null||적음?" na":(pc<55?" low":""))+'">'+(pc==null?"—":(적음?"표본 부족":pc+"%"))+'</div></div>';
-        }).join("")+'</div>';
-      }).join("")+
-      (c.outside&&c.outside.n?'<div class="outside">범위 밖에서 푼 문항 <b class="n">'+c.outside.n+'</b>개, '+esc(c.outside.names.join(", "))+'</div>':'')+
-      '</div>';
-  }
-  function 단원칸(r){
-    var 제목=r.kind==="week"?"이번 주 푼 단원":"이날 푼 단원";
-    if(!r.roots.length) return '<div class="rc"><div class="rh"><h3>'+제목+'</h3><small>문제풀이</small></div><p class="empty">문제풀이 기록 없음</p></div>';
-    return '<div class="rc"><div class="rh"><h3>'+제목+'</h3><small>문제풀이</small></div><div class="lst">'+r.roots.map(function(x){
-      var pc=Math.round(x.ok/x.ans*100);
-      return '<div class="li"><span class="nm">'+esc(x.name)+'</span><span class="ct n">'+x.ok+' / '+x.ans+'문항</span><span class="pc n'+(x.ans>=5&&pc<55?" low":"")+'">'+(x.ans<5?'<span style="font-size:14px;color:var(--tx3)">표본 부족</span>':pc+"%")+'</span></div>';
-    }).join("")+'</div></div>';
-  }
-  function 모의칸(r){
-    var m=r.mock;
-    if(!m||!m.all) return '<div class="rc"><div class="rh"><h3>모의고사</h3><small>25문항, 100점 만점</small></div><p class="empty">응시 기록 없음'+
-      (r.exam&&r.exam.dday!=null&&r.exam.dday>10?', <b>D-10</b>부터 매일 1회':'')+'</p></div>';
-    return '<div class="rc"><div class="rh"><h3>모의고사</h3><small>25문항, 100점 만점</small></div>'+
-      '<div class="stat3"><div><b class="n">'+(m.in.length?m.in.map(function(x){return x.pct;}).join(", ")+"점":"—")+'</b><span>'+(r.kind==="week"?"이번 주":"이날")+' 응시 '+m.in.length+'회</span></div>'+
-      '<div><b class="n">'+m.avg+'점</b><span>누적 평균('+m.all+'회)</span></div><div><b class="n">'+m.best+'점</b><span>누적 최고</span></div></div></div>';
   }
   function 표지(r, eyebrow, pills){
     var e=r.exam;
@@ -278,40 +283,72 @@
         (e&&e.dday!=null?'<div class="dd"><b class="n">'+(e.dday===0?"D-DAY":(e.dday>0?"D-"+e.dday:"D+"+(-e.dday)))+'</b><span>'+esc(e.name)+(e.date?', '+esc(짧은날(e.date)):'')+'</span></div>':'')+
       '</div><div class="lead">'+pills.join("")+'</div></div>';
   }
+  function 짧(k){ var d=날(k); return (d.getMonth()+1)+"/"+d.getDate(); }
+  function 막대(cols, hiIdx){
+    var mx=Math.max.apply(null, cols.map(function(c){ return c.v; }).concat([1]));
+    return '<div class="chart">'+cols.map(function(c,i){
+      var h=c.v?Math.max(6,Math.round(c.v/mx*100)):0;
+      return '<div class="col'+(c.v?" on":" zero")+(i===hiIdx?" hi":"")+'"><div class="bx" style="height:'+(h||2)+'%"><em class="n">'+c.lab+'</em></div></div>';
+    }).join("")+'</div><div class="xax">'+cols.map(function(c,i){
+      return '<div class="'+(i===hiIdx?"hi":"")+'"><b>'+c.wd+'</b></div>';
+    }).join("")+'</div>';
+  }
 
   function 일간그리기(r){
-    var 정=률(r.ok,r.ans), 전정=률(r.prev.ok,r.prev.ans), 전있음=(r.prev.solved+r.prev.min)>0;
-    var pills=[];
-    pills.push('<span class="pill">학습 시간대 <b class="n">'+(r.first?r.first+"–"+r.last:"기록 없음")+'</b></span>');
+    var pills=[], 차=r.ach.now-r.ach.prev;
+    pills.push('<span class="pill">학습 시간 <b class="n">'+시간(r.min)+'</b></span>');
+    pills.push('<span class="pill">성취도 <b class="n">'+r.ach.now+'</b>'+(차?' <span class="dl '+(차>0?"up":"dn")+'">'+(차>0?"▲":"▼")+Math.abs(차)+'</span>':'')+'</span>');
+    if(r.first) pills.push('<span class="pill">학습 시간대 <b class="n">'+r.first+'–'+r.last+'</b></span>');
     pills.push('<span class="pill">이어서 한 날 <b class="n">'+r.streak+'일</b></span>');
-    if(r.cov&&r.cov.play) pills.push('<span class="pill">시험 범위 진도 <b class="n">'+Math.round(r.cov.solved/r.cov.play*100)+'%</b></span>');
-    var 이레=r.week.filter(function(x){return x.solved+x.min>0;}).length;
+    var 비교=(r.min||r.prevMin)? (r.min===r.prevMin?"전날과 같음":"전날 대비 "+(r.min>r.prevMin?"+":"−")+시간(Math.abs(r.min-r.prevMin)))+(r.avgMin?", 최근 7일 평균 "+시간(r.avgMin):"") : "";
+    var 최고=Math.max.apply(null,r.ach.series.map(function(p){return p.v;}));
     return 표지(r, "일간 리포트, "+긴날(r.day), pills)+
-      '<div class="kpis">'+
-        '<div class="kpi"><span class="lb">학습 시간</span><b class="v n">'+시간칸(r.min)+'</b><span class="sub">'+차이(r.min, 전있음?r.prev.min:null, "분", "전날")+'</span></div>'+
-        '<div class="kpi"><span class="lb">이날 푼 문항</span><b class="v n">'+r.solved+'<small>문항</small></b><span class="sub">'+차이(r.solved, 전있음?r.prev.solved:null, "문항", "전날")+'</span></div>'+
-        '<div class="kpi"><span class="lb">정답률, 문제풀이 '+r.ans+'문항</span><b class="v n">'+(정!=null?Math.round(정)+'<small>%</small>':'—')+'</b><span class="sub">'+(정==null?"데이터 부족":차이(정, 전정, "%p", "전날"))+'</span></div>'+
-        '<div class="kpi"><span class="lb">최근 7일 중 한 날</span><b class="v n">'+이레+'<small>/7</small></b><span class="sub">이어서 한 날 '+r.streak+'일</span></div>'+
-      '</div>'+
-      '<div class="rc"><div class="rh"><h3>최근 7일</h3><small>'+짧은날(r.week[0].d)+' – '+짧은날(r.day)+', 아래는 학습 시간</small></div>'+막대(r.week, 6)+'</div>'+
-      단원칸(r)+범위칸(r)+모의칸(r);
+      '<div class="rc"><div class="rh"><h3>눈에 띄는 포인트</h3></div>'+표시(r.points)+'</div>'+
+      과목칸(r.fam, r.min, "학습 시간", 비교)+
+      '<div class="rc"><div class="rh"><h3>성취도 추이</h3><small>최근 14일, 시험 범위 이해도 평균</small></div>'+
+        선(r.ach.series.map(function(p,i,a){ return {x:((a.length-1-i)%3===0)?짧(p.d):"", v:p.v}; }),{lo:0,hi:Math.max(20,Math.ceil(최고/10)*10)})+
+        '<p class="note">'+짧(r.day)+' 마감 '+r.ach.now+', 전날보다 '+(차>=0?"+":"")+차+(r.pct!=null?'. 이날 정답률 '+r.pct+'%':'')+'</p></div>';
   }
   function 주간그리기(r){
-    var 정=률(r.ok,r.ans), 전정=률(r.prev.ok,r.prev.ans), 전있음=(r.prev.solved+r.prev.min)>0;
-    var pills=[];
+    var g=r.grade, now=g.now, pills=[];
+    pills.push('<span class="pill">학습 시간 <b class="n">'+시간(r.min)+'</b></span>');
     pills.push('<span class="pill">학습한 날 <b class="n">'+r.active+'/7</b></span>');
-    pills.push('<span class="pill">하루 평균 <b class="n">'+시간(r.min/7)+'</b></span>');
-    if(r.cov&&r.cov.play) pills.push('<span class="pill">시험 범위 진도 <b class="n">'+Math.round(r.cov.solved/r.cov.play*100)+'%</b></span>');
-    var 최다=r.days.reduce(function(b,x,i){ return x.solved>r.days[b].solved?i:b; },0);
+    pills.push('<span class="pill">성취도 <b class="n">'+r.ach.from+' → '+r.ach.to+'</b></span>');
+    if(now&&now.band) pills.push('<span class="pill">'+esc(g.label)+' <b class="n">'+now.band+'등급</b></span>');
+    var 등급점=g.series.map(function(p){ return {x:짧(p.to), v:p.band}; });
+    var 등급있음=등급점.some(function(p){return p.v!=null;});
+    var 모의=r.mocks.slice(-10);
+    var 비교=r.prevMin? ("지난주 대비 "+(r.min>=r.prevMin?"+":"−")+시간(Math.abs(r.min-r.prevMin))) : "지난주 기록 없음";
+    var 최다=r.days.reduce(function(b,x,i){ return x.min>r.days[b].min?i:b; },0);
     return 표지(r, "주간 리포트, "+짧은날(r.from)+" – "+짧은날(r.to), pills)+
-      '<div class="kpis">'+
-        '<div class="kpi"><span class="lb">이번 주 학습한 날</span><b class="v n">'+r.active+'<small>/7</small></b><span class="sub">이어서 한 날 '+r.streak+'일</span></div>'+
-        '<div class="kpi"><span class="lb">학습 시간</span><b class="v n">'+시간칸(r.min)+'</b><span class="sub">'+차이(r.min, 전있음?r.prev.min:null, "분", "지난주")+'</span></div>'+
-        '<div class="kpi"><span class="lb">이번 주에 푼 문항</span><b class="v n">'+r.solved+'<small>문항</small></b><span class="sub">'+차이(r.solved, 전있음?r.prev.solved:null, "문항", "지난주")+'</span></div>'+
-        '<div class="kpi"><span class="lb">정답률, 문제풀이 '+r.ans+'문항</span><b class="v n">'+(정!=null?Math.round(정)+'<small>%</small>':'—')+'</b><span class="sub">'+(정==null?"데이터 부족":차이(정, 전정, "%p", "지난주"))+'</span></div>'+
-      '</div>'+
-      '<div class="rc"><div class="rh"><h3>요일별 푼 문항</h3><small>월 – 일, 아래는 학습 시간</small></div>'+막대(r.days, r.days[최다].solved?최다:-1)+'</div>'+
-      단원칸(r)+범위칸(r)+모의칸(r);
+      '<div class="rc"><div class="rh"><h3>'+esc(g.label)+' 추이</h3><small>최근 8주, 가늠</small></div>'+
+        (등급있음? 선(등급점,{lo:1,hi:5,inv:true,ticks:[1,2,3,4,5],tl:function(t){return t+"등급";},vl:function(v){return v+"등급";},allv:true,chg:true,h:200})+
+          '<p class="note">'+(now.band?'이번 주 '+now.band+'등급(환산 '+now.pct+'점)':'이번 주 가늠 불가')+(g.prev&&g.prev.band?', 지난주 '+g.prev.band+'등급':'')+'. 누적 정답률과 최근 1주 정답률로 가늠한 값</p>'
+          : '<p class="empty">가늠에 쓸 풀이가 아직 적음</p>')+'</div>'+
+      '<div class="rc"><div class="rh"><h3>모의고사 회차별 추이</h3><small>100점 만점, 선은 등급 구간</small></div>'+
+        (모의.length? 선(모의.map(function(m){ return {x:짧(m.day), v:m.pct}; }),{lo:0,hi:100,ticks:[45,62,78,90],tl:function(t){return t;},allv:true,h:200})+
+          '<p class="note">최근 '+모의.length+'회, 마지막 '+모의[모의.length-1].pct+'점('+모의[모의.length-1].band+'등급 구간)</p>'
+          : '<p class="empty">응시 기록 없음'+(r.exam&&r.exam.dday!=null&&r.exam.dday>10?', <b>D-10</b>부터 매일 1회':'')+'</p>')+'</div>'+
+      '<div class="rc"><div class="rh"><h3>원인 분석</h3></div>'+표시(r.causes)+'</div>'+
+      '<div class="rc plan"><div class="rh"><h3>다음 주 학습 방향</h3><small>서비스가 이 순서로 출제</small></div>'+
+        '<ol class="pl">'+r.plan.map(function(p){ return '<li><div><b>'+esc(p.tag)+'</b><span>'+esc(p.text)+'</span></div></li>'; }).join("")+'</ol></div>'+
+      과목칸(r.fam, r.min, "학습 시간", 비교)+
+      '<div class="rc"><div class="rh"><h3>요일별 학습 시간</h3></div>'+
+        막대(r.days.map(function(d){ return {v:d.min, wd:d.wd, lab:d.min?d.min+"분":"0"}; }), r.days[최다].min?최다:-1)+'</div>'+
+      단원변화(r)+
+      (r.pct!=null?'<p class="note" style="margin:4px 4px 0">이번 주 정답률 '+r.pct+'%'+(r.prevPct!=null?', 지난주 '+r.prevPct+'%':'')+'</p>':'');
+  }
+  function 단원변화(r){
+    var 바뀐=r.units.filter(function(u){ return u.to!==u.from; }).slice(0,6);
+    var 낮은=r.units.filter(function(u){ return u.solved&&u.to<40; }).sort(function(a,b){return a.to-b.to;}).slice(0,3);
+    if(!바뀐.length&&!낮은.length) return '';
+    function 줄(u){ var d=u.to-u.from;
+      return '<div class="row"><div class="nm">'+esc(u.name)+'<small>'+esc(u.root)+'</small></div>'+
+        '<div class="tr"><i style="width:'+u.to+'%"></i></div>'+
+        '<div class="pc n'+(u.to<40?" low":"")+'">'+u.to+(d?'<small class="dl '+(d>0?"up":"dn")+'"> '+(d>0?"+":"")+d+'</small>':'')+'</div></div>'; }
+    return '<div class="rc"><div class="rh"><h3>단원별 이해도</h3><small>100점 기준, 이번 주 변화</small></div>'+
+      (바뀐.length?'<div class="grp"><h4>이번 주 바뀐 단원</h4>'+바뀐.map(줄).join("")+'</div>':'')+
+      (낮은.length?'<div class="grp"><h4>아직 낮은 단원</h4>'+낮은.map(줄).join("")+'</div>':'')+'</div>';
   }
 
   /* ── 발송 설정 + 학부모 폰 연결 (학생 기기에서만) ── */

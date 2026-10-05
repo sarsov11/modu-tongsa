@@ -1046,11 +1046,19 @@
       l.play.slice(0, take).forEach(function (q, k) {
         var r = seed("q" + q.id);
         var ok = r > (l.grade === "심화" ? 0.42 : 0.26);
-        S.ans[q.id] = { ok: ok, p: ok ? q.a : (q.a + 1) % 5, at: d.getTime() + k * 60000 };
-        S.ev.push({ k: "a", d: dayKey(d), leaf: l.code, q: q.id, ok: ok, at: d.getTime() + k * 60000 });
+        var ms = Math.round(9000 + seed("m" + q.id) * 45000);   /* 시연 응답 시간 9~54초 — 학부모 리포트 반응 속도(2026-10-05) */
+        S.ans[q.id] = { ok: ok, p: ok ? q.a : (q.a + 1) % 5, at: d.getTime() + k * 60000, ms: ms };
+        S.ev.push({ k: "a", d: dayKey(d), leaf: l.code, q: q.id, ok: ok, ms: ms, at: d.getTime() + k * 60000 });
+        /* 틀린 것 일부는 이틀 뒤 다시 푼다 — 학부모 리포트 「전에 틀린 문항 재도전」 */
+        if (!ok && back >= 3 && seed("r" + q.id) < 0.6) {
+          var d2 = new Date(d.getTime() + 2 * 86400000 + 30 * 60000 + k * 50000), ok2 = seed("o" + q.id) < 0.7;
+          S.ans[q.id] = { ok: ok2, p: ok2 ? q.a : (q.a + 2) % 5, at: d2.getTime(), ms: Math.round(ms * 0.7) };
+          S.ev.push({ k: "a", d: dayKey(d2), leaf: l.code, q: q.id, ok: ok2, ms: Math.round(ms * 0.7), at: d2.getTime() });
+        }
       });
       S.last = { leaf: l.code, at: d.getTime() };
     });
+    S.ev.sort(function (x, y) { return (x.at || 0) - (y.at || 0); });
     flush();
   }
 
