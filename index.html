@@ -522,13 +522,13 @@
 <script src="js/pool.js?v=c0d187ff"></script>
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/cards.js?v=89e204f5"></script>
+<script src="js/cards.js?v=aedaeb8d"></script>
 <script src="js/packs.js?v=9e67e178"></script>
-<script src="js/store.js?v=3fd66f8c"></script>
+<script src="js/store.js?v=6ad92f82"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
-<script src="js/auth.js?v=dca5fb29"></script>
-<script src="js/coach.js?v=c8e4b0fa"></script>
+<script src="js/auth.js?v=93150c36"></script>
+<script src="js/coach.js?v=ecc17c3a"></script>
 <script src="js/notify.js?v=f6ea0991"></script>
 <script>
 (function(){
@@ -1124,8 +1124,8 @@
     if(grade==="고2"){
       var got=T.packs();
       cards.push({eb:"확장팩",name:"선택과목 확장팩",
-        p:"고2 는 통합사회를 듣지 않습니다. 세계시민과 지리·사회와 문화 같은 "+
-          "선택과목을 하나 단위로 붙여, 같은 개념트리와 문제풀이를 그 과목 범위로 씁니다."+
+        p:"고2는 통합사회 대신 세계시민과 지리, 사회와 문화 같은 선택과목을 듣습니다. "+
+          "과목을 하나씩 붙이면 개념트리와 문제풀이가 그 과목 범위로 바뀝니다."+
           (got.length?" 선택 "+got.length+"과목":""),
         btn:"과목 고르기",href:"settings.html",st:"값 미정, 준비 중"});
     }else{
@@ -1138,7 +1138,7 @@
       btn:"준비 중",href:"settings.html",st:"값·출간일 미정",dim:true});
     cards.push({eb:"지금 되는 것",name:"킬러 훈련",
       p:(window.DRILLS||[]).map(function(d){ return d.name; }).join(", ")+
-        ". 오늘 바로 쓸 수 있습니다.",
+        ". 무료로 열려 있습니다.",
       btn:"들어가기",href:"drill.html",st:"무료"});
     document.getElementById("shop").innerHTML=cards.map(function(c){
       return '<div class="sh"><div class="cv"><span class="eb">'+c.eb+'</span>'+

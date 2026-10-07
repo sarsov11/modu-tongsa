@@ -234,10 +234,10 @@
         (v.say ? '<p class="say">' + esc(v.say) + '</p>' : '') +
         '<p class="kwans"><span>정답</span><b>' + esc(x.a) + '</b>' +
           (x.alt && x.alt.length ? '<em>' + esc(x.alt.join(", ")) + '도 정답</em>' : '') + '</p>' +
-        (!g.ok && 입력.trim() ? '<p class="kwmine">쓴 답 — ' + esc(입력.trim()) + '</p>' : '') +
+        (!g.ok && 입력.trim() ? '<p class="kwmine">쓴 답: ' + esc(입력.trim()) + '</p>' : '') +
         (덧말 ? '<p class="kwnote">' + 덧말 + '</p>' : '') +
         (근거같음 ? '<div class="why"><span class="src">' + esc(x.src) + '</span></div>' :   /* 근거가 문제 문장 그대로면 줄을 생략(1004) */
-          '<div class="why"><b>근거</b> — ' + 원문 + '<span class="src">' + esc(x.src) + '</span></div>') +
+          '<div class="why"><b>근거</b> ' + 원문 + '<span class="src">' + esc(x.src) + '</span></div>') +
         '<div class="kwnext"><button type="button" class="kwgo" id="kwgo">' + esc(opt.next || "다음 →") + '</button></div>';
       host.querySelector("#kwq").appendChild(판정칸);
       try { if (window.CHEER) { if (g.ok) CHEER.ok(판정칸); else CHEER.miss(판정칸); } } catch (e) { }   /* 정답 연출(1004) */

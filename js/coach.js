@@ -635,7 +635,7 @@
       '<div class="k' + (t.up ? " up" : "") + '"><b>' + (t.up ? "+" + t.up : "0") + '</b><span>오른 곳</span></div>' +
       '</div>' +
       '<p class="tline">' +
-      (tops.length ? "오늘 오른 곳 — " + tops.map(function (x) { return esc(x.name) + " <b>+" + x.d + "</b>"; }).join(", ") + ". "
+      (tops.length ? "오늘 오른 곳: " + tops.map(function (x) { return esc(x.name) + " <b>+" + x.d + "</b>"; }).join(", ") + ". "
                    : (t.ans ? "" : "시작 전. ")) +
       esc(비교) + '</p>';
   }
