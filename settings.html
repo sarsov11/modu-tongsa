@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="css/login.css?v=bc2184f2">
 <link rel="stylesheet" href="css/base.css?v=1a817d13">
 <link rel="stylesheet" href="css/cheer.css?v=386af7f8">
-<link rel="stylesheet" href="css/coach.css?v=b87b1187">
+<link rel="stylesheet" href="css/coach.css?v=9e11629f">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:1080px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -339,15 +339,16 @@
 <script src="js/packs.js?v=9e67e178"></script>
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/cards.js?v=aedaeb8d"></script>
-<script src="js/store.js?v=6ad92f82"></script>
-<script src="js/cheer.js?v=4ef6bd21"></script>
+<script src="js/store.js?v=9c03a376"></script>
+<script src="js/cheer.js?v=95ad66da"></script>
+<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/parent.js?v=cdb8db08"></script>
 <script src="js/auth.js?v=93150c36"></script>
 <script src="js/loginui.js?v=611a37cb"></script>
-<script src="js/coach.js?v=ecc17c3a"></script>
-<script src="js/notify.js?v=f6ea0991"></script>
+<script src="js/coach.js?v=700e3a31"></script>
+<script src="js/notify.js?v=c1a65441"></script>
 <script>
 (function(){
   var T=TERRA;
@@ -597,6 +598,24 @@
 
   /* ── 정답 연출 (js/cheer.js) ── */
   function paintCheer(){
+    /* ★ 짜잔 3판(js/zzajan.js)이 실리면 옛 3안(버스트·콤보·도장)은 안 쓴다 — 켜기·끄기와 소리, 미리 보기만 */
+    var 짜잔꺼짐=false; try{ 짜잔꺼짐=localStorage.getItem("terra.zz")==="0"; }catch(e){}
+    if(window.ZZ || 짜잔꺼짐){
+      var 소리=(function(){ try{ return localStorage.getItem("terra.cheer.sound")!=="0"; }catch(e){ return true; } })();
+      document.getElementById("cheerpick").innerHTML=
+        '<button type="button" id="zzon" aria-pressed="'+(!짜잔꺼짐)+'">게임 연출<small>'+(짜잔꺼짐?"꺼짐":"켜짐")+'</small></button>';
+      document.getElementById("cheerrow").innerHTML=
+        '<button type="button" id="cheersnd" aria-pressed="'+소리+'">소리 '+(소리?"켜짐":"꺼짐")+'</button>'+
+        (window.ZZ?'<button type="button" id="cheertry">미리 보기</button>':'')+
+        '<button type="button" id="coachagain">개념트리 안내 다시 보기</button>';
+      document.getElementById("zzon").onclick=function(){ try{ localStorage.setItem("terra.zz", 짜잔꺼짐?"1":"0"); }catch(e){} location.reload(); };
+      document.getElementById("cheersnd").onclick=function(){ try{ localStorage.setItem("terra.cheer.sound", 소리?"0":"1"); }catch(e){} paintCheer(); };
+      document.getElementById("coachagain").onclick=function(){ try{ localStorage.removeItem("terra.coachmark.tongsa.skilltree"); }catch(e){} location.href="skilltree.html"; };
+      var 차례=0;
+      if(document.getElementById("cheertry")) document.getElementById("cheertry").onclick=function(){
+        차례++; if(차례%3===1){ ZZ.setCombo(2); ZZ.ok(this); } else if(차례%3===2){ ZZ.stars(3); } else { ZZ.promote("A","S"); } };
+      return;
+    }
     if(!window.CHEER) return;
     var now=CHEER.kind(), names={a:["버스트","색 파티클"],b:["콤보","연속 정답·XP"],c:["도장","정답 도장"]};
     document.getElementById("cheerpick").innerHTML=CHEER.KINDS.map(function(k){
@@ -609,6 +628,7 @@
     document.getElementById("cheertry").onclick=function(){ CHEER.ok(null,{combo:1+(CHEER.combo()%6)}); };
   }
   paintCheer();
+  window.addEventListener("load", paintCheer);
 
   /* ── 구독 ── */
   function paintPlan(){

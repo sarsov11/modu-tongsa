@@ -16,7 +16,7 @@
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=1a817d13">
 <link rel="stylesheet" href="css/cheer.css?v=386af7f8">
-<link rel="stylesheet" href="css/coach.css?v=b87b1187">
+<link rel="stylesheet" href="css/coach.css?v=9e11629f">
 <link rel="stylesheet" href="css/keyword.css?v=7a3b2060">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -79,15 +79,15 @@
   .verdict .say{margin:10px 0 0;font-size:16px;color:var(--ink-2);line-height:1.65}
   .verdict .act{margin-top:14px;display:flex;gap:9px;flex-wrap:wrap}
 
-  .done{border:1px solid var(--line-2);border-radius:var(--r3);background:var(--surface);
+  .done:not(.seg):not(.flownext){border:1px solid var(--line-2);border-radius:var(--r3);background:var(--surface);
     padding:30px 28px;text-align:center}
-  .done h2{font-size:24px;margin-bottom:8px;letter-spacing:-.03em}
-  .done p{color:var(--ink-3);font-size:15.5px;margin-bottom:8px}
-  .done .ubar{max-width:400px;margin:18px auto 22px}
-  .done .ubar .lab{display:flex;justify-content:space-between;font-size:14.5px;
+  .done:not(.seg):not(.flownext) h2{font-size:24px;margin-bottom:8px;letter-spacing:-.03em}
+  .done:not(.seg):not(.flownext) p{color:var(--ink-3);font-size:15.5px;margin-bottom:8px}
+  .done:not(.seg):not(.flownext) .ubar{max-width:400px;margin:18px auto 22px}
+  .done:not(.seg):not(.flownext) .ubar .lab{display:flex;justify-content:space-between;font-size:14.5px;
     color:var(--ink-4);margin-bottom:5px}
-  .done .ubar .lab b{color:var(--ink-2);font-family:var(--mono);font-weight:800}
-  .done .act{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .done:not(.seg):not(.flownext) .ubar .lab b{color:var(--ink-2);font-family:var(--mono);font-weight:800}
+  .done:not(.seg):not(.flownext) .act{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
   @media(max-width:520px){
     .page{padding:0 14px var(--s5)}
     .card,.qz{padding:20px 18px}
@@ -152,13 +152,14 @@
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/trend.js?v=77dea921"></script>
 <script src="js/packs.js?v=9e67e178"></script>
-<script src="js/store.js?v=6ad92f82"></script>
-<script src="js/cheer.js?v=4ef6bd21"></script>
+<script src="js/store.js?v=9c03a376"></script>
+<script src="js/cheer.js?v=95ad66da"></script>
+<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=93150c36"></script>
-<script src="js/coach.js?v=ecc17c3a"></script>
-<script src="js/kwask.js?v=77c0d4a7"></script>
+<script src="js/coach.js?v=700e3a31"></script>
+<script src="js/kwask.js?v=bf2b1102"></script>
 <script>
 (function(){
   var T=window.TERRA, J=window.JUDGE;
@@ -264,6 +265,9 @@
     if(!ids.length){                      // 확인 문항이 없으면 그냥 넘긴다
       결과[i]={ok:true, skip:true}; i++; return 카드그리기();
     }
+    /* 「확인 →」 을 또 누르면 같은 문제가 또 붙었다(2026-10-09 흐름 검증, 8번 눌러 8개). 한 번만 붙이고 단추는 치운다 */
+    if(el("qz")){ el("qz").scrollIntoView({behavior:"smooth",block:"center"}); return; }
+    if(el("ok")) el("ok").remove();
     지금문항 = OXBY[ids[0]];
     시작시각 = Date.now();
     el("stage").insertAdjacentHTML("beforeend",
@@ -316,6 +320,8 @@
       '</div>');
     if(el("again")) el("again").onclick=function(){ 카드그리기(); };
     el("next").onclick=function(){ i++; 카드그리기(); };
+    /* 판정 밑 「다음」 이 화면 아래로 숨지 않게 — 답하면 그 자리로 내려간다 */
+    setTimeout(function(){ var n=el("next"); if(n) n.scrollIntoView({behavior:"smooth",block:"end"}); }, 380);
   }
 
   var 머리 = { eb:"", ttl:"", lede:"" };

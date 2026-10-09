@@ -73,9 +73,9 @@
     examSoon:     "{시험} D-{n} → 모의고사 강추",
     /* 결산 */
     wrapAll:      "전부 정답",
-    wrapMost:     "거의 다 맞음 → 오답 모아풀기",
-    wrapHalf:     "절반 맞음 → 오답 모아풀기",
-    wrapLow:      "오답 모아풀기",
+    wrapMost:     "거의 다 맞음 → 틀린 것은 복습으로",
+    wrapHalf:     "절반 맞음 → 틀린 것은 복습으로",
+    wrapLow:      "틀린 것은 복습으로, 내일 다시 나옴",
     wrapUp:       "{개념} 이해도 {before} → {after}",
     wrapSame:     "{개념} 이해도 {after} 유지",
     wrapDown:     "{개념} 이해도 {before} → {after}",
@@ -83,6 +83,8 @@
     flowNext:     "다음: {title} ({min}분)",
     flowStart:    "시작: {title} ({min}분)",
     flowMore:     "더 하기",
+    flowBonus:    "한 세트 더: {title} ({min}분)",
+    wrapAllDone:  "오늘 할 일 끝, {spent}분 공부",
     flowAllDone:  "오늘 목표 완료",
     flowStrip:    "오늘 {goal}분, {left}분 남음",
     flowStripDone:"오늘 목표 완료",
@@ -207,12 +209,26 @@
     o = o || {};
     var step = o.next || nextStep(true), done = flowAllDone();
     if (done || !step) {
-      var more = o.next || nextStep(false);
+      /* ★ 목표를 채운 뒤에도 고르게 하지 않는다(2026-10-09 흐름 검증 2번) — 무엇을 더 하는지 이름을 단 큰 단추 하나 */
+      var more = o.next || nextStep(false) || bonusStep();
       return '<div class="flownext done"><b class="fl">' + esc(fmt("flowAllDone")) + '</b>' +
-        '<a class="btn ghost" href="' + (more ? more.href : "study.html") + '">' + esc(fmt("flowMore")) + '</a></div>';
+        '<a class="btn flowgo" data-flowgo="1" href="' + more.href + '">' +
+        esc(more.bonus ? fmt("flowBonus", { title: more.title, min: more.min }) : fmt("flowNext", { title: more.title, min: more.min })) + ' →</a></div>';
     }
     return '<div class="flownext"><a class="btn flowgo" data-flowgo="1" href="' + step.href + '">' +
       esc(fmt("flowNext", { title: step.title, min: step.min })) + ' →</a></div>';
+  }
+
+  /* 오늘 몫을 다 한 뒤 내미는 「한 세트 더」 — 오늘 틀린 것이 남았으면 그것, 없으면 고1 은 O·X, 그 밖은 킬러 한 세트 */
+  function bonusStep() {
+    var d = T.dueList ? T.dueList() : [];
+    if (d.length) {
+      var n = Math.min(d.length, 5);
+      return { bonus: 1, kind: "due", href: "study.html?mode=wrong&n=" + n, title: "틀린 문제 " + n + "개", min: Math.max(1, Math.round(n * 50 / 60)) };
+    }
+    var g = ((T.state().student || {}).grade) || "고1";
+    if (g === "고1") return { bonus: 1, kind: "ox", href: "ox.html", title: "O·X 여덟 문장", min: 3 };
+    return { bonus: 1, kind: "drill", href: "drill.html", title: "킬러 한 세트", min: 3 };
   }
 
   /* 홈의 큰 단추 — 오늘 아직 아무것도 안 했으면 「시작: ○○ (n분)」, 했으면 「다음: ○○ (n분)」. 끝났으면 null */
@@ -456,7 +472,8 @@
                                        : fmt("wrapSame", { 개념: 개념, after: after })) : "";
     var md = midDelta(), m = leaf && midOf(leaf), tline = "";
     if (m && md[m.code] && md[m.code].d > 0) tline = fmt("wrapTree", { 개념: m.name, d: "+" + md[m.code].d });
-    var dline = t.done ? fmt("wrapDone") : (시작 && !시작.ans && t.ans ? fmt("wrapFirst") + " " : "") + fmt("wrapLeft", { left: t.left });
+    var dline = t.done ? fmt("wrapDone") : flowAllDone() ? fmt("wrapAllDone", { spent: t.spent })
+              : (시작 && !시작.ans && t.ans ? fmt("wrapFirst") + " " : "") + fmt("wrapLeft", { left: t.left });
 
     /* ★ 15분 흐름 (2026-09-15 대표님) — 학생이 고르지 않는다. 결산이 뜨면 오늘 루틴의
        어디까지 왔는지 막대로 보이고, 다음 항목을 한 줄로 알린 뒤 **3초 뒤 저절로** 연다.
@@ -495,17 +512,26 @@
                   '<b class="cnt">3</b>초 뒤 이동</p>' : '') +
       /* ★ 맨 위 행동은 「다음」 하나(큰 단추). 다시 풀기·더 풀기·닫기는 그 밑에 작게 — 학생이 고르지 않는다.
          오늘 목표를 채웠으면 「오늘 목표 완료」 + 가벼운 「더 하기」 만 */
-      (flowAllDone()
-        ? '<div class="flownext done"><b class="fl">' + esc(fmt("flowAllDone")) + '</b></div>'
-        : nextBlock({ next: opts.next })) +
+      nextBlock({ next: opts.next }) +
       '<div class="act sub">' +
-      (flowAllDone() && !opts.more
-        ? '<button class="btn" data-act="more0">' + esc(fmt("flowMore")) + '</button>' : "") +
       (opts.retry ? '<button class="btn ghost" data-act="retry">' + esc(opts.retry.label) + '</button>' : '') +
-      (opts.more ? '<button class="btn' + (flowAllDone() ? '' : ' ghost') + '" data-act="more">' + esc(opts.more.label) + '</button>' : '') +
+      (opts.more ? '<button class="btn ghost" data-act="more">' + esc(opts.more.label) + '</button>' : '') +
       '<button class="btn ghost" data-act="close">닫기</button></div></div>';
     document.body.appendChild(ov);
     confetti(ov.querySelector(".conf"));
+    /* ★ 짜잔 3판(2026-10-09 게임 연출 조사) — 세트 결산은 별 1~3개를 하나씩 박고, 개념트리 등급(S·A·B·C)이 오르면 승급 장면.
+       평소 정답은 작게, 이런 문턱에서만 크게 간다(조사 종합 0_종합_연출안.md) */
+    try {
+      if (window.ZZ && ZZ.stars && total) {
+        var 별 = ratio === 1 ? 3 : ratio >= .7 ? 2 : ratio >= .4 ? 1 : 0;
+        if (별) setTimeout(function () { ZZ.stars(별); }, 450);
+      }
+      if (window.ZZ && ZZ.promote && leaf && 시작 && 시작.leaf === leaf && 시작.a != null) {
+        var 급 = function (a) { return a >= 80 ? "S" : a >= 60 ? "A" : a >= 30 ? "B" : "C"; }, 순 = "CBAS";
+        var 전 = 급(시작.a), 후 = 급(T.leafStat(leaf).achieve);
+        if (순.indexOf(후) > 순.indexOf(전)) setTimeout(function () { ZZ.promote(전, 후); }, 600);
+      }
+    } catch (e) {}
     requestAnimationFrame(function () {
       ov.classList.add("on");
       var n = ov.querySelector(".big .n"); if (n) countUp(n, got, 800);
@@ -658,7 +684,7 @@
   window.COACH = {
     MSG: MSG, fmt: fmt, mount: mount, say: say, paint: function () { paint(idleLine()); },
     begin: begin, wrap: wrap, tally: tally, greeting: greeting, greetWhy: greetWhy, lastVisit: lastVisit,
-    nextStep: nextStep, nextBlock: nextBlock, startLabel: startLabel, allDone: flowAllDone, flowKinds: flowKinds, snap: snap, takeSnap: takeSnap, todayDelta: todayDelta, midDelta: midDelta,
+    nextStep: nextStep, bonusStep: bonusStep, nextBlock: nextBlock, startLabel: startLabel, allDone: flowAllDone, flowKinds: flowKinds, snap: snap, takeSnap: takeSnap, todayDelta: todayDelta, midDelta: midDelta,
     cardToday: cardToday, openCard: openCard, cardOpenedToday: cardOpenedToday, cardCount: cardCount,
     mountCard: mountCard, mountToday: mountToday, mountTreeDelta: mountTreeDelta,
     은는: 은는, 이가: 이가, 을를: 을를

@@ -79,11 +79,17 @@
     var 앞 = (시 && 시.d.days <= 시험알림일수)
       ? (시.e.name + " " + 시.d.label + ", ") : "";
 
+    /* ★ 피드백을 같이 싣는다(2026-10-09 대표님 「푸시로 피드백 계속」). 연속일과 오늘·어제 결과.
+       숫자만 적는다. 잘했다·대단하다 같은 평가는 붙이지 않는다 */
+    var 오늘r = T.report ? T.report() : null;
+    var 어제k = (function () { var d = new Date(); d.setDate(d.getDate() - 1); return T.dayKey ? T.dayKey(d) : ""; })();
+    var 어제r = (T.report && 어제k) ? T.report(어제k) : null;
+    var 연속 = 오늘r && 오늘r.streak ? 오늘r.streak : (어제r ? 어제r.streak : 0);
+    var 불 = 연속 >= 2 ? "연속 " + 연속 + "일" : "";
     if (r.done) {
       return { t: 앞 + "오늘 할 것 완료",
-               b: 시 && 시.d.days <= 시험알림일수
-                    ? "시험까지 " + 시.d.days + "일"
-                    : "" };
+               b: [불, 오늘r && 오늘r.solved ? "오늘 " + 오늘r.solved + "문항 중 " + 오늘r.solvedOk + "개 정답" : "",
+                   시 && 시.d.days <= 시험알림일수 ? "시험까지 " + 시.d.days + "일" : ""].filter(Boolean).join(", ") };
     }
     var left = Math.max(1, r.goal - r.spent);
     var it = r.items[0];
@@ -100,9 +106,14 @@
        어느 단원인지는 앱을 열면 띠에 늘 적혀 있다. */
     var sc = (T.scope && T.scope()) || [];
     var 범위 = "";   // 「시험 범위 3단원 안에서」 는 알림에서 뺀다 (2026-09-13) — 앱 띠에 늘 적혀 있다
+    /* 오늘 아직 안 했으면 연속일이 끊길 참이다. 그 숫자를 앞에 둔다. 어제 한 것이 있으면 결과 한 줄 */
+    var 했나 = !!(오늘r && 오늘r.solved);
+    var 머리말 = 연속 >= 2 ? "연속 " + 연속 + (했나 ? "일째, " : "일 잇기, ") : "";
+    var 어제말 = 했나 ? "오늘 " + 오늘r.solved + "문항 중 " + 오늘r.solvedOk + "개 정답. "
+              : (어제r && 어제r.solved ? "어제 " + 어제r.solved + "문항 중 " + 어제r.solvedOk + "개 정답. " : "");
     return {
-      t: 앞 + "오늘 " + left + "분",
-      b: (it ? (짧게(it.title, 12) + ". " + 짧게(it.sayShort || it.say, 34))
+      t: 앞 + 머리말 + "오늘 " + left + (했나 ? "분 남음" : "분"),
+      b: 어제말 + (it ? (짧게(it.title, 12) + ". " + 짧게(it.sayShort || it.say, 34))
              : "최적화 " + r.goal + "분") + 범위
     };
   }

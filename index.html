@@ -15,7 +15,7 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=1a817d13">
-<link rel="stylesheet" href="css/coach.css?v=b87b1187">
+<link rel="stylesheet" href="css/coach.css?v=9e11629f">
 <link rel="stylesheet" href="css/question.css?v=4cea4076">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -524,12 +524,13 @@
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/cards.js?v=aedaeb8d"></script>
 <script src="js/packs.js?v=9e67e178"></script>
-<script src="js/store.js?v=6ad92f82"></script>
+<script src="js/store.js?v=9c03a376"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=93150c36"></script>
-<script src="js/coach.js?v=ecc17c3a"></script>
-<script src="js/notify.js?v=f6ea0991"></script>
+<script src="js/coach.js?v=700e3a31"></script>
+<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
+<script src="js/notify.js?v=c1a65441"></script>
 <script>
 (function(){
   var T=TERRA, Q=window.QBANK||{};
@@ -1188,7 +1189,10 @@
       var 걸음2=window.COACH&&COACH.nextStep?COACH.nextStep(false):null, 다했나2=window.COACH&&COACH.allDone?COACH.allDone():false;
       if(걸음2 && !다했나2) 말2 = (오늘r.solved ? '오늘 '+오늘r.solved+'문항 '+오늘r.solvedOk+'개 정답 → ' : '오늘은 ')+esc(걸음2.title)+', <b>'+esc(걸음2.say)+'</b> <i class="gc">강추</i>';
       else if(다했나2) 말2 = '오늘 '+오늘r.solved+'문항 '+오늘r.solvedOk+'개 정답, 오늘 목표 완료';
+      /* 목표를 채운 뒤에도 큰 단추 하나 — 「더 하기」 흰 단추 셋 중에 고르게 하지 않는다(2026-10-09 흐름 검증 2번) */
+      var 덤2 = (!걸음2 || 다했나2) && COACH.bonusStep ? COACH.bonusStep() : null;
       var 큰단추2 = (걸음2 && !다했나2) ? '<a href="'+걸음2.href+'">'+esc(COACH.startLabel(걸음2))+'</a>'
+                    : 덤2 ? '<a href="'+덤2.href+'">한 세트 더: '+esc(덤2.title)+' ('+덤2.min+'분)</a>'
                     : '<a class="lite" href="'+(걸음2?걸음2.href:'study.html?leaf='+단원.code)+'">더 하기</a>';
       host.innerHTML='<div class="bub">'+말2+'</div>'+
         '<div class="ans">'+큰단추2+
@@ -1218,7 +1222,9 @@
     var 전체=T.report().solved;
     if(걸음 && !다했나) 말 = (전체 ? '오늘 '+전체+'문항 '+T.report().solvedOk+'개 정답 → ' : '오늘은 ')+esc(걸음.title)+', <b>'+esc(걸음.say)+'</b> <i class="gc">강추</i>';
     else if(다했나) 말 = '오늘 '+전체+'문항 '+T.report().solvedOk+'개 정답, 오늘 목표 완료';
+    var 덤 = (!걸음 || 다했나) && COACH.bonusStep ? COACH.bonusStep() : null;
     var 큰단추 = (걸음 && !다했나) ? '<a href="'+걸음.href+'">'+esc(COACH.startLabel(걸음))+'</a>'
+                 : 덤 ? '<a href="'+덤.href+'">한 세트 더: '+esc(덤.title)+' ('+덤.min+'분)</a>'
                  : '<a href="'+(걸음?걸음.href:'ox.html?leaf='+리프.code)+'" class="lite">더 하기</a>';
     host.innerHTML='<div class="bub">'+말+'</div>'+
       '<div class="ans">'+큰단추+

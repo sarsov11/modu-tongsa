@@ -1535,14 +1535,18 @@
       /* ★ 되돌리기 몫도 학년마다 다르다 — 고3은 '틀린 걸 안 보는 것' 으로 실패한다 */
       var 몫표 = 오늘몫표();
       var due분 = Math.max(3, Math.round(goal * (몫표.due || 0.3)));
-      var take = Math.min(byLeaf[top].length, Math.floor(due분 * 60 / SEC_PER_Q));
+      /* ★ 한 단원 것만 내지 않는다 — 여러 단원에 1개씩 틀리면 「틀렸던 1문항」 만 나왔다(2026-10-09). 범위 안 오답 전체에서 몫만큼 */
+      var 단원수 = 리프들.length;
+      var take = Math.min(범위안오답.length, Math.floor(due분 * 60 / SEC_PER_Q));
       var m = Math.max(1, Math.round(take * SEC_PER_Q / 60));
+      var 한단원 = 단원수 === 1;
       items.push({ kind: "due", min: m, n: take, leaf: top,
         title: "틀린 문제 다시 풀기", lead: "오답 모아풀기",
-        say: 부제괄호(BY[top] ? BY[top].name : top) + "에서 틀렸던 " + take + "문항",
-        sayShort: String(BY[top] ? BY[top].name : top).split(" — ")[0] + " " + take + "문항",
+        say: 한단원 ? 부제괄호(BY[top] ? BY[top].name : top) + "에서 틀렸던 " + take + "문항"
+                    : 단원수 + "개 단원에서 틀렸던 " + take + "문항",
+        sayShort: 한단원 ? String(BY[top] ? BY[top].name : top).split(" — ")[0] + " " + take + "문항" : "틀렸던 " + take + "문항",
         why: 범위안오답[0].days ? 범위안오답[0].days + "일 전 오답" : "오늘 오답",
-        href: "study.html?leaf=" + top + "&mode=wrong", cta: "다시 풀기" });
+        href: 한단원 ? "study.html?leaf=" + top + "&mode=wrong&n=" + take : "study.html?mode=wrong&n=" + take, cta: "다시 풀기" });
       left -= m;
     }
 
@@ -1732,7 +1736,8 @@
         }), function (l) { return l.code; })
           .sort(function (a, b) { return (b.vol || 0) - (a.vol || 0); })[0];
         tgt = fresh || (S.last && BY[S.last.leaf]);
-        제목 = fresh ? (학년4 === "고1" ? "처음 배우는 개념" : "안 푼 단원") : "보던 데 마저";
+        /* 이 항목은 개념 읽기가 아니라 기출 문제다 — 「처음 배우는 개념」 을 눌렀는데 문제가 나왔다(2026-10-09 흐름 검증 3번) */
+        제목 = fresh ? "새 단원 기출" : "보던 데 마저";
         왜 = fresh ? "시작 전, 출제 비중 최대"
                    : "오늘 마지막";
       }
@@ -1740,7 +1745,7 @@
         var nq = Math.max(2, Math.floor(left * 60 / SEC_PER_Q));
         items.push({ kind: "q", min: left, n: nq, leaf: tgt.code,
           title: 제목, say: tgt.name + " " + nq + "문항", why: 왜,
-          href: "study.html?leaf=" + tgt.code +
+          href: "study.html?leaf=" + tgt.code + "&n=" + nq +
                 (XM.mode === "real" ? "&mode=wrong" : ""), cta: "풀기" });
       }
     }

@@ -238,7 +238,7 @@
         (덧말 ? '<p class="kwnote">' + 덧말 + '</p>' : '') +
         (근거같음 ? '<div class="why"><span class="src">' + esc(x.src) + '</span></div>' :   /* 근거가 문제 문장 그대로면 줄을 생략(1004) */
           '<div class="why"><b>근거</b> ' + 원문 + '<span class="src">' + esc(x.src) + '</span></div>') +
-        '<div class="kwnext"><button type="button" class="kwgo" id="kwgo">' + esc(opt.next || "다음 →") + '</button></div>';
+        (opt.noNext ? '' : '<div class="kwnext"><button type="button" class="kwgo" id="kwgo">' + esc(opt.next || "다음 →") + '</button></div>');   /* opt.noNext — 바깥 화면이 아래 「다음」 하나로 넘긴다(start 진단, 2026-10-09 빨간 「다음」 둘) */
       host.querySelector("#kwq").appendChild(판정칸);
       try { if (window.CHEER) { if (g.ok) CHEER.ok(판정칸); else CHEER.miss(판정칸); } } catch (e) { }   /* 정답 연출(1004) */
       var 결과 = { ok: g.ok, how: g.how, kind: v.kind, next: v.next, conf: conf, ms: ms, leaf: x.leaf,
@@ -247,9 +247,9 @@
         판정칸.insertAdjacentHTML("beforeend", '<p class="kwnote">기록 안 됨 → 새로고침 뒤 다시</p>');
       }
       var go = host.querySelector("#kwgo");
-      go.addEventListener("click", function () { opt.onNext && opt.onNext(결과); });
+      if (go) go.addEventListener("click", function () { opt.onNext && opt.onNext(결과); });
       try { 판정칸.scrollIntoView({ block: "center", behavior: "smooth" }); } catch (e) { }
-      setTimeout(function () { try { go.focus({ preventScroll: true }); } catch (e) { } }, 350);
+      if (go) setTimeout(function () { try { go.focus({ preventScroll: true }); } catch (e) { } }, 350);
       opt.onDone && opt.onDone(결과);
     }
     return { input: inp, submit: 내기 };

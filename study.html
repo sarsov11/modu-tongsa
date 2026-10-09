@@ -16,7 +16,7 @@
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=1a817d13">
 <link rel="stylesheet" href="css/cheer.css?v=386af7f8">
-<link rel="stylesheet" href="css/coach.css?v=b87b1187">
+<link rel="stylesheet" href="css/coach.css?v=9e11629f">
 <link rel="stylesheet" href="css/question.css?v=4cea4076">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -280,18 +280,26 @@
 <script src="js/qrender.js?v=749818a6"></script>
 <script src="js/cards.js?v=aedaeb8d"></script>
 <script src="js/packs.js?v=9e67e178"></script>
-<script src="js/store.js?v=6ad92f82"></script>
-<script src="js/cheer.js?v=4ef6bd21"></script>
+<script src="js/store.js?v=9c03a376"></script>
+<script src="js/cheer.js?v=95ad66da"></script>
+<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=93150c36"></script>
-<script src="js/coach.js?v=ecc17c3a"></script>
+<script src="js/coach.js?v=700e3a31"></script>
 <script>
 (function(){
   var T=TERRA, Q=window.QBANK||{};
   T.mountNav("study.html");
   var P=new URLSearchParams(location.search);
   var leafCode=P.get("leaf")||"", wrongOnly=(P.get("mode")==="wrong");
+  /* ★ 단원 없이 mode=wrong 이면 범위 안 오답 전체에서 오래된 것부터(2026-10-09 흐름 검증 10번:
+     진단에서 16개 틀렸는데 루틴은 오답이 가장 많은 한 단원 것 1문항만 냈다) */
+  var 전체오답 = wrongOnly && !leafCode;
+  if(전체오답){
+    var 오답들=(T.dueList?T.dueList():[]).filter(function(d){ return !T.scopeOn||!T.scopeOn()||!T.inScopeLeaf||T.inScopeLeaf(d.leaf); });
+    if(오답들.length) leafCode=오답들[0].leaf;
+  }
   var leaf=leafCode?T.BY[leafCode]:null;
   var list=[], i=0, marks=[], picked=null, done=false;
 
@@ -316,7 +324,15 @@
   }
   function buildList(){
     var all=playable(leaf);
-    if(wrongOnly){
+    if(전체오답){
+      var 본={}; all=[];
+      (T.dueList?T.dueList():[]).forEach(function(d){
+        if(T.scopeOn&&T.scopeOn()&&T.inScopeLeaf&&!T.inScopeLeaf(d.leaf)) return;
+        var L=T.BY[d.leaf]; if(!L) return;
+        playable(L).forEach(function(q){ if(q.id===d.q && !본[q.id]){ 본[q.id]=1; all.push(q); } });
+      });
+    }
+    else if(wrongOnly){
       var S=T.state();
       all=all.filter(function(q){ var a=S.ans[q.id]; return a && !a.ok; });
     }
@@ -349,6 +365,8 @@
       붙임=Math.min(심화.length, 20-본.length);   // 모자라면 심화를 덧붙인다
     }
     list=(wrongOnly?all:본.concat(심화.slice(0,붙임))).slice(0,20);
+    /* 루틴이 정한 문항 수(&n=)만 낸다 — 「처음 배우는 개념 (2분)」 을 눌렀는데 20문항이 나왔다(2026-10-09 흐름 검증 3·11번) */
+    var 몇=parseInt(P.get("n"),10); if(몇>0 && 몇<list.length) list=list.slice(0,몇);
     i=0; marks=[]; done=false;
     if(window.COACH) COACH.begin({leaf:leaf.code, kind:wrongOnly?"wrong":"q"});
   }
@@ -489,12 +507,12 @@
   /* ══════ 푸는 화면 ══════ */
   function shell(){
     var st=T.leafStat(leaf.code);
-    document.getElementById("ttl").textContent=leaf.name;
+    document.getElementById("ttl").textContent=전체오답?"틀린 문제 다시 풀기":leaf.name;
     var S3=T.state(), g3=(S3.student&&S3.student.grade)||"고1";
     /* 부제는 단원 이름까지만 — 어느 학년 기출이 섞였는지는 문항마다 출처로 적힌다(2026-09-21) */
     document.getElementById("lede").textContent=
-      leaf.mid.root.name+", "+leaf.mid.name+
-      (wrongOnly?", 오답 모아풀기":"");
+      (전체오답 ? "시험 범위 안에서 틀렸던 문제" : leaf.mid.root.name+", "+leaf.mid.name+
+      (wrongOnly?", 오답 모아풀기":""));
     document.getElementById("headact").innerHTML=
       '<a class="btn ghost sm" href="skilltree.html?area='+leaf.mid.root.code+'">개념트리</a>'+
       '<a class="btn ghost sm" href="study.html">다른 단원</a>';
@@ -672,9 +690,11 @@
       whyHtml(d,vpick,ok)+
       '<span class="src">'+esc(q.g||"")+' '+esc(q.d||"")+' '+(q.n||"")+'번, '+
       esc(d.lb||q.lb||"")+'</span></div>'+
-      '<div class="gorow"><button class="btn" id="next">'+(last?"결과 보기":"다음 문제")+'</button>'+
+      '<div class="gorow stickgo"><button class="btn" id="next">'+(last?"결과 보기":"다음 문제")+'</button>'+
       '<span class="hint">'+(i+1)+' / '+list.length+'</span></div>';
     document.getElementById("next").onclick=function(){ i++; render(); };
+    /* 답하면 판정이 보이는 데까지 내려간다 — 「다음 문제」 는 화면 아래에 붙어 있다 */
+    setTimeout(function(){ var v=document.getElementById("v"); if(v) v.scrollIntoView({behavior:"smooth",block:"start"}); }, 420);
   }
 
   function finish(){
@@ -687,7 +707,7 @@
       'letter-spacing:-.05em;line-height:1">'+got+
       '<span style="color:var(--ink-4);font-size:34px"> / '+list.length+'</span></div>'+
       '<p style="margin-top:12px;color:var(--ink-3);font-size:15px">'+
-      (got===list.length?"전부 정답":"오답 모아풀기")+'</p>'+
+      (got===list.length?"전부 정답":"틀린 "+missed.length+"문항은 다음 복습에 다시 나옴")+'</p>'+
       /* ★ 맨 위 행동은 「다음」 하나 — 오늘 루틴의 다음 항목(2026-10-04 15분 흐름). 나머지는 그 밑에 작게 */
       '<div id="flownext" style="margin-top:26px;text-align:left">'+(window.COACH&&COACH.flowKinds?(function(){ COACH.flowKinds({kind:"q"}).forEach(function(k){ T.flowMark&&T.flowMark(k); }); return COACH.nextBlock(); })():'')+'</div>'+
       '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px">'+

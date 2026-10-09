@@ -219,13 +219,15 @@
 <script src="js/judge.js?v=eb358ca6"></script>
 <script src="js/cards.js?v=aedaeb8d"></script>
 <script src="js/packs.js?v=9e67e178"></script>
-<script src="js/store.js?v=6ad92f82"></script>
-<script src="js/cheer.js?v=4ef6bd21"></script>
-<script src="js/kwask.js?v=77c0d4a7"></script>
+<script src="js/store.js?v=9c03a376"></script>
+<script src="js/cheer.js?v=95ad66da"></script>
+<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
+<script src="js/kwask.js?v=bf2b1102"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=93150c36"></script>
-<script src="js/notify.js?v=f6ea0991"></script>
+<script src="js/notify.js?v=c1a65441"></script>
+<script>window.addEventListener("beforeinstallprompt",function(e){ e.preventDefault(); window.__terraInstall=e; window.dispatchEvent(new Event("terra:installable")); });</script>
 <script>
 (function(){
   var T=window.TERRA, Q=window.QBANK||{}, N=window.TERRA_NOTIFY;
@@ -258,7 +260,7 @@
   function 진행(){
     el("prog").innerHTML=steps.slice(1,-1).map(function(_,k){ return '<i class="'+(k<i?"on":"")+'"></i>'; }).join("");
     el("back").classList.toggle("on", i>0 && i<steps.length-1);
-    el("skip").style.visibility=(i>0 && i<steps.length-1)?"visible":"hidden";
+    el("skip").style.visibility=(i>0 && i<steps.length-1 && steps[i]!=="check")?"visible":"hidden";   /* 진단에는 문항 「건너뛰기」 가 따로 있다 — 위아래 둘이 서로 다른 일을 했다(2026-10-09) */
   }
   function 단추(label, ok, extra){
     el("foot").innerHTML=(extra||"")+'<button class="btn" id="next"'+(ok===false?' disabled':'')+'>'+esc(label)+'</button>';
@@ -273,6 +275,7 @@
     if(step==="name"){ var v=(el("nm")||{}).value; if(v&&v.trim()){ A.name=v.trim(); S.student.name=A.name; S.student.named=true; T.flush(); } }
     if(step==="grade"){ T.setGrade(A.grade); }
     if(step==="exam" && A.examId && A.examDate){ T.chooseExam(A.examId, A.examDate); }
+    else if(step==="exam" && A.examId && A.dateUnknown){ S.examPick=A.examId; T.flush(); }
     if(step==="scope" && A.scope && A.scope.length){ T.setScope(A.scope.slice()); Object.keys(A.deep||{}).forEach(function(k){ T.setDeep && T.setDeep(k, A.deep[k]!==false); }); }
     if(step==="goal"){ T.setGoalMin(A.goal); }
     if(step==="alarm" && N){ N.setAt(A.alarm); if(A.alarmOn){ try{ N.enable(); }catch(e){} } }
@@ -329,11 +332,13 @@
         '<div class="chips">'+list.map(function(e){
           return '<button data-ex="'+e.id+'" aria-pressed="'+(e.id===A.examId)+'">'+esc(e.name)+'</button>'; }).join("")+'</div>'+
         '<div class="field"><input id="dt" type="date" value="'+esc(A.examDate)+'" aria-label="시험 날짜"></div>'+
-        '<p class="note" id="dnote"></p>';
+        '<p class="note" id="dnote"></p>'+
+        /* 날짜를 모르면 멈추지 않는다 — 「다음」 이 꺼진 채 첫 설정이 끝나지 않았다(2026-10-09 흐름 검증 9번). 날짜는 설정에서 나중에 넣는다 */
+        '<div class="chips" style="margin-top:10px"><button type="button" id="dunk" aria-pressed="'+(!!A.dateUnknown)+'">날짜 아직 모름</button></div>';
       /* 날짜가 비었거나 이미 지났으면 다음으로 못 간다 */
       function 상태(){
         var d=A.examDate?T.dday(A.examDate):null;
-        var 막힘=!d||d.past;
+        var 막힘=A.dateUnknown&&!A.examDate ? false : (!d||d.past);
         if(el("next")) el("next").disabled=막힘;
         return {d:d, 막힘:막힘};
       }
@@ -341,15 +346,17 @@
         var s2=상태(), d=s2.d;
         /* 설명 문장 대신 D-day 와 마크만(2026-09-22) */
         var e2={}; for(var k in cur) e2[k]=cur[k]; if(A.examDate!==날짜(cur)){ e2.date=A.examDate; e2.note="직접"; delete e2.auto; }
-        el("dnote").innerHTML= !A.examDate ? '<b>'+esc(cur.name)+'</b> 날짜 입력'
+        el("dnote").innerHTML= !A.examDate ? (A.dateUnknown ? '<b>'+esc(cur.name)+'</b> 날짜는 설정에서 나중에' : '<b>'+esc(cur.name)+'</b> 날짜 입력')
           : d.past ? '<b>'+esc(cur.name)+'</b> 이미 지난 날짜'
           : '<b>'+esc(cur.name)+'</b> '+esc(d.label)+' '+(T.일정마크?T.일정마크(e2):""); }
       단추("다음", false);
       note();
-      st.querySelectorAll(".chips button").forEach(function(b){ b.onclick=function(){
+      el("dunk").onclick=function(){ A.dateUnknown=!A.dateUnknown; if(A.dateUnknown){ A.examDate=""; el("dt").value=""; }
+        el("dunk").setAttribute("aria-pressed", String(!!A.dateUnknown)); note(); };
+      st.querySelectorAll(".chips button[data-ex]").forEach(function(b){ b.onclick=function(){
         A.examId=b.dataset.ex; cur=list.filter(function(e){return e.id===A.examId;})[0]; A.examDate=날짜(cur); A.examDateTouched=false; el("dt").value=A.examDate;
-        눌림(st,".chips button",function(x){return x.dataset.ex===A.examId;}); note(); }; });
-      el("dt").onchange=el("dt").oninput=function(){ A.examDate=el("dt").value; A.examDateTouched=true; note(); };
+        눌림(st,".chips button[data-ex]",function(x){return x.dataset.ex===A.examId;}); note(); }; });
+      el("dt").onchange=el("dt").oninput=function(){ A.examDate=el("dt").value; A.examDateTouched=true; if(A.examDate){ A.dateUnknown=false; el("dunk").setAttribute("aria-pressed","false"); } note(); };
     },
     scope:function(st){
       if(A.grade!=="고1"){ i++; return 그리기(); }        // 고2·고3은 시험 범위가 없다 — 고2 는 선택과목, 고3 은 수능 전 범위
@@ -375,7 +382,9 @@
       function 넣기(rc, 목록){ var r=T.BY[rc]; A.scope=A.scope.filter(function(x){ return x.charAt(0)!==rc; });
         if(목록.length===r.mids.length) A.scope.push(rc); else A.scope=A.scope.concat(목록); }
       function paint(){
-        el("ulist").innerHTML=["통합사회 1","통합사회 2"].map(function(bk,z){
+        /* 고른 단원이 든 책을 위로 — 2학기 범위를 골라도 첫 화면엔 안 고른 통합사회 1 만 보였다(2026-10-09 흐름 검증 9번) */
+        var 책순=[0,1]; if(A.scope.length && A.scope.every(function(x){ return /^[F-J]/.test(x); })) 책순=[1,0];
+        el("ulist").innerHTML=책순.map(function(z){ return ["통합사회 1","통합사회 2"][z]; }).map(function(bk,zz){ var z=책순[zz];
           return '<span class="bk">'+bk+'</span>'+roots.filter(function(r){ return z===0?/^[A-E]$/.test(r.code):/^[F-J]$/.test(r.code); }).map(function(r,k){
             var on=rootIn(r.code), 든=든중(r.code);
             return '<div class="urow'+(on?' on':'')+'"><button type="button" class="u" data-r="'+r.code+'" aria-pressed="'+on+'"><b>'+(k+1)+'단원</b>'+esc(r.name)+'</button>'+
@@ -408,15 +417,28 @@
     },
     alarm:function(st){
       if(N&&N.at&&N.at()) A.alarm=N.at();
-      A.alarmOn=!!(N&&N.on&&N.on());
+      /* ★ 알림은 켠 채로 시작한다(2026-10-09 흐름 검증 1번: 꺼진 채로 시작해 대부분 「다음」 만 눌러 알림 없이 끝났다).
+         권한은 「다음」 을 누를 때 묻는다(누름이 있어야 브라우저가 묻게 해 준다). 전에 직접 끈 학생은 그대로 둔다 */
+      var 끈적있음=false; try{ 끈적있음=localStorage.getItem("terra.notify.off")==="1"; }catch(e){}
+      A.alarmOn=!!(N&&N.on&&N.on()) || (!끈적있음 && !!N && !(window.Notification && Notification.permission==="denied"));
+      var 설치됨=window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches, 아이폰=/iPad|iPhone|iPod/.test(navigator.userAgent);
       st.innerHTML=머리("6 / 7",esc(MSG.alarmH),esc(MSG.alarmP))+
         '<div class="field"><input id="tm" type="time" value="'+esc(A.alarm)+'"></div>'+
         '<div class="toggle"><div><b>알림 켜기</b></div>'+
         '<button class="sw" id="sw" role="switch" aria-checked="'+A.alarmOn+'" aria-label="알림 켜기"></button></div>'+
-        '<p class="note">'+esc(N&&N.status?(N.status().say||""):"")+'</p>';
+        '<p class="note">'+esc(N&&N.status?(N.status().say||""):"")+'</p>'+
+        /* 앱을 닫아도 알림이 오려면 홈 화면에 깔아야 한다 — 이 안내가 학부모 화면에만 있었다 */
+        (설치됨?'':'<div class="toggle" id="instrow"><div><b>홈 화면에 추가</b><span style="display:block;font-size:13.5px;color:var(--ink-4);margin-top:3px">'+
+          (아이폰?'사파리 아래 공유 단추 → 홈 화면에 추가':'앱처럼 깔면 닫아 둬도 알림이 옴')+'</span></div>'+
+          (아이폰?'':'<button type="button" class="btn sm" id="inst"'+(window.__terraInstall?'':' hidden')+'>추가</button>')+'</div>');
       el("tm").onchange=function(){ A.alarm=el("tm").value||"21:00"; };
       el("sw").onclick=function(){ A.alarmOn=!A.alarmOn; el("sw").setAttribute("aria-checked",String(A.alarmOn));
-        if(A.alarmOn&&N){ N.setAt(A.alarm); try{ N.enable(); }catch(e){} } };
+        try{ localStorage.setItem("terra.notify.off", A.alarmOn?"":"1"); }catch(e){}
+        if(A.alarmOn&&N){ N.setAt(A.alarm); try{ N.enable(); }catch(e){} } else if(N&&N.disable) N.disable(); };
+      function 설치단추(){ var b=el("inst"); if(!b) return; b.hidden=!window.__terraInstall;
+        b.onclick=function(){ var ev=window.__terraInstall; if(!ev) return; ev.prompt();
+          (ev.userChoice||Promise.resolve({})).then(function(r){ if(r&&r.outcome==="accepted"){ var row=el("instrow"); if(row) row.remove(); } window.__terraInstall=null; }); }; }
+      설치단추(); window.addEventListener("terra:installable", 설치단추);
       단추("다음");
     },
     check:function(st){
@@ -573,7 +595,7 @@
         el("qhost").innerHTML='<div class="qwrap">'+머리줄(it,"개념어 쓰기")+시계칸("kw")+'<div id="kwhost"></div></div>';
         var 초과=false, 끝남=false;
         다음단추(false, null);
-        KWASK.render(el("kwhost"), it.x, { idx:k+1, total:큐.length, next:"다음 →", noTag:true,
+        KWASK.render(el("kwhost"), it.x, { idx:k+1, total:큐.length, next:"다음 →", noTag:true, noNext:true,
           onDone:function(res){ if(끝남) return; 끝남=true; 멈춤();
             /* 시간이 넘어 자동으로 낸 것은 확신도를 「시간 초과」(모름)로 남긴다 — 「찍었어요」 가 아니다 */
             if(초과){ var r=(S.kw||{})[it.x.id]; if(r){ r.c=null; r.to=true; T.save&&T.save(); } }
@@ -613,6 +635,9 @@
       var G=T.GRADES[A.grade]||{}, nx=T.nextExam?T.nextExam():null;
       st.innerHTML='<div class="done">'+머리("",(nm?esc(nm)+" ":"")+esc(MSG.doneH),esc(MSG.doneP))+
         (A.check.length?'<p class="note" style="margin:0 0 6px">'+A.check.length+'문항 중 <b>'+맞+'개</b> 정답. '+화면.약한자리()+'</p>':'')+
+        /* 틀린 것이 어디로 가는지 적는다 — 16개 틀렸는데 「틀렸던 1문항」 만 보여 이상했다(2026-10-09 흐름 검증 10번) */
+        (function(){ var 기=0, 다른=0; A.check.forEach(function(r){ if(!r.ok){ if(r.kind==="q") 기++; else 다른++; } });
+          return (기||다른)?'<p class="note" style="margin:0 0 10px">'+(기?'틀린 기출 '+기+'개는 오늘 바로 다시. ':'')+(다른?'O·X·개념어 '+다른+'개는 복습 목록에 넣음':'')+'</p>':''; })()+
         (first?'<a class="todayone" href="'+first.href+'"><span class="lbl">오늘 할 것</span><h3>'+esc(first.title)+'</h3><p>'+esc(first.say)+'</p>'+
           (first.why?'<p class="why">'+esc(first.why)+'</p>':'')+'</a>':'')+
         '<div class="summ">'+

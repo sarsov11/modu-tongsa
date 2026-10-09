@@ -16,7 +16,7 @@
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=1a817d13">
 <link rel="stylesheet" href="css/cheer.css?v=386af7f8">
-<link rel="stylesheet" href="css/coach.css?v=b87b1187">
+<link rel="stylesheet" href="css/coach.css?v=9e11629f">
 <link rel="stylesheet" href="css/keyword.css?v=7a3b2060">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -65,6 +65,7 @@
   .ox button.pick.o{border-color:var(--mint);background:var(--mint-soft);color:var(--mint);opacity:1}
   .ox button.pick.x{border-color:var(--accent);background:rgba(229,72,77,.12);
     color:var(--accent);opacity:1}
+  .step h3.ask{color:var(--accent);font-weight:800}
   .lock{font-size:14.5px;color:var(--ink-4);margin-top:9px;text-align:center}
 
   /* 판정 */
@@ -100,9 +101,9 @@
   .oxnext .why2{font-size:14.5px;color:var(--ink-4);flex:1 0 100%}
 
   /* 끝 화면 */
-  .done{text-align:center;padding:var(--s6) var(--s4)}
-  .done h2{font-size:24px;margin:0 0 8px}
-  .done p{color:var(--ink-3);margin:0 0 var(--s4)}
+  .done:not(.seg):not(.flownext){text-align:center;padding:var(--s6) var(--s4)}
+  .done:not(.seg):not(.flownext) h2{font-size:24px;margin:0 0 8px}
+  .done:not(.seg):not(.flownext) p{color:var(--ink-3);margin:0 0 var(--s4)}
   .tally{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
     gap:10px;margin:var(--s4) 0}
   .tally div{border:1px solid var(--line-2);border-radius:var(--r1);
@@ -196,14 +197,15 @@
 <script src="js/keyword.js?v=b233a01c"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/packs.js?v=9e67e178"></script>
-<script src="js/store.js?v=6ad92f82"></script>
-<script src="js/cheer.js?v=4ef6bd21"></script>
+<script src="js/store.js?v=9c03a376"></script>
+<script src="js/cheer.js?v=95ad66da"></script>
+<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=93150c36"></script>
-<script src="js/coach.js?v=ecc17c3a"></script>
+<script src="js/coach.js?v=700e3a31"></script>
 <script src="js/qrender.js?v=749818a6"></script>
-<script src="js/kwask.js?v=77c0d4a7"></script>
+<script src="js/kwask.js?v=bf2b1102"></script>
 <script>
 (function(){
   var T=window.TERRA, J=window.JUDGE, BANK=window.OXBANK||[];
@@ -470,29 +472,43 @@
         '</div>';
     document.getElementById("stage").innerHTML=
       머리+
+      /* ★ O·X 와 확신도는 어느 쪽을 먼저 눌러도 된다(2026-10-09 흐름 검증 6번: 확신도를 안 누르면 O·X 가 회색이라 「왜 안 눌리지」).
+         O·X 를 먼저 누르면 고른 채로 두고 확신도를 누르는 순간 채점한다. 확신도를 먼저 눌렀으면 O·X 에서 바로 채점. */
       '<div class="step">'+
-        '<h3>확신도</h3>'+
+        '<div class="ox" id="ox">'+
+          '<button type="button" class="o" data-v="1">O</button>'+
+          '<button type="button" class="x" data-v="0">X</button>'+
+        '</div>'+
+        '<h3 id="confh" style="margin-top:14px">확신도</h3>'+
         '<div class="conf" id="conf">'+
           J.확신단계.map(function(c,k){
             return '<button type="button" data-c="'+c.v+'" aria-pressed="false">'+esc(c.name)+'</button>';
           }).join("")+
         '</div>'+
-        '<div class="ox" id="ox">'+
-          '<button type="button" class="o" data-v="1" disabled>O</button>'+
-          '<button type="button" class="x" data-v="0" disabled>X</button>'+
-        '</div>'+
       '</div>';
 
+    var 고른대기=null;
     document.querySelectorAll("#conf button").forEach(function(b){
       b.onclick=function(){
+        if(document.querySelector("#ox button[data-s]")) return;   // 이미 채점함
         확신=b.dataset.c;
         document.querySelectorAll("#conf button").forEach(function(z){
           z.setAttribute("aria-pressed", z===b ? "true":"false"); });
-        document.querySelectorAll("#ox button").forEach(function(z){ z.disabled=false; });
+        if(고른대기){ var g=고른대기; 고른대기=null; 답하기(g.v, g.b); }
       };
     });
     document.querySelectorAll("#ox button").forEach(function(b){
-      b.onclick=function(){ 답하기(b.dataset.v==="1", b); };
+      b.onclick=function(){
+        if(b.disabled) return;
+        if(!확신){
+          고른대기={v:b.dataset.v==="1", b:b};
+          document.querySelectorAll("#ox button").forEach(function(z){ z.classList.toggle("pick", z===b); });
+          var h=document.getElementById("confh"); if(h){ h.textContent="확신도를 누르면 채점"; h.classList.add("ask"); }
+          var cf=document.getElementById("conf"); if(cf&&cf.animate) cf.animate([{transform:"scale(1)"},{transform:"scale(1.04)"},{transform:"scale(1)"}],{duration:320,easing:"cubic-bezier(.2,1.6,.4,1)"});
+          return;
+        }
+        답하기(b.dataset.v==="1", b);
+      };
     });
   }
 
@@ -505,6 +521,8 @@
     document.querySelectorAll("#ox button").forEach(function(z){
       z.disabled=true; if((z.dataset.v==="1")===!!x.a) z.dataset.s="ok"; else if(z===단추) z.dataset.s="no";
     });
+    document.querySelectorAll("#conf button").forEach(function(z){ z.disabled=true; });
+    var 확h=document.getElementById("confh"); if(확h){ 확h.textContent="확신도"; 확h.classList.remove("ask"); }
 
     /* ── 기록 ── */
     var S=T.state();
@@ -514,7 +532,7 @@
     S.ox[x.id]={ok:ok,c:확신,ms:ms,n:시도,at:Date.now(),leaf:x.leaf};
     /* ★ 연속 정답 — 게임처럼 터뜨린다(2026-09-19 대표님). 2연속부터 뜨고, 3·5·7·10 에서 더 크게 */
     연속 = ok ? 연속+1 : 0;
-    if(ok && 연속>=2) 콤보(연속);
+    if(ok && 연속>=2 && !window.ZZ) 콤보(연속);   /* 짜잔 3판이 있으면 연속 배너는 그쪽 */
     /* 리프 통계에도 넣는다 — 개념 체크도 학습이다 */
     T.drill && T.drill("ox", ok);
     T.save && T.save();
@@ -546,7 +564,7 @@
                x.o.map(function(s,k){ return '<li'+(k===x.i?' class="mine"':'')+'>'+esc(s)+(k===x.i?'<em class="minetag">방금 푼 문장, '+(x.a?"맞는 문장":"틀린 문장")+'</em>':'')+'</li>'; }).join("")+
                '</ol></details>' : '')+
       '</div>'+
-      '<div class="oxnext">'+
+      '<div class="oxnext stickgo">'+
         '<button type="button" class="go" id="next">'+
           (i+1>=세트.length?"결과 보기":"이어서 풀기")+'</button>'+
         '<span class="why2">'+esc(n.why)+'</span>'+
