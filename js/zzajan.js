@@ -275,6 +275,7 @@
   var GRADE = { C: ["#6B7280", "#D1D5DB"], B: ["#1D4ED8", "#7CB4FF"], A: ["#C81E1E", "#FF8A8A"], S: ["#B88A00", "#FFE066"] };
   function promote(from, to) { var g = GRADE[to] || GRADE.S; bigScene(g[0], g[1], to, TXT.prT(to), from ? from + " → " + to : "", to === "S" ? "fanfare" : "levelup"); }
   function stars(n) {
+    if (!(n >= 1)) return;   /* 별 0개는 부르지 않는다(40% 미만) */
     var wait = Math.max(bannerUntil, bigUntil) - Date.now();
     if (wait > 0) { setTimeout(function () { stars(n); }, wait + 60); return; }
     bigUntil = Date.now() + 2500;
@@ -319,7 +320,7 @@
   var OKS = '[data-s="ok"],.verdict.good,.verdict.ok,.msg.ok', NOS = '[data-s="no"],.verdict.warn,.verdict.bad,.verdict.no,.msg.no';
   function pickScene(el) {
     var r = rect(el); if (!r || r.width > innerWidth * .9 || el.closest("nav,header,.tabbar,.nav,.bottom")) return;
-    if (el.matches(OKS + "," + NOS)) return;
+    if (el.matches(OKS + "," + NOS) || el.hasAttribute("data-s")) return;   /* 답을 낸 뒤 정답 칸에 다는 data-s="ans" 도 「고름」 으로 세지 않는다(중개사 2026-10-09) */
     play("pick", { vol: .7 });
     if (el.animate) el.animate([{ boxShadow: "inset 0 0 0 0 " + ACC + "00" }, { boxShadow: "inset 0 0 0 3px " + ACC + ", 0 0 0 4px " + ACC + "33", offset: .3 }, { boxShadow: "inset 0 0 0 0 " + ACC + "00" }],
       { duration: 520, easing: "ease-out" });
@@ -330,12 +331,12 @@
   var lastJudge = 0, judgedTap = -1, ready = false;
   /* 판정: 누른 뒤 첫 신호에서 40ms 기다렸다가 한 번 정한다. 화면은 오답 때도 「정답 단추」에 ok 표시를 달기 때문에
      ① 내가 누른 단추의 표시 ② 판정 상자(.verdict) ③ 첫 신호 순으로 본다. */
-  var pend = 0;
+  var pend = 0, quietUntil = 0;   /* ZZ.quiet(ms): 화면을 다시 그리며 옛 답 표시가 새로 생길 때 자동 판정을 잠시 끈다(문항 넘김·채점 때 헛 소리 방지) */
   function judge(ok, el, forced) {
     var now = Date.now();
     /* 화면이 직접 부른 판정(ZZ.ok/no, CHEER 위임)이 먼저면 같은 누름의 자동 판정은 건너뛴다 — 개념어 판정 상자(.verdict.good)가 한 번 더 터뜨렸다(2026-10-09) */
     if (forced) { lastJudge = now; judgedTap = lastTapAt; if (pend) { clearTimeout(pend); pend = 0; } (ok ? okScene : noScene)(el); return; }
-    if (now - lastTapAt > 1500 || judgedTap === lastTapAt || pend) return;
+    if (now < quietUntil || now - lastTapAt > 1500 || judgedTap === lastTapAt || pend) return;
     var tap = lastTapAt, first = ok;
     pend = setTimeout(function () {
       pend = 0; if (judgedTap === tap) return; judgedTap = tap; lastJudge = Date.now();
@@ -377,6 +378,7 @@
   W.ZZ.ok = function (el) { lastJudge = 0; judge(true, el, true); };
   W.ZZ.no = function (el) { lastJudge = 0; judge(false, el, true); };
   W.ZZ.levelUp = levelUp; W.ZZ.promote = promote; W.ZZ.stars = stars;
+  W.ZZ.quiet = function (ms) { quietUntil = Date.now() + (ms || 600); if (pend) { clearTimeout(pend); pend = 0; } };
   W.ZZ.setCombo = function (c) { combo = c | 0; seenTier = {}; saveCombo(); };
   W.ZZ.combo = function () { return combo; };
   }

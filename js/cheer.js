@@ -194,7 +194,7 @@
     if (zz()) { zz().ok(el); return; }
     o = o || {};
     HOST = (el && el.closest && el.closest("[data-cheer-host]")) || null;
-    var now = Date.now(); if (now - lastOk < 250 && (!el || el === lastEl)) return; lastOk = now; lastEl = el;     /* 한 판정에 두 번 울리지 않게 */
+    var now = Date.now(); if (now - lastOk < 1000 && (!el || el === lastEl)) return; lastOk = now; lastEl = el;     /* 한 판정에 두 번 울리지 않게. 첫 소리에서 AudioContext 를 만드느라 250ms 를 넘겨 첫 정답이 두 번 셌다(기사 실측 2026-10-09) */
     var k = KINDS.indexOf(o.kind) >= 0 ? o.kind : kind();
     var combo = typeof o.combo === "number" ? o.combo : num("terra.cheer.combo") + 1;
     ss("terra.cheer.combo", String(combo));
@@ -218,7 +218,7 @@
   function miss(el) {
     if (zz()) { zz().no(el); return; }
     HOST = (el && el.closest && el.closest("[data-cheer-host]")) || null;
-    var now = Date.now(); if (now - lastOk < 250 && el && el === lastEl) return; lastOk = now; lastEl = el;
+    var now = Date.now(); if (now - lastOk < 1000 && el && el === lastEl) return; lastOk = now; lastEl = el;
     reset();
     if (RM) return;
     cls(el, "shake"); buzz(10); beepMiss();
