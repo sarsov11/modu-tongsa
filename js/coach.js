@@ -361,7 +361,14 @@
     el.className = "flowstrip";
     el.setAttribute("aria-label", "오늘 " + R.goal + "분 진행");
     el.innerHTML = '<div class="in"><span class="bars">' + segs + '</span><span class="tx">' +
-      esc(flowAllDone() ? fmt("flowStripDone") : fmt("flowStrip", { goal: R.goal, left: Math.max(0, R.goal - R.spent) })) + '</span></div>';
+      esc(flowAllDone() ? fmt("flowStripDone") : (function () {
+        /* 루틴 몇 번째인지 글로 — 막대만으로는 오늘 할 일이 몇 개인지 안 읽혔다(2026-10-11 대표님 「루틴이 없는 느낌」) */
+        var 지금 = null; for (var q = 0; q < R.items.length; q++) if (!mk[R.items[q].kind]) { 지금 = q; break; }
+        var 여기 = here(), 이칸 = 지금;
+        for (var w = 0; w < R.items.length; w++) if (R.items[w].href && R.items[w].href.split("?")[0] === 여기 && !mk[R.items[w].kind]) { 이칸 = w; break; }
+        return 이칸 == null ? fmt("flowStrip", { goal: R.goal, left: Math.max(0, R.goal - R.spent) })
+          : "루틴 " + (이칸 + 1) + "/" + R.items.length + ", " + R.items[이칸].title + ", " + Math.max(1, R.goal - R.spent) + "분 남음";
+      })()) + '</span></div>';
     nav.insertAdjacentElement("afterend", el);
   }
 

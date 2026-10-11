@@ -528,8 +528,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/supa.config.js?v=e1d10860"></script>
 <script src="js/auth.js?v=93150c36"></script>
-<script src="js/coach.js?v=700e3a31"></script>
-<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
+<script src="js/coach.js?v=f36907f3"></script>
+<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script><script src="js/routinecard.js?v=1011a" defer></script>
 <script src="js/notify.js?v=c1a65441"></script>
 <script>
 (function(){
@@ -1240,6 +1240,8 @@
     document.getElementById("talkmore").onclick=function(){ var m=document.getElementById("askmore"); m.hidden=!m.hidden; if(!m.hidden) m.scrollIntoView({block:"nearest",behavior:"smooth"}); };
   })();
   window.addEventListener("terra:skin",function(){ location.reload(); });
+  /* ★ 오늘의 루틴 카드 — 홈 맨 위(2026-10-11 대표님 「오늘 할 일 인식이 부족, 루틴이 없는 느낌」). js/routinecard.js */
+  window.addEventListener("load", function(){ if(window.ROUTINE) ROUTINE.mount(document.getElementById("talk")); });
 })();
 </script>
 <script>
