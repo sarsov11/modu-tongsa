@@ -1065,7 +1065,7 @@
       todo.push({t:"앞으로",
         h: XM.untilReal===0 ? "내일부터 매일 모의고사"
                             : XM.untilReal+"일 뒤부터 매일 모의고사",
-        p:(XM.exam?XM.exam.name+" ":"")+"D-10부터 매일 25문항, 45분",
+        p:(XM.exam?XM.exam.name+" ":"")+"D-10부터 매일 25문항, 35분",
         href:"settings.html"});
     })();
 
@@ -1083,7 +1083,7 @@
         ? {t:XM.exam.name+" "+XM.label, h:"오늘 회차 완료",
            p:"오답 모아풀기", href:"exam.html"}
         : {t:XM.exam.name+" "+XM.label, h:"오늘의 모의고사",
-           p:"25문항, 45분", href:"exam.html"});
+           p:"25문항, 35분", href:"exam.html"});
     })();
 
     /* 트레이닝 — 시험 범위를 정해 뒀으면 그 범위에서 아직 안 한 것을 집어 준다.
