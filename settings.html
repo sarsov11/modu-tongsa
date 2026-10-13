@@ -407,7 +407,7 @@
       });
     });
     document.getElementById("scope").innerHTML=
-      (되돌릴범위?'<div class="sc-undo"><span>범위를 지웠습니다</span><button type="button" id="scundo">되돌리기</button></div>':'')+
+      (되돌릴범위?'<div class="sc-undo"><span>범위를 지웠습니다</span><button type="button" id="scundo">실행 취소</button></div>':'')+
       '<div class="sc-quick">'+빠른목록.map(function(q,i){
         return '<button data-q="'+i+'">'+q.name+'</button>'; }).join("")+'</div>'+
       '<div class="ulist">'+줄+'</div>';
