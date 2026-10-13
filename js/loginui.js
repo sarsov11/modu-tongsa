@@ -22,7 +22,7 @@
     function 준비중() {
       host.innerHTML = '<div class="lgbox">' + (opt.title ? '<h3 class="lgtitle">' + esc(opt.title) + '</h3>' : '') + '<p class="lgnote">로그인 준비 중. 기록은 이 기기에 저장되고, <a href="settings.html#savesec">기록 옮기기</a>로 백업할 수 있습니다</p></div>';
     }
-    if (!A || !A.on) { 준비중(); return; }
+    if (!A || !A.on) { host.innerHTML = ""; host.hidden = true; return; }   /* 서버 연결이 꺼져 있으면 로그인 칸을 만들지 않는다 */
     /* 서버 건강 확인이 실패하면 단추를 감춘다. 30초마다 다시 확인해 살아나면 단추가 나온다. */
     A.서버확인().then(function (ok) {
       if (!ok) {

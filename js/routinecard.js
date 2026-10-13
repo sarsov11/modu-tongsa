@@ -142,7 +142,7 @@
       body = '<ol class="tl">' + items.map(function (it, i) {
         var s2 = st(it) || "up", col = COL[it.kind] || "#6B7280";
         return '<li class="' + s2 + '" style="--c:' + col + '"><span class="nd">' + (s2 === "done" ? "✓" : (ICON[it.kind] || (i + 1))) + '</span>' +
-          '<span class="tx">' + (s2 === "now" ? '<span class="k2">' + (i + 1) + '번째, 지금</span>' : '') + '<b>' + esc(it.title) + '</b><span>' + esc(shortSay(it)) + '</span></span>' +
+          '<span class="tx">' + (s2 === "now" ? '<span class="k2">' + (i + 1) + '번째, 지금</span>' : '') + '<b>' + esc(it.title) + '</b>' + (s2 === "done" ? '' : '<span>' + esc(shortSay(it)) + '</span>') + '</span>' +   /* 끝낸 항목의 부제는 다시 계산된 다음 단원이라 실제로 한 것과 달라 뺀다(2026-10-13) */
           '<span class="mn">' + (s2 === "done" ? "완료" : it.min + "분") + '</span>' +
           (s2 === "now" ? '<a class="go" href="' + it.href + '">' + (nd ? "이어서 하기" : "시작하기") + ' →</a>' : '') + '</li>';
       }).join("") + '</ol>';

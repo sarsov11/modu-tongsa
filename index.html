@@ -514,23 +514,22 @@
 </div>
 
 <script src="js/trend.js?v=77dea921"></script>
-<script src="js/tree.js?v=70df12a1"></script>
-<script src="js/qbank.js?v=7b68ff94"></script>
+<script src="js/tree.js?v=00e4b89a"></script>
+<script src="js/qbank.js?v=35cf47ff"></script>
 <script src="js/lecture.js?v=878e128c"></script>
 <script src="js/video.js?v=2ad8e90e"></script>
-<script src="js/qrender.js?v=749818a6"></script>
+<script src="js/qrender.js?v=a9f6b896"></script>
 <script src="js/pool.js?v=c0d187ff"></script>
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/cards.js?v=aedaeb8d"></script>
 <script src="js/packs.js?v=9e67e178"></script>
-<script src="js/store.js?v=9c03a376"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="js/supa.config.js?v=e1d10860"></script>
+<script src="js/store.js?v=a32ac781"></script>
+<script src="js/supa.config.js?v=85aed5a2"></script>
 <script src="js/auth.js?v=93150c36"></script>
 <script src="js/coach.js?v=f36907f3"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script><script src="js/routinecard.js?v=1011a" defer></script>
-<script src="js/notify.js?v=c1a65441"></script>
+<script src="js/notify.js?v=dd7c6343"></script>
 <script>
 (function(){
   var T=TERRA, Q=window.QBANK||{};
@@ -607,12 +606,12 @@
   /* ★ 머리는 **다가온 시험과 남은 날** — 「김서준 학생의 오늘」「REMIND 내신 대비형 학교에서 배운 개념을 시험 전에 다시 떠올려요」 는
        뜻도 없고 꼬리표와 설명이 한 줄에 붙어 구분도 안 됐다(2026-09-19 대표님). 시험 날짜가 없으면 이름만. */
   (function(){
-    var 다음=null;
+    var 다음=null, 지난시험=null;
     try{ (T.exams()||[]).filter(function(e){ return e.date; }).forEach(function(e){
-      var dd=T.dday(e.date); if(dd.days<0) return; if(!다음||dd.days<다음.d.days) 다음={e:e,d:dd}; }); }catch(_e){}
+      var dd=T.dday(e.date); if(dd.days<0){ if(!지난시험||dd.days>지난시험.d.days) 지난시험={e:e,d:dd}; return; } if(!다음||dd.days<다음.d.days) 다음={e:e,d:dd}; }); }catch(_e){}
     document.getElementById("hi").innerHTML = 다음
       ? esc(다음.e.name)+' <em>'+esc(다음.d.label)+'</em>'
-      : esc(name);
+      : esc(name)+(지난시험 ? ' <a href="settings.html" style="display:block;margin-top:6px;font-size:15px;font-weight:700;color:var(--cta);text-decoration:none">'+esc(지난시험.e.name)+' 끝남, 다음 시험 날짜 입력 →</a>' : '');
     document.getElementById("remode").hidden=true;
   })();
   var todayAll=r.answers+r.drills;

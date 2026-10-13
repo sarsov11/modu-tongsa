@@ -137,7 +137,7 @@
     var 시도 = (앞 && 앞.n ? 앞.n : (앞 ? 1 : 0)) + 1;
 
     S.ans[qid] = {
-      ok: ok, p: pick, at: Date.now(),
+      ok: ok, p: pick, at: opt.at || Date.now(),   // opt.at — 모의고사처럼 답한 시각을 따로 아는 화면이 넘긴다(2026-10-13)
       n: 시도,                                   // 몇 번째 시도인가
       c: opt.conf || null,                       // 확신도
       ms: opt.ms || null,                        // 걸린 시간(밀리초)
@@ -147,7 +147,7 @@
       c0: 앞 ? (앞.c0 == null ? 앞.c : 앞.c0) : (opt.conf || null)
     };
     S.ev.push({ k: "a", d: dayKey(), leaf: q.leaf, q: qid, ok: ok,
-                c: opt.conf || null, ms: opt.ms || null, n: 시도, at: Date.now() });
+                c: opt.conf || null, ms: opt.ms || null, n: 시도, at: opt.at || Date.now() });
     S.last = { leaf: q.leaf, at: Date.now() };
     save();
     tell({ k: "a", leaf: q.leaf, q: qid, ok: ok, c: opt.conf || null, n: 시도 });
