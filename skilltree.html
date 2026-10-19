@@ -355,8 +355,8 @@
 </div>
 
 <script src="js/trend.js?v=77dea921"></script>
-<script src="js/tree.js?v=69a9d1e3"></script>
-<script src="js/lecture.js?v=49bbdd03"></script>
+<script src="js/tree.js?v=19859c15"></script>
+<script src="js/lecture.js?v=256143e4"></script>
 <script src="js/video.js?v=2ad8e90e"></script>
 <script src="js/lecprac.js?v=704d9a6e"></script>
 <script src="js/pool.js?v=2f91d798"></script>
@@ -364,7 +364,7 @@
 <script src="js/cards.js?v=aedaeb8d"></script>
 <script src="js/packs.js?v=73c47a93"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/store.js?v=02ee326c"></script>
+<script src="js/store.js?v=75ae1491"></script>
 <script src="js/supa.config.js?v=85aed5a2"></script>
 <script src="js/auth.js?v=93150c36"></script>
 <script src="js/coach.js?v=b3f47f42"></script>
@@ -560,7 +560,7 @@
           // 이 학년이 **본 문항으로** 풀 수 있는 수(고1·고2 는 통합사회 학평)
           var mine=0;
           m.leaves.forEach(function(lf){ mine+=T.mainCount(lf); });
-          return {code:m.code,name:별뗌(m.name),deep:/★/.test(m.name),full:별뗌(m.full||m.name),ref:m,root:r,st:st,fam:f,mine:mine,
+          return {code:m.code,name:별뗌(m.name),deep:(m.star||/★/.test(m.name)),full:별뗌(m.full||m.name),ref:m,root:r,st:st,fam:f,mine:mine,
                   wt:lc.wt||0,own:lc.own||0,vol:lc.vol||0,eff:lc.eff||0,
                   lec:lc.lectures||[],mins:lc.sumMin||0,
                   tier:tierOf(st.achieve,st.solved>0)};

@@ -51,6 +51,14 @@
   var T = window.TREE;
   var KEY = "terra.tree.v1";
 
+  /* 개념트리 원본 이름의 ★ 는 표시(킬러·심화)다 — 이름에서 떼어 star 로 옮긴다.
+     「헌법재판소의 지위와 심판 종류 ★」 가 문제풀이 제목에 글자로 나갔다(2026-10-19). exam.js 킬러인가·개념트리 deep 은 star 를 본다. */
+  function 별떼기(x) {
+    if (!/★/.test(x.name || "")) return;
+    x.star = true;
+    x.name = x.name.replace(/\s*★\s*(심화)?/g, "").trim();
+    if (x.full) x.full = x.full.replace(/\s*★\s*(심화)?/g, "").trim();
+  }
   /* ── 색인 ─────────────────────────────────────── */
   var ROOTS = T.roots;
   var MIDS = [], LEAVES = [], BY = {}, QOF = {};
@@ -60,7 +68,9 @@
       m.leaves.forEach(function (l) {
         l.mid = m; l.root = r; LEAVES.push(l); BY[l.code] = l;
         l.play.forEach(function (q) { q.leaf = l.code; QOF[q.id] = q; });
+        별떼기(l);
       });
+      별떼기(m);
     });
     BY[r.code] = r;
   });

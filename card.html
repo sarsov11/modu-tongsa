@@ -140,11 +140,11 @@
   <div id="stage"></div>
 </div>
 
-<script src="js/tree.js?v=69a9d1e3"></script>
+<script src="js/tree.js?v=19859c15"></script>
 <script src="js/qbank.js?v=428a0c8c"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
 <script src="js/cardox.js?v=bf0f306b"></script>
-<script src="js/conceptq.js?v=5849c4d6"></script>
+<script src="js/conceptq.js?v=c469b76f"></script>
 <script src="js/cards.js?v=aedaeb8d"></script>
 <script src="js/keyword.js?v=b233a01c"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
@@ -153,7 +153,7 @@
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/trend.js?v=77dea921"></script>
 <script src="js/packs.js?v=73c47a93"></script>
-<script src="js/store.js?v=02ee326c"></script>
+<script src="js/store.js?v=75ae1491"></script>
 <script src="js/cheer.js?v=4b8966be"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
 <script src="js/supa.config.js?v=85aed5a2"></script>
@@ -206,7 +206,7 @@
   var k=0, 개념어결과=[];
   if(window.COACH) COACH.begin({kind:"card"});   // 리프를 안 넘긴다 — 카드는 이해도를 안 움직인다
 
-  el("eb").textContent = (T.BY[leaf]&&T.BY[leaf].mid.root.name||"")+", "+묶음.mid;   // 단원 코드(F)는 안 보인다
+  el("eb").textContent = (T.BY[leaf]&&T.BY[leaf].mid.root.name||"")+", "+(T.BY[leaf]&&T.BY[leaf].mid.name||String(묶음.mid||"").replace(/\s*★\s*(심화)?/g,""));   // 단원 코드(F)는 안 보인다 · 중단원 이름은 개념트리 것(★ 뗀 것)을 쓴다(2026-10-19)
   el("ttl").innerHTML = 이름꼴(묶음.name);
   el("lede").hidden = true;   /* 만든 사람 설명문이었다 — 화면이 하는 일은 카드와 확인 문항으로 드러난다(2026-09-21) */
 

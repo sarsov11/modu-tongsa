@@ -74,7 +74,7 @@
   }
 
   function 킬러인가(leaf) {
-    if (/★/.test(leaf.name || "")) return true;      // 개념트리가 표시해 둔 것
+    if (leaf.star || /★/.test(leaf.name || "")) return true;      // 개념트리가 표시해 둔 것(store.js 가 이름의 ★ 를 star 로 옮긴다)
     var pre = 킬러설정();
     for (var i = 0; i < pre.length; i++) {
       if (leaf.code.indexOf(pre[i]) === 0) return true;
