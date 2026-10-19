@@ -137,6 +137,8 @@
     /* 점줄(········ ㉠)은 시험지의 줄 맞춤용이다 — 끊을 자리가 없어 폰에서 자료 상자가 화면 두 배로 넘쳤다(2026-09-19). 짧게 줄인다 */
     s = s.replace(/[·.…‥]{4,}/g, ' … ');
     s = s.replace(/([㉠-㉭ⓐ-ⓩ])/g, '<b class="mk box">$1</b>');
+    /* 빈칸 뒤 조사는 붙여 쓴다 — 「(가) 를 믿는」 은 PDF 에서 빈칸 상자와 조사가 떨어져 뽑힌 것(2026-10-19) */
+    s = s.replace(new RegExp("(\\([가-바]\\))\\s+(?=" + _빈칸조사 + ")", "g"), '$1');
     s = s.replace(/(\([가-힣]\))/g, '<b class="mk">$1</b>');
     /* 홑 대문자 A~H 자리표시(「A 를 침해」 「A ~ C」)는 상자로 — 글 사이에 묻혀 안 보인다(2026-09-18 대표님).
        EU·GDP 처럼 영문 낱말의 일부는 손대지 않는다. */
@@ -157,15 +159,29 @@
            또는 ◦ 항목이 갈래 안에 있을 때. */
   var _갈래머리 = /\((가|나|다|라|마|바)\)/g;
   var _불릿 = /[◦•▪■]/;
+  /* 빈칸 표지 뒤에 바로 붙는 조사 — 긴 것부터 */
+  var _빈칸조사 = "(?:을/를|를/을|은/는|는/은|이/가|가/이|와/과|과/와|에서|으로|에게|에는|와는|과는|이다|이며|이고|를|을|는|은|가|이|의|와|과|에|로|도|만)(?=[\\s.,·)]|$)";
   function 갈래나누기(t) {
     var s = String(t || "");
     var marks = s.match(_갈래머리) || [];
     var 가짓수 = {}; marks.forEach(function (m) { 가짓수[m] = 1; });
     if (Object.keys(가짓수).length < 2) return null;
-    var i0 = s.indexOf("(가)");
-    if (i0 < 0) return null;
+    /* ★ 문장 속 빈칸 「대부분의 국민이 (가) 를 믿는」 은 갈래 머리가 아니다 — 머리로 보고 상자를 쪼개 문장이 다음 줄로 밀렸다(2026-10-19 대표님).
+       뒤에 조사가 바로 오거나 앞 낱말이 꾸밈말이면 빈칸이다(「지하수를 활용한 (가) 발전이」). */
+    var 머리꼴 = new RegExp(/\((?:가|나|다|라|마|바)\)\s/.source + "(?!" + _빈칸조사 + ")", "g");
+    var 자리 = [], mm;
+    while ((mm = 머리꼴.exec(s))) {
+      var 앞 = s.slice(0, mm.index).replace(/\s+$/, "");
+      /* 바로 앞 낱말이 꾸밈말·조사로 끝나면(활용한·배출하는·로고에는·국민의) 문장 속 빈칸 */
+      if (!/[한는은의인된던운진를을에로터]$/.test(앞)) 자리.push(mm.index);
+    }
+    var 진짜 = {}; 자리.forEach(function (i) { 진짜[s.charAt(i + 1)] = 1; });
+    if (Object.keys(진짜).length < 2 || !진짜["가"]) return null;
+    var i0 = 자리.filter(function (i) { return s.charAt(i + 1) === "가"; })[0];
     var 머리 = s.slice(0, i0).trim();
-    var 조각 = s.slice(i0).split(/(?=\((?:가|나|다|라|마|바)\)\s)/).filter(function (x) { return x.trim(); });
+    var 조각 = [];
+    자리.filter(function (i) { return i >= i0; }).forEach(function (i, k, arr) { 조각.push(s.slice(i, k + 1 < arr.length ? arr[k + 1] : s.length)); });
+    조각 = 조각.filter(function (x) { return x.trim(); });
     if (조각.length < 2) return null;
     var 항목있음 = _불릿.test(s);
     var 짧은 = 조각.filter(function (x) { return x.trim().length < 25; }).length;
@@ -449,7 +465,7 @@
     /* 선지가 그림 안에 있으면 번호 단추만 낸다 — 글은 그림에 있다 */
     if (opt.numbersOnly) 선지 = [];
     var 열 = 선지.length && 선지.every(function (o) {
-      return String(o).length <= 5 && !/[㉠-㉭ⓐ-ⓩ]/.test(String(o));       // ㉠ 은 상자로 그려져 넓다 — 「ㄱ, ㄴ」 처럼 아주 짧을 때만 가로로 — 14자까지 가로로 두니 폰(375px)에서 다섯 칸이 화면 밖으로 넘쳤다(2026-09-19 전수 실측 60여 문항)
+      return String(o).length <= 5 && !/[㉠-㉭ⓐ-ⓩ]/.test(String(o)) && (String(o).match(/[A-H]/g) || []).length <= 2;   // 「A B C」 는 글자마다 상자라 한 칸에 안 들어간다(2026-10-19)       // ㉠ 은 상자로 그려져 넓다 — 「ㄱ, ㄴ」 처럼 아주 짧을 때만 가로로 — 14자까지 가로로 두니 폰(375px)에서 다섯 칸이 화면 밖으로 넘쳤다(2026-09-19 전수 실측 60여 문항)
     }) ? " row" : "";
     /* 선지 수만큼만 그린다 — 4지선다에 빈 칸을 만들지 않는다 */
     var 자리 = [];

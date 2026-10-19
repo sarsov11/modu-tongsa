@@ -1543,7 +1543,8 @@
       items.push({ kind: "due", min: m, n: take, leaf: top,
         title: "틀린 문제 다시 풀기", lead: "오답 모아풀기",
         say: 한단원 ? 부제괄호(BY[top] ? BY[top].name : top) + "에서 틀렸던 " + take + "문항"
-                    : 단원수 + "개 단원에서 틀렸던 " + take + "문항",
+                    : (take < 범위안오답.length ? "틀렸던 " + 범위안오답.length + "문항 중 " + take + "문항"   /* 「9개 단원에서 틀렸던 6문항」 은 단원 수와 문항 수가 엇갈려 읽혔다(2026-10-18 검수) */
+                                                 : 단원수 + "개 단원에서 틀렸던 " + take + "문항"),
         sayShort: 한단원 ? String(BY[top] ? BY[top].name : top).split(" — ")[0] + " " + take + "문항" : "틀렸던 " + take + "문항",
         why: 범위안오답[0].days ? 범위안오답[0].days + "일 전 오답" : "오늘 오답",
         href: 한단원 ? "study.html?leaf=" + top + "&mode=wrong&n=" + take : "study.html?mode=wrong&n=" + take, cta: "다시 풀기" });
@@ -1662,7 +1663,7 @@
       if (몇개 >= 8) {
         items.push({ kind: "ox", min: OX몫, n: 8,
           title: 배움 ? "문제로 확인" : "개념 체크",
-          say: "O·X 여덟 문장",
+          say: "기출 문장 O·X 12개",
           why: 배움
             ? (강의봄 ? "강의 직후 확인"
                       : "읽은 개념 → O·X")
@@ -1991,7 +1992,8 @@
        학생이 찾아갈 자리가 있어야 한다. 강의(개념트리) 바로 뒤에 둔다. */
     /* ★ 나비는 넷(2026-09-06 대표님: "개념카드, 문제풀이, 어쩌구 존나 많아서 더 정신없음").
        개념 카드·문제풀이·개념 체크는 홈의 '지금 할 것' 과 개념트리에서 간다. */
-    var items = [["index.html", "홈"], ["skilltree.html", "개념트리"], ["skills.html", "푸는 기술"],
+    /* 「푸는 기술」 탭은 뺐다(2026-10-19 대표님 「아무리 봐도 별로다, 걍 빼버려」) — skills.html 은 홈으로 돌려보낸다 */
+    var items = [["index.html", "홈"], ["skilltree.html", "개념트리"],
                  ["drill.html", "킬러 훈련"], ["settings.html", "설정"]];   /* 모의고사 탭은 375px 에서 6칸이 넘쳐 넣지 않았다(설정이 잘림) */
     return '<nav class="nav"><div class="wrap">' +
       '<a class="logo" href="index.html"><span class="dot"></span>모두의 통사<small>테라러닝</small></a>' +

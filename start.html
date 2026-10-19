@@ -13,7 +13,7 @@
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=1a817d13">
 <link rel="stylesheet" href="css/cheer.css?v=386af7f8">
-<link rel="stylesheet" href="css/question.css?v=4cea4076">
+<link rel="stylesheet" href="css/question.css?v=6956a62b">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <link rel="stylesheet" href="css/keyword.css?v=7a3b2060">
 <style>
@@ -204,12 +204,12 @@
 <div class="obfoot"><div class="in" id="foot"></div></div>
 
 <script src="js/trend.js?v=77dea921"></script>
-<script src="js/tree.js?v=00e4b89a"></script>
-<script src="js/qbank.js?v=35cf47ff"></script>
-<script src="js/lecture.js?v=878e128c"></script>
+<script src="js/tree.js?v=69a9d1e3"></script>
+<script src="js/qbank.js?v=428a0c8c"></script>
+<script src="js/lecture.js?v=49bbdd03"></script>
 <script src="js/video.js?v=2ad8e90e"></script>
-<script src="js/qrender.js?v=a9f6b896"></script>
-<script src="js/pool.js?v=c0d187ff"></script>
+<script src="js/qrender.js?v=2f8df5c4"></script>
+<script src="js/pool.js?v=2f91d798"></script>
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
@@ -218,8 +218,8 @@
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/judge.js?v=eb358ca6"></script>
 <script src="js/cards.js?v=aedaeb8d"></script>
-<script src="js/packs.js?v=9e67e178"></script>
-<script src="js/store.js?v=a32ac781"></script>
+<script src="js/packs.js?v=73c47a93"></script>
+<script src="js/store.js?v=02ee326c"></script>
 <script src="js/cheer.js?v=4b8966be"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
 <script src="js/kwask.js?v=bf2b1102"></script>
@@ -636,7 +636,9 @@
         (A.check.length?'<p class="note" style="margin:0 0 6px">'+A.check.length+'문항 중 <b>'+맞+'개</b> 정답. '+화면.약한자리()+'</p>':'')+
         /* 틀린 것이 어디로 가는지 적는다 — 16개 틀렸는데 「틀렸던 1문항」 만 보여 이상했다(2026-10-09 흐름 검증 10번) */
         (function(){ var 기=0, 다른=0; A.check.forEach(function(r){ if(!r.ok){ if(r.kind==="q") 기++; else 다른++; } });
-          return (기||다른)?'<p class="note" style="margin:0 0 10px">'+(기?'틀린 기출 '+기+'개는 오늘 바로 다시. ':'')+(다른?'O·X·개념어 '+다른+'개는 복습 목록에 넣음':'')+'</p>':''; })()+
+          var 오늘=(R.items.filter(function(it){return it.kind==="due";})[0]||{}).n||0;   /* 오늘 다시 푸는 수는 루틴 몫만큼 — 「5개 바로 다시」 라 해 놓고 4문항이 나왔다(2026-10-18 검수) */
+          var 기말 = !기 ? '' : (오늘 && 오늘<기) ? '틀린 기출 '+기+'개 중 '+오늘+'개는 오늘 다시, 나머지는 다음 날. ' : '틀린 기출 '+기+'개는 오늘 바로 다시. ';
+          return (기||다른)?'<p class="note" style="margin:0 0 10px">'+기말+(다른?'O·X·개념어 '+다른+'개는 복습 목록에 넣음':'')+'</p>':''; })()+
         (first?'<a class="todayone" href="'+first.href+'"><span class="lbl">오늘 할 것</span><h3>'+esc(first.title)+'</h3><p>'+esc(first.say)+'</p>'+
           (first.why?'<p class="why">'+esc(first.why)+'</p>':'')+'</a>':'')+
         '<div class="summ">'+

@@ -110,6 +110,48 @@
     return a;
   }
 
+  /* ── 자리 고루 놓기 (2026-10-19 대표님 「단원별로 주르륵 묶어놨더라, 사상가 연속 5문항도. 실제 모고처럼 섞어야지」) ──
+     무작위로만 섞으니 범위가 대단원 셋뿐일 때 같은 단원이 최장 8문항 이어졌다(20회차 실측).
+     대단원을 제 몫만큼 고르게 흩고, 같은 중단원·같은 리프·사상가 문항이 붙지 않게 놓는다. */
+  function 사상가형(x) {
+    if (x.root && x.root.code === "K") return true;
+    var d = (window.QBANK || {})[x.q.id] || {};
+    return /사상가|갑,\s*을|갑, 을, 병/.test(d.q || "") && /사상|입장|주장/.test(d.q || "");
+  }
+  function 고루놓기(arr, rnd) {
+    /* ① 대단원마다 중단원을 번갈아 줄 세운다(같은 중단원이 붙지 않게)
+       ② 대단원마다 제 몫만큼 시험지 전체에 고르게 흩는다 — k 번째 문항의 자리 = (k + 흔들림) / 그 단원 문항 수
+       ③ 사상가 문항이나 같은 리프가 붙으면 뒤의 덜 겹치는 문항과 자리를 바꾼다 */
+    function 중(x) { return x.leaf.code.split(".")[0]; }
+    var 단원 = {};
+    arr.forEach(function (x) { (단원[x.root.code] = 단원[x.root.code] || []).push(x); });
+    var 놓을 = [];
+    Object.keys(단원).forEach(function (r) {
+      var 묶음 = {}, 차례 = [];
+      단원[r].forEach(function (x) { var m = 중(x); if (!묶음[m]) { 묶음[m] = []; 차례.push(m); } 묶음[m].push(x); });
+      차례.sort(function (a, b) { return 묶음[b].length - 묶음[a].length; });
+      var 줄 = [];
+      for (var 남 = true; 남;) {
+        남 = false;
+        차례.forEach(function (m) { if (묶음[m].length) { 줄.push(묶음[m].shift()); 남 = true; } });
+      }
+      줄.forEach(function (x, k) { 놓을.push({ x: x, 자리: (k + 0.25 + 0.5 * rnd()) / 줄.length }); });
+    });
+    놓을.sort(function (a, b) { return a.자리 - b.자리; });
+    var 놓음 = 놓을.map(function (o) { return o.x; });
+    function 겹침(a, b) { return !!a && !!b && (a.leaf.code === b.leaf.code || (a._s && b._s)); }
+    for (var i = 1; i < 놓음.length; i++) {
+      if (!겹침(놓음[i - 1], 놓음[i])) continue;
+      for (var j = i + 1; j < 놓음.length; j++) {
+        var c = 놓음[j];
+        if (!겹침(놓음[i - 1], c) && !겹침(c, 놓음[i + 1]) && !겹침(놓음[j - 1], 놓음[i]) && !겹침(놓음[i], 놓음[j + 1])) {
+          놓음[j] = 놓음[i]; 놓음[i] = c; break;
+        }
+      }
+    }
+    return 놓음;
+  }
+
   /* ── 회차 기록 ────────────────────────────────── */
   function log() {
     try { return JSON.parse(localStorage.getItem(K_LOG) || "[]") || []; }
@@ -446,6 +488,9 @@
       if (a.killer !== b.killer) return a.killer ? 1 : -1;   // 킬러는 뒤로
       return 0;
     });
+    뽑힘.forEach(function (x) { x._s = 사상가형(x); });
+    뽑힘 = 고루놓기(뽑힘.filter(function (x) { return !x.killer; }), rnd)
+      .concat(고루놓기(뽑힘.filter(function (x) { return x.killer; }), rnd));
 
     /* 배점 — 킬러 5점, 그 수만큼 쉬운 것 3점, 나머지 4점 → 합 100.
          5k + 3k + 4(n-2k) = 4n  이므로 n=25 면 어떤 k 든 100 이 된다.

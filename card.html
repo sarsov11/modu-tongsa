@@ -140,25 +140,25 @@
   <div id="stage"></div>
 </div>
 
-<script src="js/tree.js?v=00e4b89a"></script>
-<script src="js/qbank.js?v=35cf47ff"></script>
+<script src="js/tree.js?v=69a9d1e3"></script>
+<script src="js/qbank.js?v=428a0c8c"></script>
 <script src="js/oxbank.js?v=1884002d"></script>
 <script src="js/cardox.js?v=bf0f306b"></script>
-<script src="js/conceptq.js?v=7e53efff"></script>
+<script src="js/conceptq.js?v=5849c4d6"></script>
 <script src="js/cards.js?v=aedaeb8d"></script>
 <script src="js/keyword.js?v=b233a01c"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/judge.js?v=eb358ca6"></script>
-<script src="js/pool.js?v=c0d187ff"></script>
+<script src="js/pool.js?v=2f91d798"></script>
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/trend.js?v=77dea921"></script>
-<script src="js/packs.js?v=9e67e178"></script>
-<script src="js/store.js?v=a32ac781"></script>
+<script src="js/packs.js?v=73c47a93"></script>
+<script src="js/store.js?v=02ee326c"></script>
 <script src="js/cheer.js?v=4b8966be"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
 <script src="js/supa.config.js?v=85aed5a2"></script>
 <script src="js/auth.js?v=93150c36"></script>
-<script src="js/coach.js?v=f36907f3"></script>
+<script src="js/coach.js?v=b3f47f42"></script>
 <script src="js/kwask.js?v=bf2b1102"></script>
 <script>
 (function(){
@@ -370,7 +370,7 @@
        큰 「다음」 이 그 기출이고, 개념 다시 읽기는 밑에 작게. */
     var 고1만 = (((T.state().student||{}).grade)||"고1")==="고1";   /* O·X 은행은 고1 통합사회 학평에서 뽑았다 — 고2·고3 은 그 단원 기출 풀이로 */
     var 갈곳 = (있나&&고1만) ? ("ox.html?leaf="+encodeURIComponent(leaf)) : ("study.html?leaf="+leaf);
-    var 다음 = { href:갈곳, title:((있나&&고1만)?"기출 풀기":"문제풀이"), min:3, kind:((있나&&고1만)?"ox":"q") };
+    var 다음 = { href:갈곳, title:((있나&&고1만)?"문제로 확인":"문제풀이"), min:3, kind:((있나&&고1만)?"ox":"q") };
     if(window.COACH) COACH.wrap({got:맞+어맞, total:장들.length+개념어결과.length, kind:"card", next:다음});
     if(T.flowMark) T.flowMark("card");
     el("stage").innerHTML=

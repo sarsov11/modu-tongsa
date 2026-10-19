@@ -84,13 +84,13 @@
     flowStart:    "시작: {title} ({min}분)",
     flowMore:     "더 하기",
     flowBonus:    "한 세트 더: {title} ({min}분)",
-    wrapAllDone:  "오늘 할 일 끝, {spent}분 공부",
+    wrapAllDone:  "오늘 {spent}분 공부",
     flowAllDone:  "오늘 목표 완료",
     flowStrip:    "오늘 {goal}분, {left}분 남음",
     flowStripDone:"오늘 목표 완료",
     wrapLeft:     "{left}분 남음",
     wrapFirst:    "오늘 첫 세트",
-    wrapTree:     "개념트리 {개념} {d}",
+    wrapTree:     "오늘 {개념} 단원 전체 {d}",
     /* 인사 */
     hiFirst:      "오늘 할 것 하나",
     /* ★★ 2026-09-29 판정소 5차 — 「직전 결과 → 추천」을 한 줄에 다 적지 않는다.
@@ -227,7 +227,7 @@
       return { bonus: 1, kind: "due", href: "study.html?mode=wrong&n=" + n, title: "틀린 문제 " + n + "개", min: Math.max(1, Math.round(n * 50 / 60)) };
     }
     var g = ((T.state().student || {}).grade) || "고1";
-    if (g === "고1") return { bonus: 1, kind: "ox", href: "ox.html", title: "O·X 여덟 문장", min: 3 };
+    if (g === "고1") return { bonus: 1, kind: "ox", href: "ox.html", title: "기출 문장 O·X 12개", min: 3 };
     return { bonus: 1, kind: "drill", href: "drill.html", title: "킬러 한 세트", min: 3 };
   }
 
@@ -479,7 +479,8 @@
                                        : fmt("wrapSame", { 개념: 개념, after: after })) : "";
     var md = midDelta(), m = leaf && midOf(leaf), tline = "";
     if (m && md[m.code] && md[m.code].d > 0) tline = fmt("wrapTree", { 개념: m.name, d: "+" + md[m.code].d });
-    var dline = t.done ? fmt("wrapDone") : flowAllDone() ? fmt("wrapAllDone", { spent: t.spent })
+    /* 끝났을 때 「오늘 목표 완료」 는 아래 큰 단추 칸이 말한다 — 여기서는 공부한 분만(2026-10-18 검수: 같은 말 두 번) */
+    var dline = (t.done || flowAllDone()) ? fmt("wrapAllDone", { spent: t.spent })
               : (시작 && !시작.ans && t.ans ? fmt("wrapFirst") + " " : "") + fmt("wrapLeft", { left: t.left });
 
     /* ★ 15분 흐름 (2026-09-15 대표님) — 학생이 고르지 않는다. 결산이 뜨면 오늘 루틴의
@@ -508,7 +509,8 @@
               (after > before ? '<em class="d">+' + (after - before) + '</em>' : '') + '</b></div>' +
               '<span class="track"><i class="was" style="width:' + before + '%"></i>' +
               '<i class="now" style="width:' + before + '%" data-to="' + after + '"></i></span></div>' : '') +
-      (uline ? '<p class="say">' + esc(uline) + (tline ? " " + esc(tline) : "") + '</p>' : '') +
+      /* 이해도 줄은 막대(.ubar)가 이미 보여 준다 — 같은 말을 한 줄 더 쓰지 않는다(2026-10-18 검수: 「이해도 0 → 0」 아래 「이해도 0 유지」) */
+      (tline ? '<p class="say">' + esc(tline) + '</p>' : '') +
       '<div class="today"><div><b>' + t.ok + '</b><span>오늘 맞힘</span></div>' +
       '<div><b>' + t.ans + '</b><span>오늘 푼 것</span></div>' +
       '<div><b>' + t.spent + '<i>/' + t.goal + '</i></b><span>분</span></div>' +
