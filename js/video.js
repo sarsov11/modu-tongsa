@@ -389,5 +389,53 @@ window.VIDEO=
   "part": 1,
   "parts": 1,
   "ep": "I06"
+ },
+ "C2.1": {
+  "title": "열대·건조 기후",
+  "min": 3.4,
+  "sum": "",
+  "local": "",
+  "web": "lec/C2_1.mp4",
+  "yt": "",
+  "mb": 9,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "C2.2": {
+  "title": "열대·건조 기후",
+  "min": 3.4,
+  "sum": "",
+  "local": "",
+  "web": "lec/C2_1.mp4",
+  "yt": "",
+  "mb": 9,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "C2.3": {
+  "title": "열대·건조 기후",
+  "min": 3.4,
+  "sum": "",
+  "local": "",
+  "web": "lec/C2_1.mp4",
+  "yt": "",
+  "mb": 9,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "C2.4": {
+  "title": "열대·건조 기후",
+  "min": 3.4,
+  "sum": "",
+  "local": "",
+  "web": "lec/C2_1.mp4",
+  "yt": "",
+  "mb": 9,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
  }
 };
