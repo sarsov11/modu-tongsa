@@ -487,9 +487,9 @@
   function paint(){
     FAMS.forEach(function(f){
       var hex=cv(FAM[f].key)||"#4FC3E8", c=hsl(hex);
-      FAM[f].hex=hex; FAM[f].h=c[0]; FAM[f].s=c[1];
+      FAM[f].hex=cv("--ink-3")||"#6B7280"; FAM[f].h=c[0]; FAM[f].s=c[1];   /* 단원 색은 쓰지 않는다(10/20) */
     });
-    GOLD=cv("--fam-soc")||"#FFD86B"; STAR=cv("--star")||"#CFE0FF";
+    GOLD=ACH.S; STAR=cv("--star")||"#CFE0FF";
     CORE=cv("--core-glow")||"#4E7BD6";
     /* 영상이 한 편도 없으면 강의 수·시간을 말하지 않는다(2026-09-17 감사: 0편인데 '21강, 다 들었어요'). */
     HASV=Object.keys(window.VIDEO||{}).length>0;
@@ -508,15 +508,19 @@
 
   /* 밤에서는 밝을수록, 종이에서는 진할수록 잘한 것이다 */
   var TIER={
-    S:{n:"S",l:80,pl:38,m:1.00,pm:1.00,label:"성취도 80% 이상"},
-    A:{n:"A",l:65,pl:52,m:1.00,pm:.98,label:"60% 이상"},
-    B:{n:"B",l:52,pl:66,m:.94,pm:.86,label:"30% 이상"},
+    S:{n:"S",l:80,pl:38,m:1.00,pm:1.00,label:"80% 이상"},
+    A:{n:"A",l:65,pl:52,m:1.00,pm:.98,label:"60~80%"},
+    B:{n:"B",l:52,pl:66,m:.94,pm:.86,label:"30~60%"},
     C:{n:"C",l:40,pl:78,m:.86,pm:.70,label:"30% 미만"},
     L:{n:"–",l:36,pl:87,m:.44,pm:.30,label:"아직 안 풂"}
   };
+  /* ★ 2026-10-20 대표님 「색은 성취도 기준」 — 단원별 색(갈색·주황·빨강)이 비슷비슷해 무엇을 뜻하는지 안 보였다.
+     이제 색 = 성취도 구간 하나뿐. 단원은 이름으로 가른다. 옛 판 _skilltree_성취도색전_1020.html */
+  var ACH={S:"#2F6FED",A:"#1FA35C",B:"#F2B705",C:"#E5484D",L:"#A3AAB4"};
+  function achHex(av,played){ return ACH[tierOf(av,played)]; }
   function tone(f,t,dl){
-    var F=FAM[f]||FAM["지리"], k=TIER[t], pp=paper(), d=(dl||0);
-    return "hsl("+F.h+" "+Math.round(F.s*(pp?k.pm:k.m))+"% "+(pp?k.pl-d:k.l+d)+"%)";
+    var c=hsl(ACH[t]||ACH.L), d=(dl||0)*(paper()?-.5:.5);
+    return "hsl("+c[0]+" "+c[1]+"% "+Math.max(12,Math.min(88,c[2]+d))+"%)";
   }
   function tierOf(a,played){ return !played?"L":a>=80?"S":a>=60?"A":a>=30?"B":"C"; }
   /* 학생에게 하는 말은 지적이 아니라 권유다. 판단은 학생이 한다. */
@@ -758,7 +762,7 @@
       var av=M.items.length
         ? Math.round(M.items.reduce(function(s,x2){ return s+x2.st.achieve; },0)/M.items.length)
         : 0;
-      var gp=orb(nodes,x,y,rr,hue,av,{bold:true});
+      var gp=orb(nodes,x,y,rr,achHex(av,M.items.some(function(x2){ return x2.st.solved; })),av,{bold:true});
       gp.setAttribute("aria-label",f+" 갈래 열기, 평균 성취도 "+av+"퍼센트");
       var shown=FAM[f].label||f;
       txt(gp,shown,{x:x,y:y+L.fName*.42,"text-anchor":"middle",fill:SINK,
@@ -831,7 +835,7 @@
         ? Math.round(gr.items.reduce(function(s2,y){ return s2+y.st.achieve; },0)/gr.items.length)
         : 0;
       var rr=Math.round((26+16*Math.sqrt(wt/maxWt))*L.k+10);
-      var gp=orb(nodes,x,y,rr,hue,av,{bold:true});
+      var gp=orb(nodes,x,y,rr,achHex(av,gr.items.some(function(y2){ return y2.st.solved; })),av,{bold:true});
       gp.setAttribute("aria-label",gr.name+" 열기, 성취도 "+av+"퍼센트");
       var lec=gr.items.reduce(function(s2,y){ return s2+y.lec.length; },0);
       var l1=txt(labs,gr.name,{x:x,y:y+rr+L.fName+7,"text-anchor":"middle",
@@ -1495,7 +1499,7 @@
   function legend(){
     var f=fam||"지리";
     var size='';
-    document.getElementById("legend").innerHTML=(level===1
+    document.getElementById("legend").innerHTML=(true
       ? ["S","A","B","C","L"].map(function(k){
           return '<span class="k"><i class="dot" style="background:'+
             (k==="S"?GOLD:tone(f,k))+'"></i>'+TIER[k].label+'</span>';   /* 등급 글자(S·A·B·C) 없이 뜻만(2026-09-21) */
@@ -1614,7 +1618,7 @@
   window.addEventListener("load", function(){ if(window.ZZCOACH) ZZCOACH.run("tongsa.skilltree", [
     { el:"#pickhost .pick", text:"오늘 할 것. 누르면 바로 시작" },
     { el:function(){ var l=document.querySelector("#treelist .mrow"); return (l&&l.offsetParent)?l:document.querySelector(".board"); }, text:"시험 범위 단원 지도. 누르면 그 단원의 개념과 기출로 들어감" },
-    { el:"#legend", text:"색은 단원 구분. 단원에 들어가면 많이 맞힌 곳일수록 진해지고, 성취도 80%를 넘으면 금색" }
+    { el:"#legend", text:"색은 성취도. 빨강 30% 미만, 노랑 30~60%, 초록 60~80%, 파랑 80% 이상, 회색은 아직 안 푼 곳" }
   ], { delay: 900 }); });   /* zzcoach.js 는 defer 라 load 뒤에 부른다 */
   /* ★ 오늘 오른 곳 — 선생님 층이 하루 시작 때 찍어 둔 이해도와 견준다. 누르면 그 중영역 시트 */
   if(window.COACH) COACH.mountTreeDelta(document.getElementById("deltahost"), function(leafCode, mk){

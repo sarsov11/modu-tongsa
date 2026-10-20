@@ -437,5 +437,41 @@ window.VIDEO=
   "part": 1,
   "parts": 1,
   "ep": "통사v5"
+ },
+ "B1.1": {
+  "title": "서양 행복론",
+  "min": 3.6,
+  "sum": "",
+  "local": "",
+  "web": "lec/B1_1.mp4",
+  "yt": "",
+  "mb": 7,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "B1.3": {
+  "title": "서양 행복론",
+  "min": 3.6,
+  "sum": "",
+  "local": "",
+  "web": "lec/B1_1.mp4",
+  "yt": "",
+  "mb": 7,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "K1.1": {
+  "title": "서양 행복론",
+  "min": 3.6,
+  "sum": "",
+  "local": "",
+  "web": "lec/B1_1.mp4",
+  "yt": "",
+  "mb": 7,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
  }
 };
