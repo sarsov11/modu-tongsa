@@ -1361,5 +1361,89 @@ window.VIDEO=
   "part": 1,
   "parts": 1,
   "ep": "통사v5"
+ },
+ "H2.1": {
+  "title": "비용·편익 분석",
+  "min": 2.4,
+  "sum": "",
+  "local": "",
+  "web": "lec/H2_1.mp4",
+  "yt": "",
+  "mb": 5,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "H2.2": {
+  "title": "비용·편익 분석",
+  "min": 2.4,
+  "sum": "",
+  "local": "",
+  "web": "lec/H2_1.mp4",
+  "yt": "",
+  "mb": 5,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "H2.3": {
+  "title": "비용·편익 분석",
+  "min": 2.4,
+  "sum": "",
+  "local": "",
+  "web": "lec/H2_1.mp4",
+  "yt": "",
+  "mb": 5,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "B2.1": {
+  "title": "행복의 조건",
+  "min": 3.1,
+  "sum": "",
+  "local": "",
+  "web": "lec/B2_1.mp4",
+  "yt": "",
+  "mb": 6,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "C6.1": {
+  "title": "환경 문제와 국제 협약",
+  "min": 2.7,
+  "sum": "",
+  "local": "",
+  "web": "lec/C6_1.mp4",
+  "yt": "",
+  "mb": 5,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "C6.2": {
+  "title": "환경 문제와 국제 협약",
+  "min": 2.7,
+  "sum": "",
+  "local": "",
+  "web": "lec/C6_1.mp4",
+  "yt": "",
+  "mb": 5,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "C6.3": {
+  "title": "환경 문제와 국제 협약",
+  "min": 2.7,
+  "sum": "",
+  "local": "",
+  "web": "lec/C6_1.mp4",
+  "yt": "",
+  "mb": 5,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
  }
 };
