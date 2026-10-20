@@ -223,16 +223,16 @@ window.VIDEO=
   "ep": "G02"
  },
  "G2.1": {
-  "title": "자유주의적 정의관과 공동체주의적 정의관",
-  "min": 7.8,
+  "title": "롤스 vs 노직",
+  "min": 3.3,
   "sum": "",
   "local": "",
-  "web": "https://youtu.be/Ro2kL94Mw70",
-  "yt": "Ro2kL94Mw70",
-  "mb": 278,
+  "web": "lec/G2_1.mp4",
+  "yt": "",
+  "mb": 6,
   "part": 1,
   "parts": 1,
-  "ep": "G03"
+  "ep": "통사v5"
  },
  "G2.2": {
   "title": "자유주의적 정의관과 공동체주의적 정의관",
@@ -566,6 +566,30 @@ window.VIDEO=
   "web": "lec/D1_1.mp4",
   "yt": "",
   "mb": 5,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "H1.2": {
+  "title": "수요와 공급",
+  "min": 3.0,
+  "sum": "",
+  "local": "",
+  "web": "lec/H1_2.mp4",
+  "yt": "",
+  "mb": 6,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "K3.1": {
+  "title": "롤스 vs 노직",
+  "min": 3.3,
+  "sum": "",
+  "local": "",
+  "web": "lec/G2_1.mp4",
+  "yt": "",
+  "mb": 6,
   "part": 1,
   "parts": 1,
   "ep": "통사v5"

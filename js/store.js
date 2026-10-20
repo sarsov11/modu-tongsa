@@ -1185,7 +1185,7 @@
       var ls = leafStat(S.last.leaf);
       if (ls.solved < ls.play)
         steps.push({ kind: "cont", leaf: S.last.leaf,
-          title: "보던 데를 마저",
+          title: "이어서 학습",
           say: BY[S.last.leaf].name + ", " + ls.solved + " / " + ls.play + "문항",
           href: "study.html?leaf=" + S.last.leaf, cta: "이어서 풀기" });
     }
@@ -1738,7 +1738,7 @@
         제목 = "약한 곳 굳히기";
         왜 = 약한 ? ("정답률 " + leafStat(약한.code).pct + "%") : "";
         if (!tgt && S.last && BY[S.last.leaf]) {
-          tgt = BY[S.last.leaf]; 제목 = "보던 데 마저";
+          tgt = BY[S.last.leaf]; 제목 = "이어서 학습";
           왜 = "시험 임박 → 보던 것부터";
         }
       } else {
@@ -1748,7 +1748,7 @@
           .sort(function (a, b) { return (b.vol || 0) - (a.vol || 0); })[0];
         tgt = fresh || (S.last && BY[S.last.leaf]);
         /* 이 항목은 개념 읽기가 아니라 기출 문제다 — 「처음 배우는 개념」 을 눌렀는데 문제가 나왔다(2026-10-09 흐름 검증 3번) */
-        제목 = fresh ? "새 단원 기출" : "보던 데 마저";
+        제목 = fresh ? "새 단원 기출" : "이어서 학습";
         왜 = fresh ? "시작 전, 출제 비중 최대"
                    : "오늘 마지막";
       }
