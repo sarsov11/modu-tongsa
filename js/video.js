@@ -151,76 +151,76 @@ window.VIDEO=
   "ep": "통사v5"
  },
  "F4.1": {
-  "title": "시민 참여와 시민 불복종",
-  "min": 7.8,
+  "title": "시민 불복종 — 소로 · 롤스 · 싱어",
+  "min": 2.9,
   "sum": "",
   "local": "",
-  "web": "https://youtu.be/y9n_6d2K2pE",
-  "yt": "y9n_6d2K2pE",
-  "mb": 260,
+  "web": "lec/F3_6.mp4",
+  "yt": "",
+  "mb": 6,
   "part": 1,
   "parts": 1,
-  "ep": "F09"
+  "ep": "통사v5"
  },
  "F4.2": {
-  "title": "시민 참여와 시민 불복종",
-  "min": 7.8,
+  "title": "시민 불복종 — 소로 · 롤스 · 싱어",
+  "min": 2.9,
   "sum": "",
   "local": "",
-  "web": "https://youtu.be/y9n_6d2K2pE",
-  "yt": "y9n_6d2K2pE",
-  "mb": 260,
+  "web": "lec/F3_6.mp4",
+  "yt": "",
+  "mb": 6,
   "part": 1,
   "parts": 1,
-  "ep": "F09"
+  "ep": "통사v5"
  },
  "F3.6": {
-  "title": "시민 참여와 시민 불복종",
-  "min": 7.8,
+  "title": "시민 불복종 — 소로 · 롤스 · 싱어",
+  "min": 2.9,
   "sum": "",
   "local": "",
-  "web": "https://youtu.be/y9n_6d2K2pE",
-  "yt": "y9n_6d2K2pE",
-  "mb": 260,
+  "web": "lec/F3_6.mp4",
+  "yt": "",
+  "mb": 6,
   "part": 1,
   "parts": 1,
-  "ep": "F09"
+  "ep": "통사v5"
  },
  "G1.1": {
-  "title": "정의의 의미와 분배적 정의",
-  "min": 7.6,
+  "title": "정의의 기준 — 업적 · 능력 · 필요",
+  "min": 2.6,
   "sum": "",
   "local": "",
-  "web": "https://youtu.be/YAZ-xREVnm4",
-  "yt": "YAZ-xREVnm4",
-  "mb": 260,
+  "web": "lec/G1_1.mp4",
+  "yt": "",
+  "mb": 5,
   "part": 1,
   "parts": 1,
-  "ep": "G01"
+  "ep": "통사v5"
  },
  "G1.2": {
-  "title": "정의의 의미와 분배적 정의",
-  "min": 7.6,
+  "title": "정의의 기준 — 업적 · 능력 · 필요",
+  "min": 2.6,
   "sum": "",
   "local": "",
-  "web": "https://youtu.be/YAZ-xREVnm4",
-  "yt": "YAZ-xREVnm4",
-  "mb": 260,
+  "web": "lec/G1_1.mp4",
+  "yt": "",
+  "mb": 5,
   "part": 1,
   "parts": 1,
-  "ep": "G01"
+  "ep": "통사v5"
  },
  "G1.3": {
-  "title": "교정적 정의 · 응보주의와 예방주의",
-  "min": 7.5,
+  "title": "칸트 vs 베카리아 — 형벌",
+  "min": 3.6,
   "sum": "",
   "local": "",
-  "web": "https://youtu.be/1iPypcvF9hM",
-  "yt": "1iPypcvF9hM",
-  "mb": 265,
+  "web": "lec/G1_3.mp4",
+  "yt": "",
+  "mb": 7,
   "part": 1,
   "parts": 1,
-  "ep": "G02"
+  "ep": "통사v5"
  },
  "G2.1": {
   "title": "롤스 vs 노직",
@@ -235,16 +235,16 @@ window.VIDEO=
   "ep": "통사v5"
  },
  "G2.2": {
-  "title": "자유주의적 정의관과 공동체주의적 정의관",
-  "min": 7.8,
+  "title": "공동체주의 — 매킨타이어 · 샌델 · 왈처",
+  "min": 3.1,
   "sum": "",
   "local": "",
-  "web": "https://youtu.be/Ro2kL94Mw70",
-  "yt": "Ro2kL94Mw70",
-  "mb": 278,
+  "web": "lec/G2_2.mp4",
+  "yt": "",
+  "mb": 6,
   "part": 1,
   "parts": 1,
-  "ep": "G03"
+  "ep": "통사v5"
  },
  "G3.1": {
   "title": "사회 불평등",
@@ -355,16 +355,16 @@ window.VIDEO=
   "ep": "통사v5"
  },
  "I3.1": {
-  "title": "소극적 평화와 적극적 평화",
-  "min": 7.6,
+  "title": "갈퉁 vs 칸트 — 평화",
+  "min": 3.3,
   "sum": "",
   "local": "",
-  "web": "https://youtu.be/h4QzUslMhwY",
-  "yt": "h4QzUslMhwY",
-  "mb": 258,
+  "web": "lec/I3_1.mp4",
+  "yt": "",
+  "mb": 6,
   "part": 1,
   "parts": 1,
-  "ep": "I04"
+  "ep": "통사v5"
  },
  "I3.2": {
   "title": "동아시아 역사 갈등과 평화 통일",
@@ -1442,6 +1442,54 @@ window.VIDEO=
   "web": "lec/C6_1.mp4",
   "yt": "",
   "mb": 5,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "K4.2": {
+  "title": "시민 불복종 — 소로 · 롤스 · 싱어",
+  "min": 2.9,
+  "sum": "",
+  "local": "",
+  "web": "lec/F3_6.mp4",
+  "yt": "",
+  "mb": 6,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "K5.1": {
+  "title": "갈퉁 vs 칸트 — 평화",
+  "min": 3.3,
+  "sum": "",
+  "local": "",
+  "web": "lec/I3_1.mp4",
+  "yt": "",
+  "mb": 6,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "K3.3": {
+  "title": "칸트 vs 베카리아 — 형벌",
+  "min": 3.6,
+  "sum": "",
+  "local": "",
+  "web": "lec/G1_3.mp4",
+  "yt": "",
+  "mb": 7,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "K3.2": {
+  "title": "공동체주의 — 매킨타이어 · 샌델 · 왈처",
+  "min": 3.1,
+  "sum": "",
+  "local": "",
+  "web": "lec/G2_2.mp4",
+  "yt": "",
+  "mb": 6,
   "part": 1,
   "parts": 1,
   "ep": "통사v5"
