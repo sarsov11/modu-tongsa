@@ -91,40 +91,40 @@ window.VIDEO=
   "ep": "F05"
  },
  "F3.1": {
-  "title": "권력 분립 · 국회와 대통령",
-  "min": 5.6,
+  "title": "권력 분립",
+  "min": 2.9,
   "sum": "",
   "local": "",
-  "web": "https://youtu.be/N-RIc7tEfxE",
-  "yt": "N-RIc7tEfxE",
-  "mb": 185,
+  "web": "lec/F3_1.mp4",
+  "yt": "",
+  "mb": 5,
   "part": 1,
   "parts": 1,
-  "ep": "F06"
+  "ep": "통사v5"
  },
  "F3.2": {
-  "title": "권력 분립 · 국회와 대통령",
-  "min": 5.6,
+  "title": "권력 분립",
+  "min": 2.9,
   "sum": "",
   "local": "",
-  "web": "https://youtu.be/N-RIc7tEfxE",
-  "yt": "N-RIc7tEfxE",
-  "mb": 185,
+  "web": "lec/F3_1.mp4",
+  "yt": "",
+  "mb": 5,
   "part": 1,
   "parts": 1,
-  "ep": "F06"
+  "ep": "통사v5"
  },
  "F3.3": {
-  "title": "권력 분립 · 국회와 대통령",
-  "min": 5.6,
+  "title": "권력 분립",
+  "min": 2.9,
   "sum": "",
   "local": "",
-  "web": "https://youtu.be/N-RIc7tEfxE",
-  "yt": "N-RIc7tEfxE",
-  "mb": 185,
+  "web": "lec/F3_1.mp4",
+  "yt": "",
+  "mb": 5,
   "part": 1,
   "parts": 1,
-  "ep": "F06"
+  "ep": "통사v5"
  },
  "F3.4": {
   "title": "법원과 사법권의 독립",
@@ -468,6 +468,18 @@ window.VIDEO=
   "sum": "",
   "local": "",
   "web": "lec/B1_1.mp4",
+  "yt": "",
+  "mb": 7,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "K1.4": {
+  "title": "동양 행복론",
+  "min": 3.6,
+  "sum": "",
+  "local": "",
+  "web": "lec/K1_4.mp4",
   "yt": "",
   "mb": 7,
   "part": 1,
