@@ -593,5 +593,29 @@ window.VIDEO=
   "part": 1,
   "parts": 1,
   "ep": "통사v5"
+ },
+ "K1.2": {
+  "title": "공리주의 vs 칸트",
+  "min": 3.4,
+  "sum": "",
+  "local": "",
+  "web": "lec/K1_2.mp4",
+  "yt": "",
+  "mb": 6,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "K1.3": {
+  "title": "공리주의 vs 칸트",
+  "min": 3.4,
+  "sum": "",
+  "local": "",
+  "web": "lec/K1_2.mp4",
+  "yt": "",
+  "mb": 6,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
  }
 };
