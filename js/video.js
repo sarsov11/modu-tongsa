@@ -7,16 +7,16 @@ window.VIDEO=
 /* 10/20: F2.3 은 강의영상 표준(개념v4) 판 — 사이트에 mp4 를 같이 싣는다(lec/). 옛 유튜브 a2bU6E7uhR4 는 _video_개념v4전_1020.js */
 {
  "F2.1": {
-  "title": "기본권의 다섯 유형",
-  "min": 5.9,
+  "title": "기본권의 유형",
+  "min": 2.8,
   "sum": "",
   "local": "",
-  "web": "https://youtu.be/4-S3AhRD86Q",
-  "yt": "4-S3AhRD86Q",
-  "mb": 197,
+  "web": "lec/F2_1.mp4",
+  "yt": "",
+  "mb": 5,
   "part": 1,
   "parts": 1,
-  "ep": "F01"
+  "ep": "통사v5"
  },
  "F2.3": {
   "title": "기본권의 제한",
@@ -127,28 +127,28 @@ window.VIDEO=
   "ep": "통사v5"
  },
  "F3.4": {
-  "title": "법원과 사법권의 독립",
-  "min": 5.0,
+  "title": "법원과 헌법 재판소",
+  "min": 2.9,
   "sum": "",
   "local": "",
-  "web": "https://youtu.be/xyFDZpma7VM",
-  "yt": "xyFDZpma7VM",
-  "mb": 165,
+  "web": "lec/F3_4.mp4",
+  "yt": "",
+  "mb": 5,
   "part": 1,
   "parts": 1,
-  "ep": "F07"
+  "ep": "통사v5"
  },
  "F3.5": {
-  "title": "헌법재판소 · 위헌 법률 심판과 헌법 소원",
-  "min": 5.6,
+  "title": "법원과 헌법 재판소",
+  "min": 2.9,
   "sum": "",
   "local": "",
-  "web": "https://youtu.be/le8Ehcnr_2c",
-  "yt": "le8Ehcnr_2c",
-  "mb": 187,
+  "web": "lec/F3_4.mp4",
+  "yt": "",
+  "mb": 5,
   "part": 1,
   "parts": 1,
-  "ep": "F08"
+  "ep": "통사v5"
  },
  "F4.1": {
   "title": "시민 참여와 시민 불복종",
@@ -482,6 +482,90 @@ window.VIDEO=
   "web": "lec/K1_4.mp4",
   "yt": "",
   "mb": 7,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "C1.1": {
+  "title": "기후 요소와 기후 구분",
+  "min": 3.4,
+  "sum": "",
+  "local": "",
+  "web": "lec/C1_1.mp4",
+  "yt": "",
+  "mb": 7,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "C1.2": {
+  "title": "기후 요소와 기후 구분",
+  "min": 3.4,
+  "sum": "",
+  "local": "",
+  "web": "lec/C1_1.mp4",
+  "yt": "",
+  "mb": 7,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "C1.3": {
+  "title": "기후 요소와 기후 구분",
+  "min": 3.4,
+  "sum": "",
+  "local": "",
+  "web": "lec/C1_1.mp4",
+  "yt": "",
+  "mb": 7,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "C1.6": {
+  "title": "기후 요소와 기후 구분",
+  "min": 3.4,
+  "sum": "",
+  "local": "",
+  "web": "lec/C1_1.mp4",
+  "yt": "",
+  "mb": 7,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "D1.1": {
+  "title": "문화권과 세계의 종교",
+  "min": 2.7,
+  "sum": "",
+  "local": "",
+  "web": "lec/D1_1.mp4",
+  "yt": "",
+  "mb": 5,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "D1.2": {
+  "title": "문화권과 세계의 종교",
+  "min": 2.7,
+  "sum": "",
+  "local": "",
+  "web": "lec/D1_1.mp4",
+  "yt": "",
+  "mb": 5,
+  "part": 1,
+  "parts": 1,
+  "ep": "통사v5"
+ },
+ "D1.3": {
+  "title": "문화권과 세계의 종교",
+  "min": 2.7,
+  "sum": "",
+  "local": "",
+  "web": "lec/D1_1.mp4",
+  "yt": "",
+  "mb": 5,
   "part": 1,
   "parts": 1,
   "ep": "통사v5"
