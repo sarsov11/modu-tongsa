@@ -935,25 +935,38 @@
     var nG=M.groups.length;
     var maxWt=Math.max.apply(null,M.items.map(function(x){ return x.wt; }))||1;
 
+    /* ★ 2026-10-20 대표님 「겹친다」 — 이웃 단원의 원끼리 겹쳤다(문화권·환경 문제). 자리를 먼저 다 잡고, 겹치는 원을 밀어낸 뒤 그린다 */
+    var HUB=[], ALL=[];
+    M.groups.forEach(function(gr,gi){
+      var a=-90+gi*(360/nG), hx=L.CX+Rh*Math.cos(rad(a)), hy=L.CY+Rh*Math.sin(rad(a)); HUB[gi]=[hx,hy];
+      var m=gr.items.length, two=(m>=5), spread=Math.min(two?176:150,(two?46:36)*Math.max(1,m-1)+26);
+      gr.items.forEach(function(n,k){
+        var aa=a+(m===1?0:(k/(m-1)-.5)*spread), rr2=Rc*(two&&(k%2===1)?1.34:1);
+        n._x=hx+rr2*Math.cos(rad(aa)); n._y=hy+rr2*Math.sin(rad(aa)); n._far=(rr2>Rc); n._hub=gi;
+        n._rr=Math.round((13+Math.sqrt(n.wt/maxWt)*15)*L.k+7); ALL.push(n); });
+    });
+    for(var it=0;it<80;it++){ var moved=false;
+      for(var i=0;i<ALL.length;i++){ var A=ALL[i];
+        for(var j=i+1;j<ALL.length;j++){ var B=ALL[j], dx=B._x-A._x, dy=B._y-A._y, d=Math.sqrt(dx*dx+dy*dy)||.01, need=A._rr+B._rr+L.fName*3.4;
+          if(d<need){ var push=(need-d)/2; A._x-=dx/d*push; A._y-=dy/d*push; B._x+=dx/d*push; B._y+=dy/d*push; moved=true; } }
+        var cx=A._x-L.CX, cy=A._y-L.CY, cd=Math.sqrt(cx*cx+cy*cy)||.01, cn=L.rCore+A._rr+22;   /* 가운데 원과도 */
+        if(cd<cn){ A._x=L.CX+cx/cd*cn; A._y=L.CY+cy/cd*cn; moved=true; }
+        A._x=Math.max(A._rr+8,Math.min(L.W-A._rr-8,A._x)); A._y=Math.max(A._rr+8,Math.min(L.H-A._rr-8,A._y)); }
+      if(!moved) break; }
+    ALL.forEach(function(n){ var h=HUB[n._hub]; n._a=Math.atan2(n._y-h[1],n._x-h[0])*180/Math.PI; });
+
     M.groups.forEach(function(gr,gi){
       var a=-90+gi*(360/nG);
-      var hx=L.CX+Rh*Math.cos(rad(a)), hy=L.CY+Rh*Math.sin(rad(a));
+      var hx=HUB[gi][0], hy=HUB[gi][1];
       el("line",{x1:L.CX,y1:L.CY,x2:hx,y2:hy,stroke:hue,"stroke-width":1.4,
         opacity:".24"},link);
 
-      // 자식은 허브 바깥쪽 부채꼴에 — 자기 대영역 곁에 붙어 있다
-      var m=gr.items.length;
-      var two=(m>=5);                       // 다섯부터는 안팎 두 겹
-      var spread=Math.min(two?176:150,(two?46:36)*Math.max(1,m-1)+26);
+      // 자식은 허브 바깥쪽 부채꼴에 — 자기 대영역 곁에 붙어 있다(자리는 위에서 잡았다)
       gr.items.forEach(function(n,k){
-        var aa=a+(m===1?0:(k/(m-1)-.5)*spread);
-        var rr2=Rc*(two&&(k%2===1)?1.34:1);
-        n._x=hx+rr2*Math.cos(rad(aa)); n._y=hy+rr2*Math.sin(rad(aa)); n._a=aa;
         var lock=(n.tier==="L");
         el("line",{x1:hx,y1:hy,x2:n._x,y2:n._y,stroke:lock?SLINE:hue,
           "stroke-width":lock?.9:1.4,opacity:lock?".45":".34",
           "stroke-dasharray":lock?"3 5":"none"},link);
-        n._far=(rr2>Rc);
       });
 
       // 대영역 이름표 — 코드 문자는 붙이지 않는다
@@ -971,7 +984,7 @@
 
       gr.items.forEach(function(n){
         var col=tone(f,n.tier), lock=(n.tier==="L");
-        var rr=Math.round((13+Math.sqrt(n.wt/maxWt)*15)*L.k+7);
+        var rr=n._rr;
         var gp=orb(nodes,n._x,n._y,rr,col,n.st.achieve,{});
         gp.setAttribute("aria-label",
           n.name+", 성취도 "+n.st.achieve+"퍼센트, 강의 "+n.lec.length+"개 열기");
