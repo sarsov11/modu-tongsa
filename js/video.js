@@ -78,18 +78,6 @@ window.VIDEO=
   "parts": 1,
   "ep": "통사v5"
  },
- "F2.4": {
-  "title": "인권 보장을 위한 헌법의 역할",
-  "min": 6.8,
-  "sum": "",
-  "local": "",
-  "web": "https://youtu.be/XXVH738j1cE",
-  "yt": "XXVH738j1cE",
-  "mb": 242,
-  "part": 1,
-  "parts": 1,
-  "ep": "F05"
- },
  "F3.1": {
   "title": "권력 분립",
   "min": 2.9,
