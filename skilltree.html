@@ -157,6 +157,7 @@
   .lec{display:flex;gap:14px;align-items:flex-start;padding:15px 16px;border-radius:var(--r1);
     border:1px solid var(--line);background:var(--surface-2);margin-bottom:9px;transition:.16s}
   .lec:hover{border-color:var(--line-3)}
+  .samelec{display:flex;align-items:center;justify-content:center;font-size:14.5px;font-weight:700;color:var(--ink-4);border:1px dashed var(--line-2);border-radius:var(--r1,10px);padding:0 10px;min-height:44px}
   .lec .no{flex:0 0 40px;height:40px;border-radius:12px;display:grid;place-items:center;
     font-family:var(--mono);font-size:16px;font-weight:800;background:var(--surface-3);
     color:var(--ink-3)}
@@ -1305,6 +1306,9 @@
        리프를 안 걸렀다. 범위 밖 리프(학교 프리셋 drop·심화 끔)는 맨 아래로 내리고 흐리게 「이번 범위 아님」. */
     var 안리프=function(x){ return !T.inScopeLeaf || T.inScopeLeaf(x.code); };
     var 줄=n.lec.filter(안리프).concat(n.lec.filter(function(x){ return !안리프(x); }));
+    /* ★ 2026-10-21 대표님 「영상들 다 똑같은 건데 다른 영상인 것처럼」 — 한 편이 여러 리프를 다루면
+       같은 영상 단추가 리프마다 떴다. 시트 안에서 같은 영상은 처음 리프에만 「강의 보기」, 나머지는 안내만. */
+    var 본영상={};
     document.getElementById("shList").innerHTML=줄.map(function(x){
       var ls=T.leafStat(x.code), lt=tierOf(ls.achieve,ls.solved>0);
       var col=lt==="S"?GOLD:tone(n.fam,lt,paper()?14:0);
@@ -1326,6 +1330,9 @@
           /* ★ 항목은 있는데 주소가 둘 다 비면(배포판 — 영상을 못 올린 편) 준비 중으로.
              단추만 살아 있으면 "눌러도 안 나오는 강의" 가 된다. */
           if(!V || !(V.yt||V.web||V.local)) return '<button class="btn quiet soon" disabled>강의 준비 중</button>';
+          var 키=V.yt||V.web||V.local;
+          if(본영상[키]) return '<span class="samelec">위 강의에서 함께 다룸</span>';
+          본영상[키]=1;
           return '<button class="btn play" data-leaf="'+x.code+'">강의 보기</button>';
         })()+
         /* ★ 0919 대표님 「강의 옆 관련 문항 1개 딸랑 — 적합도도 떨어지고 문제 수도 적다」
