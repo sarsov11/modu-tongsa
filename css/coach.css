@@ -107,7 +107,7 @@
 .tcard:not(.open):hover .front,.tcard:not(.open):focus-visible .front{transform:translateY(-3px);border-color:var(--cta)}
 .tcard .eb{font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--ink-4);}
 .tcard .front b{font-size:17px;color:var(--ink);letter-spacing:-.02em}
-.tcard .front .tap{display:inline-block;margin-top:4px;font-size:15px;font-weight:700;color:#fff;
+.tcard .front .tap{display:inline-block;margin-top:4px;font-size:15px;font-weight:700;color:var(--cta-ink,#fff);
   background:var(--cta);padding:8px 16px;border-radius:99px;animation:tapbeat 1.6s ease-in-out infinite}
 @keyframes tapbeat{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 .tcard .seal{display:flex;gap:6px;margin:4px 0}
