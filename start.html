@@ -243,11 +243,11 @@
 <div class="obfoot"><div class="in" id="foot"></div></div>
 
 <script src="js/trend.js?v=77dea921"></script>
-<script src="js/tree.js?v=b45f6f1c"></script>
+<script src="js/tree.js?v=9d3fe5ce"></script>
 <script src="js/qbank.js?v=416b309c"></script>
 <script src="js/lecture.js?v=40cd99f6"></script>
 <script src="js/video.js?v=1cfffffd"></script>
-<script src="js/qrender.js?v=2f8df5c4"></script>
+<script src="js/qrender.js?v=3419f389"></script>
 <script src="js/pool.js?v=a86b23b9"></script>
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
@@ -261,7 +261,7 @@
 <script src="js/store.js?v=f23c6ee6"></script>
 <script src="js/schools.js?v=227ee5e4"></script>
 <script>window.ZZSTRAT=window.ZZSTRAT||{add:function(d){(window.__ZZS=window.__ZZS||{})[d.id]=d;}};</script>
-<script src="js/zzstrat_tongsa.js?v=71c8390e"></script>
+<script src="js/zzstrat_tongsa.js?v=4950996a"></script>
 <script src="js/cheer.js?v=4b8966be"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
 <script src="js/kwask.js?v=bf2b1102"></script>
@@ -605,10 +605,17 @@
       /* ── 배치 시험 20문항 — O·X 10, 객관식 6, 개념어 쓰기 4. 리프를 돌아가며 골고루(2026-09-18 대표님).
          문항마다 초읽기: O·X 20초, 개념어 30초, 객관식 60초(2026-09-18 대표님 '개념어 쓰기 너무 짧아'). 시간이 다 되면 틀린 것으로 적고 넘어간다. ── */
       var 제한 = { ox:20, q:60, kw:30 };
-      var 차례 = ["ox","q","ox","kw","ox","q","ox","ox","kw","q","ox","ox","q","kw","ox","q","ox","kw","ox","q"];
-      var 리프들 = (T.오늘의리프?T.오늘의리프({전부:true}):[]).map(function(c){ return c.leaf; })
-        .filter(function(l){ return !T.scopeOn() || !T.inScopeLeaf || T.inScopeLeaf(l.code); });
+      /* 배치고사 20 = O·X 8 · 자료형 기출 5 · 글 기출 3 · 개념어 4 */
+      var 차례 = ["ox","qc","ox","q","kw","qd","ox","ox","q","qd","kw","ox","qd","ox","q","kw","ox","qd","ox","kw"];
+      /* 배치고사는 시험 범위가 아니라 학년 전 범위에서 — 기후·지리·경제까지 고루(2026-10-25 대표님 「기후파트·그래프 분석 문제 등 다양하게」) */
+      var 리프들 = (배치 && A.grade==="고1" && window.TREE)
+        ? (function(){ var o=[]; TREE.roots.forEach(function(r){ if(/^[A-J]$/.test(r.code)) r.mids.forEach(function(m){ m.leaves.forEach(function(l){ o.push(l); }); }); }); return o; })()   /* 고1 배치고사 = 통합사회 1·2 전 단원 */
+        : (T.오늘의리프?T.오늘의리프({전부:true}):[]).map(function(c){ return c.leaf; })
+          .filter(function(l){ return !T.scopeOn() || !T.inScopeLeaf || T.inScopeLeaf(l.code); });
       리프들.sort(function(x,y){ return T.seed("ob"+T.dayKey()+x.code) - T.seed("ob"+T.dayKey()+y.code); });
+      /* 대단원을 번갈아 — 같은 단원 문항이 몰리지 않게 */
+      (function(){ var 칸={}, 순=[]; 리프들.forEach(function(l){ var r=(l.mid&&l.mid.root&&l.mid.root.code)||l.code.charAt(0); if(!칸[r]){ 칸[r]=[]; 순.push(r); } 칸[r].push(l); });
+        var 섞=[], 남=true; for(var z=0; 남; z++){ 남=false; 순.forEach(function(r){ if(칸[r][z]){ 섞.push(칸[r][z]); 남=true; } }); } 리프들=섞; })();
       var OXB = window.OXBANK||[], 본OX = {};
       OXB.forEach(function(x){ (본OX[x.leaf] = 본OX[x.leaf] || []).push(x); });
       var 쓴OX = {}, 쓴Q = {}, 쓴KW = {};
@@ -619,8 +626,14 @@
           풀.sort(function(x,y){ return (/_c\d+$/.test(y.id)?1:0) - (/_c\d+$/.test(x.id)?1:0) || T.seed("ob"+T.dayKey()+x.id) - T.seed("ob"+T.dayKey()+y.id); });
           var x = 풀[0]; 쓴OX[x.id] = 1; return { kind:"ox", x:x, leaf:l };
         },
-        q:function(l){
-          var qs=(l.play||[]).filter(function(q){ var d=Q[q.id]; return d && !쓴Q[q.id] && (A.grade==="고1" ? q.id.charAt(0)==="T" : T.isMain(q, A.grade)) && !d.g && !q.ff && !q.fig && d.o && d.o.length>=4 && (!window.QRENDER||QRENDER.ok(d,q)) && !S.ans[q.id] && 깔끔한가(d); });
+        /* qd = 자료형(그래프·표·지도·그림 — 원본 자료 그림이 나가는 것), q = 글 문항 */
+        qd:function(l){ return 뽑기.q(l, true); },
+        /* 기후 자료형 — 배치고사에 하나는 꼭(2026-10-25 대표님 「기후파트 문제」) */
+        qc:function(l){ return /기후/.test(l.name||"") ? 뽑기.q(l, true) : null; },
+        q:function(l, 자료형){
+          var qs=(l.play||[]).filter(function(q){ var d=Q[q.id]; if(!(d && !쓴Q[q.id] && (A.grade==="고1" ? q.id.charAt(0)==="T" : T.isMain(q, A.grade)) && !q.ff && d.o && d.o.length>=4 && (!window.QRENDER||QRENDER.ok(d,q)) && !S.ans[q.id])) return false;
+            var 자=!!q.fig || (d.t&&d.t.length) || /그래프|표는|표의|지도|그림/.test(String(d.q||""));
+            return 자료형 ? (자 && (!d.g || q.fig)) : (!자 && !d.g && 깔끔한가(d)); });
           if(A.grade==="고3"){ var 고삼=qs.filter(function(q){ return q.g==="고3"; }); if(고삼.length) qs=고삼; }   /* 고3 진단은 고3 기출(평가원·교육청)로 */
           if(!qs.length) return null;
           var q=qs[Math.floor(T.seed("ob"+T.dayKey()+l.code)*qs.length)%qs.length]; 쓴Q[q.id]=1; return { kind:"q", q:q, leaf:l };
@@ -634,11 +647,13 @@
       var 큐 = [], li = 0;
       /* 고2·고3 은 단답형을 안 낸다 — 그 자리를 O·X 로(2026-09-22) */
       /* O·X 은행은 고1 통합사회 학평에서 뽑은 것이다 — 고2·고3 은 본 과목 기출 10문항으로 */
-      if(A.grade!=="고1") 차례=["q","q","q","q","q","q","q","q","q","q","q","q","q","q","q"];
+      if(A.grade!=="고1") 차례=["q","qd","q","qd","q","qd","q","qd","q","qd","q","qd","q","qd","q"];
       /* 처음인 학생은 10문항(2026-10-24 대표님 「10문제 이상」), 배치고사는 고1 20 · 고2·3 15 */
-      if(!배치) 차례 = A.grade==="고1" ? ["ox","q","ox","kw","ox","q","ox","ox","kw","q"] : 차례.slice(0,수.first);
+      if(!배치) 차례 = A.grade==="고1" ? ["ox","q","ox","kw","qd","ox","q","ox","kw","qd"] : 차례.slice(0,수.first);
       차례.forEach(function(kind){
-        for(var t=0; t<리프들.length; t++){ var l=리프들[(li++)%리프들.length]; var it=뽑기[kind](l); if(it){ 큐.push(it); return; } }
+        var 차례들 = kind==="qc" ? ["qc","qd","q"] : kind==="qd" ? ["qd","q"] : [kind];   /* 자료형이 바닥나면 글 문항으로 */
+        for(var w=0; w<차례들.length; w++)
+          for(var t=0; t<리프들.length; t++){ var l=리프들[(li++)%리프들.length]; var it=뽑기[차례들[w]](l); if(it){ it.data=차례들[w]!=="q"; 큐.push(it); return; } }
       });
       if(!큐.length){ i++; return 그리기(); }
       var k=0; A.check=[]; A.checkSkipped=false;
