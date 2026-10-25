@@ -620,6 +620,15 @@
         var m = 글.match(/^.*?[.?!](?=\s|$)/);
         out.push(m ? m[0] : 글);
       });
+      /* 도식 카드(2026-10-25)는 줄글 문단이 거의 없다 — 개념어 뜻, 도식 제목과 갈래 이름으로 미리 보인다 */
+      if (out.length < 2) (card.blocks || []).forEach(function (b) {
+        var 맨 = function (t) { return String(t || "").replace(/\*\*/g, "").split(" · ").join(", "); };
+        if (b.t === "def") out.push(맨(b.term) + ": " + 맨(b.text));
+        else if (b.t === "tree") out.push(맨(b.root) + ": " + (b.branches || []).map(function (g) { return 맨(g[0]); }).join(", "));
+        else if (b.t === "flow" || b.t === "cycle") out.push((b.title ? 맨(b.title) + ": " : "") + (b.steps || []).map(function (x) { return 맨(String(x).split(" · ")[0]); }).join(" → "));
+        else if (b.t === "vs") out.push((b.cols || []).map(function (c) { return 맨(c.name); }).join(" / "));
+        else if (b.t === "cause") out.push(맨(b.result));
+      });
       return out;
     }
     function face(c) {

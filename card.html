@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="css/cheer.css?v=386af7f8">
 <link rel="stylesheet" href="css/coach.css?v=9bd6a7e9">
 <link rel="stylesheet" href="css/keyword.css?v=7a3b2060">
+<link rel="stylesheet" href="css/diagram.css?v=7c251633">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .page{max-width:820px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -123,6 +124,7 @@
   .card .cflow li::before{content:counter(f);position:absolute;left:10px;top:9px;width:22px;height:22px;border-radius:7px;background:var(--ink);color:var(--bg);font-weight:900;font-size:13px;display:grid;place-items:center}
   .card .ctrap{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--red-soft);border:1px solid var(--red-line)}
   .card .ctrap .ctt{margin:0 0 6px;color:var(--red-2)} .card .ctrap ul{margin:0;padding-left:18px} .card .ctrap li{font-size:15px;line-height:1.6;color:var(--ink);margin-bottom:4px}
+  .card .dg + .cp{margin-top:14px}
   .card .cnote{font-size:14.5px;color:var(--ink-3);margin:8px 0 0}
   .verdict .why{margin-top:11px;padding-top:11px;border-top:1px solid var(--line-2);font-size:15.5px;line-height:1.6;color:var(--ink-2)}
   .verdict .why b{color:var(--ink)} .verdict .why .src{display:block;margin-top:4px;font-size:13.5px;color:var(--ink-3);font-weight:600}
@@ -145,20 +147,21 @@
 <script src="js/oxbank.js?v=1884002d"></script>
 <script src="js/cardox.js?v=05b6eb88"></script>
 <script src="js/conceptq.js?v=29822237"></script>
-<script src="js/cards.js?v=509ee67a"></script>
+<script src="js/cards.js?v=0e727ee3"></script>
+<script src="js/diagram.js?v=36842420"></script>
 <script src="js/keyword.js?v=b233a01c"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
 <script src="js/judge.js?v=eb358ca6"></script>
 <script src="js/pool.js?v=a86b23b9"></script>
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/trend.js?v=77dea921"></script>
-<script src="js/packs.js?v=34d91be9"></script>
+<script src="js/packs.js?v=87449626"></script>
 <script src="js/store.js?v=f23c6ee6"></script>
 <script src="js/cheer.js?v=4b8966be"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
 <script src="js/supa.config.js?v=85aed5a2"></script>
 <script src="js/auth.js?v=93150c36"></script>
-<script src="js/coach.js?v=b3f47f42"></script>
+<script src="js/coach.js?v=c2d6f8ac"></script>
 <script src="js/kwask.js?v=bf2b1102"></script>
 <script>
 (function(){
@@ -225,9 +228,10 @@
   /* 가운뎃점으로 잇지 않는다(0915) — 표 칸·목록은 줄을 바꾸고, 제목은 쉼표로(2026-09-24 지적검수 T03) */
   function 칸글(t){ return 굵게(t).split(" · ").join("<br>"); }
   function 제목글(t){ return 굵게(t).split(" · ").join(", "); }
-  function 블록글(b){ if(!b) return ""; if(b.t==="p") return b.text||""; if(b.t==="table") return (b.head||[]).concat.apply([], (b.rows||[])).join(" "); if(b.t==="tree") return [b.root].concat((b.branches||[]).map(function(x){return x.join(" ");})).join(" "); if(b.t==="flow") return (b.steps||[]).join(" "); if(b.t==="trap") return (b.items||[]).join(" "); return b.text||""; }
+  function 블록글(b){ if(!b) return ""; if(window.DIAGRAM&&DIAGRAM.has(b.t)) return DIAGRAM.text(b); if(b.t==="p") return b.text||""; if(b.t==="table") return (b.head||[]).concat.apply([], (b.rows||[])).join(" "); if(b.t==="tree") return [b.root].concat((b.branches||[]).map(function(x){return x.join(" ");})).join(" "); if(b.t==="flow") return (b.steps||[]).join(" "); if(b.t==="trap") return (b.items||[]).join(" "); return b.text||""; }
   function 블록HTML(b){
     if(b.t==="p") return '<p class="cp">'+제목글(b.text)+'</p>';
+    if(window.DIAGRAM&&DIAGRAM.has(b.t)) return DIAGRAM.html(b);   /* 도식 블록(2026-10-25) — 표·갈래·차례도 같은 그리개로 */
     if(b.t==="table") return '<div class="ctab">'+(b.title?'<div class="ctt">'+제목글(b.title)+'</div>':'')+'<table>'+(b.head&&b.head.length?'<thead><tr>'+b.head.map(function(h){return '<th>'+칸글(h)+'</th>';}).join("")+'</tr></thead>':'')+
       '<tbody>'+(b.rows||[]).map(function(r){ return '<tr>'+r.map(function(x){return '<td>'+칸글(x)+'</td>';}).join("")+'</tr>'; }).join("")+'</tbody></table></div>';
     if(b.t==="tree") return '<div class="ctree">'+(b.title?'<div class="ctt">'+제목글(b.title)+'</div>':'')+'<div class="root">'+굵게(b.root)+'</div><ul>'+(b.branches||[]).map(function(x){ return '<li><b>'+굵게(x[0])+'</b><span>'+굵게(x[1]||"")+'</span></li>'; }).join("")+'</ul></div>';

@@ -193,16 +193,16 @@
 <script src="js/trend.js?v=77dea921"></script>
 <script src="js/conceptq.js?v=29822237"></script>
 <script src="js/lecprac.js?v=704d9a6e"></script>
-<script src="js/cards.js?v=509ee67a"></script>
+<script src="js/cards.js?v=0e727ee3"></script>
 <script src="js/keyword.js?v=b233a01c"></script>
 <script src="js/kwgrade.js?v=dc3854d5"></script>
-<script src="js/packs.js?v=34d91be9"></script>
+<script src="js/packs.js?v=87449626"></script>
 <script src="js/store.js?v=f23c6ee6"></script>
 <script src="js/cheer.js?v=4b8966be"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
 <script src="js/supa.config.js?v=85aed5a2"></script>
 <script src="js/auth.js?v=93150c36"></script>
-<script src="js/coach.js?v=b3f47f42"></script>
+<script src="js/coach.js?v=c2d6f8ac"></script>
 <script src="js/qrender.js?v=3419f389"></script>
 <script src="js/kwask.js?v=bf2b1102"></script>
 <script>
@@ -250,7 +250,8 @@
     (C.cards||[]).forEach(function(c){
       (c.lines||[]).forEach(function(t){ Object.assign(o,낱말집합(t)); });
       (c.blocks||[]).forEach(function(b){
-        [b.text,b.root].concat(b.steps||[],b.items||[],(b.rows||[]).map(function(r){return r.join(" ");}),(b.branches||[]).map(function(x){return x.join(" ");})).forEach(function(t){ if(t) Object.assign(o,낱말집합(t)); });
+        /* 도식 블록(2026-10-25)은 칸이 여러 겹이다 — 글자 값을 전부 훑는다 */
+        (function 훑기(v,k){ if(typeof v==="string"){ if(k!=="t") Object.assign(o,낱말집합(v)); } else if(v&&typeof v==="object") Object.keys(v).forEach(function(kk){ 훑기(v[kk],kk); }); })(b);
       });
     });
     return o;
