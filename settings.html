@@ -313,6 +313,12 @@
     </div>
   </section>
 
+  <section class="sec" id="rssec" data-nm="학습 기록 활용 동의">   <!-- 2026-10-27 학습 기록 활용 동의(동의하면 할인): 약관과 따로, research.html 에서 켜고 끈다 -->
+    <div class="sechd"><h2>학습 기록 활용 동의</h2><span class="cap" id="rscap"></span></div>
+    <div class="keep"><a class="prbtn" href="research.html">어떤 기록인지 보고 할인받기</a></div>
+    <script>try{var _c=JSON.parse(localStorage.getItem("terra.rs.consent")||"null");document.getElementById("rscap").textContent=_c&&_c.agreed&&!_c.withdrawn?"동의함 · 할인 중":"동의하지 않음";}catch(e){}</script>
+  </section>
+
   <section class="sec">
     <div class="sechd"><h2>기록 옮기기</h2></div>
     <div class="keep">
@@ -340,12 +346,13 @@
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/cards.js?v=0e727ee3"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/store.js?v=f23c6ee6"></script>
+<script src="js/store.js?v=9ed2f66a"></script>
 <script src="js/cheer.js?v=4b8966be"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
 <script src="js/supa.config.js?v=85aed5a2"></script>
 <script src="js/parent.js?v=cdb8db08"></script>
-<script src="js/auth.js?v=93150c36"></script>
+<script src="js/auth.js?v=775bb24d"></script>
+<script src="js/research.js?v=5d5043fd"></script>
 <script src="js/loginui.js?v=c19cd4a9"></script>
 <script src="js/coach.js?v=c2d6f8ac"></script>
 <script src="js/notify.js?v=dd7c6343"></script>
@@ -710,7 +717,7 @@
   /* ── 기록 옮기기 ──────────────────────────────
      기록이 이 기기에만 있다. 계정이 붙기 전까지의 안전장치다.
 
-     ★ 되돌리기는 **지금 기록을 덮는다.** 되돌릴 수 없다.
+     ★ 불러오기는 **지금 기록을 덮는다.** 원래대로 돌릴 수 없다.
        그래서 덮기 전에 지금 것과 들어올 것을 나란히 보여 주고 묻는다. */
   var 상자=document.getElementById("kbox"), 말=document.getElementById("ksay");
   function 알림(t,꼴){ 말.textContent=t; 말.className="keepsay"+(꼴?" "+꼴:""); }
@@ -757,7 +764,7 @@
     T.코드읽기(v).then(function(짐){
       var 들어올것=T.짐요약(짐);
       if(!덮을까(들어올것)) { 알림("취소됨"); return; }
-      var r=T.기록되돌리기(짐);
+      var r=T.기록불러오기(짐);
       알림("불러옴: "+사람말(r)+". 새로 고침 → 반영", "ok");
       paintAll();
     }).catch(function(e){
@@ -780,7 +787,7 @@
       catch(e){ 알림("학습 기록 없는 파일", "no"); return; }
       if(!덮을까(들어올것)) { 알림("취소됨"); return; }
       try{
-        var r=T.기록되돌리기(짐);
+        var r=T.기록불러오기(짐);
         알림("불러옴: "+사람말(r)+". 새로 고침 → 반영", "ok");
         paintAll();
       }catch(e){ 알림("불러오기 실패: "+e.message, "no"); }

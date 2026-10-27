@@ -102,7 +102,10 @@
   }
   var timer = null;
   function flush() { clearTimeout(timer); try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { } }
-  function save() { clearTimeout(timer); timer = setTimeout(flush, 120); }
+  /* savedAt — 기기 둘을 쓰는 학생의 기록을 auth.js 가 「최근에 저장한 쪽」으로 맞출 때 본다(2026-10-27).
+     ★ flush 가 아니라 save 에서 찍는다 — flush 는 화면을 열 때 시험 일정 정리로도 불려서,
+       거기서 찍으면 오래된 기기가 「최근」이 되어 서버 기록을 덮어쓴다. save 는 답·훈련·설정처럼 학생이 한 일에서만 불린다. */
+  function save() { S.savedAt = Date.now(); clearTimeout(timer); timer = setTimeout(flush, 120); }
 
   function dayKey(d) {
     d = d || new Date();
@@ -160,7 +163,9 @@
                 c: opt.conf || null, ms: opt.ms || null, n: 시도, at: opt.at || Date.now() });
     S.last = { leaf: q.leaf, at: Date.now() };
     save();
-    tell({ k: "a", leaf: q.leaf, q: qid, ok: ok, c: opt.conf || null, n: 시도 });
+    /* p·p0·ms 는 연구 수집(js/research.js)이 받는다 — 고른 선지와 걸린 시간이 빠지면 오개념 분석을 못 한다(2026-10-27) */
+    tell({ k: "a", leaf: q.leaf, q: qid, ok: ok, c: opt.conf || null, n: 시도,
+           p: pick, p0: S.ans[qid].p0, ms: opt.ms || null });
     return { ok: ok, correct: q.a, q: q, n: 시도 };
   }
 
@@ -202,7 +207,7 @@
       if (ok) delete S.dw[e.r]; else S.dw[e.r] = { t: type, at: e.at };
     }
     S.ev.push(e); save();
-    tell({ k: "x", t: type, ok: !!ok });
+    tell({ k: "x", t: type, ok: !!ok, r: e.r || null });
   }
   /* 강의를 본 만큼 적는다. 같은 강의를 이어 보면 분이 쌓인다. */
   function watch(code, min) {
@@ -2241,7 +2246,7 @@
     주간점검날: 주간점검날, 주간점검함: 주간점검함, 주간점검끝: 주간점검끝,
     범위낡음: 범위낡음, 오늘몫표: 오늘몫표, 기록일수: 기록일수, 지나간시험: 지나간시험,
     /* 기록 꺼내기·되돌리기 — 계정이 생기기 전까지의 안전장치 */
-    기록모으기: 기록모으기, 짐요약: 짐요약, 기록되돌리기: 기록되돌리기,
+    기록모으기: 기록모으기, 짐요약: 짐요약, 기록되돌리기: 기록되돌리기, 기록불러오기: 기록되돌리기,   /* 화면 쪽은 「불러오기」 이름을 쓴다(말투 관문) */
     옮기기코드: 옮기기코드, 코드읽기: 코드읽기, 코드로되돌리기: 코드로되돌리기,
     파일로내보내기: 파일로내보내기
   };

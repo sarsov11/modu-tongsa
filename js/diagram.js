@@ -15,7 +15,8 @@
 */
 (function(){
   function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-  function b(t){ return esc(t).replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>"); }
+  /* 사이트가 글꼴 함수를 주면(수학 $…$ 수식 등) 그것으로 그린다 — 함수는 이스케이프까지 맡는다 */
+  function b(t){ if(window.DIAGRAM&&window.DIAGRAM.글꼴) return window.DIAGRAM.글꼴(String(t==null?"":t)).replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>"); return esc(t).replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>"); }
   /* 가운뎃점으로 이은 칸은 줄을 바꾼다(통사 0915 규칙) */
   function 칸(t){ return b(t).split(" · ").join("<br>"); }
   function 제목(t){ return t ? '<div class="dg-t">'+b(t).split(" · ").join(", ")+'</div>' : ""; }
@@ -110,6 +111,7 @@
   }
 
   window.DIAGRAM = {
+    글꼴: null,
     has: function(t){ return !!그리개[t]; },
     html: function(x){ var f=그리개[x&&x.t]; return f ? f(x) : ""; },
     text: 글

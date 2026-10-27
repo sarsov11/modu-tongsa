@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>학습 기록 활용 동의</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.png">
+<link rel="stylesheet" href="css/base.css?v=b8c335dc">
+<script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
+<style>
+  /* 학습 기록 활용 동의 — 동의하면 이용권 할인 · 배경 · 시험 결과 · 설문 (2026-10-27).
+     모으는 것과 모으지 않는 것을 한 화면에 다 적는다. 동의는 약관과 따로, 언제든 끈다. */
+  .wrapx{max-width:760px;margin:0 auto;padding:0 var(--s3) var(--s6)}
+  h1,h2{font-family:var(--title);font-weight:var(--tw);letter-spacing:var(--tls)}
+  .sec{margin-top:var(--s5)}
+  .sechd{display:flex;align-items:baseline;gap:12px;margin-bottom:var(--s2);flex-wrap:wrap}
+  .sechd h2{font-size:22px}
+  .sechd .cap{font-size:15px;color:var(--ink-4)}
+  .box{border:1px solid var(--line,#ddd);border-radius:12px;padding:16px 18px;background:var(--paper,#fff)}
+  .box h3{font-size:16px;margin:0 0 6px}
+  .box ul{margin:0 0 12px 18px;padding:0;line-height:1.7;font-size:15.5px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:8px 0}
+  .row label{font-size:15.5px}
+  select,input[type=text],input[type=number]{font:inherit;font-size:15.5px;padding:7px 10px;border-radius:8px;border:1px solid var(--line,#ccc)}
+  button{font:inherit;font-size:15.5px;padding:9px 16px;border-radius:10px;border:1px solid var(--ink,#222);background:var(--paper,#fff);cursor:pointer}
+  button.on{background:var(--ink,#222);color:var(--paper,#fff)}
+  .say{font-size:14.5px;color:var(--ink-3,#555);min-height:1.4em}
+  .lock{opacity:.45;pointer-events:none}
+  .lik{display:flex;gap:6px;flex-wrap:wrap}
+  .lik label{border:1px solid var(--line,#ccc);border-radius:8px;padding:4px 10px;font-size:14.5px}
+  .item{margin:12px 0}
+  .easy{list-style:none;margin:0 0 12px;padding:0;font-size:17px;line-height:1.9}
+  .easy li:before{content:'✓ ';color:var(--red-2,#c0392b);font-weight:700}
+  .terms{margin:8px 0 12px;border-top:1px solid var(--line,#ddd);padding-top:8px}
+  .terms summary{cursor:pointer;font-size:15px;color:var(--ink-3,#555)}
+  .law{max-height:340px;overflow:auto;margin-top:8px;padding:12px 14px;background:var(--tint,#f6f5f1);border-radius:8px;font-size:13.5px;line-height:1.75}
+  .law h3{font-size:15px;margin:0 0 8px}.law p{margin:0 0 8px}
+</style>
+</head>
+<body>
+<div class="wrapx">
+  <div class="phead"><div>
+    <h1>학습 기록 활용 동의</h1>
+    <p class="sub" id="deal" style="margin-top:6px;font-weight:700"></p>
+    <p class="sub" style="margin-top:8px"><a href="settings.html" style="color:var(--red-2);font-weight:700">← 설정으로</a></p>
+  </div></div>
+
+  <section class="sec">
+    <div class="sechd"><h2>한눈에 보기</h2><span class="cap" id="ver"></span></div>
+    <div class="box">
+      <ul class="easy">
+        <li>내가 문제를 푼 기록을 <b>이름을 빼고</b> 공부 방법 연구에 써요.</li>
+        <li>동의하면 이용권을 <b>할인</b>해 드려요.</li>
+        <li>동의하지 않아도 앱은 <b>똑같이</b> 쓸 수 있어요.</li>
+        <li>마음이 바뀌면 언제든 이 화면에서 <b>동의를 거둘 수</b> 있어요.</li>
+      </ul>
+      <details class="terms">
+        <summary>약관 전문 보기</summary>
+        <div class="law">
+          <h3>학습 기록의 연구 활용에 관한 동의 약관</h3>
+          <p><b>제1조(목적)</b> 이 약관은 테라러닝(이하 「회사」)이 이용자의 학습 기록을 교육 연구에 활용하는 데 필요한 사항과, 이에 동의한 이용자에게 제공하는 혜택을 정한다.</p>
+          <p><b>제2조(수집·이용하는 항목)</b> ① 회사는 동의한 이용자에 대하여 다음 항목을 수집·이용한다.<br>
+            1. 문항 응답 기록: 문항 식별번호, 개념 분류, 정답 여부, 선택한 답, 처음 선택한 답, 응답 확신도, 응답 소요 시간, 시도 횟수<br>
+            2. 복습 기록: 복습 일시, 재풀이 결과<br>
+            3. 영상 시청 기록: 시청 구간, 정지·되감기 위치, 재생 속도<br>
+            4. 이용 기록: 접속 일시, 이용 시간, 열람한 화면과 열람 시간, 기기 식별번호(무작위 생성)<br>
+            ② 다음 항목은 이용자가 직접 입력한 경우에만 수집한다: 연령대, 학업·취업 상태, 응시 목적, 시험 응시 여부·점수·합격 여부, 설문 응답.<br>
+            ③ 회사는 성명, 전자우편 주소, 전화번호, 소속 학교명을 연구 목적으로 이용하거나 제공하지 아니한다.</p>
+          <p><b>제3조(이용 목적)</b> 회사는 수집한 항목을 다음 목적으로만 이용한다.<br>
+            1. 학습 방법과 학습 지속에 관한 교육 연구<br>
+            2. 연구 결과를 반영한 서비스 기능 개선</p>
+          <p><b>제4조(가명처리와 제3자 제공)</b> ① 회사는 연구에 쓰는 기록을 이용자를 알아볼 수 없도록 무작위 번호로 바꾸어 가명처리한다.<br>
+            ② 회사는 회사와 공동연구 협약을 맺은 대학 연구기관에 가명처리한 기록을 제공할 수 있다. 제공받는 기관은 연구 윤리 심의(IRB)를 거친 연구에만 이를 이용하며 다른 정보와 결합하여 이용자를 다시 알아보려 하여서는 아니 된다.<br>
+            ③ 제공받는 기관의 명칭, 이용 목적, 보유 기간은 협약을 맺을 때 이 화면에 알린다.</p>
+          <p><b>제5조(보유·이용 기간)</b> 회사는 동의일부터 동의를 철회한 날 또는 연구 목적을 달성한 날 중 먼저 오는 날까지 기록을 보유·이용하며 그 뒤에는 지체 없이 파기하거나 연구 자료에서 제외한다. 다만 관계 법령이 보존을 정한 경우에는 그에 따른다.</p>
+          <p><b>제6조(동의를 거부할 권리)</b> 이용자는 이 동의를 거부할 수 있다. 거부하더라도 서비스의 모든 기능을 동일하게 이용할 수 있으며 제7조의 혜택을 받지 못하는 것 외에 불이익은 없다.</p>
+          <p><b>제7조(혜택)</b> 회사는 동의를 유지하는 이용자에게 이용권 가격을 할인한다. 할인 금액은 이용권 안내 화면에 표시한다.</p>
+          <p><b>제8조(동의의 철회)</b> 이용자는 언제든지 이 화면에서 동의를 철회할 수 있다. 철회한 때부터 기록을 연구에 수집·이용하지 아니하며 이미 제공한 기록은 다음 제공분부터 제외한다. 철회 후 처음 결제하는 이용권부터 할인이 적용되지 아니한다.</p>
+          <p><b>제9조(만 14세 미만 이용자)</b> 만 14세 미만 이용자의 동의는 법정대리인이 한다.</p>
+          <p><b>부칙</b> 이 약관은 <span id="lawver"></span>부터 적용한다.</p>
+        </div>
+      </details>
+      <div class="row"><label><input type="checkbox" id="readok"> 약관을 읽었고 내용에 동의해요.</label></div>
+      <div class="row"><label><input type="checkbox" id="age14"> 만 14세 이상이에요. (만 14세 미만이면 보호자가 함께 읽고 동의해 주세요.)</label></div>
+      <div class="row">
+        <button type="button" id="cyes">동의하기</button>
+        <button type="button" id="cno">동의하지 않기</button>
+      </div>
+      <p class="say" id="csay"></p>
+    </div>
+  </section>
+
+  <section class="sec gate">
+    <div class="sechd"><h2>나에 대해</h2><span class="cap">적고 싶은 것만 적어 주세요.</span></div>
+    <div class="box">
+      <div class="row"><label for="pa">연령대</label>
+        <select id="pa"><option value="">고르지 않음</option><option>10대</option><option>20대 초반</option><option>20대 후반</option><option>30대</option><option>40대</option><option>50대 이상</option></select></div>
+      <div class="row"><label for="ps">지금 하는 일</label>
+        <select id="ps"><option value="">고르지 않음</option><option value="student">학생</option><option value="jobseeker">취업 준비</option><option value="employed">직장인</option><option value="other">그 밖</option></select></div>
+      <div class="row"><label for="pp">응시 목적</label>
+        <select id="pp"><option value="">고르지 않음</option><option value="entrance">대학 입시</option><option value="job">취업</option><option value="switch">이직·직무 전환</option><option value="promotion">승진·자격 수당</option><option value="self">자기계발</option></select></div>
+      <div class="row"><button type="button" id="psave">저장</button></div>
+      <p class="say" id="psay"></p>
+    </div>
+  </section>
+
+  <section class="sec gate">
+    <div class="sechd"><h2>시험 결과</h2><span class="cap">시험을 본 뒤에 적어 주시면 연구에 큰 도움이 돼요.</span></div>
+    <div class="box">
+      <div class="row"><label for="oe">시험</label><input type="text" id="oe" placeholder="예: 2028학년도 수능, 2027 위험물산업기사 1회 필기" style="flex:1;min-width:240px"></div>
+      <div class="row"><label>시험장에 갔나요</label>
+        <label><input type="radio" name="ot" value="1"> 응시함</label>
+        <label><input type="radio" name="ot" value="0"> 응시하지 않음</label></div>
+      <div class="row"><label for="os">점수</label><input type="number" id="os" step="0.1" style="width:110px">
+        <label><input type="checkbox" id="op"> 합격</label></div>
+      <div class="row"><button type="button" id="osave">저장</button></div>
+      <p class="say" id="osay"></p>
+    </div>
+  </section>
+
+  <section class="sec gate" id="svsec" hidden>
+    <div class="sechd"><h2>설문</h2><span class="cap" id="svcap"></span></div>
+    <div class="box"><div id="svbody"></div>
+      <div class="row"><button type="button" id="svsave">제출</button></div>
+      <p class="say" id="svsay"></p></div>
+  </section>
+</div>
+
+<script src="js/supa.config.js?v=85aed5a2"></script>
+<script src="js/research_instruments.js?v=89c766b7"></script>
+<script src="js/research.js?v=5d5043fd"></script>
+<script>
+(function () {
+  var R = window.RESEARCH, $ = function (id) { return document.getElementById(id); };
+  $("ver").textContent = "약관 " + R.version + "판"; $("lawver").textContent = R.version.replace(/-/g, ". ") + ".";
+  var 예 = R.price(19900);
+  $("deal").textContent = "동의하면 할인돼요. 예: 대입 전 과목 이용권 월 " + 예.list.toLocaleString() + "원 → 월 19,900원";
+  function 그리기() {
+    var ok = R.consented(), st = R.consentState();
+    $("cyes").classList.toggle("on", ok);
+    $("cno").classList.toggle("on", !!(st && !st.agreed));
+    $("csay").textContent = ok ? "동의했어요. 다음 결제부터 할인된 값으로 나가요." : (st && !st.agreed ? "동의하지 않았어요. 앱은 똑같이 쓸 수 있어요." : "");
+    document.querySelectorAll(".gate").forEach(function (s) { s.classList.toggle("lock", !ok); });
+    $("age14").checked = !!(st && st.scope && st.scope.age14);
+  }
+  $("cyes").onclick = function () {
+    if (!$("readok").checked) { $("csay").textContent = "약관을 읽고 동의 칸에 표시해 주세요."; return; }
+    if (!$("age14").checked) { $("csay").textContent = "만 14세 이상인지 표시해 주세요."; return; }
+    R.consent(true, { age14: true, terms: R.version }).then(그리기); 그리기();
+  };
+  $("cno").onclick = function () { R.consent(false, {}).then(그리기); 그리기(); };
+
+  try { var p = JSON.parse(localStorage.getItem("terra.rs.profile") || "{}"); $("pa").value = p.age_band || ""; $("ps").value = p.status || ""; $("pp").value = p.purpose || ""; } catch (e) {}
+  $("psave").onclick = function () {
+    R.profile({ age_band: $("pa").value || null, status: $("ps").value || null, purpose: $("pp").value || null });
+    $("psay").textContent = "저장했어요.";
+  };
+  $("osave").onclick = function () {
+    var t = document.querySelector('input[name=ot]:checked');
+    if (!$("oe").value.trim() || !t) { $("osay").textContent = "시험 이름과 응시 여부를 적어 주세요."; return; }
+    R.outcome({ exam_key: $("oe").value.trim(), took: t.value === "1", score: $("os").value === "" ? null : +$("os").value, passed: $("op").checked });
+    $("osay").textContent = "저장했어요.";
+  };
+
+  /* 설문 — 척도는 연구실이 정해 js/research_instruments.js 에 넣는다. 비어 있으면 칸을 숨긴다. */
+  var 척도 = (window.RS_INSTRUMENTS || []).filter(function (s) { return s.active; })[0];
+  if (척도) {
+    $("svsec").hidden = false; $("svcap").textContent = 척도.title + " · " + 척도.items.length + "문항";
+    $("svbody").innerHTML = 척도.items.map(function (it, i) {
+      var 칸 = [];
+      for (var v = 1; v <= 척도.points; v++) 칸.push('<label><input type="radio" name="sv' + i + '" value="' + v + '"> ' + (척도.labels[v - 1] || v) + '</label>');
+      return '<div class="item"><div>' + (i + 1) + ". " + it + '</div><div class="lik">' + 칸.join("") + '</div></div>';
+    }).join("");
+    $("svsave").onclick = function () {
+      var a = 척도.items.map(function (it, i) { var r = document.querySelector('input[name=sv' + i + ']:checked'); return r ? +r.value : null; });
+      if (a.indexOf(null) >= 0) { $("svsay").textContent = "모든 문항에 답해 주세요."; return; }
+      R.survey(척도.id, 척도.wave, a); $("svsay").textContent = "제출했어요. 고마워요.";
+    };
+  }
+  그리기();
+})();
+</script>
+</body>
+</html>

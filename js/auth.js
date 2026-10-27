@@ -16,7 +16,9 @@
 (function () {
   var C = window.SUPA;
   var ON = !!(C && C.url && C.anon && window.supabase);
-  var 키들 = ["terra.state", "terra.scope", "terra.snap", "terra.cards", "terra.axis", "terra.onboarded"];
+  /* ★ 학습 기록 본체는 "terra.tree.v1"(js/store.js 의 KEY)이다. 옛 이름 "terra.state" 만 올리고 있어서
+       답·확신도·사건 기록이 서버에 한 번도 안 올라갔다(2026-10-27 발견). 옛 이름은 옛 기기 복원용으로 남긴다. */
+  var 키들 = ["terra.tree.v1", "terra.exam.log", "terra.goalmin", "terra.state", "terra.scope", "terra.snap", "terra.cards", "terra.axis", "terra.onboarded"];
   var sb = ON ? window.supabase.createClient(C.url, C.anon) : null;
 
   /* ── 서버가 살아 있는지 ──────────────────────────────────
@@ -91,7 +93,7 @@
           if (!row) return 올리기();                       // 서버가 비었으면 이 기기 것을 올린다
           var 서버 = new Date(row.saved_at).getTime();
           var 여기 = 0;
-          try { 여기 = JSON.parse(localStorage.getItem("terra.state") || "{}").savedAt || 0; } catch (e) {}
+          try { 여기 = JSON.parse(localStorage.getItem("terra.tree.v1") || "{}").savedAt || 0; } catch (e) {}
           if (서버 > 여기) { 풀기(row.data); return "내려받음"; }
           return 올리기();
         });

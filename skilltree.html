@@ -16,6 +16,12 @@
 <link rel="icon" href="icons/favicon.png">
 <link rel="stylesheet" href="css/base.css?v=b8c335dc">
 <link rel="stylesheet" href="css/coach.css?v=9bd6a7e9">
+<link rel="stylesheet" href="css/stree.css?v=4e46c2a2">
+<style>
+  /* 1025 대표님 「구김 없이, 넘기면 다 보이게」 — 궤도판(원 배치)은 숨기고 넘김판(공용 stree)을 그린다. 옛 판 _skilltree_궤도전_1025.html */
+  body.stree-on .board, body.stree-on #treelist, body.stree-on #legend, body.stree-on .segbar, body.stree-on #crumb, body.stree-on #lede{display:none!important}
+  #streehost{margin-top:var(--s3,16px)}
+</style>
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:1360px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -307,6 +313,7 @@
   <div id="deltahost"></div>
   <div id="pickhost"></div>
 
+  <div id="streehost"></div>
   <section class="board">
     <div class="plate">
       <h2 id="plateTitle"></h2>
@@ -365,10 +372,12 @@
 <script src="js/cards.js?v=0e727ee3"></script>
 <script src="js/packs.js?v=87449626"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/store.js?v=f23c6ee6"></script>
+<script src="js/store.js?v=9ed2f66a"></script>
 <script src="js/supa.config.js?v=85aed5a2"></script>
-<script src="js/auth.js?v=93150c36"></script>
+<script src="js/auth.js?v=775bb24d"></script>
+<script src="js/research.js?v=5d5043fd"></script>
 <script src="js/coach.js?v=c2d6f8ac"></script>
+<script src="js/stree.js?v=a1e8ac3a"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script><script src="js/zzcoach.js?v=1009a" defer></script>
 <script>
 (function(){
@@ -1634,6 +1643,31 @@
   });
   boot();
   paintPick();
+  /* ══ 넘김 스킬트리(공용 stree, 1025) — 대영역 한 장씩, 중영역 = 원, 리프 = 잎. 원을 누르면 옛 강의 시트 그대로 ══ */
+  if(window.STREE){
+    document.body.classList.add("stree-on");
+    var SG=[];
+    FAMS.forEach(function(f){ MODEL[f].groups.forEach(function(g){
+      if(T.inScope && T.scopeOn && T.scopeOn() && !범위풀기 && !T.inScope(g.code)) return;
+      var nodes=g.items.map(function(x){
+        var lv=(x.ref.leaves||[]).map(function(lf){ var ls=T.leafStat(lf.code);
+          return { name:별뗌(lf.name).split(" — ")[0], code:lf.code, pct:ls.achieve, n:ls.n,
+                   state:!ls.n?"none": ls.achieve>=80?"done": ls.solved?"wip":"none" }; });
+        return { name:x.name, item:x, pct:x.st.achieve, state:x.st.achieve>=80?"done": x.st.solved?"wip":"none",
+                 meta:노드꼬리(x, x.tier==="L"), leaves:lv, badge:(todayLec()&&x.lec.some(function(v){ return v.code===todayLec().code; }))?"오늘":"" };
+      });
+      var ach=nodes.length?Math.round(nodes.reduce(function(a,n){ return a+n.pct; },0)/nodes.length):0;
+      SG.push({ name:g.name, nodes:nodes, pct:ach, avg:null });   /* 색은 stree 기본 팔레트 — FAM 색은 화이트 스킨에서 회색 한 가지였다 */
+    }); });
+    STREE.mount(document.getElementById("streehost"),{
+      key:"tongsa", title:"통합사회", groups:SG,
+      sub:"대영역 "+SG.length+" · 중영역 "+SG.reduce(function(a,g){ return a+g.nodes.length; },0)+" · 리프 "+SG.reduce(function(a,g){ return a+g.nodes.reduce(function(b,n){ return b+n.leaves.length; },0); },0),
+      onNode:function(n){ openSheet(n.item); },
+      onLeaf:function(l,n){ openSheet(n.item); setTimeout(function(){
+        var row=document.querySelector('.lec[data-code="'+l.code+'"]')||document.querySelector('.lec');
+        if(row){ row.classList.add("today"); row.scrollIntoView({behavior:"smooth",block:"center"}); } },120); }
+    });
+  }
   /* ★ 처음 열면 게임 튜토리얼처럼 한 곳씩 비추며 쓰는 법을 짚는다(2026-10-09, js/zzcoach.js). 한 번 보면 다시 안 뜬다 */
   window.addEventListener("load", function(){ if(window.ZZCOACH) ZZCOACH.run("tongsa.skilltree", [
     { el:"#pickhost .pick", text:"오늘 할 것. 누르면 바로 시작" },
