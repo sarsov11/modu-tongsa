@@ -42,12 +42,22 @@
   function 동의함() { var c = 동의상태(); return !!(c && c.agreed && !c.withdrawn && c.version === 판); }
 
   /* ── 대기열 ─────────────────────────────────────────── */
+  /* 사건마다 eid(무작위 16자)를 단다 — 올리기가 성공했는데 응답만 끊겨 다시 올려도 서버가 같은 eid 를 한 번만 받는다 */
+  var 맥락 = null;                    // 모의고사처럼 화면이 정한 맥락. answer 에 data.ctx 로 붙는다
   function log(kind, data, 겉) {
-    var e = { kind: kind, at: new Date().toISOString(), service: 서비스, session: 접속, device: 기기, data: data || {} };
+    var e = { eid: 무작위(8), kind: kind, at: new Date().toISOString(), service: 서비스, session: 접속, device: 기기, data: data || {} };
     if (겉) { if (겉.q != null) e.q = String(겉.q); if (겉.leaf != null) e.leaf = String(겉.leaf); if (겉.ok != null) e.ok = !!겉.ok; }
+    if (맥락 && kind === "answer") e.data.ctx = 맥락;
     var q = 읽기(대기열키, []);
     q.push(e);
-    if (q.length > 최대) q.splice(0, q.length - 최대);
+    if (q.length > 최대) {
+      /* 오래 못 올려 상한을 넘으면 오래된 것부터 버리고, 버린 개수와 구간을 gap 사건으로 남긴다 — 빈 구간을 분석에서 알아보게 */
+      var 앞 = q[0] && q[0].kind === "gap" ? q.shift() : null;      // 이미 버린 구간이 맨 앞에 있으면 합친다
+      var 버림 = q.splice(0, q.length - 최대 + 1);
+      var 수 = 버림.length + (앞 ? 앞.data.dropped : 0), 처음 = 앞 ? 앞.data.from : 버림[0].at;
+      q.unshift({ eid: 앞 ? 앞.eid : 무작위(8), kind: "gap", at: 버림[버림.length - 1].at, service: 서비스, session: 접속, device: 기기,
+                  data: { dropped: 수, from: 처음, to: 버림[버림.length - 1].at } });
+    }
     쓰기(대기열키, q);
     곧올리기();
     return e;
@@ -94,16 +104,20 @@
   function 곧올리기() { if (!예약) 예약 = setTimeout(function () { 예약 = null; flush(); }, 15000); }
   function flush() {
     if (올리는중 || !켜짐 || !동의함()) return Promise.resolve(0);
-    var q = 읽기(대기열키, []); if (!q.length) return Promise.resolve(0);
+    /* 지금 동의한 시각보다 앞선 사건은 올리지 않고 버린다 — 동의 전·철회 뒤 쌓인 것은 연구에 쓰지 않는다 */
+    var 부터 = Date.parse(동의상태().at), q = 읽기(대기열키, []);   // 서버 시각(+00:00)과 기기 시각(Z) 형식이 달라 숫자로 견준다
+    var 거른 = q.filter(function (e) { return Date.parse(e.at) >= 부터; });
+    if (거른.length !== q.length) { 쓰기(대기열키, 거른); q = 거른; }
+    if (!q.length) return Promise.resolve(0);
     올리는중 = true;
     return 사용자().then(function (s) {
       if (!s) return 0;
       var 묶음 = q.slice(0, 500);
       var rows = 묶음.map(function (e) {
-        return { user_id: s.user.id, device: e.device, service: e.service, session: e.session, kind: e.kind,
+        return { eid: e.eid || 무작위(8), user_id: s.user.id, device: e.device, service: e.service, session: e.session, kind: e.kind,
                  at: e.at, q: e.q || null, leaf: e.leaf || null, ok: e.ok == null ? null : e.ok, data: e.data };
       });
-      return 클라이언트().from("learn_events").insert(rows).then(function (r) {
+      return 클라이언트().from("learn_events").upsert(rows, { onConflict: "eid", ignoreDuplicates: true }).then(function (r) {
         if (r.error) return 0;
         var 남은 = 읽기(대기열키, []);
         남은.splice(0, 묶음.length);           // 올리는 사이 새로 쌓인 것은 뒤에 남는다
@@ -114,17 +128,46 @@
   }
 
   /* 동의·철회 — research.html 이 부른다. 서버 표에도 같은 내용을 적는다. */
+  /* 로그인한 학생이 새 기기에서 열면 서버에 적힌 동의 상태를 기기로 받아 온다 — 기기마다 다시 동의하지 않아도 이어서 모이고,
+     다른 기기에서 철회했으면 이 기기도 멈춘다. 로그인 안 한 학생은 동의가 기기에만 있다(익명 계정을 새로 만들지 않는다). */
+  function 서버동의맞추기() {
+    var c = 클라이언트(); if (!c) return Promise.resolve(null);
+    return c.auth.getSession().then(function (r) {
+      var s = r.data && r.data.session; if (!s) return null;
+      return c.from("research_consents").select("*").eq("user_id", s.user.id).maybeSingle().then(function (r2) {
+        var d = r2 && r2.data; if (!d) return null;
+        var 서버시각 = d.withdrawn_at || d.agreed_at, 로컬 = 동의상태();
+        if (!서버시각 || (로컬 && Date.parse(로컬.at) >= Date.parse(서버시각))) return d;      // 기기 쪽이 더 새롭다
+        쓰기(동의키, { version: d.version, agreed: !!d.agreed && !d.withdrawn_at, withdrawn: !!d.withdrawn_at, at: 서버시각, scope: d.scope || {} });
+        if (d.withdrawn_at) 쓰기(대기열키, []);
+        return d;
+      });
+    }).catch(function () { return null; });
+  }
+
   function consent(agreed, scope) {
     var c = { version: 판, agreed: !!agreed, withdrawn: !agreed, at: new Date().toISOString(), scope: scope || {} };
     쓰기(동의키, c);
     log("consent", { agreed: !!agreed, version: 판 });
     if (!agreed) 쓰기(대기열키, []);          // 철회하면 기기에 남은 대기분도 버린다
     if (!켜짐) return Promise.resolve(false);
-    return 사용자().then(function (s) {
+    return 서버동의맞추기().then(function (d) {
+      /* 같은 판에 이미 동의해 있는 계정이면(다른 기기에서 동의) 동의 시각을 새로 찍지 않는다 —
+         새로 찍으면 서버 뷰가 그 시각 앞의 기록을 모두 숨긴다 */
+      if (agreed && d && d.agreed && !d.withdrawn_at && d.version === 판) {
+        c.at = d.agreed_at; 쓰기(동의키, c); return flush();
+      }
+      return 사용자().then(function (s) {
       if (!s) return false;
       var row = { user_id: s.user.id, version: 판, agreed: !!agreed, scope: c.scope };
       if (agreed) { row.agreed_at = c.at; row.withdrawn_at = null; } else row.withdrawn_at = c.at;
-      return 클라이언트().from("research_consents").upsert(row, { onConflict: "user_id" }).then(function () { return flush(); });
+      return 클라이언트().from("research_consents").upsert(row, { onConflict: "user_id" }).then(function () {
+        /* 동의 전에 적어 둔 배경은 기기에만 있었다 — 동의하는 순간 한 번 올린다 */
+        var p = agreed && 읽기("terra.rs.profile", null);
+        if (p) 표에쓰기("research_profiles", { age_band: p.age_band, status: p.status, purpose: p.purpose, updated_at: new Date().toISOString() }, "user_id");
+        return flush();
+      });
+    });
     }).catch(function () { return false; });
   }
 
@@ -178,6 +221,7 @@
   });
   var 이름 = location.pathname.split("/").pop() || "index.html";
   var 대시보드 = { "skilltree.html": "개념트리", "skills.html": "스킬", "parent.html": "학부모 리포트", "index.html": "홈" };
+  서버동의맞추기();
   log("session", { how: "start" });
   log("page", { path: 이름, ref: (document.referrer || "").replace(location.origin, "") });
   window.addEventListener("pagehide", function () {
@@ -204,6 +248,7 @@
   window.RESEARCH = {
     version: 판, service: 서비스, device: 기기, price: price, listPrice: 정가,
     log: log, answer: answer, arm: arm, flush: flush,
+    ctx: function (v) { 맥락 = v || null; },
     consent: consent, consented: 동의함, consentState: 동의상태,
     profile: profile, outcome: outcome, survey: survey,
     pending: function () { return 읽기(대기열키, []).length; },

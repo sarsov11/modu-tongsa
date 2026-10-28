@@ -138,7 +138,7 @@
 <script src="js/store.js?v=9ed2f66a"></script>
 <script src="js/supa.config.js?v=85aed5a2"></script>
 <script src="js/auth.js?v=775bb24d"></script>
-<script src="js/research.js?v=5d5043fd"></script>
+<script src="js/research.js?v=878362aa"></script>
 <script src="js/coach.js?v=c2d6f8ac"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
 <script src="js/qrender.js?v=3419f389"></script>
@@ -184,8 +184,22 @@
   }
   function 불러오기(){
     var n=E.now();
-    if(n && n.day===day){ picks=n.picks||{}; 시작=n.start||null; }
+    if(n && n.day===day){ picks=n.picks||{}; 시작=n.start||null;
+      if(시작) 연구("resume", {answered:Object.keys(picks).length, left:남은초()}); }
+    /* 어제 시작만 하고 채점하지 않은 회차 — 하루가 지나 초기화되기 전에 「중단」으로 한 줄 남긴다 */
+    else if(n && n.start){ 연구("abandon", {paper:n.day, answered:Object.keys(n.picks||{}).length, started:new Date(n.start).toISOString()}); }
   }
+
+  /* ── 연구 기록(js/research.js) — 모의고사 시작·재개·이탈·채점·중단 ───────
+     사건 종류는 exam, data.how 로 가른다. 문항 답은 채점 때 answer 사건(data.ctx="exam")으로 따로 남는다. */
+  function 연구(how, d){
+    if(!window.RESEARCH) return;
+    d=d||{}; d.how=how; if(!d.paper) d.paper=day; if(paper){ d.n=paper.items.length; d.min=paper.minutes; d.round=paper.round; }
+    RESEARCH.log("exam", d);
+  }
+  window.addEventListener("pagehide", function(){
+    if(paper && 시작 && !끝남) 연구("leave", {answered:Object.keys(picks).length, left:남은초()});
+  });
 
   /* ── 그리기 ─────────────────────────────────── */
   /* 문항은 **텍스트로 조판**한다. 지면을 통째로 베낀 크롭을 붙이지 않는다.
@@ -242,7 +256,7 @@
     document.querySelectorAll(".picks .pick").forEach(function(b){
       b.onclick=function(){ 고르기(b); };
     });
-    document.getElementById("submit").onclick=제출;
+    document.getElementById("submit").onclick=function(){ 제출(false); };   /* 제출 을 그대로 달면 클릭 이벤트가 「자동」 자리에 들어가 미응답 확인이 건너뛰어졌다(2026-10-27) */
     document.getElementById("jump").onclick=안푼곳으로;
     document.querySelectorAll("#omr button").forEach(function(b){
       b.onclick=function(){
@@ -256,11 +270,12 @@
 
   function 고르기(b){
     if(끝남) return;
-    if(!시작){ 시작=Date.now(); 타이머시작(); var w=document.getElementById("tmw"); if(w) w.remove(); }
+    if(!시작){ 시작=Date.now(); 타이머시작(); var w=document.getElementById("tmw"); if(w) w.remove(); 연구("start", {}); }
     var id=b.dataset.q, v=+b.dataset.v;
     picksAt[id]=Date.now();        // 모의고사 35분이 오늘 공부 시간에 잡히도록 답한 시각을 기억한다(2026-10-13)
     if(picks[id]===v) delete picks[id];          // 다시 누르면 취소
     else picks[id]=v;
+    if(window.RESEARCH) RESEARCH.log("exam", {how:"pick", paper:day, v:(picks[id]===undefined?null:v), sec:Math.round((Date.now()-시작)/1000)}, {q:id});
     b.parentNode.querySelectorAll(".pick").forEach(function(x){
       x.setAttribute("aria-pressed", picks[id]===+x.dataset.v);
     });
@@ -318,12 +333,15 @@
     끝남=true;
     var res=E.grade(paper, picks);
     E.record(paper, res, picks);
+    연구("submit", {auto:!!자동, answered:푼, right:res.right, score:res.score, total:res.total, sec:paper.minutes*60-남은초()});
+    if(window.RESEARCH) RESEARCH.ctx("exam");
     /* 오늘 루틴에도 반영 — 모의고사를 푼 것도 공부다 */
     try {
       paper.items.forEach(function(it){
         if(picks[it.id]!==undefined) T.answer(it.id, picks[it.id], {at:picksAt[it.id]});
       });
     } catch(e){}
+    if(window.RESEARCH) RESEARCH.ctx(null);
     결과그리기(res);
     if(window.COACH) COACH.wrap({got:res.right, total:paper.items.length, kind:"exam"});
   }
