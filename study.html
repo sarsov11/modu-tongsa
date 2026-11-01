@@ -278,7 +278,7 @@
 <script src="js/pool.js?v=a86b23b9"></script>
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/qrender.js?v=3419f389"></script>
-<script src="js/cards.js?v=0e727ee3"></script>
+<script src="js/cards.js?v=55a7ce1c"></script>
 <script src="js/packs.js?v=87449626"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/store.js?v=9ed2f66a"></script>
@@ -294,6 +294,11 @@
   T.mountNav("study.html");
   var P=new URLSearchParams(location.search);
   var leafCode=P.get("leaf")||"", wrongOnly=(P.get("mode")==="wrong");
+  /* 앰블럼 금색 복습(11-01): mode=review&leaves=소주제들 — 맞힌 문항도 마지막으로 푼 지 3일이 지나면 다시 낸다.
+     금색은 이렇게 복습 주기를 돌며 다시 받은 문항을 계속 맞혀야 받는다(skilltree.html 앰블럼판). */
+  var 복습잎=P.get("mode")==="review"?(P.get("leaves")||"").split(",").filter(function(c){ return T.BY[c]; }):null;
+  if(복습잎&&!복습잎.length) 복습잎=null;
+  if(복습잎&&!leafCode) leafCode=복습잎[0];
   /* ★ 단원 없이 mode=wrong 이면 범위 안 오답 전체에서 오래된 것부터(2026-10-09 흐름 검증 10번:
      진단에서 16개 틀렸는데 루틴은 오답이 가장 많은 한 단원 것 1문항만 냈다) */
   var 전체오답 = wrongOnly && !leafCode;
@@ -324,6 +329,15 @@
     return (l.play||[]).filter(function(q){ return Q[q.id]; });
   }
   function buildList(){
+    if(복습잎){
+      var SR=T.state(), 지금=Date.now();
+      list=[]; 복습잎.forEach(function(c){ playable(T.BY[c]).forEach(function(q){ var a=SR.ans[q.id]; if(a&&지금-(a.at||0)>=3*86400000) list.push(q); }); });
+      if(window.QRENDER) list=list.filter(function(q){ return QRENDER.ok(Q[q.id], q); });
+      list.sort(function(x,y){ return (SR.ans[x.id].at||0)-(SR.ans[y.id].at||0); });
+      list=list.slice(0,20); i=0; marks=[]; done=false;
+      if(window.COACH) COACH.begin({leaf:leaf.code, kind:"q"});
+      return;
+    }
     var all=playable(leaf);
     if(전체오답){
       var 본={}; all=[];
@@ -736,7 +750,7 @@
       shell();
       document.getElementById("stage").innerHTML=
         '<div class="empty"><p style="font-size:16px;color:var(--ink-2)">'+
-        (wrongOnly?"오답 없음":"풀 수 있는 문항 없음")+
+        (복습잎?"지금 복습할 문항 없음. 맞힌 문항은 3일 뒤에 다시 나옴":wrongOnly?"오답 없음":"풀 수 있는 문항 없음")+
         '</p>'+
         '<div style="margin-top:22px;text-align:left">'+(window.COACH&&COACH.nextBlock?(function(){ if(wrongOnly&&T.flowMark) T.flowMark("due"); return COACH.nextBlock(); })():'<a class="btn" href="study.html">다른 단원 고르기</a>')+'</div>'+
         '<div style="margin-top:12px"><a class="btn ghost sm" href="study.html">다른 단원</a></div></div>';

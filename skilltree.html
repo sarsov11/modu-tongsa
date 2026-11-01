@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>개념트리 — 모두의 통사</title>
+<title>모두의 통사 개념트리</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
@@ -21,6 +21,13 @@
   /* 1025 대표님 「구김 없이, 넘기면 다 보이게」 — 궤도판(원 배치)은 숨기고 넘김판(공용 stree)을 그린다. 옛 판 _skilltree_궤도전_1025.html */
   body.stree-on .board, body.stree-on #treelist, body.stree-on #legend, body.stree-on .segbar, body.stree-on #crumb, body.stree-on #lede{display:none!important}
   #streehost{margin-top:var(--s3,16px)}
+  /* 1030 앰블럼판 탭(공용 embboard) */
+  .embtabs{display:flex;gap:6px;margin-top:var(--s3,16px);padding:4px;border-radius:14px;background:var(--surface-2,#eef0f4)}
+  .embtabs button{flex:1;font:inherit;font-weight:800;font-size:15px;padding:10px 8px;border:0;border-radius:11px;background:none;color:var(--ink-3,#6b7280);cursor:pointer}
+  .embtabs button[aria-pressed="true"]{background:var(--surface,#fff);color:var(--ink,#1d2230);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  .embtabs b{font-weight:900;color:#b8860b}
+  #embhost{margin-top:var(--s3,16px)}
+  body.emb-on #streehost{display:none!important}
 </style>
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -313,6 +320,8 @@
   <div id="deltahost"></div>
   <div id="pickhost"></div>
 
+  <div class="embtabs" id="embtabs" hidden><button type="button" data-tab="tree">개념트리</button><button type="button" data-tab="emb">앰블럼 <b id="embcnt"></b></button></div>
+  <div id="embhost" hidden></div>
   <div id="streehost"></div>
   <section class="board">
     <div class="plate">
@@ -369,7 +378,7 @@
 <script src="js/lecprac.js?v=704d9a6e"></script>
 <script src="js/pool.js?v=a86b23b9"></script>
 <script src="js/drills.js?v=3f81d010"></script>
-<script src="js/cards.js?v=0e727ee3"></script>
+<script src="js/cards.js?v=55a7ce1c"></script>
 <script src="js/packs.js?v=87449626"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/store.js?v=9ed2f66a"></script>
@@ -378,6 +387,7 @@
 <script src="js/research.js?v=878362aa"></script>
 <script src="js/coach.js?v=c2d6f8ac"></script>
 <script src="js/stree.js?v=a1e8ac3a"></script>
+<script src="js/emblem.js?v=0b4d6893"></script><script src="js/hextree.js?v=7f615b80"></script><script src="js/embboard.js?v=1101h"></script><script src="js/titles.js?v=1101h"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script><script src="js/zzcoach.js?v=1009a" defer></script>
 <script>
 (function(){
@@ -1661,13 +1671,85 @@
     }); });
     STREE.mount(document.getElementById("streehost"),{
       key:"tongsa", title:"통합사회", groups:SG,
-      sub:"대영역 "+SG.length+" · 중영역 "+SG.reduce(function(a,g){ return a+g.nodes.length; },0)+" · 리프 "+SG.reduce(function(a,g){ return a+g.nodes.reduce(function(b,n){ return b+n.leaves.length; },0); },0),
+      sub:"대영역 "+SG.length+", 중영역 "+SG.reduce(function(a,g){ return a+g.nodes.length; },0)+", 리프 "+SG.reduce(function(a,g){ return a+g.nodes.reduce(function(b,n){ return b+n.leaves.length; },0); },0),
       onNode:function(n){ openSheet(n.item); },
       onLeaf:function(l,n){ openSheet(n.item); setTimeout(function(){
         var row=document.querySelector('.lec[data-code="'+l.code+'"]')||document.querySelector('.lec');
         if(row){ row.classList.add("today"); row.scrollIntoView({behavior:"smooth",block:"center"}); } },120); }
     });
   }
+  /* ══ 앰블럼판(공용 embboard, 1030). 허브 10-23 칭호·앰블럼의 통사 어댑터 ══
+     5판(11-01 대표님): 단원마다 학생이 막히는 핵심만 1~3개(17개). 앰블럼 = 단원 + 소주제 묶음(잎: 중영역 코드나 소주제 코드).
+     사상가(K) 소주제는 해당 단원 앰블럼에 합쳐지고, 고3이 아니면 안 보이는 소주제는 조건에서 빠진다.
+     이름 = 묶음 이름(11-01 대표님: 칭호를 따로 짓지 않는다). 은 = 적당히 잘함, 금 = 거의 보장.
+     은(11-01 2차): 지금 다 맞힘 — 소주제마다 4문항 이상(적으면 전부) + 3점 문항 전부 풀어 전부 맞힘 + 틀린 채 남은 문항 0.
+     금: 은 + 첫 풀이에서 21일 넘게 지남 + 복습 답(같은 문항을 3일 넘게 지나 다시 푼 것)이 max(10, 푼 문항 수) 이상 + 그 정답률 95% 이상.
+         맞힌 문항 복습은 study.html?mode=review&leaves= 가 낸다. 단원 앰블럼을 다 모으면 「단원명 정복」.
+     칭호 정본 테라러닝_허브\칭호\통사_앰블럼.json → js/titles.js. 도전 = 가장 덜 푼 소주제 문제풀이. */
+  (function 앰블럼판(){
+    var TT=window.TTITLE, host=document.getElementById("embhost"), tabs=document.getElementById("embtabs");
+    if(!window.TEMBOARD||!TT||!TT.앰블럼||!host||!tabs) return;
+    var 색=["#2563EB","#DB2777","#0F766E","#C2410C","#9333EA","#B45309","#15803D","#4F46E5","#0E7490","#BE123C","#57534E"];
+    var 얻은수=0, 전체수=0;
+    /* 통합사회 1·2 가 섞이면 둘 다 「1단원」부터라 책 이름을 붙인다 */
+    var 책이름={"통합사회1":"통합사회 1","통합사회2":"통합사회 2"}, 책들={};
+    보이는루트.forEach(function(r){ if(책이름[r.book]) 책들[r.book]=1; });
+    var 두권=Object.keys(책들).length>1;
+    var S0=T.state(), 하루=86400000;
+    var 보임=[]; 보이는루트.forEach(function(r){ (r.mids||[]).forEach(function(m){ 보임.push(m); }); });
+    var 과목=보이는루트.map(function(r,i){
+      var 앰=Object.keys(TT.앰블럼).filter(function(id){ return TT.앰블럼[id].단원===r.code; }).map(function(id,j){
+        var x=TT.앰블럼[id], 잎={}; (x.잎||[]).forEach(function(c){ 잎[c]=1; });
+        var ls=[]; 보임.forEach(function(m){ (T.BY[m.code].leaves||[]).forEach(function(l){ if(!잎[m.code]&&!잎[l.code]) return; var s=T.leafStat(l.code); if(s.play>0) ls.push(s); }); });
+        if(!ls.length) return null;
+        var 푼=0, 맞=0; ls.forEach(function(s){ 푼+=s.solved; 맞+=s.correct; });
+        var 률=푼?맞/푼:null;
+        var 다=ls.every(function(s){ return s.solved>=Math.min(4,s.play); });
+        var qs=[], 잎있음={}; ls.forEach(function(s){ 잎있음[s.code]=1; s.leaf.play.forEach(function(q){ qs.push(q); }); });
+        var 어려운=qs.filter(function(q){ return q.p>=3; }), 어푼=어려운.filter(function(q){ return S0.ans[q.id]; });
+        var 어맞=어푼.filter(function(q){ return S0.ans[q.id].ok; }).length;
+        var 오답=qs.filter(function(q){ var a=S0.ans[q.id]; return a&&!a.ok; });
+        /* 복습 답 = 같은 문항을 앞 답에서 3일 넘게 지나 다시 푼 것(S.ev) */
+        var 줄={}, 처음=null; (S0.ev||[]).forEach(function(e){ if(e.k!=="a"||!잎있음[e.leaf]) return; (줄[e.q]=줄[e.q]||[]).push(e); if(처음==null||e.at<처음) 처음=e.at; });
+        var 복=0, 복맞=0; for(var k in 줄){ var r=줄[k].sort(function(x,y){ return x.at-y.at; }); for(var t=1;t<r.length;t++) if(r[t].at-r[t-1].at>=3*하루){ 복++; if(r[t].ok) 복맞++; } }
+        var 날=처음==null?0:Math.floor((Date.now()-처음)/하루), 복목표=Math.max(10,푼);
+        var 얻=다&&!오답.length&&어푼.length===어려운.length&&어맞===어려운.length;
+        var 금=얻&&날>=21&&복>=복목표&&복맞/복>=0.95;
+        var 잎들=ls.map(function(s){ return s.code; });
+        var 갈곳=오답.length?"study.html?leaf="+오답[0].leaf+"&mode=wrong"
+          :!다?"study.html?leaf="+ls.slice().sort(function(a,b){ return a.solved/Math.min(4,a.play)-b.solved/Math.min(4,b.play); })[0].code
+          :어푼.length<어려운.length?"study.html?leaf="+어려운.filter(function(q){ return !S0.ans[q.id]; })[0].leaf
+          :"study.html?mode=review&leaves="+잎들.join(",");
+        전체수++; if(얻) 얻은수++;
+        return { id:"앰:"+id, 번:j+1, 이름:x.이름, 칭호:x.칭호, 한줄:x.한줄, 상징:x.상징, 표:x.표,
+          단계:금?3:얻?2:0, 얻:얻, 률:률, 부:"문항 "+ls.reduce(function(a,s){ return a+s.play; },0)+"개",
+          목록:ls.map(function(s){ return { n:별뗌(s.name).split(" — ")[0], v:s.solved?s.solved+"/"+s.play+"문항, "+s.pct+"%":"아직" }; }).concat([
+            { n:"은색 조건: 3점 문항 전부 맞힘", v:어려운.length?어맞+"/"+어려운.length+"개":"없음" },
+            { n:"은색 조건: 틀린 채 남은 문항", v:오답.length+"개" },
+            { n:"금색 조건: 복습에서 다시 푼 문항", v:복+"/"+복목표+"개, "+(복?Math.round(복맞/복*100)+"%":"아직")+" (95% 넘게)" },
+            { n:"금색 조건: 첫 풀이 뒤 지난 날", v:날+"/21일" }]),
+          도전:function(){ location.href=갈곳; } };
+      }).filter(Boolean);
+      return { n:(두권&&책이름[r.book]?"["+책이름[r.book]+"] ":"")+(r.unit?r.unit+"단원 ":"")+r.name, 색:색[i%색.length], 칭호:별뗌(r.name)+" 정복", 한줄:"이 단원 앰블럼을 모두 모음", 상징:"crown", 표:"", 앰:앰 };
+    }).filter(function(g){ return g.앰.length; });
+    if(!전체수) return;
+    document.getElementById("embcnt").textContent=얻은수+"/"+전체수;
+    tabs.hidden=false;
+    var 그림=false;
+    function 판(){ if(그림) return; 그림=true;
+      TEMBOARD.render(host,{ 키:"tongsa."+((T.state().student||{}).grade||""), 과목:과목, 합격칸:0,
+        안내:"단원마다 막히는 내용만 골라 앰블럼으로 만듦. 앰블럼을 누르면 묶인 소주제가 나옴.",
+        조건글:"3점 문항까지 다 맞히면 은색, 3주 동안 복습마다 95% 넘게 맞히면 금색", 도전글:"남은 오답과 3점 문항부터, 은색 뒤에는 복습" }); }
+    function 탭(t){
+      try{ localStorage.setItem("tongsa.treeTab",t); }catch(e){}
+      tabs.querySelectorAll("button").forEach(function(b){ b.setAttribute("aria-pressed",b.dataset.tab===t); });
+      var e=t==="emb"; host.hidden=!e; document.body.classList.toggle("emb-on",e); if(e) 판();
+    }
+    tabs.querySelectorAll("button").forEach(function(b){ b.onclick=function(){ 탭(b.dataset.tab); }; });
+    var 처음="tree"; try{ 처음=localStorage.getItem("tongsa.treeTab")||"tree"; }catch(e){}
+    if(QS.get("tab")==="emb") 처음="emb";
+    탭(처음);
+  })();
   /* ★ 처음 열면 게임 튜토리얼처럼 한 곳씩 비추며 쓰는 법을 짚는다(2026-10-09, js/zzcoach.js). 한 번 보면 다시 안 뜬다 */
   window.addEventListener("load", function(){ if(window.ZZCOACH) ZZCOACH.run("tongsa.skilltree", [
     { el:"#pickhost .pick", text:"오늘 할 것. 누르면 바로 시작" },
