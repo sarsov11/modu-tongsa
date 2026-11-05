@@ -217,11 +217,12 @@
   .tip::after{content:"";position:absolute;right:18px;top:100%;border:6px solid transparent;border-top-color:var(--ink)}
   .tip.on{opacity:1;visibility:visible;transform:none}
   .oxq{padding:18px 18px 16px;border:1px solid var(--line);border-radius:var(--r2);background:var(--surface)}
+  .bdgs .bdg-time{background:var(--surface-2);color:var(--ink-3);box-shadow:inset 0 0 0 1px var(--line-2)}   /* 초시계 표시는 회색 — 빨강은 오답·임박에만(2026-11-05) */
   .oxstem{font-size:17px;font-weight:700;line-height:1.65;color:var(--ink);margin:0 0 14px}
   .oxq .ox{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .oxq .ox button{height:56px;border-radius:12px;border:1.5px solid var(--line-2);background:var(--surface-2);font-family:var(--kr);font-size:24px;font-weight:900;color:var(--ink-3);cursor:pointer;position:relative}
   .tm{display:flex;align-items:center;gap:10px;margin:0 0 12px}
-  .tmbar{flex:1;height:8px;border-radius:99px;background:var(--surface-3);overflow:hidden} .tmbar i{display:block;height:100%;width:100%;background:var(--cta);transition:width .1s linear}
+  .tmbar{flex:1;height:8px;border-radius:99px;background:var(--surface-3);overflow:hidden} .tmbar i{display:block;height:100%;width:100%;background:var(--ink-3);transition:width .1s linear}
   .tmbar i.low{background:var(--red)} .tm b{font-size:16px;font-weight:800;min-width:38px;text-align:right;color:var(--ink-2);font-variant-numeric:tabular-nums}
   .oxq .ox button:disabled{cursor:default}
   .opt[data-s="pick"]{border-color:var(--cta);background:var(--cta-soft);color:var(--ink)}
@@ -296,7 +297,7 @@
     levelH:"{과목}, 공부해 본 적 있어요?", levelP:"",
     checkH:"진단 {n}문항", checkP:"",   /* 제한 시간은 설명 문장 대신 초시계 마크로(2026-09-22) */
     placeH:"배치고사 {n}문항",
-    doneH:"진단 결과", placeDoneH:"배치고사 결과", doneP:"",
+    doneH:"진단 결과", placeDoneH:"배치고사 결과", doneP:"", readyH:"준비 끝났어요",
     sheetH:"이 기록 저장하기", sheetP:"로그인하면 폰을 바꿔도 기록이 남습니다. 지금 저장하지 않으면 이 기기에만 남아요.",
     sheetTierH:"기록 저장하고 티어 받기", sheetTierP:"로그인하면 배치 결과가 티어로 남고, 다음 주 승급전에 나갈 수 있습니다.",
     later:"나중에 할게요"
@@ -307,8 +308,8 @@
           examId:null, examDate:"", scope:null, deep:{}, goal:15, alarm:"21:00", alarmOn:false, check:[] };
   var steps=["intro","name","grade","school","exam","scope","goal","alarm","source","level","check","done","role"];
   /* 진행 막대는 묶음 다섯 칸 — 묶음 안 화면은 칸 안에서 차오른다(2026-10-24, 마이메르시 학교·학년 점 두 개) */
-  var 묶음={name:0,grade:0,school:1,exam:1,scope:1,goal:2,alarm:2,source:2,level:3,check:3,done:4,role:4}, 묶음이름=["나","학교","공부","진단","결과"];
-  A.mode=null;   /* "first" 처음, "place" 배치고사 */
+  var 묶음={name:0,grade:0,school:1,exam:1,scope:1,goal:2,alarm:2,source:2,level:3,check:3,done:4,role:4}, 묶음이름=["나","학교","공부","시작","결과"];
+  A.mode=null;   /* "first" 진단, "place" 배치고사, "concept" 개념 먼저(진단 없이) */
   function 줄임(n){ return String(n||"").replace(/여자고등학교$/,"여고").replace(/고등학교$/,"고"); }
   function 범위학교(){ var B=T.기본범위||{}; return !!(A.school && B.학교 && 줄임(A.school.name)===B.학교); }
   var i=0;
@@ -451,19 +452,28 @@
       var 수=개수();
       st.innerHTML=머리("",esc(MSG.levelH.replace("{과목}",과목)),"")+
         '<div class="tiles">'+
-          '<button class="tile" data-lv="new" aria-pressed="'+(A.level==="new")+'"><span class="ic">1</span><span><b>처음이에요</b><span>진단 '+수.first+'문항, 약한 곳부터 개념</span></span></button>'+
+          '<button class="tile" data-lv="new" aria-pressed="'+(A.level==="new")+'"><span class="ic">1</span><span><b>처음이에요</b><span>개념부터 차근차근</span></span></button>'+
           '<button class="tile" data-lv="old" aria-pressed="'+(A.level==="old")+'"><span class="ic">2</span><span><b>해 봤어요</b><span>배치고사로 지금 실력 확인</span></span></button>'+
         '</div><div id="recbox"></div>';
       function 그림(){
         눌림(st,".tile",function(x){ return x.dataset.lv===A.level; });
         /* 경험자에게만 배치고사를 권한다(2026-10-24 대표님 「학습이 처음이 아닌 사람이라고 하면 추천」) */
-        el("recbox").innerHTML = A.level!=="old" ? "" :
-          '<div class="rec"><b>배치고사 '+수.place+'문항을 권합니다</b><p>'+(A.grade==="고1"&&!A.nsu?"맞힌 수로 예상 점수와 티어를 매기고, 첫 주 기록으로 다시 잡습니다.":"맞힌 수로 단원별 실력을 잽니다.")+'</p>'+
-          '<div class="chips" style="margin:0"><button type="button" data-m="place" aria-pressed="'+(A.mode==="place")+'">배치고사 '+수.place+'문항</button><button type="button" data-m="first" aria-pressed="'+(A.mode==="first")+'">진단 '+수.first+'문항만</button></div></div>';
+        /* 시작을 고르게 한다 — 설정이 끝나자마자 O·X 진단이 강제로 나와 「개념을 먼저 보고 싶을 수도 있는데」 싫었다(2026-11-05 대표님).
+           처음이면 개념 먼저가 기본, 해 봤으면 배치고사가 기본. 어느 쪽이든 바꿀 수 있다. */
+        var 문 = A.mode==="concept" ? "개념 카드부터 읽고, 문제는 그다음에 풉니다."
+               : A.mode==="place" ? (A.grade==="고1"&&!A.nsu?"맞힌 수로 예상 점수와 티어를 매기고, 첫 주 기록으로 다시 잡습니다.":"맞힌 수로 단원별 실력을 잽니다.")
+               : A.mode==="first" ? "O·X·기출·개념어 "+수.first+"문항으로 약한 곳을 찾습니다." : "";
+        var 칩 = function(m, 글){ return '<button type="button" data-m="'+m+'" aria-pressed="'+(A.mode===m)+'">'+글+'</button>'; };
+        el("recbox").innerHTML = !A.level ? "" :
+          '<div class="rec"><b>어떻게 시작할까요?</b><p>'+문+'</p>'+
+          '<div class="chips" style="margin:0">'+
+            (A.level==="old" ? 칩("place","배치고사 "+수.place+"문항")+칩("first","진단 "+수.first+"문항만")+칩("concept","개념 먼저 보기")
+                             : 칩("concept","개념 먼저 보기")+칩("first","바로 문제 풀기"))+
+          '</div></div>';
         el("recbox").querySelectorAll("[data-m]").forEach(function(b){ b.onclick=function(){ A.mode=b.dataset.m; 그림(); }; });
         if(el("next")) el("next").disabled=!A.level;
       }
-      st.querySelectorAll(".tile").forEach(function(b){ b.onclick=function(){ A.level=b.dataset.lv; A.mode=A.level==="old"?"place":"first"; 그림(); }; });
+      st.querySelectorAll(".tile").forEach(function(b){ b.onclick=function(){ A.level=b.dataset.lv; A.mode=A.level==="old"?"place":"concept"; 그림(); }; });
       단추("다음", !!A.level);
       그림();
     },
@@ -602,6 +612,7 @@
       단추("다음");
     },
     check:function(st){
+      if(A.mode==="concept"){ i++; return 그리기(); }   /* 개념 먼저 — 진단 없이 결과(시작) 화면으로 */
       var 수=개수(), 배치=A.mode==="place";
       /* ── 배치 시험 20문항 — O·X 10, 객관식 6, 개념어 쓰기 4. 리프를 돌아가며 골고루(2026-09-18 대표님).
          문항마다 초읽기: O·X 20초, 개념어 30초, 객관식 60초(2026-09-18 대표님 '개념어 쓰기 너무 짧아'). 시간이 다 되면 틀린 것으로 적고 넘어간다. ── */
@@ -808,12 +819,14 @@
     },
     done:function(st){
       try{ localStorage.setItem("terra.onboarded","1"); }catch(e){}
-      var R=T.routine(), first=R.items[0]||null, 맞=A.check.filter(function(r){return r.ok;}).length;
+      var R=T.routine(), first=R.items[0]||null, 개념먼저=A.mode==="concept", 맞=A.check.filter(function(r){return r.ok;}).length;
       var nm=A.name||(S.student&&S.student.name)||"";
       var G=T.GRADES[A.grade]||{}, nx=T.nextExam?T.nextExam():null;
       var 배치=A.mode==="place", 티=배치&&A.grade==="고1"&&!A.nsu&&A.check.length>=개수().place*0.75?예상티어(맞, A.check.length):null;   /* 3/4 넘게 풀어야 티어(건너뛰면 없음) */
+      if(개념먼저){ var 카=R.items.filter(function(x){ return x.kind==="card"; })[0];
+        first = 카 || {kind:"card", title:"개념 먼저 보기", say:"단원을 골라 개념 카드부터", why:"", href:"skilltree.html", cta:"개념 보기"}; }
       if(티){ S.student.placement={점:티.점, 등급:티.등급, 티어:티.이름, n:A.check.length, 맞:맞, at:Date.now()}; T.flush(); }
-      st.innerHTML='<div class="done">'+머리("",(nm?esc(nm)+"님 ":"")+esc(배치?MSG.placeDoneH:MSG.doneH),esc(MSG.doneP))+
+      st.innerHTML='<div class="done">'+머리("",(nm?esc(nm)+(개념먼저?"님, ":"님 "):"")+esc(개념먼저?MSG.readyH:(배치?MSG.placeDoneH:MSG.doneH)),esc(MSG.doneP))+
         (배치&&!티&&A.grade==="고1"&&!A.nsu?'<p class="note" style="margin:0 0 10px">배치고사를 '+Math.ceil(개수().place*0.75)+'문항 넘게 풀면 티어가 나옵니다.</p>':'')+
         (티?'<div class="tierbox"><div class="gem" style="background:linear-gradient(160deg,'+티.밝+','+티.색+')">'+esc(티.글)+'</div><div><b>'+esc(티.이름)+'</b><span>50점으로 치면 '+티.점+'점, '+esc(티.등급말)+'<br>첫 주 기록으로 다시 잡습니다</span></div></div>':'')+
         (A.check.length?'<p class="note" style="margin:0 0 6px">'+A.check.length+'문항 중 <b>'+맞+'개</b> 정답. '+화면.약한자리()+'</p>':'')+
