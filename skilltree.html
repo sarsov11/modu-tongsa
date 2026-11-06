@@ -1388,14 +1388,14 @@
     var body=document.getElementById("vbody");
     /* ★ 2026-09-18: 새 강의는 유튜브 일부 공개 — yt 가 있으면 nocookie 임베드로 튼다 */
     if(V.yt){
-      body.innerHTML='<iframe class="yt" src="https://www.youtube-nocookie.com/embed/'+V.yt+
+      body.innerHTML='<iframe class="yt" data-vid="'+code+'" src="https://www.youtube-nocookie.com/embed/'+V.yt+
         '?rel=0&modestbranding=1&playsinline=1" title="'+V.title+'" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
       vwrap.hidden=false; requestAnimationFrame(function(){ vwrap.classList.add("on"); });
       document.body.style.overflow="hidden";
       return;
     }
     var src=V.web||V.local;
-    body.innerHTML='<video controls preload="metadata" src="'+src+'"></video>';
+    body.innerHTML='<video controls preload="metadata" data-vid="'+code+'" src="'+src+'"></video>';
     var vd=body.querySelector("video");
     vd.onerror=function(){
       body.innerHTML='<div class="vmiss"><b>'+V.title+'</b> ('+V.min+'분, '+V.mb+'MB)<br><br>'+

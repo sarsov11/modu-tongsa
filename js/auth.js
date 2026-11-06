@@ -19,7 +19,7 @@
   /* ★ 학습 기록 본체는 "terra.tree.v1"(js/store.js 의 KEY)이다. 옛 이름 "terra.state" 만 올리고 있어서
        답·확신도·사건 기록이 서버에 한 번도 안 올라갔다(2026-10-27 발견). 옛 이름은 옛 기기 복원용으로 남긴다. */
   var 키들 = ["terra.tree.v1", "terra.exam.log", "terra.goalmin", "terra.state", "terra.scope", "terra.snap", "terra.cards", "terra.axis", "terra.onboarded"];
-  var sb = ON ? window.supabase.createClient(C.url, C.anon) : null;
+  var sb = ON ? C.client() : null;
 
   /* ── 서버가 살아 있는지 ──────────────────────────────────
      무료 플랜 프로젝트는 쉬는 동안 도메인이 사라진다(2026-10-04 실측: DNS 조회 실패).
@@ -70,34 +70,50 @@
       try { localStorage.setItem(k, o[k]); } catch (e) {}
     });
   }
-  var 마지막올림 = 0;
+  var 마지막올림 = 0, 올림예약 = null;
   function 올리기() {
     if (!ON) return Promise.resolve(false);
     return 사용자().then(function (u) {
       if (!u) return false;
       var now = Date.now();
-      if (now - 마지막올림 < 4000) return false;          // 답할 때마다 부르므로 묶어서
+      if (now - 마지막올림 < 4000) {                      // 답할 때마다 부르므로 묶어서
+        /* 묶인 답도 4초 뒤 올린다. 그냥 버리면 마지막 답이 다음 답 때까지 서버에 없다 */
+        if (!올림예약) 올림예약 = setTimeout(function () { 올림예약 = null; 올리기(); }, 4000 - (now - 마지막올림));
+        return false;
+      }
       마지막올림 = now;
       return sb.from("records").upsert({
         user_id: u.id, data: 꾸러미(), saved_at: new Date().toISOString()
       }, { onConflict: "user_id" }).then(function () { 리포트올리기(u); return true; });
     });
   }
+  function 기록읽기(글) { try { return JSON.parse(글 || "{}") || {}; } catch (e) { return {}; } }
+  function 답수(t) { return Object.keys((t && t.ans) || {}).length; }
   function 내려받기() {
     if (!ON) return Promise.resolve(false);
     return 사용자().then(function (u) {
       if (!u) return false;
       return sb.from("records").select("data,saved_at").eq("user_id", u.id).maybeSingle()
         .then(function (r) {
+          if (r.error) return false;                       // 읽기 실패를 「서버가 비었다」로 보면 서버 기록을 덮어쓴다
           var row = r.data;
-          if (!row) return 올리기();                       // 서버가 비었으면 이 기기 것을 올린다
-          var 서버 = new Date(row.saved_at).getTime();
-          var 여기 = 0;
-          try { 여기 = JSON.parse(localStorage.getItem("terra.tree.v1") || "{}").savedAt || 0; } catch (e) {}
-          if (서버 > 여기) { 풀기(row.data); return "내려받음"; }
+          if (!row) { 맞춘계정(u.id); return 올리기(); }    // 서버가 비었으면 이 기기 것을 올린다
+          var 서버기록 = 기록읽기(row.data && row.data["terra.tree.v1"]), 여기기록 = {};
+          try { 여기기록 = 기록읽기(localStorage.getItem("terra.tree.v1")); } catch (e) {}
+          /* saved_at 은 올린 시각이라 언제나 기기의 savedAt 보다 늦다. 같은 기기 기록끼리 견주도록 savedAt 을 쓴다 */
+          var 서버 = 서버기록.savedAt || new Date(row.saved_at).getTime(), 여기 = 여기기록.savedAt || 0;
+          var 처음 = 맞춘계정() !== u.id;
+          /* 이 계정과 처음 맞추는 기기: 새 기기에서 몇 문제 풀고 로그인해도 쌓인 기록을 덮어쓰지 않게 답 수로 정한다 */
+          var 받을까 = 처음 ? 답수(서버기록) >= 답수(여기기록) : 서버 > 여기;
+          맞춘계정(u.id);
+          if (받을까) { 풀기(row.data); return "내려받음"; }
+          if (!처음 && 서버 === 여기) return false;         // 이미 같다
           return 올리기();
         });
-    });
+    }).catch(function () { return false; });
+  }
+  function 맞춘계정(id) {
+    try { if (id) localStorage.setItem("terra.sync.uid", id); return localStorage.getItem("terra.sync.uid"); } catch (e) { return null; }
   }
 
   /* ── 학부모 리포트 (2026-10-04) ──────────────────────────────
@@ -204,10 +220,17 @@
 
   /* 답할 때마다 올린다 — store.js 가 쏘는 사건 */
   window.addEventListener("terra:ev", function () { 올리기(); });
-  if (ON) sb.auth.onAuthStateChange(function (ev) {
-    if (ev === "SIGNED_IN") 내려받기().then(function () {
-      window.dispatchEvent(new CustomEvent("terra:synced"));
-    });
+  /* INITIAL_SESSION = 로그인한 채 화면을 연 때. 앞 화면에서 못 올린 마지막 답을 여기서 맞춘다.
+     콜백 안에서 Supabase 를 바로 부르면 멈출 수 있어(공식 문서 경고) setTimeout 으로 빼낸다.
+     다른 기기 기록을 받으면 메모리의 옛 기록이 덮어쓰지 않도록 화면을 다시 연다. login.html 은 terra:synced 로 스스로 옮겨 간다. */
+  if (ON) sb.auth.onAuthStateChange(function (ev, session) {
+    if (ev !== "SIGNED_IN" && !(ev === "INITIAL_SESSION" && session)) return;
+    setTimeout(function () {
+      내려받기().then(function (결과) {
+        window.dispatchEvent(new CustomEvent("terra:synced"));
+        if (결과 === "내려받음" && !/login\.html$/.test(location.pathname)) location.reload();
+      });
+    }, 0);
   });
 
   window.AUTH = { on: ON, 서버확인: 서버확인, 사용자: 사용자, 로그인: 로그인, 로그아웃: 로그아웃,

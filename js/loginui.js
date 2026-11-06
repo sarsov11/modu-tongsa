@@ -37,7 +37,7 @@
     });
     function 그리기() {
     A.사용자().then(function (u) {
-      if (u) {
+      if (u && !u.is_anonymous) {   /* 연구 수집용 익명 계정은 로그인으로 치지 않는다 */
         var nm = (u.user_metadata && (u.user_metadata.name || u.user_metadata.full_name || u.user_metadata.preferred_username)) || u.email || "로그인됨";
         host.innerHTML = '<div class="lgbox"><p class="lgwho"><b>' + esc(nm) + '</b> 계정에 저장 중</p>' +
           '<button type="button" class="lgout" id="lgOut">로그아웃</button></div>';

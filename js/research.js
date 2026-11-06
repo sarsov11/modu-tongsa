@@ -6,11 +6,11 @@
  * 한 줄을 싣고, 답할 때 RESEARCH.answer(...) 를 부르면 같은 형식으로 쌓인다.
  *
  * 무엇을 하나
- *   1) 사건을 한 건씩 기기 안 대기열(localStorage "terra.rs.q")에 쌓는다 — 동의와 상관없이 기기 안에만.
+ *   1) 동의한 이용자의 사건을 한 건씩 기기 안 대기열(localStorage "terra.rs.q")에 쌓는다. 동의 전에는 쌓지 않는다.
  *   2) 학생이 연구 참여에 동의했고(research.html) 서버(window.SUPA)가 켜져 있으면 대기열을 learn_events 로 올린다.
  *      동의하지 않으면 한 건도 밖으로 나가지 않는다. 서버 쪽 RLS 도 동의 없는 쓰기를 막는다(supabase/research.sql).
  *   3) 모두의 통사는 store.js 가 쏘는 "terra:ev"(답·훈련) 를 받아 그대로 옮긴다 — 화면을 고치지 않는다.
- *   4) <video> 는 화면 어디에 있든 재생·멈춤·되감기·끝까지 봄을 구간 단위로 적는다.
+ *   4) <video> 와 유튜브 임베드는 화면 어디에 있든 재생·멈춤·되감기·배속·끝까지 봄을 구간 단위로 적는다.
  *   5) 접속 시작·끝, 화면 열기, 대시보드(개념트리·학부모 리포트) 머문 시간을 적는다.
  *
  * ★ 학생 화면에는 "서버·업로드" 같은 말을 쓰지 않는다(auth.js 와 같은 원칙). 동의 화면에서만 무엇을 모으는지 적는다.
@@ -45,6 +45,8 @@
   /* 사건마다 eid(무작위 16자)를 단다 — 올리기가 성공했는데 응답만 끊겨 다시 올려도 서버가 같은 eid 를 한 번만 받는다 */
   var 맥락 = null;                    // 모의고사처럼 화면이 정한 맥락. answer 에 data.ctx 로 붙는다
   function log(kind, data, 겉) {
+    /* 동의 전 사건은 어차피 올리지 않고 버린다. 여러 서비스가 같은 주소(github.io)의 저장 공간을 나눠 쓰므로 아예 쌓지 않는다 */
+    if (kind !== "consent" && !동의함()) return null;
     var e = { eid: 무작위(8), kind: kind, at: new Date().toISOString(), service: 서비스, session: 접속, device: 기기, data: data || {} };
     if (겉) { if (겉.q != null) e.q = String(겉.q); if (겉.leaf != null) e.leaf = String(겉.leaf); if (겉.ok != null) e.ok = !!겉.ok; }
     if (맥락 && kind === "answer") e.data.ctx = 맥락;
@@ -87,7 +89,7 @@
   var sb = null;
   function 클라이언트() {
     if (sb) return sb;
-    if (켜짐 && window.supabase) sb = window.supabase.createClient(C.url, C.anon);
+    if (켜짐 && C.client) sb = C.client();   // auth.js 와 같은 연결을 쓴다
     return sb;
   }
   /* 로그인한 학생은 그 계정으로, 로그인 안 한 학생은 익명 계정으로 올린다(이름·이메일 없음). */
@@ -194,24 +196,134 @@
     else if (d.k === "l") log("lecture", { lec: d.lec, m: d.m }, { leaf: d.lec });
   });
 
-  /* 2) 영상 — 화면에 있는 <video> 를 따로 고치지 않고 문서에서 잡는다(재생 이벤트는 거품이 안 오르므로 capture) */
-  var 구간 = new WeakMap();
-  function 영상정보(v) { return { src: (v.currentSrc || v.src || "").replace(location.origin, ""), rate: v.playbackRate }; }
+  /* 2) 영상 — 어느 서비스든 화면에 영상이 붙으면 화면을 고치지 않아도 잡는다 (2026-11-06)
+     · <video>: mp4·HLS 등 어디에 올려도 같다. 재생 이벤트는 거품이 안 오르므로 capture 로 받는다.
+     · 유튜브 임베드: iframe 이 생기면 enablejsapi 를 붙이고 플레이어 API 로 받는다.
+     · 영상 이름은 data-vid 가 있으면 그것, 없으면 파일 이름·유튜브 ID.
+     · 긴 시청이 앱 강제 종료로 사라지지 않게 60초마다 구간을 끊어 적는다(how: tick). */
+  var 끊는초 = 60, 구간 = new Map();
+  function 초(x) { return Math.round((x || 0) * 10) / 10; }
+  function 영상이름(v) {
+    if (v.dataset && v.dataset.vid) return v.dataset.vid;
+    var s = v.currentSrc || v.src || "";
+    return s.indexOf("blob:") === 0 ? "blob" : s.replace(location.origin, "").split(/[?#]/)[0];
+  }
+  function 구간적기(이름, 시작, 끝, how, 속도, 길이, 더) {
+    if (끝 <= 시작 + 0.5 && how !== "seek") return;
+    var d = { src: 이름, from: 초(시작), to: 초(끝), how: how, rate: 속도, len: 초(길이) };
+    if (더 != null) d.jump = 초(더);
+    log("video", d);
+  }
   function 구간닫기(v, how) {
     var g = 구간.get(v); if (!g) return;
-    var 끝 = v.currentTime;
-    if (끝 > g.from + 0.5) { var d = 영상정보(v); d.from = Math.round(g.from * 10) / 10; d.to = Math.round(끝 * 10) / 10; d.how = how; d.len = Math.round((v.duration || 0) * 10) / 10; log("video", d); }
+    구간적기(영상이름(v), g.from, v.currentTime, how, g.rate, v.duration);
     구간.delete(v);
   }
-  document.addEventListener("play", function (e) { var v = e.target; if (v.tagName === "VIDEO") 구간.set(v, { from: v.currentTime }); }, true);
-  document.addEventListener("pause", function (e) { var v = e.target; if (v.tagName === "VIDEO") 구간닫기(v, "pause"); }, true);
-  document.addEventListener("ended", function (e) { var v = e.target; if (v.tagName === "VIDEO") 구간닫기(v, "ended"); }, true);
+  function 구간열기(v) { if (!v.paused && !v.ended) 구간.set(v, { from: v.currentTime, rate: v.playbackRate, t: Date.now() }); }
+  function 영상이면(e, f) { var v = e.target; if (v && v.tagName === "VIDEO") f(v); }
+  document.addEventListener("play", function (e) { 영상이면(e, function (v) { 구간.set(v, { from: v.currentTime, rate: v.playbackRate, t: Date.now() }); }); }, true);
+  document.addEventListener("pause", function (e) { 영상이면(e, function (v) { if (!v.seeking) 구간닫기(v, "pause"); }); }, true);
+  document.addEventListener("ended", function (e) { 영상이면(e, function (v) { 구간닫기(v, "ended"); }); }, true);
+  document.addEventListener("ratechange", function (e) { 영상이면(e, function (v) { 구간닫기(v, "rate"); 구간열기(v); }); }, true);
   document.addEventListener("seeking", function (e) {
-    var v = e.target; if (v.tagName !== "VIDEO") return;
-    var g = 구간.get(v);
-    if (g) { var d = 영상정보(v); d.from = Math.round(g.from * 10) / 10; d.to = Math.round((v._rsLast || g.from) * 10) / 10; d.how = "seek"; d.jump = Math.round(v.currentTime * 10) / 10; log("video", d); 구간.set(v, { from: v.currentTime }); }
+    영상이면(e, function (v) {
+      var g = 구간.get(v); if (!g) return;
+      구간적기(영상이름(v), g.from, v._rsLast == null ? g.from : v._rsLast, "seek", g.rate, v.duration, v.currentTime);
+      구간.set(v, { from: v.currentTime, rate: v.playbackRate, t: Date.now() });
+    });
   }, true);
-  document.addEventListener("timeupdate", function (e) { var v = e.target; if (v.tagName === "VIDEO" && !v.seeking) v._rsLast = v.currentTime; }, true);
+  document.addEventListener("timeupdate", function (e) { 영상이면(e, function (v) { if (!v.seeking) v._rsLast = v.currentTime; }); }, true);
+
+  /* 유튜브 — 플레이어 API 에서 상태와 위치를 받아 <video> 와 같은 형식으로 적는다 */
+  var 유튜브들 = [], API상태 = 0, API대기 = [];
+  function 유튜브ID(src) { var m = /youtube(?:-nocookie)?\.com\/embed\/([\w-]{6,})/.exec(src || ""); return m && m[1]; }
+  function API부르기(f) {
+    if (window.YT && window.YT.Player) return f();
+    API대기.push(f);
+    if (API상태) return;
+    API상태 = 1;
+    var 앞 = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = function () { if (앞) 앞(); var a = API대기; API대기 = []; a.forEach(function (x) { x(); }); };
+    var s = document.createElement("script"); s.src = "https://www.youtube.com/iframe_api"; s.async = true;
+    s.onerror = function () { API상태 = 0; log("video", { how: "noapi" }); };
+    document.head.appendChild(s);
+  }
+  function 유튜브닫기(u, how, 끝) {
+    if (u.from == null) return;
+    구간적기(u.name, u.from, 끝 == null ? u.last : 끝, how, u.rate, u.len);
+    u.from = null;
+  }
+  function 유튜브잡기(f) {
+    if (f._rsYT) return;
+    var id = 유튜브ID(f.getAttribute("src")); if (!id) return;
+    f._rsYT = true;
+    if (!/[?&]enablejsapi=1/.test(f.src)) {
+      f.src = f.src + (f.src.indexOf("?") < 0 ? "?" : "&") + "enablejsapi=1&origin=" + encodeURIComponent(location.origin);
+    }
+    var u = { name: (f.dataset && f.dataset.vid) || "yt:" + id, from: null, last: 0, rate: 1, len: 0, p: null, f: f, t: 0 };
+    API부르기(function () {
+      if (!f.isConnected) return;
+      u.p = new window.YT.Player(f, { events: { onStateChange: function (e) {
+        var S = window.YT.PlayerState, 지금 = e.target.getCurrentTime();
+        u.len = e.target.getDuration() || u.len;
+        if (e.data === S.PLAYING) {
+          /* 건너뛰면 버퍼링을 거쳐 다시 PLAYING 이 온다. 앞 구간을 잃지 않게 먼저 적는다 */
+          if (u.from != null && Math.abs(지금 - u.last) > 2.5 * Math.max(u.rate, 1)) 구간적기(u.name, u.from, u.last, "seek", u.rate, u.len, 지금);
+          else if (u.from != null) { u.last = 지금; return; }
+          u.rate = e.target.getPlaybackRate(); u.from = 지금; u.last = 지금; u.t = Date.now();
+          if (유튜브들.indexOf(u) < 0) 유튜브들.push(u);
+        }
+        else if (e.data === S.PAUSED) 유튜브닫기(u, "pause", 지금);
+        else if (e.data === S.ENDED) 유튜브닫기(u, "ended", 지금);
+      }, onPlaybackRateChange: function (e) {
+        if (u.from != null) { var 지금 = e.target.getCurrentTime(); 유튜브닫기(u, "rate", 지금); u.from = 지금; u.t = Date.now(); }
+        u.rate = e.data;
+      } } });
+    });
+  }
+  /* 1초마다 위치를 보고 건너뛰기를 알아낸다. 화면에서 사라진 플레이어는 마지막 위치까지 닫는다 */
+  setInterval(function () {
+    유튜브들 = 유튜브들.filter(function (u) {
+      if (!u.f.isConnected) { 유튜브닫기(u, "leave"); return false; }
+      if (u.from == null || !u.p || !u.p.getCurrentTime) return true;
+      var 지금 = u.p.getCurrentTime();
+      if (Math.abs(지금 - u.last) > 2.5 * Math.max(u.rate, 1)) {
+        구간적기(u.name, u.from, u.last, "seek", u.rate, u.len, 지금);
+        u.from = 지금; u.t = Date.now();
+      }
+      u.last = 지금;
+      return true;
+    });
+  }, 1000);
+  function 유튜브찾기(뿌리) {
+    if (!뿌리.querySelectorAll) return;
+    if (뿌리.tagName === "IFRAME") 유튜브잡기(뿌리);
+    뿌리.querySelectorAll("iframe").forEach(유튜브잡기);
+  }
+  유튜브찾기(document);
+  new MutationObserver(function (목록) {
+    목록.forEach(function (m) { m.addedNodes.forEach(유튜브찾기); });
+  }).observe(document.documentElement, { childList: true, subtree: true });
+
+  /* 긴 시청을 끊어 적기 · 화면을 벗어날 때 닫기 */
+  setInterval(function () {
+    var 지금 = Date.now();
+    구간.forEach(function (g, v) {
+      if (지금 - g.t >= 끊는초 * 1000) { 구간닫기(v, "tick"); 구간열기(v); }
+    });
+    유튜브들.forEach(function (u) {
+      if (u.from != null && 지금 - u.t >= 끊는초 * 1000) { 유튜브닫기(u, "tick"); u.from = u.last; u.t = 지금; }
+    });
+  }, 5000);
+  function 전부닫기(how) {
+    Array.from(구간.keys()).forEach(function (v) { 구간닫기(v, how); });
+    유튜브들.forEach(function (u) { 유튜브닫기(u, how); });
+  }
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState !== "hidden") return;
+    Array.from(구간.keys()).forEach(function (v) { 구간닫기(v, "hide"); 구간열기(v); });
+    유튜브들.forEach(function (u) { if (u.from != null) { 유튜브닫기(u, "hide"); u.from = u.last; u.t = Date.now(); } });
+  });
 
   /* 3) 접속·화면·대시보드 */
   var 보인시간 = 0, 보인때 = document.visibilityState === "visible" ? Date.now() : null;
@@ -227,7 +339,7 @@
   window.addEventListener("pagehide", function () {
     if (보인때) { 보인시간 += Date.now() - 보인때; 보인때 = null; }
     var 초 = Math.round((Date.now() - 접속시작) / 1000), 본초 = Math.round(보인시간 / 1000);
-    document.querySelectorAll("video").forEach(function (v) { if (!v.paused) 구간닫기(v, "leave"); });
+    전부닫기("leave");
     if (대시보드[이름]) log("view", { what: 대시보드[이름], sec: 본초 });
     log("session", { how: "end", sec: 초, vis: 본초 });
     flush();
