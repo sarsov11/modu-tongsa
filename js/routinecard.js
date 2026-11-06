@@ -167,8 +167,7 @@
     var foot = '<div class="wk">' + wk.map(function (c) {
       return '<div class="' + (c.lv === 2 ? "full" : c.lv === 1 ? "part" : "") + (c.today ? " tdy" : "") + '">' + c.nm + '<i>' + (c.lv === 2 ? "✓" : "") + '</i></div>';
     }).join("") + '</div>' +
-      '<p class="ft">' + (allDone ? "연속 <b>" + streak + "일</b>" : 오늘함 ? "연속 <b>" + streak + "일째</b>, 루틴을 끝내면 오늘 칸에 불이 켜짐"
-        : streak ? "오늘 시작하면 연속 <b>" + (streak + 1) + "일</b>" : "오늘 루틴을 끝내면 이번 주 첫 칸에 불이 켜짐") +
+      '<p class="ft">' + (allDone ? "오늘 루틴 끝" : 오늘함 ? "루틴을 끝내면 오늘 칸에 표시됨" : "오늘 루틴을 끝내면 이번 주 첫 칸에 표시됨") +
       (window.TERRA_NOTIFY && TERRA_NOTIFY.on && TERRA_NOTIFY.on() ? ", 매일 " + TERRA_NOTIFY.at() + " 알림" : "") + '</p>';
     host.className = "rtc rt-" + v + (allDone ? " alldone" : "");
     host.innerHTML = head + body + foot;

@@ -85,7 +85,8 @@
   }
 
   /* ── 올리기 ─────────────────────────────────────────── */
-  var C = window.SUPA, 켜짐 = !!(C && C.url && C.anon);
+  /* C.research 는 IRB 승인 전까지 false(supa.config.js). 서버 연결과 별개로 연구 기록과 동의 내용은 서버에 나가지 않는다 */
+  var C = window.SUPA, 켜짐 = !!(C && C.url && C.anon && C.research);
   var sb = null;
   function 클라이언트() {
     if (sb) return sb;

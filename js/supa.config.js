@@ -3,11 +3,15 @@
    라이브러리는 js/supabase.min.js(@supabase/supabase-js 2.119.0)를 이 파일이 url 이 있을 때만 싣는다.
    화면마다 script 를 넣고 빼지 않는다.
 
-   off = 옛 프로젝트(시드니, 2026-10-04부터 쉬는 중, DNS 조회 실패). 새 프로젝트로 옮기면 지운다. */
+   정본 = 서울 프로젝트 fqxouxunoiwoezlkorva(2026-11-06, 조직 테라러닝).
+   off = 옛 프로젝트(시드니, sarsov11 조직, 2026-10-04부터 쉬는 중). 학생 기록 유무를 복구해 확인한 뒤 지운다. */
 window.SUPA = {
-  url: "",
-  anon: "",
-  vapid: "",
+  url: "https://fqxouxunoiwoezlkorva.supabase.co",
+  anon: "sb_publishable_Je1KMwQzq1rbzY42ZhOjOQ_TdSNBTYA",
+  vapid: "BFh3VUZQlO_eMJcumm898UvbxY-trWxDIoV_MbIUHqkktYfhxDkBXL7av9RBuwcV-1d-z1790UzaMySd7AEN9Ro",
+  /* 연구 수집 스위치. 서버 연결(url)과 따로 둔다. IRB 승인 전에는 false: 동의해도 연구 기록이 서버로 나가지 않는다.
+     승인 뒤 대표님 확인을 받고 true 로 바꾼다. */
+  research: false,
   off: {
     url: "https://oeiebutgervwbljpqxum.supabase.co",
     anon: "sb_publishable_NFpZLgSRWrkyXEZbjKYUfw_ni8Wrn7A",

@@ -287,7 +287,6 @@
                    : fmt("idleStart", { goal: t.goal });
     var s = [];
     if (t.up) s.push(fmt("upToday", { n: t.up }));
-    if (t.streak >= 2) s.push(fmt("streakDay", { n: t.streak }));
     if (!cardOpenedToday() && here() === "index.html" && cardToday()) s.push(fmt("cardWait"));
     return { b: b, s: s.join(" ") };
   }
@@ -514,7 +513,6 @@
       '<div class="today"><div><b>' + t.ok + '</b><span>오늘 맞힘</span></div>' +
       '<div><b>' + t.ans + '</b><span>오늘 푼 것</span></div>' +
       '<div><b>' + t.spent + '<i>/' + t.goal + '</i></b><span>분</span></div>' +
-      '<div><b>' + t.streak + '</b><span>일 연속</span></div>' +
       (t.up ? '<div class="up"><b>+' + t.up + '</b><span>오른 곳</span></div>' : '') + '</div>' +
       '<p class="dline">' + esc(dline) + '</p>' +
       (autoNext ? '<p class="autonext">다음 ' + esc(step.title) + ' ' + step.min + '분, ' +

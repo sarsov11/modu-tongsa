@@ -2100,7 +2100,7 @@
       try { if (window.COACH) window.COACH.mount(active); else mountNext(active); } catch (e) {}
     }, 500);
     var el = document.getElementById("navstreak");
-    if (el) { var 연 = report().streak; el.textContent = 연 + "일 연속"; el.style.display = 연 ? "" : "none"; }   // 0일 연속은 숨긴다 (.chip 의 display 가 hidden 을 덮는다)
+    if (el) el.style.display = "none";   // 0일 연속은 숨긴다 (.chip 의 display 가 hidden 을 덮는다)
   }
 
   /* ── 기록 꺼내기·되돌리기 ─────────────────────────────

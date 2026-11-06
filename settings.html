@@ -625,7 +625,7 @@
       document.getElementById("coachagain").onclick=function(){ try{ localStorage.removeItem("terra.coachmark.tongsa.skilltree"); }catch(e){} location.href="skilltree.html"; };
       var 차례=0;
       if(document.getElementById("cheertry")) document.getElementById("cheertry").onclick=function(){
-        차례++; if(차례%3===1){ ZZ.setCombo(2); ZZ.ok(this); } else if(차례%3===2){ ZZ.stars(3); } else { ZZ.promote("A","S"); } };
+        ZZ.ok(this); };
       return;
     }
     if(!window.CHEER) return;
