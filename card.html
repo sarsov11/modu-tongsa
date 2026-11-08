@@ -48,6 +48,8 @@
   .card ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
   .card li{display:flex;gap:11px;align-items:flex-start;font-size:16px;line-height:1.7;
     color:var(--ink)}
+  /* 1108 도식 안 목록은 줄글 그대로(위 flex 가 보통 글·굵은 글을 칸으로 쪼개 세로로 세웠다) */
+  .card .dg ul li{display:block}
   .card li i{flex:0 0 auto;width:6px;height:6px;border-radius:50%;margin-top:11px;
     background:var(--red)}
   .card .src{margin-top:16px;padding-top:13px;border-top:1px solid var(--line);

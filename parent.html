@@ -300,7 +300,7 @@
     pills.push('<span class="pill">학습 시간 <b class="n">'+시간(r.min)+'</b></span>');
     pills.push('<span class="pill">성취도 <b class="n">'+r.ach.now+'</b>'+(차?' <span class="dl '+(차>0?"up":"dn")+'">'+(차>0?"▲":"▼")+Math.abs(차)+'</span>':'')+'</span>');
     if(r.first) pills.push('<span class="pill">학습 시간대 <b class="n">'+r.first+'–'+r.last+'</b></span>');
-    pills.push('<span class="pill">이어서 한 날 <b class="n">'+r.streak+'일</b></span>');
+    pills.push('<span class="pill">연속 출석 <b class="n">'+r.streak+'일</b></span>');
     var 비교=(r.min||r.prevMin)? (r.min===r.prevMin?"전날과 같음":"전날 대비 "+(r.min>r.prevMin?"+":"−")+시간(Math.abs(r.min-r.prevMin)))+(r.avgMin?", 최근 7일 평균 "+시간(r.avgMin):"") : "";
     var 최고=Math.max.apply(null,r.ach.series.map(function(p){return p.v;}));
     return 표지(r, "일간 리포트, "+긴날(r.day), pills)+

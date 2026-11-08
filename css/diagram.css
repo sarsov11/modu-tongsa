@@ -163,6 +163,9 @@ html.sc-with-side body{padding-right:420px}
 .sc-ok{background:color-mix(in srgb,#1f9d55 10%,transparent)}.sc-ok b{background:#1f9d55}
 .sc-no{background:color-mix(in srgb,var(--sc-key) 10%,transparent)}.sc-no b{background:var(--sc-key)}
 /*tnote-start*/
+.dg ul>li{display:block}
+.dg-wcards{display:none}
+@media (max-width:760px){.dg-wide>.dg-table{display:none}.dg-wide>.dg-wcards{display:block}.dg-wcards>.dg-rl{margin-top:10px}}
 .tn-t{background:rgba(127,127,127,.15);padding:0 2px;margin:0 -1px;border-radius:4px;cursor:help;-webkit-tap-highlight-color:transparent;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .tn-t:hover,.tn-t.tn-act,.tn-t:focus-visible{background:rgba(127,127,127,.3);outline:0}
 .tn-s{cursor:pointer;border-radius:5px;transition:background .12s;-webkit-tap-highlight-color:transparent}
