@@ -14,12 +14,12 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=b8c335dc">
-<link rel="stylesheet" href="css/cheer.css?v=386af7f8">
-<link rel="stylesheet" href="css/coach.css?v=9bd6a7e9">
-<link rel="stylesheet" href="css/question.css?v=6956a62b">
-<link rel="stylesheet" href="css/tera-q.css">
-<link rel="stylesheet" href="css/tera-q-tongsa.css">
+<link rel="stylesheet" href="css/base.css?v=22afa090">
+<link rel="stylesheet" href="css/cheer.css?v=b6d0f7c3">
+<link rel="stylesheet" href="css/coach.css?v=02d1145b">
+<link rel="stylesheet" href="css/question.css?v=482f4a2f">
+<link rel="stylesheet" href="css/tera-q.css?v=44ec127e">
+<link rel="stylesheet" href="css/tera-q-tongsa.css?v=0219224b">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:1360px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -31,18 +31,18 @@
     overflow:hidden}
   /* 「1 / 20」(prog) 과 출처(qtop)를 한 줄에 — 띠 두 개가 문제 위를 차지했다(2026-09-21) */
   .qtop{display:flex;align-items:center;gap:12px;padding:15px 22px;flex-wrap:wrap;overflow:hidden}
-  .qtop .no{font-family:var(--mono);font-size:15px;color:var(--ink-4);font-weight:800}
-  .qtop .srcline{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);margin-left:auto;font-weight:800}
+  .qtop .no{font-family:var(--mono);font-size:16px;color:var(--ink-4);font-weight:800}
+  .qtop .srcline{font-family:var(--mono);font-size:14px;color:var(--ink-4);margin-left:auto;font-weight:800}
   .qbody{padding:24px 26px 26px}
-  .stem{font-size:18px;font-weight:700;color:var(--ink);line-height:1.62;
+  .stem{font-size:16px;font-weight:700;color:var(--ink);line-height:1.62;
     letter-spacing:-.025em;margin-bottom:18px}
   .data{position:relative;border-radius:var(--r1);padding:20px 22px;margin-bottom:16px;
     background:var(--surface-2);border:1px solid var(--line);border-left:3px solid var(--mint);
     font-size:16px;line-height:1.92;color:var(--ink-2)}
   .boki{border-radius:var(--r1);padding:16px 20px;margin-bottom:16px;
     background:var(--surface-2);border:1px dashed var(--line-2);
-    font-size:15.5px;line-height:1.85;color:var(--ink-2)}
-  .boki:before{content:"보 기";display:block;font-family:var(--kr);font-weight:700;font-size:14.5px;
+    font-size:16px;line-height:1.85;color:var(--ink-2)}
+  .boki:before{content:"보 기";display:block;font-family:var(--kr);font-weight:700;font-size:14px;
     letter-spacing:-.01em;color:var(--ink-4);margin-bottom:8px}
   /* 표·지도는 원본이 있어야 읽힌다.
      어두운 스킨에서는 **반전**해서 검은 바탕에 흰 글씨로 만든다 —
@@ -63,7 +63,7 @@
   .figure figcaption{display:flex;align-items:center;gap:10px}
   .figure .zoom{margin-left:auto;appearance:none;flex:0 0 auto;
     border:1px solid var(--line-2);background:var(--surface);color:var(--ink-2);
-    border-radius:8px;font-size:14.5px;padding:6px 12px;cursor:pointer;
+    border-radius:12px;font-size:14px;padding:6px 12px;cursor:pointer;
     font-family:var(--mono);font-weight:800}
   .figure .zoom:hover{border-color:var(--red);color:var(--ink)}
   /* 크게 보기 */
@@ -73,17 +73,17 @@
   .lens.on{display:block}
   /* 원본 크기로 둔다 — 화면 폭에 맞추면 카드와 같은 크기라 크게 볼 까닭이 없다 */
   .lens img{display:block;margin:0 auto;width:auto;max-width:none;height:auto;
-    filter:invert(1) contrast(1.06);border-radius:10px}
+    filter:invert(1) contrast(1.06);border-radius:12px}
   .lens .hint2{position:fixed;left:0;right:0;bottom:0;text-align:center;
-    font-family:var(--mono);font-size:14.5px;color:var(--ink-4);
+    font-family:var(--mono);font-size:14px;color:var(--ink-4);
     padding:10px;background:linear-gradient(transparent,rgba(4,6,10,.9) 40%);font-weight:800}
   :root[data-skin="note"] .lens img,
   :root[data-skin="jelly"] .lens img,
   :root[data-skin="white"] .lens img{filter:none;background:#fff}
   .lens .x{position:absolute;top:14px;right:16px;appearance:none;border:0;
-    background:var(--surface);color:var(--ink);border-radius:10px;
+    background:var(--surface);color:var(--ink);border-radius:12px;
     font-size:16px;padding:9px 14px;cursor:pointer}
-  .figcap{font-size:15px;color:var(--ink-4);margin:0 0 6px;font-family:var(--mono);font-weight:800}
+  .figcap{font-size:16px;color:var(--ink-4);margin:0 0 6px;font-family:var(--mono);font-weight:800}
 
   /* ── 자료 표 ── */
   .qtab{margin:0 0 14px;overflow-x:auto;-webkit-overflow-scrolling:touch;
@@ -99,16 +99,16 @@
     background:var(--surface-2);color:var(--ink);font-weight:600}
   .qtab + .qtab{margin-top:-6px}
   @media(max-width:640px){
-    .qtab table{font-size:15px}
+    .qtab table{font-size:16px}
     .qtab th,.qtab td{padding:7px 10px}
   }
   .opts.nums{flex-direction:row;flex-wrap:wrap;gap:10px}
   .opts.nums .opt{flex:1;min-width:78px;justify-content:center;padding:16px 10px}
   .opts.nums .opt .k{width:30px;height:30px;flex:0 0 30px;font-size:16px}
-  .figure figcaption{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);
+  .figure figcaption{font-family:var(--mono);font-size:14px;color:var(--ink-4);
     padding:7px 12px;background:var(--surface-2);border-top:1px solid var(--line);font-weight:800}
   .datafold{margin-bottom:16px}
-  .datafold summary{cursor:pointer;font-family:var(--mono);font-size:14.5px;color:var(--ink-4);
+  .datafold summary{cursor:pointer;font-family:var(--mono);font-size:14px;color:var(--ink-4);
     padding:8px 0;list-style:none;display:flex;align-items:center;gap:7px;font-weight:800}
   .datafold summary:before{content:"+";font-size:16px;color:var(--ink-3)}
   .datafold[open] summary:before{content:"–"}
@@ -118,10 +118,10 @@
   .opts{display:flex;flex-direction:column;gap:9px;margin-top:20px}
   .opt{display:flex;gap:13px;align-items:flex-start;padding:14px 17px;border-radius:var(--r1);
     border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2);cursor:pointer;
-    font-family:inherit;font-size:16.5px;line-height:1.62;text-align:left;transition:.14s;color:var(--ink)}
+    font-family:inherit;font-size:16px;line-height:1.62;text-align:left;transition:.14s;color:var(--ink)}
   .opt:hover:not([disabled]){border-color:var(--line-3);color:var(--ink)}
-  .opt .k{flex:0 0 24px;height:24px;border-radius:7px;background:var(--surface-3);
-    display:grid;place-items:center;font-family:var(--mono);font-size:14.5px;font-weight:800;
+  .opt .k{flex:0 0 24px;height:24px;border-radius:12px;background:var(--surface-3);
+    display:grid;place-items:center;font-family:var(--mono);font-size:14px;font-weight:800;
     color:var(--ink-3)}
   .opt[data-s="ok"]{border-color:var(--mint);background:rgba(47,224,206,.10);color:var(--ink)}
   .opt[data-s="ok"] .k{background:var(--mint);color:#06110F}
@@ -132,20 +132,20 @@
   .verdict{margin-top:20px;border-radius:var(--r1);border:1px solid var(--line);
     background:var(--surface-2);padding:18px 20px}
   .verdict .vl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-  .verdict .tag2{font-family:var(--mono);font-size:14.5px;font-weight:800;padding:4px 11px;
-    border-radius:6px}
+  .verdict .tag2{font-family:var(--mono);font-size:14px;font-weight:800;padding:4px 11px;
+    border-radius:12px}
   .verdict .tag2.ok{background:var(--mint);color:#06110F}
   .verdict .tag2.no{background:var(--red);color:#fff}
-  .verdict p{font-size:15.5px;line-height:1.78;color:var(--ink-2)}
+  .verdict p{font-size:16px;line-height:1.78;color:var(--ink-2)}
   /* ── 왜 틀렸나 ──
      정답만 알려 주면 학생은 제 답이 왜 아닌지를 스스로 찾아 읽어야 한다.
      고른 선지의 설명을 맨 앞에 둔다. */
   .whyrow{display:flex;gap:10px;align-items:flex-start;padding:13px 15px;
     border-radius:var(--r1);margin-bottom:9px;font-size:16px;line-height:1.7}
-  .whyrow .no{flex:0 0 24px;height:24px;border-radius:7px;display:grid;place-items:center;
-    font-family:var(--mono);font-size:14.5px;font-weight:800}
+  .whyrow .no{flex:0 0 24px;height:24px;border-radius:12px;display:grid;place-items:center;
+    font-family:var(--mono);font-size:14px;font-weight:800}
   .whyrow .tt{flex:1;min-width:0}
-  .whyrow .tt b{display:block;font-size:14.5px;margin-bottom:3px;letter-spacing:.02em}
+  .whyrow .tt b{display:block;font-size:14px;margin-bottom:3px;letter-spacing:.02em}
   .whyrow.mine{background:var(--red-soft);border:1px solid var(--red-line)}
   .whyrow.mine .no{background:var(--red);color:#fff}
   .whyrow.mine .tt b{color:var(--red-2)}
@@ -154,7 +154,7 @@
   .whyrow.right .tt b{color:var(--mint)}
   .whyrow .tt span{color:var(--ink-2)}
   .whymore{margin-top:4px}
-  .whymore summary{cursor:pointer;font-family:var(--mono);font-size:14.5px;color:var(--ink-4);
+  .whymore summary{cursor:pointer;font-family:var(--mono);font-size:14px;color:var(--ink-4);
     padding:7px 0;list-style:none;display:flex;align-items:center;gap:7px;font-weight:800}
   .whymore summary:before{content:"+";font-size:16px}
   .whymore[open] summary:before{content:"–"}
@@ -162,32 +162,32 @@
   .whymore .whyrow{background:var(--surface-2);border:1px solid var(--line)}
   .whymore .whyrow .no{background:var(--surface-3);color:var(--ink-3)}
 
-  .verdict .src{display:block;margin-top:12px;font-family:var(--mono);font-size:14.5px;
+  .verdict .src{display:block;margin-top:12px;font-family:var(--mono);font-size:14px;
     color:var(--ink-4);font-weight:800}
   .gorow{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;align-items:center}
-  .gorow .hint{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-weight:800}
+  .gorow .hint{font-family:var(--mono);font-size:14px;color:var(--ink-4);font-weight:800}
 
   /* ── 진행 ── */
   .prog{float:left;display:flex;align-items:center;gap:14px;padding:15px 0 0 22px}
   .qbody{clear:both}
   .pips{display:flex;gap:4px;flex-wrap:wrap}
-  .pips i{width:20px;height:5px;border-radius:3px;background:var(--line-2);display:block}
+  .pips i{width:20px;height:5px;border-radius:12px;background:var(--line-2);display:block}
   .pips i.ok{background:var(--mint)} .pips i.no{background:var(--red)}
   .pips i.now{background:var(--ink-3)}
-  .prog .sc{font-family:var(--mono);font-size:15px;color:var(--ink-3);font-weight:800}
+  .prog .sc{font-family:var(--mono);font-size:16px;color:var(--ink-3);font-weight:800}
   .prog .sc b{color:var(--ink);font-size:16px}
 
   /* ── 사이드 ── */
   .side{display:flex;flex-direction:column;gap:var(--s2)}
   .side .card .bd{padding:16px 18px}
   .lf{display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--surface-2);
-    font-size:15.5px;cursor:pointer;border-radius:9px;border:1px solid transparent;
+    font-size:16px;cursor:pointer;border-radius:12px;border:1px solid transparent;
     transition:.14s;margin-bottom:5px}
   .lf:hover{border-color:var(--line-2)}
   .lf.on{border-color:var(--red-line);background:var(--red-soft)}
   .lf .dot{width:8px;height:8px;border-radius:50%;flex:0 0 8px;background:var(--lv1)}
   .lf .nm{flex:1;min-width:0;color:var(--ink-2);font-weight:600;word-break:keep-all;overflow-wrap:anywhere}
-  .lf .n{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-weight:800}
+  .lf .n{font-family:var(--mono);font-size:14px;color:var(--ink-4);font-weight:800}
 
   /* ── 고르는 화면 ── */
   .pickwrap{margin-top:var(--s3)}
@@ -196,9 +196,9 @@
     background:var(--surface);cursor:pointer;transition:.15s;text-align:left;
     font-family:inherit;display:block;width:100%}
   .pk:hover{border-color:var(--line-3);transform:translateY(-2px)}
-  .pk .eb{font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--ink-4)}
-  .pk h3{font-size:16.5px;margin:7px 0 9px;letter-spacing:-.03em}
-  .pk .meta{font-family:var(--mono);font-size:14.5px;color:var(--ink-3);font-weight:800}
+  .pk .eb{font-family:var(--kr);font-weight:700;font-size:14px;letter-spacing:-.01em;color:var(--ink-4)}
+  .pk h3{font-size:16px;margin:7px 0 9px;letter-spacing:-.03em}
+  .pk .meta{font-family:var(--mono);font-size:14px;color:var(--ink-3);font-weight:800}
   .pk .track{margin-top:11px}
   .empty{padding:60px 20px;text-align:center;color:var(--ink-3)}
   .cols > *{min-width:0}   /* 격자 칸이 표·긴 글 폭으로 늘어나 폰에서 오른쪽이 잘렸다(2026-09-21 코덱스 SYS-MOBILE) */
@@ -210,8 +210,8 @@
     .wrapx{padding:0 14px var(--s5)}
     .qbody{padding:6px 16px 20px}.qtop{padding:13px 16px}.prog{padding:13px 0 0 16px}
     .phead .btn.sm{padding:8px 13px;font-size:14px}
-    .stem{font-size:17px}.opt{font-size:16.5px;padding:13px 14px}
-    .phead h1{font-size:24px}.phead{padding:14px 0 10px}   /* 풀이 화면 머리는 작게 — 문제가 첫 화면에 들어오게 */
+    .stem{font-size:16px}.opt{font-size:16px;padding:13px 14px}
+    .phead h1{font-size:26px}.phead{padding:14px 0 10px}   /* 풀이 화면 머리는 작게 — 문제가 첫 화면에 들어오게 */
     .data{padding:16px 16px;font-size:16px}
     .side{flex-direction:column}}
 
@@ -223,34 +223,34 @@
     padding:26px 28px;position:relative;overflow:hidden}
   .today::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
     background:var(--red)}
-  .today .eb{font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;
+  .today .eb{font-family:var(--kr);font-weight:700;font-size:14px;letter-spacing:-.01em;
     color:var(--ink-4);}
-  .today h2{font-size:clamp(24px,3.2vw,34px);margin:9px 0 10px;letter-spacing:-.045em;
+  .today h2{font-size:26px;margin:9px 0 10px;letter-spacing:-.045em;
     line-height:1.2}
   .today .why{font-size:16px;color:var(--ink-2);line-height:1.65;max-width:52ch}
   .today .facts{display:flex;gap:18px;flex-wrap:wrap;margin:18px 0 6px;
-    font-family:var(--mono);font-size:15px;color:var(--ink-3);font-weight:800}
+    font-family:var(--mono);font-size:16px;color:var(--ink-3);font-weight:800}
   .today .facts b{color:var(--ink);font-weight:600}
   .today .ubar{margin:14px 0 20px;max-width:420px}
-  .today .ubar .lab{display:flex;justify-content:space-between;font-size:14.5px;
+  .today .ubar .lab{display:flex;justify-content:space-between;font-size:14px;
     color:var(--ink-4);margin-bottom:5px}
   .today .ubar .lab b{color:var(--ink-2);font-family:var(--mono);font-weight:800}
   .today .go{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
   .today .go .btn{font-size:16px;padding:14px 26px}
 
   .side{display:flex;flex-direction:column;gap:12px}
-  .side .more{width:100%;font-family:inherit;font-size:15.5px;font-weight:700;
+  .side .more{width:100%;font-family:inherit;font-size:16px;font-weight:700;
     padding:14px 16px;border-radius:var(--r2);border:1px solid var(--line-2);
     background:var(--surface-2);color:var(--ink-2);cursor:pointer;text-align:left;
     display:flex;align-items:center;justify-content:space-between;gap:10px}
   .side .more:hover{color:var(--ink);border-color:var(--line-3)}
-  .side .more i{font-style:normal;color:var(--ink-4);font-size:15px}
+  .side .more i{font-style:normal;color:var(--ink-4);font-size:16px}
   .rep{border:1px solid var(--line);border-radius:var(--r2);background:var(--surface);
     padding:16px 18px}
-  .rep h3{font-size:15px;color:var(--ink-4);font-family:var(--kr);letter-spacing:-.01em;
+  .rep h3{font-size:16px;color:var(--ink-4);font-family:var(--kr);letter-spacing:-.01em;
     margin-bottom:11px;font-weight:700}
   .rep ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
-  .rep li{display:flex;gap:9px;align-items:flex-start;font-size:15.5px;color:var(--ink-2);
+  .rep li{display:flex;gap:9px;align-items:flex-start;font-size:16px;color:var(--ink-2);
     line-height:1.55}
   .rep li i{flex:0 0 auto;width:7px;height:7px;border-radius:50%;margin-top:6px;
     background:var(--ink-4)}
@@ -258,7 +258,7 @@
   .rep li.bad  i{background:var(--red)}
   .rep li b{color:var(--ink)}
   .rep .note{margin-top:12px;padding-top:11px;border-top:1px solid var(--line);
-    font-size:14.5px;color:var(--ink-4);line-height:1.6}
+    font-size:14px;color:var(--ink-4);line-height:1.6}
 
   /* ═══ 2026-11-10 화면표준 4절 — 문제 풀이(선택형) ═══ */
   .sbar4{height:4px;background:var(--surface-3)}
@@ -293,20 +293,20 @@
 <script src="js/pool.js?v=a86b23b9"></script>
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/qrender.js?v=3419f389"></script>
-<script src="js/tera-pad.js"></script>
+<script src="js/tera-pad.js?v=b4d72bc2"></script>
 <script src="notes.js"></script>
-<script src="js/tera-q.js"></script>
-<script src="js/tera-q-tongsa.js"></script>
-<script src="js/cards.js?v=7df28fb5"></script>
+<script src="js/tera-q.js?v=69037a58"></script>
+<script src="js/tera-q-tongsa.js?v=64d2c2ed"></script>
+<script src="js/cards.js?v=4a02015e"></script>
 <script src="js/packs.js?v=87449626"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/store.js?v=9ed2f66a"></script>
-<script src="js/cheer.js?v=4b8966be"></script>
+<script src="js/store.js?v=a750b224"></script>
+<script src="js/cheer.js?v=d35f9315"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
-<script src="js/supa.config.js?v=85aed5a2"></script>
-<script src="js/auth.js?v=775bb24d"></script>
-<script src="js/research.js?v=878362aa"></script>
-<script src="js/coach.js?v=c2d6f8ac"></script>
+<script src="js/supa.config.js?v=a3ea51e7"></script>
+<script src="js/auth.js?v=7c16df38"></script>
+<script src="js/research.js?v=62660e08"></script>
+<script src="js/coach.js?v=59b600d3"></script>
 <script>
 (function(){
   var T=TERRA, Q=window.QBANK||{};
@@ -509,7 +509,7 @@
     function block(title, cap, arr){
       if(!arr.length) return "";
       return '<section class="pickwrap"><div class="secthead"><h2>'+title+'</h2>'+
-        '<span class="mono" style="color:var(--ink-4);font-size:12.5px">'+cap+'</span></div>'+
+        '<span class="mono" style="color:var(--ink-4);font-size:13px">'+cap+'</span></div>'+
         '<div class="pickgrid">'+arr.map(function(r){
           var st=r.st;
           return '<button class="pk" data-go="'+r.l.code+'">'+
@@ -560,7 +560,7 @@
       '<div class="card" hidden><div class="hd"><h3>근거</h3></div><div class="bd" id="basis"></div></div>'+
       '</aside></div>';
     document.getElementById("basis").innerHTML=
-      '<p style="font-size:12.5px;line-height:1.75;color:var(--ink-4)">'+
+      '<p style="font-size:13px;line-height:1.75;color:var(--ink-4)">'+
       '발문·자료·선지·해설과 정답은 <b style="color:var(--ink-3)">출제기관 원문</b>입니다. '+
       '도표나 지도가 있어야 읽히는 문항은 그 그림도 싣습니다.</p>';
     sibs();
@@ -764,10 +764,10 @@
     var missed=list.filter(function(q,k){ return marks[k]===false; });
     document.getElementById("stage").innerHTML=
       '<div class="qbody" style="text-align:center;padding:52px 20px 46px">'+
-      '<div style="font-family:var(--mono);font-size:64px;font-weight:600;color:var(--ink);'+
+      '<div style="font-family:var(--mono);font-size:26px;font-weight:600;color:var(--ink);'+
       'letter-spacing:-.05em;line-height:1">'+got+
-      '<span style="color:var(--ink-4);font-size:34px"> / '+list.length+'</span></div>'+
-      '<p style="margin-top:12px;color:var(--ink-3);font-size:15px">'+
+      '<span style="color:var(--ink-4);font-size:26px"> / '+list.length+'</span></div>'+
+      '<p style="margin-top:12px;color:var(--ink-3);font-size:16px">'+
       (got===list.length?"전부 정답":"틀린 "+missed.length+"문항은 다음 복습에 다시 나옴")+'</p>'+
       /* ★ 맨 위 행동은 「다음」 하나 — 오늘 루틴의 다음 항목(2026-10-04 15분 흐름). 나머지는 그 밑에 작게 */
       '<div id="flownext" style="margin-top:26px;text-align:left">'+(window.COACH&&COACH.flowKinds?(function(){ COACH.flowKinds({kind:"q"}).forEach(function(k){ T.flowMark&&T.flowMark(k); }); return COACH.nextBlock(); })():'')+'</div>'+

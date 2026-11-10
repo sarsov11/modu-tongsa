@@ -14,9 +14,9 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=b8c335dc">
-<link rel="stylesheet" href="css/coach.css?v=9bd6a7e9">
-<link rel="stylesheet" href="css/question.css?v=6956a62b">
+<link rel="stylesheet" href="css/base.css?v=22afa090">
+<link rel="stylesheet" href="css/coach.css?v=02d1145b">
+<link rel="stylesheet" href="css/question.css?v=482f4a2f">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:900px;margin:0 auto;padding:0 var(--s3) calc(var(--s6) + 120px)}   /* 아래 선생님 띠 자리 */
@@ -25,21 +25,21 @@
   .exbar{position:sticky;top:0;z-index:40;background:var(--bg);
     border-bottom:1px solid var(--line);padding:11px 0;margin-bottom:var(--s3)}
   .exbar .in{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-  .exbar .rd{font-family:var(--kr);font-weight:700;font-size:14.5px;color:var(--ink-4);letter-spacing:-.01em;}
-  .exbar .tm{font-family:var(--mono);font-size:22px;font-weight:800;color:var(--ink);
+  .exbar .rd{font-family:var(--kr);font-weight:700;font-size:14px;color:var(--ink-4);letter-spacing:-.01em;}
+  .exbar .tm{font-family:var(--mono);font-size:20px;font-weight:800;color:var(--ink);
     font-variant-numeric:tabular-nums;letter-spacing:.02em}
   .exbar .tm.warn{color:var(--red-2)}
-  .exbar .pg{margin-left:auto;font-size:15px;color:var(--ink-3)}
+  .exbar .pg{margin-left:auto;font-size:16px;color:var(--ink-3)}
   .exbar .pg b{color:var(--ink);font-family:var(--mono);font-weight:800}
-  .exbar .bar{height:3px;background:var(--line);border-radius:99px;margin-top:9px;overflow:hidden}
-  .exbar .tmw{font-size:13.5px;font-weight:800;color:var(--ink-4);border:1px solid var(--line-2);border-radius:6px;padding:1px 7px;margin-left:-6px}
+  .exbar .bar{height:3px;background:var(--line);border-radius:999px;margin-top:9px;overflow:hidden}
+  .exbar .tmw{font-size:14px;font-weight:800;color:var(--ink-4);border:1px solid var(--line-2);border-radius:12px;padding:1px 7px;margin-left:-6px}
   .exbar .bar i{display:block;height:100%;background:var(--mint);width:0;transition:width .2s}
 
   /* ── 번호판 — 실제 OMR 처럼 앞뒤로 짚어 간다 ── */
   .omr{display:grid;grid-template-columns:repeat(13,1fr);gap:4px;margin-top:9px}
   .omr button{appearance:none;border:1px solid var(--line);background:var(--surface);
-    color:var(--ink-4);border-radius:5px;padding:5px 0;cursor:pointer;
-    font-family:var(--mono);font-size:14.5px;line-height:1.2;transition:.12s;font-weight:800}
+    color:var(--ink-4);border-radius:12px;padding:5px 0;cursor:pointer;
+    font-family:var(--mono);font-size:14px;line-height:1.2;transition:.12s;font-weight:800}
   .omr button:hover{border-color:var(--ink-3);color:var(--ink-2)}
   .omr button[data-done="1"]{background:var(--mint-soft);border-color:var(--mint);
     color:var(--ink)}
@@ -56,10 +56,10 @@
   .qh{display:flex;align-items:center;gap:10px;padding:13px 20px;flex-wrap:wrap;
     border-bottom:1px solid var(--line)}
   .qh .no{font-family:var(--mono);font-size:16px;font-weight:800;color:var(--ink)}
-  .qh .pt{font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-weight:800}
-  .qh .kl{font-size:14.5px;font-weight:700;color:var(--red-2);background:var(--red-soft);
-    border-radius:99px;padding:3px 9px;letter-spacing:.02em}
-  .qh .lb{font-size:14.5px;color:var(--ink-4);margin-left:auto;max-width:46%;
+  .qh .pt{font-family:var(--mono);font-size:14px;color:var(--ink-4);font-weight:800}
+  .qh .kl{font-size:14px;font-weight:700;color:var(--red-2);background:var(--red-soft);
+    border-radius:999px;padding:3px 9px;letter-spacing:.02em}
+  .qh .lb{font-size:14px;color:var(--ink-4);margin-left:auto;max-width:46%;
     word-break:keep-all;overflow-wrap:anywhere}
   .qb{padding:18px 20px 20px}
   .qb figure{margin:0 0 14px}
@@ -72,7 +72,7 @@
   .foot{position:sticky;bottom:0;z-index:40;background:var(--bg);
     border-top:1px solid var(--line);padding:13px 0;margin-top:var(--s4)}
   .foot .in{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .foot .left{font-size:15.5px;color:var(--ink-3)}
+  .foot .left{font-size:16px;color:var(--ink-3)}
   .foot .left b{color:var(--ink)}
   .foot .act{margin-left:auto;display:flex;gap:9px}
 
@@ -80,7 +80,7 @@
   .res{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);
     padding:var(--s4);margin-bottom:var(--s3)}
   .res .big{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-  .res .sc{font-size:52px;font-weight:900;letter-spacing:-.04em;color:var(--ink);line-height:1}
+  .res .sc{font-size:26px;font-weight:800;letter-spacing:-.04em;color:var(--ink);line-height:1}
   .res .sc small{font-size:20px;color:var(--ink-4);font-weight:500}
   .res .gr{font-size:16px;color:var(--ink-3)}
   .res .rows{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
@@ -88,37 +88,37 @@
   .res .cell{background:var(--surface);border:1px solid var(--line);border-radius:var(--r1);
     padding:13px 15px}
   .res .cell b{display:block;font-family:var(--mono);font-size:20px;color:var(--ink);font-weight:800}
-  .res .cell span{font-size:14.5px;color:var(--ink-4)}
-  .res .say{margin-top:16px;font-size:15.5px;line-height:1.8;color:var(--ink-2)}
+  .res .cell span{font-size:14px;color:var(--ink-4)}
+  .res .say{margin-top:16px;font-size:16px;line-height:1.8;color:var(--ink-2)}
   .res .say b{color:var(--ink)}
 
   /* 회차 추이 */
   .trend{display:flex;align-items:flex-end;gap:6px;height:64px;margin-top:16px}
-  .trend .b{flex:1;background:var(--line-2);border-radius:3px 3px 0 0;min-height:3px;
+  .trend .b{flex:1;background:var(--line-2);border-radius:12px 12px 0 0;min-height:3px;
     position:relative}
   .trend .b.now{background:var(--mint)}
   .trend .b span{position:absolute;top:-17px;left:50%;transform:translateX(-50%);
-    font-family:var(--mono);font-size:14.5px;color:var(--ink-4);font-weight:800}
+    font-family:var(--mono);font-size:14px;color:var(--ink-4);font-weight:800}
 
-  .note{font-size:15.5px;color:var(--ink-4);line-height:1.75}
+  .note{font-size:16px;color:var(--ink-4);line-height:1.75}
   .why{margin-top:14px;padding:14px 16px;background:var(--surface-2);
     border:1px solid var(--line);border-left:3px solid var(--mint);
-    border-radius:var(--r1);font-size:15.5px;line-height:1.8;color:var(--ink-2)}
-  .why .src{display:block;margin-top:9px;font-family:var(--mono);font-size:14.5px;
+    border-radius:var(--r1);font-size:16px;line-height:1.8;color:var(--ink-2)}
+  .why .src{display:block;margin-top:9px;font-family:var(--mono);font-size:14px;
     color:var(--ink-4);font-weight:800}
   @media(max-width:560px){
     .picks{grid-template-columns:repeat(5,1fr);gap:6px}
     .picks button{padding:11px 0;font-size:16px}
-    .exbar .tm{font-size:19px}
+    .exbar .tm{font-size:20px}
   }
-  @media(max-width:640px){ .phead h1{font-size:24px} .phead{padding:14px 0 10px} }   /* 풀이 화면 머리는 작게(2026-09-21) */
+  @media(max-width:640px){ .phead h1{font-size:26px} .phead{padding:14px 0 10px} }   /* 풀이 화면 머리는 작게(2026-09-21) */
   /* 2026-11-10 2차 — 채점하기 54px · 시험지 지면은 그대로 */
   html body.inner .foot{bottom:0;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
-  html body.inner .foot .btn{height:54px;min-height:54px;border-radius:16px;font-size:16.5px;font-weight:800}
-  html body.inner .exbar .bar{height:8px;background:#F1F5F9}
+  html body.inner .foot .btn{height:54px;min-height:54px;border-radius:14px;font-size:16px;font-weight:800}
+  html body.inner .exbar .bar{height:8px;background:#F1F3F5}
   html body.inner .exbar .bar i{border-radius:999px;background:var(--pt)}
   html body.inner .foot{height:calc(72px + env(safe-area-inset-bottom));padding-top:11px;box-shadow:0 -2px 10px rgba(15,23,42,.08)}
-  html body.inner .foot #jump{height:44px;min-height:44px;border-radius:8px;border:1px solid var(--pt);background:color-mix(in srgb,var(--pt) 5%,#fff);color:color-mix(in srgb,var(--pt) 78%,#111419);font-weight:600}
+  html body.inner .foot #jump{height:44px;min-height:44px;border-radius:12px;border:1px solid var(--pt);background:color-mix(in srgb,var(--pt) 5%,#fff);color:color-mix(in srgb,var(--pt) 78%,#111419);font-weight:600}
 </style>
 </head>
 <body>
@@ -139,18 +139,18 @@
 <script src="js/qbank.js?v=416b309c"></script>
 <script src="js/pool.js?v=a86b23b9"></script>
 <script src="js/drills.js?v=3f81d010"></script>
-<script src="js/cards.js?v=7df28fb5"></script>
+<script src="js/cards.js?v=4a02015e"></script>
 <script src="js/packs.js?v=87449626"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/store.js?v=9ed2f66a"></script>
-<script src="js/supa.config.js?v=85aed5a2"></script>
-<script src="js/auth.js?v=775bb24d"></script>
-<script src="js/research.js?v=878362aa"></script>
-<script src="js/coach.js?v=c2d6f8ac"></script>
+<script src="js/store.js?v=a750b224"></script>
+<script src="js/supa.config.js?v=a3ea51e7"></script>
+<script src="js/auth.js?v=7c16df38"></script>
+<script src="js/research.js?v=62660e08"></script>
+<script src="js/coach.js?v=59b600d3"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
 <script src="js/qrender.js?v=3419f389"></script>
 <script src="js/exam.js?v=de468b6e"></script>
-<script src="js/notify.js?v=dd7c6343"></script>
+<script src="js/notify.js?v=c73fb7d9"></script>
 <script>
 (function(){
   var T=TERRA, E=window.TERRA_EXAM, Q=window.QBANK||{};

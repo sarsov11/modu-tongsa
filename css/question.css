@@ -9,7 +9,7 @@
 
 /* ── 발문 ────────────────────────────────── */
 .stem{
-  font-size:17px; font-weight:700; color:var(--ink); line-height:1.62;
+  font-size:16px; font-weight:700; color:var(--ink); line-height:1.62;
   letter-spacing:-.022em; margin:0 0 16px;
   word-break:keep-all;                 /* 한글은 낱말 가운데서 안 끊는다 */
 }
@@ -18,7 +18,7 @@
 /* 기호는 검정 굵은 글씨 — 빨강·주황은 본문 읽기를 끊었다(2026-09-21 대표님 「문제가 눈에 안 들어옴」) */
 .mk{ color:var(--ink); font-weight:800; }
 .mk.box{ display:inline-block; min-width:1.55em; padding:0 .32em; margin:0 .08em; line-height:1.4; text-align:center;
-  border:1px solid var(--ink-3); border-radius:3px; background:transparent; font-weight:800; font-size:.94em; vertical-align:baseline; }
+  border:1px solid var(--ink-3); border-radius:12px; background:transparent; font-weight:800; font-size:.94em; vertical-align:baseline; }
 
 /* ── 자료 상자 ───────────────────────────── */
 .data{
@@ -32,8 +32,8 @@
 /* (가)(나)(다) 갈래 상자 · ◦ 항목 줄 */
 .data .dhead{ margin:0 0 10px; font-weight:700; }
 .data .gnd{ display:grid; gap:8px; }
-.data .gd{ display:grid; grid-template-columns:36px 1fr; gap:8px; align-items:start; padding:9px 11px; border:1px solid var(--line-2); border-radius:8px; background:var(--surface); }
-.data .glab{ font-weight:900; color:var(--ink); font-size:15px; padding-top:1px; }   /* 문항 기호는 검정 굵은 글씨(0921) — 빨강은 오답에만. 2026-09-24 지적검수 P02 */
+.data .gd{ display:grid; grid-template-columns:36px 1fr; gap:8px; align-items:start; padding:9px 11px; border:1px solid var(--line-2); border-radius:12px; background:var(--surface); }
+.data .glab{ font-weight:800; color:var(--ink); font-size:16px; padding-top:1px; }   /* 문항 기호는 검정 굵은 글씨(0921) — 빨강은 오답에만. 2026-09-24 지적검수 P02 */
 .data .gbody p{ margin:0 0 6px; } .data .gbody p:last-child{ margin:0; }
 .data ul.bul{ margin:2px 0 0; padding-left:18px; } .data ul.bul li{ margin:3px 0; line-height:1.6; }
 .data .gbody ul.bul{ padding-left:16px; }
@@ -44,7 +44,7 @@
 .data .say .who{
   flex:0 0 auto; width:20px; height:20px; border-radius:50%;
   display:inline-flex; align-items:center; justify-content:center;
-  background:var(--line-2); color:var(--ink); font-size:14.5px; font-weight:700;
+  background:var(--line-2); color:var(--ink); font-size:14px; font-weight:700;
 }
 
 /* ── 보기 상자 ───────────────────────────── */
@@ -56,7 +56,7 @@
 }
 .boki:before{
   content:"보 기"; display:block; text-align:center;
-  font-family:var(--kr);font-weight:700; font-size:14.5px; letter-spacing:-.01em;
+  font-family:var(--kr);font-weight:700; font-size:14px; letter-spacing:-.01em;
   color:var(--ink-4); margin-bottom:10px;
   padding-bottom:8px; border-bottom:1px solid var(--line);
 }
@@ -90,14 +90,14 @@
 .qfig{ background:#fff; }
 :root:not([data-skin]) .qfig{ background:var(--surface-2); }
 .qfig figcaption{
-  padding:7px 12px; font-family:var(--mono); font-size:14.5px;
+  padding:7px 12px; font-family:var(--mono); font-size:14px;
   color:var(--ink-4); background:var(--surface); border-top:1px solid var(--line);font-weight:800}
 
 /* ── 선지 — 읽기만 할 때 ──────────────────── */
 .opts5{ list-style:none; margin:0; padding:0; }
 .opts5 li{
   display:flex; gap:9px; align-items:baseline; padding:7px 2px;
-  font-size:15.5px; line-height:1.68; color:var(--ink-2); word-break:keep-all;
+  font-size:16px; line-height:1.68; color:var(--ink-2); word-break:keep-all;
 }
 .opts5 .n{ flex:0 0 auto; font-size:16px; color:var(--ink-3); font-weight:600; }
 
@@ -110,9 +110,9 @@
   text-align:left; width:100%;
   border:1px solid var(--line-2); background:var(--surface-2); color:var(--ink-2);
   border-radius:var(--r1); padding:13px 15px; cursor:pointer;
-  font-size:15.5px; line-height:1.6; transition:.12s; word-break:keep-all;
+  font-size:16px; line-height:1.6; transition:.12s; word-break:keep-all;
 }
-.picks.row .pick{ justify-content:center; padding:13px 6px; font-size:17px; }
+.picks.row .pick{ justify-content:center; padding:13px 6px; font-size:16px; }
 /* 가로 다섯 칸 — 폰 한 칸이 56px 안팎이라 「① ㄱ, ㄴ」 을 한 줄에 못 담아 「ㄴ」 이 다음 줄로 밀렸다(2026-10-19 대표님).
    번호를 위, 글을 아래에 두고 글은 줄을 바꾸지 않는다 */
 .picks.row{ gap:6px; }
@@ -134,8 +134,8 @@
 
 @media(max-width:560px){
   .stem{ font-size:16px; }
-  .data,.boki{ font-size:15.5px; padding:14px 15px; }
-  .opts5 li,.picks .pick{ font-size:15.5px; }
+  .data,.boki{ font-size:16px; padding:14px 15px; }
+  .opts5 li,.picks .pick{ font-size:16px; }
   .picks.row .pick{ font-size:16px; padding:11px 4px; }
 }
 
@@ -156,9 +156,9 @@
 /* ── 그림 확대 (1004) ── */
 .qfig{ position:relative; }
 .qfig img[data-zoom]{ cursor:zoom-in; }
-.qzbtn{ position:absolute; top:8px; right:8px; appearance:none; border:1px solid var(--line-2); background:var(--surface); color:var(--ink); font:700 14px/1 var(--kr); padding:8px 11px; border-radius:8px; min-height:36px; }
+.qzbtn{ position:absolute; top:8px; right:8px; appearance:none; border:1px solid var(--line-2); background:var(--surface); color:var(--ink); font:700 14px/1 var(--kr); padding:8px 11px; border-radius:12px; min-height:36px; }
 .qzoom{ position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,.94); display:flex; flex-direction:column; }
-.qzx{ position:absolute; top:10px; right:10px; z-index:2; appearance:none; border:0; background:#fff; color:#111; font:800 15px/1 var(--kr); padding:11px 15px; border-radius:9px; min-height:44px; }
+.qzx{ position:absolute; top:10px; right:10px; z-index:2; appearance:none; border:0; background:#fff; color:#111; font:800 16px/1 var(--kr); padding:11px 15px; border-radius:12px; min-height:44px; }
 .qzscroll{ flex:1; overflow:auto; -webkit-overflow-scrolling:touch; touch-action:pan-x pan-y pinch-zoom; display:flex; align-items:center; justify-content:center; padding:56px 8px 16px; }
 .qzoom img{ width:100%; max-width:none; height:auto; background:#fff; cursor:zoom-in; }
 .qzoom.z2 .qzscroll{ display:block; }
