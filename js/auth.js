@@ -18,7 +18,18 @@
   var ON = !!(C && C.url && C.anon && window.supabase);
   /* ★ 학습 기록 본체는 "terra.tree.v1"(js/store.js 의 KEY)이다. 옛 이름 "terra.state" 만 올리고 있어서
        답·확신도·사건 기록이 서버에 한 번도 안 올라갔다(2026-10-27 발견). 옛 이름은 옛 기기 복원용으로 남긴다. */
-  var 키들 = ["terra.tree.v1", "terra.exam.log", "terra.goalmin", "terra.state", "terra.scope", "terra.snap", "terra.cards", "terra.axis", "terra.onboarded"];
+  /* ── 서비스 구분 (2026-11-10 전 서비스 연결) ─────────────────────
+     13개 서비스가 한 서버·한 계정을 쓰고, 대부분 같은 주소(github.io) 아래라 기기 저장 공간도 같이 쓴다.
+     그래서 서버 기록은 (계정, 서비스) 한 줄씩, 맞춤 표시는 서비스마다 따로 둔다.
+     서비스 이름·올릴 키는 화면이 정한다: <script src="js/auth.js" data-service="gisa" data-keys="키1,키2">
+     또는 <meta name="terra-service" content="gisa">. 없으면 통사(지금 이 사이트) 값. */
+  var 내스크립트 = document.currentScript;
+  var 서비스 = (내스크립트 && 내스크립트.getAttribute("data-service")) ||
+    ((document.querySelector('meta[name="terra-service"]') || {}).content) || "tongsa";
+  var 키들 = (내스크립트 && 내스크립트.getAttribute("data-keys")) ?
+    내스크립트.getAttribute("data-keys").split(",").map(function (s) { return s.trim(); }).filter(Boolean) :
+    ["terra.tree.v1", "terra.exam.log", "terra.goalmin", "terra.state", "terra.scope", "terra.snap", "terra.cards", "terra.axis", "terra.onboarded"];
+  var 맞춤키 = "terra.sync." + 서비스;
   var sb = ON ? C.client() : null;
 
   /* ── 서버가 살아 있는지 ──────────────────────────────────
@@ -59,7 +70,7 @@
   /* 기기의 학습 기록 지우기 — 로그아웃·다른 계정 로그인 때. 화면이 메모리에 든 기록을 곧바로 다시 써넣을 수 있어
      한 번 더 지운 뒤 새로 연다(1110 검수: 지운 직후 옛 기록이 되살아나 새 계정에 올라갔다) */
   function 기기비우기() {
-    function 지우기() { 키들.concat(["terra.sync", "terra.sync.uid"]).forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} }); }
+    function 지우기() { 키들.concat([맞춤키, "terra.sync", "terra.sync.uid"]).forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} }); }
     지우기();
     return new Promise(function (res) { setTimeout(function () { 지우기(); res(); }, 400); });
   }
@@ -114,8 +125,8 @@
     o["terra.tree.v1"] = JSON.stringify(a);
     return o;
   }
-  function 맞춤읽기() { try { return JSON.parse(localStorage.getItem("terra.sync") || "null") || {}; } catch (e) { return {}; } }
-  function 맞춤적기(uid, at) { try { localStorage.setItem("terra.sync", JSON.stringify({ uid: uid, at: at, sig: 지문(꾸러미()) })); } catch (e) {} }
+  function 맞춤읽기() { try { return JSON.parse(localStorage.getItem(맞춤키) || "null") || {}; } catch (e) { return {}; } }
+  function 맞춤적기(uid, at) { try { localStorage.setItem(맞춤키, JSON.stringify({ uid: uid, at: at, sig: 지문(꾸러미()) })); } catch (e) {} }
   function 바뀜() { var m = 맞춤읽기(); return m.sig !== 지문(꾸러미()); }
 
   var 마지막올림 = 0, 올림예약 = null, 올리는중 = null;
@@ -134,15 +145,15 @@
       마지막올림 = now;
       var 보낼것 = 꾸러미(), m = 맞춤읽기();
       /* 폰과 PC 를 둘 다 열어 둔 학생: 그 사이 다른 기기가 올렸으면 덮지 말고 합친다(1109 검수에서 찾은 구멍) */
-      올리는중 = sb.from("records").select("saved_at").eq("user_id", u.id).maybeSingle().then(function (r0) {
+      올리는중 = sb.from("records").select("saved_at").eq("user_id", u.id).eq("service", 서비스).maybeSingle().then(function (r0) {
         var 서버시각 = r0 && r0.data ? Date.parse(r0.data.saved_at) : 0;
         if (!서버시각 || m.uid !== u.id || 서버시각 <= (m.at || 0)) return null;
-        return sb.from("records").select("data").eq("user_id", u.id).maybeSingle().then(function (r1) { return r1 && r1.data ? r1.data.data : null; });
+        return sb.from("records").select("data").eq("user_id", u.id).eq("service", 서비스).maybeSingle().then(function (r1) { return r1 && r1.data ? r1.data.data : null; });
       }).then(function (서버것) {
         var 여기것 = 보낼것;
         if (서버것) 보낼것 = 합치기(보낼것, 서버것);
         var 시각 = new Date().toISOString();
-        return sb.from("records").upsert({ user_id: u.id, data: 보낼것, saved_at: 시각 }, { onConflict: "user_id" })
+        return sb.from("records").upsert({ user_id: u.id, service: 서비스, data: 보낼것, saved_at: 시각 }, { onConflict: "user_id,service" })
           .then(function (r) { r.시각 = 시각; r.합침 = !!서버것; r.여기것 = 여기것; return r; });
       }).then(function (r) {
           올리는중 = null;
@@ -150,7 +161,7 @@
           /* 지문은 이 기기 내용으로 적는다. 합쳤으면 서버가 더 많이 가진 것이므로 시각을 한 칸 뒤로 두어
              다음에 화면을 열 때 합친 기록을 내려받게 한다 */
           var at = Date.parse(r.시각) - (r.합침 ? 1 : 0);
-          try { localStorage.setItem("terra.sync", JSON.stringify({ uid: u.id, at: at, sig: 지문(r.여기것) })); } catch (e) {}
+          try { localStorage.setItem(맞춤키, JSON.stringify({ uid: u.id, at: at, sig: 지문(r.여기것) })); } catch (e) {}
           리포트올리기(u); return true;
         }, function () { 올리는중 = null; return false; });
       return 올리는중;
@@ -162,7 +173,7 @@
     if (!ON) return Promise.resolve(false);
     return 사용자().then(function (u) {
       if (!u) return false;
-      return sb.from("records").select("data,saved_at").eq("user_id", u.id).maybeSingle()
+      return sb.from("records").select("data,saved_at").eq("user_id", u.id).eq("service", 서비스).maybeSingle()
         .then(function (r) {
           if (r.error) return false;                       // 읽기 실패를 「서버가 비었다」로 보면 서버 기록을 덮어쓴다
           var row = r.data, m = 맞춤읽기();
