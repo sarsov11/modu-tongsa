@@ -1192,7 +1192,7 @@
         steps.push({ kind: "cont", leaf: S.last.leaf,
           title: "이어서 학습",
           say: BY[S.last.leaf].name + ", " + ls.solved + " / " + ls.play + "문항",
-          href: "study.html?leaf=" + S.last.leaf, cta: "이어서 풀기" });
+          href: "study.html?leaf=" + S.last.leaf, cta: "다음" });
     }
     var fresh = LEAVES.filter(function (l) {
       return leafStat(l.code).solved === 0 && l.play.length >= 5;
@@ -1201,13 +1201,13 @@
       steps.push({ kind: "new", leaf: fresh.code,
         title: "처음 배우는 개념",
         say: fresh.name + ", 시작 전, 출제 비중 최대",
-        href: "study.html?leaf=" + fresh.code, cta: "시작하기" });
+        href: "study.html?leaf=" + fresh.code, cta: "시작" });
     var dr = drillStat();
     steps.push({ kind: "drill",
       title: "하루 한 세트",
-      say: dr.n ? "킬러 훈련 " + dr.n + "문항 완료, 한 세트 더"
+      say: dr.n ? "드릴 " + dr.n + "문항 완료, 한 세트 더"
                 : "하루 한 세트",
-      href: "drill.html", cta: "킬러 훈련" });
+      href: "drill.html", cta: "드릴" });
     return { quota: q, steps: steps, due: due.length };
   }
 
@@ -1219,15 +1219,24 @@
   var GOAL_DEFAULT = 15;
 
   function goalMin() {
-    try { var v = parseInt(localStorage.getItem("terra.goalmin"), 10);
-          if (v >= 5 && v <= 60) return v; } catch (e) {}
+    /* 11-10 표준 7절: 과목당 하루 시간 = 공용 키 tera_daeip_per_min (15·30·45·60·90·120분).
+       옛 키 terra.goalmin 에 값만 있으면 가장 가까운 단추 값으로 한 번 옮긴다. */
+    try {
+      var p = parseInt(localStorage.getItem("tera_daeip_per_min"), 10);
+      if (p >= 15) return Math.min(p, 120);
+      var v = parseInt(localStorage.getItem("terra.goalmin"), 10);
+      if (v >= 5) {
+        var O = [15, 30, 45, 60, 90, 120], n = O.reduce(function (a, b) { return Math.abs(b - v) < Math.abs(a - v) ? b : a; });
+        localStorage.setItem("tera_daeip_per_min", String(n)); return n;
+      }
+    } catch (e) {}
     return GOAL_DEFAULT;
   }
   function setGoalMin(v) {
     /* 읽을 때와 같은 범위로 잘라서 넣는다 — 안 그러면 저장은 됐는데
        읽으면 기본값이 나와 "바꿨는데 안 바뀐다" 가 된다 */
-    v = Math.max(5, Math.min(60, parseInt(v, 10) || GOAL_DEFAULT));
-    try { localStorage.setItem("terra.goalmin", String(v)); } catch (e) {}
+    v = Math.max(15, Math.min(120, parseInt(v, 10) || GOAL_DEFAULT));
+    try { localStorage.setItem("tera_daeip_per_min", String(v)); } catch (e) {}
     return v;
   }
 
@@ -1451,7 +1460,7 @@
         items.push({ kind: "exwrong", min: 분2, n: 틀린수,
           title: "오늘 시험에서 틀린 것",
           say: 틀린수 + "문항 다시 보기",
-          why: "오답 모아풀기",
+          why: "복습",
           href: "exam.html", cta: "다시 보기" });
         left -= 분2;
       }
@@ -1471,7 +1480,7 @@
         var 틀 = 지난기록.wrong.length;
         var 분3 = Math.max(3, Math.min(left, Math.round(틀 * SEC_PER_Q / 60)));
         items.push({ kind: "after", min: 분3, n: 틀,
-          title: XM.exam.name + " 오답 다시 보기",
+          title: XM.exam.name + " 복습",
           say: 틀 + "문항 되짚기",
           why: "",
           href: "exam.html", cta: "되짚기" });
@@ -1556,7 +1565,7 @@
       var m = Math.max(1, Math.round(take * SEC_PER_Q / 60));
       var 한단원 = 단원수 === 1;
       items.push({ kind: "due", min: m, n: take, leaf: top,
-        title: "틀린 문제 다시 풀기", lead: "오답 모아풀기",
+        title: "복습", lead: "복습",
         say: 한단원 ? 부제괄호(BY[top] ? BY[top].name : top) + "에서 틀렸던 " + take + "문항"
                     : (take < 범위안오답.length ? "틀렸던 " + 범위안오답.length + "문항 중 " + take + "문항"   /* 「9개 단원에서 틀렸던 6문항」 은 단원 수와 문항 수가 엇갈려 읽혔다(2026-10-18 검수) */
                                                  : 단원수 + "개 단원에서 틀렸던 " + take + "문항"),
@@ -1644,7 +1653,7 @@
         var cc = 카드후보[0], 장 = Math.min(5, window.CARDS[cc.code].cards.length, Math.max(2, Math.round(CARD몫 / 1.4)));
         var 학년3 = (S.student && S.student.grade) || "고1";
         items.push({ kind: "card", min: CARD몫, leaf: cc.code, n: 장,
-          title: 학년3 === "고1" ? "오늘 개념 읽기" : "개념 다시 읽기",
+          title: 학년3 === "고1" ? "개념" : "개념",
           say: cc.st.name + " " + 장 + "개",
           why: "읽고 바로 O·X",
           href: "card.html?leaf=" + cc.code, cta: "개념 학습" });   /* 「읽기 7분」 → 「개념 학습」(2026-09-19 대표님) */
@@ -1677,7 +1686,7 @@
       })();
       if (몇개 >= 8) {
         items.push({ kind: "ox", min: OX몫, n: 8,
-          title: 배움 ? "문제로 확인" : "개념 체크",
+          title: 배움 ? "기출" : "개념 체크",
           say: "기출 문장 O·X 12개",
           why: 배움
             ? (강의봄 ? "강의 직후 확인"
@@ -1704,21 +1713,21 @@
         /* ★ **왜 이것이 나왔는지** 말해 준다. 수준과 약점으로 골랐으므로
            "안 해 본 것" 한 마디로는 설명이 안 된다 — 학생이 납득해야 한다. */
         var 까닭 = st9.n === 0
-          ? "처음 하는 킬러 훈련"
+          ? "처음 하는 드릴"
           : (st9.pct != null && st9.pct < 60
               ? "지난 정답률 " + st9.pct + "%, 최저"
               : "오래전에 푼 훈련");
         items.push({ kind: "drill", min: DRILL_MIN, drill: 하나.id,
-          title: scopeOn() ? (내신킬러 ? "범위 킬러" : "범위 킬러 훈련")
-                           : ((((S.student && S.student.grade) || "고1") === "고1") ? "오늘의 킬러 훈련" : (골라.level === "기초" ? "준킬러부터" : "오늘의 킬러")),   /* 내신 대비(고1)에서 킬러·준킬러라는 말은 어색하다(2026-09-19 대표님) */
+          title: scopeOn() ? (내신킬러 ? "어려운 O·X" : "어려운 O·X")
+                           : ((((S.student && S.student.grade) || "고1") === "고1") ? "오늘의 드릴" : (골라.level === "기초" ? "준킬러부터" : "오늘의 킬러")),   /* 내신 대비(고1)에서 킬러·준킬러라는 말은 어색하다(2026-09-19 대표님) */
           say: 내신킬러 ? "시험 범위에서 헷갈리는 문항" : 하나.name + " 한 세트",
           why: 내신킬러 ? "헷갈린 문항 모아풀기" : ((((S.student && S.student.grade) || "고1") === "고1") ? "" : (하나.tier ? "준킬러. " : "킬러. ")) + 까닭,
-          href: 내신킬러 ? "naeshin.html?auto=1" : "drill.html?type=" + 하나.id, cta: 내신킬러 ? "범위 킬러" : "킬러 훈련" });
+          href: 내신킬러 ? "naeshin.html?auto=1" : "drill.html?type=" + 하나.id, cta: 내신킬러 ? "어려운 O·X" : "드릴" });
       } else {
         items.push({ kind: "drill", min: DRILL_MIN,
-          title: "마무리 한 세트", say: "킬러 훈련 5문제",
+          title: "마무리 한 세트", say: "드릴 5문제",
           why: "",
-          href: "drill.html", cta: "킬러 훈련" });
+          href: "drill.html", cta: "드릴" });
       }
       left -= DRILL_MIN;
     }
@@ -2008,15 +2017,62 @@
     /* ★ 나비는 넷(2026-09-06 대표님: "개념카드, 문제풀이, 어쩌구 존나 많아서 더 정신없음").
        개념 카드·문제풀이·개념 체크는 홈의 '지금 할 것' 과 개념트리에서 간다. */
     /* 「푸는 기술」 탭은 뺐다(2026-10-19 대표님 「아무리 봐도 별로다, 걍 빼버려」) — skills.html 은 홈으로 돌려보낸다 */
-    var items = [["index.html", "홈"], ["skilltree.html", "개념트리"],
-                 ["drill.html", "킬러 훈련"], ["settings.html", "설정"]];   /* 모의고사 탭은 375px 에서 6칸이 넘쳐 넣지 않았다(설정이 잘림) */
-    return '<nav class="nav"><div class="wrap">' +
-      '<a class="logo" href="index.html"><span class="dot"></span>모두의 통사<small>테라러닝</small></a>' +
+    var items = [["index.html", "오늘"], ["skilltree.html", "합격 지도"],
+                 ["study.html", "기출"], ["drill.html", "드릴"], ["settings.html", "설정"]];   /* 9절: 오늘 → 합격 지도 → 기출 → 드릴 → 설정 */   /* 모의고사 탭은 375px 에서 6칸이 넘쳐 넣지 않았다(설정이 잘림) */
+    /* ── 2026-11-10 화면표준: 머리띠 56 · 표식 28 · 격자 단추 36 / 아래 탭 62 · 아이콘 23 · 글자 11.5 ──
+       문제 화면(ox.html, study.html?leaf=)은 안쪽 머리띠(‹ 제목 진행 ×)로 바꾸고 아래 탭을 숨긴다. */
+    var SV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">';
+    var 그림 = {
+      "index.html": SV + '<path d="M4 11.2 12 4l8 7.2V19a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H5.5A1.5 1.5 0 0 1 4 19z"/></svg>',
+      "skilltree.html": SV + '<circle cx="6.5" cy="5.5" r="2.4"/><circle cx="6.5" cy="18.5" r="2.4"/><circle cx="17.5" cy="9.5" r="2.4"/><path d="M6.5 7.9v8.2M17.5 11.9c0 3.4-3.6 3.2-8.6 5.2"/></svg>',
+      "study.html": SV + '<rect x="5" y="3.5" width="14" height="17" rx="3"/><path d="M8.5 9l1.6 1.6L13 7.6M8.5 15h7"/></svg>',
+      "drill.html": SV + '<path d="M13.2 3 5.5 13.4h5.6L10.2 21l8.3-10.6h-5.7z"/></svg>',
+      "settings.html": SV + '<circle cx="12" cy="12" r="3.2"/><path d="M12 3.2v2.4M12 18.4v2.4M3.2 12h2.4M18.4 12h2.4M5.8 5.8l1.7 1.7M16.5 16.5l1.7 1.7M18.2 5.8l-1.7 1.7M7.5 16.5l-1.7 1.7"/></svg>',
+      grid: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7.5" height="7.5" rx="2.2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2.2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2.2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2.2"/></svg>',
+      back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 5.5-6.5 6.5 6.5 6.5"/></svg>',
+      close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg>'
+    };
+    var here = (location.pathname.split("/").pop() || "index.html");
+    var 안쪽 = here === "ox.html" || (here === "study.html" && /[?&]leaf=/.test(location.search)) ||
+      /^(drill|exam|naeshin|card)\.html$/.test(here);   /* 11-10 표준 1절: 훈련·모의고사·내신·카드도 안쪽 머리띠, 아래 탭 숨김 */
+    if (안쪽) document.body.classList.add("inner");
+    return '<nav class="nav' + (안쪽 ? ' inner' : '') + '"><div class="wrap">' +
+      '<div class="g-out"><a class="logo" href="index.html"><span class="mk">대</span><span class="nm">모두의 <em>대입</em></span><small class="sb">통합사회</small></a>' +
       '<div class="navlinks">' + items.map(function (it) {
-        return '<a href="' + it[0] + '"' + (it[0] === active ? ' class="on"' : '') + '>' + it[1] + '</a>';
+        return '<a href="' + it[0] + '"' + (it[0] === active ? ' class="on" aria-current="page"' : '') + '>' + (그림[it[0]] || "") + '<span>' + it[1] + '</span></a>';
       }).join("") + '</div>' +
+      '<a class="fam" href="https://teralearning.kr/" aria-label="테라러닝 전체 서비스">' + 그림.grid + '</a></div>' +
+      '<div class="g-in"><a class="bk" href="index.html" aria-label="뒤로" onclick="if(history.length>1){history.back();return false}">' + 그림.back + '</a><b class="gt" id="gtitle"></b><span class="gpr" id="gpr"></span><a class="xx" href="index.html" aria-label="닫기">' + 그림.close + '</a></div>' +
       /* 위 배지(학년 모드·연속일·시연 데이터)는 뺐다 — 학생이 누를 것도 아니고 화면만 채웠다(2026-09-21 대표님 "지저분한 요소를 줄여라") */
       '</div></nav>';
+  }
+  /* 안쪽 머리띠의 제목·진행을 화면의 제목(.hd h1 · .phead h1)에서 따라 쓴다 */
+  function 안쪽제목맞추기() {
+    var h = document.querySelector(".hd h1, .phead h1"), g = document.getElementById("gtitle");
+    if (!g || !h) return;
+    var f = function () { g.textContent = (h.textContent || "").replace(/\s+/g, " ").trim(); };
+    f();
+    try { new MutationObserver(f).observe(h, { childList: true, characterData: true, subtree: true }); } catch (e) { }
+  }
+  /* 훈련·모의고사·내신·카드 — 머리띠 바로 아래 4px 막대 = 오늘 루틴 진행(옛 루틴 띠를 대신), 오른쪽 숫자 「루틴 1 / 4」 */
+  function 루틴막대() {
+    var here = (location.pathname.split("/").pop() || "");
+    if (!/^(drill|exam|naeshin|card)\.html$/.test(here) || document.querySelector(".rbar")) return;
+    var nv = document.querySelector(".nav"); if (!nv) return;
+    var R = routine(), mk = flowDone(), n = R.items.length, done = 0, idx = -1;
+    R.items.forEach(function (it, i) { if (mk[it.kind]) done++; else if (idx < 0) idx = i; });
+    var 막 = document.createElement("div"); 막.className = "rbar";
+    막.innerHTML = '<i style="width:' + (n ? Math.max(4, Math.round((done + (idx >= 0 ? 0.5 : 0)) * 100 / n)) : 0) + '%"></i>';
+    nv.insertAdjacentElement("afterend", 막);
+    if (n) 진행표시("루틴 " + Math.min(done + 1, n) + " / " + n);
+  }
+  function 진행표시(글) { var g = document.getElementById("gpr"); if (g) g.textContent = 글 || ""; }
+  /* 표준 글꼴(Pretendard)을 한 번 불러 둔다 — 모든 화면이 nav 를 거친다 */
+  function 표준글꼴() {
+    if (document.getElementById("std-font")) return;
+    var l = document.createElement("link"); l.id = "std-font"; l.rel = "stylesheet";
+    l.href = "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css";
+    document.head.appendChild(l);
   }
   /* 지금 화면에서 할 만한 다음 것을 골라 아래에 띄운다.
      지금 있는 화면과 같은 것은 건너뛴다 — 이미 하고 있는 걸 또 권하면 안 된다. */
@@ -2087,6 +2143,21 @@
        학생이 직접 정한 값은 절대 덮지 않는다(scopeAt 이 있으면 손대지 않는다). */
     try { 범위기본값채우기(); } catch (e) {}
     document.body.insertAdjacentHTML("afterbegin", nav(active));
+    try { 표준글꼴(); 안쪽제목맞추기(); 루틴막대(); } catch (e) {}
+    /* 10절: 문제 화면에도 주 단추가 늘 보이게 — 답하기 전에는 흐린 「다음」 자리 표시, 답하면 진짜 단추가 이어받는다 */
+    if (/^(ox|study|naeshin|drill)\.html$/.test(location.pathname.split("/").pop() || "")) {
+      var 자리동기 = function () {
+        var 문제 = document.querySelector(".opt, #ox button"), 진짜 = document.getElementById("next") || document.getElementById("nx") || document.getElementById("submit");
+        var 자리 = document.querySelector(".stickgo.pre");
+        if (문제 && !진짜 && document.body.classList.contains("inner") && !document.querySelector(".opt[data-s],#ox button[data-s]")) {
+          if (!자리) document.body.insertAdjacentHTML("beforeend", '<div class="gorow stickgo pre"><button type="button" class="btn" disabled>다음</button></div>');
+        } else if (자리) 자리.remove();
+      };
+      try { new MutationObserver(자리동기).observe(document.body, { childList: true, subtree: true }); } catch (e) { }
+      setTimeout(자리동기, 800);
+    }
+    /* 9절: 합격 전략(띄어쓰기) — 공용 엔진 zzstrat.js 가 그리는 알약 글자를 앱에서 덮는다 */
+    [600, 1500, 3000].forEach(function (ms) { setTimeout(function () { var t = document.querySelector(".zs-fab span"); if (t && t.textContent === "합격전략") t.textContent = "합격 전략"; }, ms); });
     document.querySelectorAll("[data-skinbtn]").forEach(function (b) {
       b.onclick = function () { setSkin(b.dataset.skinbtn); };
     });
@@ -2225,7 +2296,7 @@
     packList: packList, packCount: packCount, packState: packState,
     본과목표: 본과목표, 켠확장팩과목: 켠확장팩과목,
     suneungGuess: suneungGuess,
-    quota: quota, dueList: dueList, 복습대기: 복습대기, prescribe: prescribe, mountNext: mountNext,
+    quota: quota, dueList: dueList, 복습대기: 복습대기, prescribe: prescribe, mountNext: mountNext, 진행표시: 진행표시,
     isMain: isMain, splitPool: splitPool, mainCount: mainCount,
     scope: scope, setScope: setScope, scopeOn: scopeOn,
     /* 고1 흐름 — 보이는 대영역 · 서문여고 기본 범위 */

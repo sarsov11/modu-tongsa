@@ -52,7 +52,7 @@
     idleDone:     "오늘 목표 완료",
     upToday:      "오늘 이해도 상승 {n}곳",
     streakDay:    "{n}일 연속",
-    cardWait:     "개념 보기",
+    cardWait:     "개념",
     okOne:        "정답. 오늘 {n}개째",
     okRun3:       "3문제 연속 정답",
     okRun5:       "5문제 연속 정답",
@@ -62,8 +62,8 @@
     missSure:     "다시 확인",
     missGuess:    "해설 확인",
     missRun3:     "3문제 연속 틀림 → 개념 다시",
-    drillOk:      "정답. 오늘 킬러 훈련 {n}문제째",
-    drillMiss:    "한 번 더 (킬러 훈련은 정답률 제외)",
+    drillOk:      "정답. 오늘 드릴 {n}문제째",
+    drillMiss:    "한 번 더 (드릴은 정답률 제외)",
     oxOk:         "정답. 오늘 O·X {n}문제째",
     oxMiss:       "근거 확인 (O·X는 정답률 제외)",
     kwOk:         "정답",
@@ -106,7 +106,7 @@
     /* 카드 */
     cardSealed:   "오늘 개념",
     cardTap:      "눌러서 열기",
-    cardOpened:   "문제로 확인",
+    cardOpened:   "기출",
     cardCount:    "읽은 개념 {n}개",
     cardNone:     "이 범위는 개념 없음 → 바로 문제"
   };
@@ -499,7 +499,7 @@
       '<div class="wrapbox" role="dialog" aria-label="결산">' +
       '<div class="conf" aria-hidden="true"></div>' +
       '<div class="flowbar" aria-label="오늘 ' + t.goal + '분 진행">' + bars + '</div>' +
-      '<span class="eb">' + esc(opts.kind === "ox" ? "개념 체크 끝" : opts.kind === "drill" ? "킬러 훈련 한 세트 끝"
+      '<span class="eb">' + esc(opts.kind === "ox" ? "개념 체크 끝" : opts.kind === "drill" ? "드릴 한 세트 끝"
                                  : opts.kind === "card" ? "개념 끝" : "한 세트 끝") + '</span>' +
       (total ? '<div class="big"><b class="n">0</b><span> / ' + total + '</span></div>' : '') +
       (head ? '<p class="head">' + esc(head) + '</p>' : '') +

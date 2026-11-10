@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>모두의 통사 개념트리</title>
+<title>모두의 통사 합격 지도</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
@@ -21,6 +21,9 @@
   /* 1025 대표님 「구김 없이, 넘기면 다 보이게」 — 궤도판(원 배치)은 숨기고 넘김판(공용 stree)을 그린다. 옛 판 _skilltree_궤도전_1025.html */
   body.stree-on .board, body.stree-on #treelist, body.stree-on #legend, body.stree-on .segbar, body.stree-on #crumb, body.stree-on #lede{display:none!important}
   #streehost{margin-top:var(--s3,16px)}
+  body.tmap-on .wrapx{max-width:1240px}
+  .scopectl{margin:-6px 0 16px}
+  body.tmap-on .phead{display:none}
   /* 1030 앰블럼판 탭(공용 embboard) */
   .embtabs{display:flex;gap:6px;margin-top:var(--s3,16px);padding:4px;border-radius:14px;background:var(--surface-2,#eef0f4)}
   .embtabs button{flex:1;font:inherit;font-weight:800;font-size:15px;padding:10px 8px;border:0;border-radius:11px;background:none;color:var(--ink-3,#6b7280);cursor:pointer}
@@ -47,6 +50,11 @@
     background:var(--surface-2);color:var(--ink-2);cursor:pointer;white-space:nowrap}
   #scopeband .act a:hover,#scopeband .act button:hover{color:var(--ink);
     border-color:var(--line-3)}
+  /* 11-10 합격 지도 — 지도가 화면 맨 위에서 시작한다. 범위 안내 줄글·오늘 카드는 뺐다(오늘 탭에 있다). 범위는 제목 줄의 칩 하나 + 작은 단추 둘 */
+  body.tmap-on #pickhost,body.tmap-on #scopeband{display:none!important}
+  .scopectl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .scopectl .sc-chip{height:34px;padding:0 13px;border-radius:999px;display:inline-flex;align-items:center;background:var(--pt-soft,rgba(229,32,46,.10));color:var(--pt-ink,#B01822);font:800 13px/1 inherit;white-space:nowrap}
+  .scopectl a,.scopectl button{height:34px;padding:0 13px;border-radius:999px;border:1px solid var(--line-2,#D3D7DD);background:var(--surface,#fff);color:var(--ink-2,#333941);font:700 13px/1 inherit;text-decoration:none;display:inline-flex;align-items:center;cursor:pointer;white-space:nowrap}
   h1,h2,.pk-title{font-family:var(--title);font-weight:var(--tw);letter-spacing:var(--tls)}
 
   /* ── 머리 — 층을 옮기면 제목이 따라 움직인다 ── */
@@ -306,7 +314,7 @@
 <div class="wrapx">
   <div class="phead">
     <div>
-      <span class="kicker">개념트리</span>
+      <span class="kicker">합격 지도</span>
       <h1><span class="crumb" id="crumb"></span></h1>
       <p class="sub" id="lede"></p>
     </div>
@@ -320,7 +328,7 @@
   <div id="deltahost"></div>
   <div id="pickhost"></div>
 
-  <div class="embtabs" id="embtabs" hidden><button type="button" data-tab="tree">개념트리</button><button type="button" data-tab="emb">앰블럼 <b id="embcnt"></b></button></div>
+  <div class="embtabs" id="embtabs" hidden><button type="button" data-tab="tree">합격 지도</button><button type="button" data-tab="emb">앰블럼 <b id="embcnt"></b></button></div>
   <div id="embhost" hidden></div>
   <div id="streehost"></div>
   <section class="board">
@@ -329,7 +337,7 @@
       <p class="sub" id="plateSub"></p>
     </div>
     <div class="stage"><svg id="orbit" viewBox="0 0 1280 880" role="img"
-      aria-label="개념트리"></svg></div>
+      aria-label="합격 지도"></svg></div>
   </section>
 
   <div class="treelist" id="treelist"></div>
@@ -387,6 +395,7 @@
 <script src="js/research.js?v=878362aa"></script>
 <script src="js/coach.js?v=c2d6f8ac"></script>
 <script src="js/stree.js?v=a1e8ac3a"></script>
+<script src="js/tera-map.js"></script>
 <script src="js/emblem.js?v=0b4d6893"></script><script src="js/hextree.js?v=7f615b80"></script><script src="js/embboard.js?v=1101h"></script><script src="js/titles.js?v=1101h"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script><script src="js/zzcoach.js?v=1009a" defer></script>
 <script>
@@ -1654,6 +1663,61 @@
   boot();
   paintPick();
   /* ══ 넘김 스킬트리(공용 stree, 1025) — 대영역 한 장씩, 중영역 = 원, 리프 = 잎. 원을 누르면 옛 강의 시트 그대로 ══ */
+  /* ══ 합격 지도(공용 tera-map, 11-10 표준 11절) — 줄 = 통합사회1·2 대단원, 칸 = 중단원.
+     avg = 그 중단원에 배정된 기출 문항 수(리프 vol 합) ÷ 기출이 나온 해 수 — 실제 문항에서만 나온 값.
+     학교 시험 범위에 드는 칸에만 추천 순서(order)를 준다(중요도 × 남은 정도 순). 범위를 안 정했으면 지도가 스스로 매긴다. ══ */
+  if(window.TERA_MAP){
+    document.body.classList.add("stree-on","tmap-on");
+    var 해=new Set();
+    (보이는루트||[]).forEach(function(r){ r.mids.forEach(function(m){ m.leaves.forEach(function(lf){ (lf.play||[]).forEach(function(p){ if(p&&p.d) 해.add(String(p.d).slice(0,4)); }); }); }); });
+    var 해수=Math.max(1,해.size), 범위=T.scopeOn&&T.scopeOn();
+    var TG=[], 모두=[];
+    (T.보이는대영역?T.보이는대영역():T.ROOTS).forEach(function(r){
+      if(r.cross) return;
+      var nodes=r.mids.map(function(m){
+        var vol=0; m.leaves.forEach(function(lf){ vol+=(lf.vol!=null?lf.vol:(lf.n||0)); });
+        var st=T.midStat(m.code), 안=!범위||!T.inScopeMid||T.inScopeMid(m.code);
+        var nd={ id:m.code, name:별뗌(m.name), avg:Math.round(vol/해수*10)/10, pct:st.achieve, _in:안, _m:m,
+          leaves:m.leaves.map(function(lf){ var ls=T.leafStat(lf.code); return { name:별뗌(lf.name).split(" — ")[0], code:lf.code, avg:Math.round((lf.vol!=null?lf.vol:(lf.n||0))/해수*10)/10, pct:ls.achieve }; }) };
+        모두.push(nd); return nd;
+      });
+      TG.push({ name:r.book+" "+r.name, nodes:nodes });
+    });
+    if(범위){
+      모두.filter(function(n){ return n._in; }).sort(function(a,b){ return (b.avg*(1-(b.pct||0)/100))-(a.avg*(1-(a.pct||0)/100)); })
+        .slice(0,3).forEach(function(n,i){ n.order=i+1; });
+    }
+    var 대=T.dday&&T.exams&&(function(){ try{ var best=null; (T.exams()||[]).forEach(function(e){ if(!e.date) return; var d=T.dday(e.date); if(d.days>=0&&(!best||d.days<best.days)) best=d; }); return best&&best.label; }catch(_e){ return ""; } })();
+    var M=document.getElementById("streehost"), only=false;
+    function 그리기(){
+      var G=TG.map(function(g){ return { name:g.name, nodes:g.nodes.filter(function(n){ return !only||n._in; }).map(function(n){ n.dim=!n._in; return n; }) }; })
+        .filter(function(g){ return g.nodes.length; });
+      TERA_MAP.mount(M,{
+        title:"통합사회", sub:"합격 지도", dday:대||"", unit:"문항", mark:"star", groups:G,
+        onStart:function(n){
+          var ls=n._m.leaves.filter(function(l){ return T.leafStat(l.code).play>0; });
+          ls.sort(function(a,b){ var x=T.leafStat(a.code),y=T.leafStat(b.code); return x.solved/Math.min(4,x.play)-y.solved/Math.min(4,y.play); });
+          var c=(ls[0]||n._m.leaves[0]||{}).code; if(!c) return;
+          location.href=(window.CARDS&&CARDS[c]&&CARDS[c].cards&&CARDS[c].cards.length?"card.html?leaf=":"study.html?leaf=")+encodeURIComponent(c);
+        },
+        onLeaf:function(l){ location.href="study.html?leaf="+encodeURIComponent(l.code); }
+      });
+      /* 범위 칩 + 작은 단추 둘(전체 · 범위 바꾸기) — 머리 줄 아래. 범위 밖 타일은 dim 으로 넘겨 부품이 흐리게 그린다 */
+      var top=M.querySelector(".tm-top");
+      if(범위&&top){
+        var b=(T.기본범위지금&&T.기본범위지금())||null, c=document.createElement("div"); c.className="scopectl";
+        c.innerHTML='<span class="sc-chip">'+esc(시험명(b)||"시험")+' 범위</span><button type="button" id="scall" aria-pressed="'+(!only)+'">'+(only?"범위만":"전체")+'</button><a href="settings.html#scope">범위 바꾸기</a>';
+        top.insertAdjacentElement("afterend",c);
+        c.querySelector("#scall").onclick=function(){ only=!only; 그리기(); };
+      }
+    }
+    그리기();
+    /* 합격 지도 / 앰블럼 전환 줄은 지도 아래로 */
+    (function(){
+      var et=document.getElementById("embtabs"), eh=document.getElementById("embhost");
+      if(et) M.insertAdjacentElement("afterend",et); if(et&&eh) et.insertAdjacentElement("afterend",eh);
+    })();
+  } else
   if(window.STREE){
     document.body.classList.add("stree-on");
     var SG=[];
@@ -1751,7 +1815,7 @@
     탭(처음);
   })();
   /* ★ 처음 열면 게임 튜토리얼처럼 한 곳씩 비추며 쓰는 법을 짚는다(2026-10-09, js/zzcoach.js). 한 번 보면 다시 안 뜬다 */
-  window.addEventListener("load", function(){ if(window.ZZCOACH) ZZCOACH.run("tongsa.skilltree", [
+  window.addEventListener("load", function(){ if(window.ZZCOACH && !document.body.classList.contains("tmap-on")) ZZCOACH.run("tongsa.skilltree", [
     { el:"#pickhost .pick", text:"오늘 할 것. 누르면 바로 시작" },
     { el:function(){ var l=document.querySelector("#treelist .mrow"); return (l&&l.offsetParent)?l:document.querySelector(".board"); }, text:"시험 범위 단원 지도. 누르면 그 단원의 개념과 기출로 들어감" },
     { el:"#legend", text:"색은 성취도. 빨강 30% 미만, 노랑 30~60%, 초록 60~80%, 파랑 80% 이상, 회색은 아직 안 푼 곳" }

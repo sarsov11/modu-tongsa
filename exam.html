@@ -112,6 +112,13 @@
     .exbar .tm{font-size:19px}
   }
   @media(max-width:640px){ .phead h1{font-size:24px} .phead{padding:14px 0 10px} }   /* 풀이 화면 머리는 작게(2026-09-21) */
+  /* 2026-11-10 2차 — 채점하기 54px · 시험지 지면은 그대로 */
+  html body.inner .foot{bottom:0;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+  html body.inner .foot .btn{height:54px;min-height:54px;border-radius:16px;font-size:16.5px;font-weight:800}
+  html body.inner .exbar .bar{height:8px;background:#F1F5F9}
+  html body.inner .exbar .bar i{border-radius:999px;background:var(--pt)}
+  html body.inner .foot{height:calc(72px + env(safe-area-inset-bottom));padding-top:11px;box-shadow:0 -2px 10px rgba(15,23,42,.08)}
+  html body.inner .foot #jump{height:44px;min-height:44px;border-radius:8px;border:1px solid var(--pt);background:color-mix(in srgb,var(--pt) 5%,#fff);color:color-mix(in srgb,var(--pt) 78%,#111419);font-weight:600}
 </style>
 </head>
 <body>
@@ -349,7 +356,7 @@
   function 등급말(pct){
     /* 등급 예언·「킬러만 잡으면」·위로 문구는 뺐다(2026-09-19 멘트 조사) — 사실과 권유만 */
     if(pct>=100) return "만점";
-    return "오답 모아풀기";
+    return "복습";
   }
 
   function 결과그리기(res){
@@ -432,7 +439,7 @@
       if(window.COACH && COACH.flowKinds) COACH.flowKinds({kind:"exam"}).forEach(function(k){ T.flowMark&&T.flowMark(k); });
       foot.innerHTML =
         (window.COACH&&COACH.nextBlock ? '<div style="flex:1 1 100%;text-align:left">'+COACH.nextBlock()+'</div>'
-          : (몰린 ? '<a class="btn" href="study.html?leaf='+esc(몰린)+'&mode=wrong">틀린 단원 다시 풀기</a>' : '<a class="btn" href="drill.html">킬러 훈련</a>'))+
+          : (몰린 ? '<a class="btn" href="study.html?leaf='+esc(몰린)+'&mode=wrong">복습</a>' : '<a class="btn" href="drill.html">드릴</a>'))+
         '<a class="btn ghost sm" href="index.html">홈으로</a>';
     }
     갱신();
@@ -476,7 +483,7 @@
           '</b><span>킬러 문항</span></div>'+
         '<div class="cell"><b>'+r.round+'회차</b><span>오늘까지</span></div>'+
       '</div>'+
-      '<p class="say">하루 한 회. 남은 것 <b>오답 모아풀기</b></p>'+
+      '<p class="say">하루 한 회. 남은 것 <b>복습</b></p>'+
       '</div>'+
       '<div class="foot"><div class="in"><span class="left">'+
       '내일 새 회차</span><span class="act">'+

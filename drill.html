@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>킬러 훈련</title>
+<title>드릴</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
@@ -17,6 +17,8 @@
 <link rel="stylesheet" href="css/base.css?v=b8c335dc">
 <link rel="stylesheet" href="css/cheer.css?v=386af7f8">
 <link rel="stylesheet" href="css/coach.css?v=9bd6a7e9">
+<link rel="stylesheet" href="css/tera-q.css">
+<link rel="stylesheet" href="css/tera-q-tongsa.css">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .page{max-width:var(--wrap);margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -362,7 +364,7 @@
 <div class="page">
   <div class="phead">
     <div>
-      <div><h1 id="ktitle">킬러 훈련</h1>   <!-- 「다들 여기서 막힙니다」 → 제목은 이름만(2026-09-19 대표님 선택). 위 작은 꼬리표는 같은 말이라 뺐다 -->
+      <div><h1 id="ktitle">드릴</h1>   <!-- 「다들 여기서 막힙니다」 → 제목은 이름만(2026-09-19 대표님 선택). 위 작은 꼬리표는 같은 말이라 뺐다 -->
       <p class="sub" id="kdesc"></p></div>
     </div>
     <div class="pheadact"><div class="segs" id="modes"></div></div>
@@ -400,6 +402,10 @@
 <script src="js/trend.js?v=77dea921"></script>
 <script src="js/tree.js?v=9d3fe5ce"></script>
 <script src="js/qrender.js?v=3419f389"></script>
+<script src="js/tera-pad.js"></script>
+<script src="notes.js"></script>
+<script src="js/tera-q.js"></script>
+<script src="js/tera-q-tongsa.js"></script>
 <script src="js/atlas.js?v=b77a2dac"></script>
 <script src="js/thinker.js?v=72a943f9"></script>
 <script src="js/subkiller.js?v=00662b97"></script>
@@ -480,7 +486,7 @@
 
   (function(){ var g=(T.state().student||{}).grade||"고1"; if(g!=="고1"||!T.scopeOn()) return;
     var ph=document.querySelector(".phead"); if(!ph) return;
-    ph.insertAdjacentHTML("afterend",'<a class="naeshin" href="naeshin.html"><b>범위 킬러</b><i>→</i></a>');
+    ph.insertAdjacentHTML("afterend",'<a class="naeshin" href="naeshin.html"><b>어려운 O·X</b><i>→</i></a>');
   })();
   /* ★ 내신 대비(고1)에서는 킬러·준킬러로 가르지 않는다 — 수능 말이라 어색하다(2026-09-19 대표님) */
   var _고1=((T.state().student||{}).grade||"고1")==="고1";
@@ -521,7 +527,7 @@
   }
   function nextBtn(){
     return '<div style="display:flex;gap:10px;margin-top:18px;flex-wrap:wrap">'+
-      '<button class="btn" id="next">다음 문제</button>'+
+      '<button class="btn" id="next">다음</button>'+
       '<a class="btn ghost" href="index.html">학습 홈</a></div>';
   }
   function bindNext(){ var b=document.getElementById("next"); if(b) b.onclick=next; }
@@ -815,7 +821,7 @@
     var last=(set.i+1>=SET_NOW);
     document.getElementById("v").innerHTML=
       '<div class="gorow stickgo"><button class="btn big" id="next">'+
-      (last?"결과 보기":"다음 문제")+'</button>'+
+      (last?"결과 보기":"다음")+'</button>'+
       '<span class="gohint">'+(set.i+1)+' / '+SET_N+' 째</span></div>'+
       '<div class="why"><b>'+q.city.n+' — '+kc(q.city.k)+' '+A.koppen[q.city.k].name+'</b>'+
       '<br>'+
@@ -917,7 +923,7 @@
     }
     document.getElementById("stage").innerHTML=
       '<div class="result"><div class="big">'+got+'<span> / '+SET_NOW+'</span></div>'+
-      '<div class="cap">'+(got===SET_NOW?"전부 정답":"오답 모아풀기")+'</div>'+
+      '<div class="cap">'+(got===SET_NOW?"전부 정답":"복습")+'</div>'+
       (miss?'<div class="missed">'+miss+'</div>':'')+review+
       /* ★ 맨 위 행동은 「다음」 하나(오늘 루틴의 다음 항목) — 다시·더·홈은 밑에 작게(2026-10-04 15분 흐름) */
       '<div style="margin-top:22px;text-align:left">'+(window.COACH&&COACH.flowKinds?(function(){ COACH.flowKinds({kind:"drill"}).forEach(function(k){ T.flowMark&&T.flowMark(k); }); return COACH.nextBlock(); })():'')+'</div>'+
@@ -1449,7 +1455,7 @@
     var me=TK.people[t.right]||{}, ot=TK.people[비교]||{};
     var it=t.it;
     document.getElementById("v").innerHTML=
-      '<div class="gorow stickgo"><button class="btn big" id="next">다음 문제</button>'+
+      '<div class="gorow stickgo"><button class="btn big" id="next">다음</button>'+
       '<span class="gohint">'+(ok?"정답":"오답")+
       (t.hints?', 힌트 '+t.hints+'개':'')+'</span></div>'+
       '<div class="why">'+
@@ -1961,6 +1967,20 @@
   }
 
   head(); showStart(); side(); renderPush(); 범위띠();
+  /* 11-10 문제 화면 공용 부품 — 선지가 있는 훈련 화면에 번호 줄·아래 줄. 훈련 종류마다 그리는 방식이 달라 단계 화면이 바뀔 때 붙인다 */
+  (function(){
+    var st=document.getElementById("stage"); if(!st||!window.TQT) return;
+    var 붙음=false, 끝남=false;
+    new MutationObserver(function(){
+      var 선지=st.querySelector(".opt"), 다음=document.getElementById("next");
+      if(선지 && !붙음){
+        붙음=true; 끝남=false; TQT.on();
+        TQT.q({ no:session.length+1, id:"dr-"+mode+"-"+session.length, leaf:null, src:"", host:document.querySelector(".stage"), stem:"#qtext", before:document.querySelector(".qbar"), timer:false, annotate:["#qtext",".opt",".stem"] });
+      }
+      if(붙음 && !끝남 && 다음){ 끝남=true; TQT.done({}); }
+      if(!선지 && !다음){ 붙음=false; 끝남=false; TQT.off(); }
+    }).observe(st,{childList:true,subtree:true});
+  })();
 })();
 </script>
 <script>

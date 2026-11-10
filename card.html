@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>개념 읽기 — 모두의 통사</title>
+<title>개념 — 모두의 통사</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="css/cheer.css?v=386af7f8">
 <link rel="stylesheet" href="css/coach.css?v=9bd6a7e9">
 <link rel="stylesheet" href="css/keyword.css?v=7a3b2060">
+<link rel="stylesheet" href="css/tera-q.css">
 <link rel="stylesheet" href="css/diagram.css?v=c711fbbd">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
@@ -130,6 +131,14 @@
   .card .cnote{font-size:14.5px;color:var(--ink-3);margin:8px 0 0}
   .verdict .why{margin-top:11px;padding-top:11px;border-top:1px solid var(--line-2);font-size:15.5px;line-height:1.6;color:var(--ink-2)}
   .verdict .why b{color:var(--ink)} .verdict .why .src{display:block;margin-top:4px;font-size:13.5px;color:var(--ink-3);font-weight:600}
+  /* 2026-11-10 2차 — 확인·다음 단추는 54px 아래 고정 */
+  html body.inner .card .act:has(#ok),html body.inner .verdict .act:has(#next),html body.inner .act:has(#next){position:fixed;left:50%;transform:translateX(-50%);width:100%;max-width:720px;box-sizing:border-box;
+    margin:0;padding:0 20px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:60;flex-wrap:nowrap;gap:12px}
+  html body.inner .act:has(#ok) .btn,html body.inner .act:has(#next) .btn{flex:1;height:54px;min-height:54px;border-radius:16px;font-size:16.5px;font-weight:800;justify-content:center}
+  html body.inner .act:has(#ok) .btn.ghost,html body.inner .act:has(#next) .btn.ghost{flex:none;padding:0 16px}
+  /* 2026-11-10 문제 화면 공용 값 — 확인 문항(발문 20px/30px · 해설 판 12px) */
+  #qz .stem{font-weight:600;font-size:20px;line-height:30px;color:#111827;letter-spacing:-.5px;word-break:keep-all}
+  #qz .verdict{border:1px solid #E2E8F0;border-radius:12px;background:#fff;font-weight:400;font-size:16px;line-height:28.8px;color:#334155;letter-spacing:-.5px}
 </style>
 </head>
 <body>
@@ -137,7 +146,7 @@
 <div class="page">
   <div class="hd">
     <span class="eb" id="eb"></span>
-    <h1 id="ttl">개념 읽기</h1>
+    <h1 id="ttl">개념</h1>
     <p id="lede"></p>
   </div>
   <div class="prog" id="prog"></div>
@@ -164,6 +173,9 @@
 <script src="js/supa.config.js?v=85aed5a2"></script>
 <script src="js/auth.js?v=775bb24d"></script>
 <script src="js/research.js?v=878362aa"></script>
+<script src="notes.js"></script>
+<script src="js/tera-q.js"></script>
+<script src="js/tera-q-tongsa.js"></script>
 <script src="js/coach.js?v=c2d6f8ac"></script>
 <script src="js/kwask.js?v=bf2b1102"></script>
 <script>
@@ -198,7 +210,7 @@
   if(!묶음){
     el("stage").innerHTML='<div class="done"><h2>개념 없음</h2>'+
       '<div class="act"><a class="btn" href="study.html">문제 풀러 가기</a>'+
-      '<a class="btn ghost" href="skilltree.html">개념트리</a></div></div>';
+      '<a class="btn ghost" href="skilltree.html">합격 지도</a></div></div>';
     return;
   }
 
@@ -286,6 +298,7 @@
     document.querySelectorAll("#qz .ox button").forEach(function(b){
       b.onclick=function(){ 답하기(b.dataset.v==="1"); };
     });
+    if(window.TERA_Q) TERA_Q.annotate(document.querySelectorAll("#qz .stem"));
     el("qz").scrollIntoView({behavior:"smooth",block:"center"});
   }
 
@@ -320,7 +333,7 @@
           (function(){ var m=String(x.why||"").match(/\((고[123] \d\d\.\d\d)\)\s*$/); var src=m?m[1]:(x.src&&x.src!=="원고"?x.src:""); return src?'<span class="src">'+esc(src)+'</span>':''; })()+
         '</div>'+
         '<div class="act">'+
-          (!ok?'<button class="btn ghost" id="again">개념 다시 읽기</button>':'')+
+          (!ok?'<button class="btn ghost" id="again">개념</button>':'')+
           '<button class="btn" id="next">'+
             (i+1>=장들.length?"끝내기":"다음 개념 →")+'</button>'+
         '</div>'+
@@ -377,7 +390,7 @@
        큰 「다음」 이 그 기출이고, 개념 다시 읽기는 밑에 작게. */
     var 고1만 = (((T.state().student||{}).grade)||"고1")==="고1";   /* O·X 은행은 고1 통합사회 학평에서 뽑았다 — 고2·고3 은 그 단원 기출 풀이로 */
     var 갈곳 = (있나&&고1만) ? ("ox.html?leaf="+encodeURIComponent(leaf)) : ("study.html?leaf="+leaf);
-    var 다음 = { href:갈곳, title:((있나&&고1만)?"문제로 확인":"문제풀이"), min:3, kind:((있나&&고1만)?"ox":"q") };
+    var 다음 = { href:갈곳, title:((있나&&고1만)?"기출":"기출"), min:3, kind:((있나&&고1만)?"ox":"q") };
     if(window.COACH) COACH.wrap({got:맞+어맞, total:장들.length+개념어결과.length, kind:"card", next:다음});
     if(T.flowMark) T.flowMark("card");
     el("stage").innerHTML=
@@ -389,8 +402,8 @@
           '<span class="track"><i style="width:'+u+'%;background:'+
           (u>=80?"var(--mint)":"var(--lv2)")+'"></i></span></div>'+
         '<div style="margin:18px 0 10px;text-align:left">'+(window.COACH&&COACH.nextBlock?COACH.nextBlock({next:다음}):'<a class="btn" href="'+갈곳+'">기출 풀기 →</a>')+'</div>'+
-        (있나 ? '' : '<p class="fall">기출 부족 → 문제풀이</p>')+
-        '<div style="margin-top:6px"><button type="button" class="btn ghost sm" id="re">개념 다시 읽기</button></div>'+
+        (있나 ? '' : '<p class="fall">기출 부족 → 기출</p>')+
+        '<div style="margin-top:6px"><button type="button" class="btn ghost sm" id="re">개념</button></div>'+
       '</div>';
     el("re").onclick=function(){ i=0; 결과=[]; k=0; 개념어결과=[]; 카드그리기(); window.scrollTo({top:0,behavior:"smooth"}); };
     window.scrollTo({top:0,behavior:"smooth"});

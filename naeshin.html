@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>범위 킬러 — 모두의 통사</title>
+<title>어려운 O·X — 모두의 통사</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;700;900&display=swap">
@@ -17,6 +17,8 @@
 <link rel="stylesheet" href="css/cheer.css?v=386af7f8">
 <link rel="stylesheet" href="css/coach.css?v=9bd6a7e9">
 <link rel="stylesheet" href="css/question.css?v=6956a62b">
+<link rel="stylesheet" href="css/tera-q.css">
+<link rel="stylesheet" href="css/tera-q-tongsa.css">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .page{max-width:860px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -75,7 +77,7 @@
 <div class="page">
   <div class="hd">
     <span class="kicker">시험 범위</span>
-    <h1>범위 킬러</h1>
+    <h1>어려운 O·X</h1>
     <div class="scope" id="scope"></div>
   </div>
   <div id="host"></div>
@@ -98,6 +100,10 @@
 <script src="js/cheer.js?v=4b8966be"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
 <script src="js/qrender.js?v=3419f389"></script>
+<script src="js/tera-pad.js"></script>
+<script src="notes.js"></script>
+<script src="js/tera-q.js"></script>
+<script src="js/tera-q-tongsa.js"></script>
 <script src="js/naeshin.js?v=7a07e790"></script>
 <script src="js/supa.config.js?v=85aed5a2"></script>
 <script src="js/auth.js?v=775bb24d"></script>
@@ -123,6 +129,7 @@
 
   var P=window.NAESHIN?NAESHIN.포인트들():[];
   function list(){
+    if(window.TQT) TQT.off();
     if(!P.length){ host.innerHTML='<div class="empty">문항 없음</div>'; return; }
     var byMid={}, order=[];
     P.forEach(function(x){ var k=x.mid.code; if(!byMid[k]){ byMid[k]=[]; order.push(k); } byMid[k].push(x); });
@@ -139,6 +146,8 @@
         }).join("")+'</div>';
     }).join("");
     host.querySelectorAll("[data-leaf]").forEach(function(b){ b.onclick=function(){ solve(b.dataset.leaf); }; });
+    /* 10절: 목록의 첫 묶음(앱이 정한 순서 그대로)에 「추천」 한 개 */
+    var 첫=host.querySelector(".pt .nm"); if(첫) 첫.insertAdjacentHTML("beforeend",'<i class="recbadge">추천</i>');
   }
 
   function solve(leafCode){
@@ -162,6 +171,7 @@
       host.querySelectorAll(".opt").forEach(function(b){ b.onclick=function(){ judge(q,d,+b.dataset.v,b); }; });
       if(window.webpFallback) webpFallback(document);
       window.scrollTo({top:0,behavior:"smooth"});
+      if(window.TQT){ var 줄=host.querySelector(".srcline"); TQT.q({ no:i+1, total:list_.length, leaf:leafCode, id:q.id, src:(줄?줄.textContent:""), host:host, stem:".stem", before:host.querySelector(".qbody") }); }
     }
     function judge(q,d,pick,btn){
       var r=T.answer?T.answer(q.id,pick):null, ok=r?r.ok:(pick===d.a); marks.push(ok);
@@ -169,11 +179,13 @@
       var why=d.x?'<p>'+esc(window.QRENDER&&QRENDER.해설?QRENDER.해설(d.x):d.x)+'</p>':'<p>해설 없음</p>';
       document.getElementById("v").innerHTML='<div class="verdict"><div class="vl"><span class="tag2 '+(ok?"ok":"no")+'">'+(ok?"정답":"오답")+'</span>'+
         '<span style="font-size:14.5px;font-weight:800;color:var(--ink-3)">정답 '+M.charAt(d.a)+(ok?'':', 내가 고른 것 '+M.charAt(pick))+'</span></div>'+why+
-        '<div class="gorow stickgo"><button class="btn" id="next">'+(i+1>=list_.length?"결과 보기":"다음 문제")+'</button><span class="hint">'+(i+1)+' / '+list_.length+'</span></div></div>';
+        '<div class="gorow stickgo"><button class="btn" id="next">'+(i+1>=list_.length?"결과 보기":"다음")+'</button><span class="hint">'+(i+1)+' / '+list_.length+'</span></div></div>';
       document.getElementById("next").onclick=function(){ i++; render(); };
+      if(window.TQT) TQT.done({ answer:(d.a+1)+"번", conceptHref:"card.html?leaf="+encodeURIComponent(leafCode) });
       document.getElementById("v").scrollIntoView({behavior:"smooth",block:"center"});
     }
     function finish(){
+      if(window.TQT) TQT.off();
       var got=marks.filter(Boolean).length;
       if(!list_.length){ list(); return; }                 /* 빈 세트에는 결과 화면을 안 낸다 */
       /* ★ 맨 위 행동은 「다음」 하나(오늘 루틴의 다음 항목). 다른 자리·목록은 밑에 작게(2026-10-04 15분 흐름) */

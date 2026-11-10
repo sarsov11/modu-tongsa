@@ -29,7 +29,7 @@
 
   /* ── 오늘 할 일 — 화면을 열면 이게 먼저 보인다 ── */
   .today{margin-top:var(--s3);border:1px solid var(--line-2);border-radius:var(--r3);
-    background:linear-gradient(180deg,var(--red-soft),transparent 58%),var(--surface);
+    background:var(--surface);
     overflow:hidden}
   .today .hd{display:flex;align-items:center;gap:20px;padding:24px 26px 20px;flex-wrap:wrap}
   .today .ring{flex:0 0 auto;width:96px;height:96px;position:relative}
@@ -74,7 +74,7 @@
     padding:17px 20px;display:block;transition:.16s}
   .dd:hover{border-color:var(--line-3)}
   .dd.hot{border-color:var(--red-line);background:
-    linear-gradient(180deg,var(--red-soft),transparent 70%),var(--surface)}
+    var(--surface)}
   .dd .k{font-size:14.5px;color:var(--ink-4);font-weight:600}
   .dd .v{display:block;margin-top:6px;font-family:var(--mono);font-size:33px;
     font-weight:800;letter-spacing:-.05em;color:var(--ink);line-height:1}
@@ -88,7 +88,7 @@
   .sh{border:1px solid var(--line);border-radius:var(--r2);background:var(--surface);
     overflow:hidden;display:flex;flex-direction:column}
   .sh .cv{padding:20px 22px 16px;
-    background:linear-gradient(135deg,var(--red-soft),transparent 72%),var(--surface-2);
+    background:var(--surface-2);
     border-bottom:1px solid var(--line)}
   .sh .cv .eb{font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--ink-4)}
   .sh .cv b{display:block;margin-top:7px;font-size:20px;color:var(--ink);
@@ -158,7 +158,7 @@
 
   /* ── 확인해볼까요 ── */
   .check{border:1px solid var(--red-line);border-radius:var(--r2);
-    background:linear-gradient(180deg,var(--red-soft),transparent 62%),var(--surface);
+    background:var(--surface);
     padding:24px 26px}
   .check h2{font-size:22px}
   .check .lead{font-size:16px;color:var(--ink-2);margin-top:10px;line-height:1.7;
@@ -368,7 +368,7 @@
   .rt .top h2{font-size:19px}
   .hero{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;margin-top:14px;
     padding:18px 18px 16px;border:1px solid var(--red-line);border-radius:var(--r2);
-    background:linear-gradient(180deg,var(--red-soft),transparent 70%),var(--card-2);
+    background:var(--card-2);
     text-decoration:none;color:inherit}
   .hero .lbl{font-family:var(--kr);font-weight:700;font-size:14.5px;letter-spacing:-.01em;color:var(--red-2);}
   .hero h3{font-size:20px;margin:6px 0 4px;letter-spacing:-.03em;color:var(--ink);font-family:var(--kr);font-weight:800}
@@ -438,6 +438,28 @@
   .mine{margin:34px 0 8px;font-size:14px;font-weight:800;color:var(--ink-4)}
   body.home .nextbar{display:none}          /* 홈에서는 말 거는 목소리가 하나여야 한다 — 아래 띠는 다른 화면에서만 */
   body.home.hasnext{padding-bottom:calc(58px + env(safe-area-inset-bottom,0))}
+
+  /* ═══ 2026-11-10 화면표준 3절 — 날짜 줄 → D-day → 오늘 카드(js/routinecard.js) → 숫자 두 칸 → 출석 → 목록 ═══ */
+  .wrapx{max-width:720px;padding:0 20px 120px}
+  .phead{display:block;padding:18px 2px 14px}
+  .phead .kicker{display:block;font-size:13px;font-weight:600;color:var(--ink-4)}
+  .phead .kicker i{display:none}
+  .phead h1{font-size:30px;line-height:1.15;font-weight:900;letter-spacing:-.04em;margin:6px 0 0}
+  .phead h1 em{font-style:normal;color:var(--pt-ink)}
+  #talk{margin-top:6px}
+  body.has-rt #talk::before{content:"다른 연습";display:block;font-size:16px;font-weight:800;letter-spacing:-.02em;margin:24px 2px 10px;color:var(--ink)}
+  #talk .ans{grid-template-columns:1fr;gap:10px;max-width:none;margin-top:0}
+  #talk .ans .lite{display:flex;justify-content:space-between;align-items:center;text-align:left;min-height:56px;padding:12px 16px;border:0;border-radius:18px;
+    background:var(--surface);box-shadow:0 1px 2px rgba(17,20,25,.05),0 0 0 1px var(--line);color:var(--ink);font-size:16px;font-weight:800;letter-spacing:-.02em}
+  #talk .ans .lite::after{content:"›";flex:none;width:32px;height:32px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;color:var(--ink-3);font-size:18px;font-weight:700;line-height:1}
+  .askmore{max-width:none}
+  .pickl a{border:0;border-radius:18px;box-shadow:0 1px 2px rgba(17,20,25,.05),0 0 0 1px var(--line);font-weight:800}
+  .more{border:0;border-radius:18px;box-shadow:0 1px 2px rgba(17,20,25,.05),0 0 0 1px var(--line)}
+  .more summary{font-size:16px;font-weight:800;letter-spacing:-.02em}
+  .scopenote{border:0;border-radius:18px;box-shadow:0 1px 2px rgba(17,20,25,.05),0 0 0 1px var(--line);margin:12px 0}
+  .scopenote b{font-weight:800;font-size:16px}
+  .scopenote span{font-size:13.5px;font-weight:600}
+  .scopenote a{font-size:14px;font-weight:800}
 </style>
 </head>
 <body>
@@ -469,7 +491,7 @@
   </section>
 
   <!-- ④ 나머지는 접어 둔다 — 폰에서 한 화면에 할 것 하나만 보이게 -->
-  <div class="mine">내 기록</div>
+  <div class="mine">기록</div>
   <details class="more" id="more-cal">
     <summary><span>이번 달</span><i></i></summary>
     <div class="mbody"><div class="cal" id="cal"></div></div>
@@ -610,8 +632,10 @@
     var 다음=null, 지난시험=null;
     try{ (T.exams()||[]).filter(function(e){ return e.date; }).forEach(function(e){
       var dd=T.dday(e.date); if(dd.days<0){ if(!지난시험||dd.days>지난시험.d.days) 지난시험={e:e,d:dd}; return; } if(!다음||dd.days<다음.d.days) 다음={e:e,d:dd}; }); }catch(_e){}
+    /* 표준 3절 — 위 줄 「11월 10일 · 시험 이름」, 아래 줄 D-day + 시험일 */
+    if(다음) document.getElementById("today").textContent=(d.getMonth()+1)+"월 "+d.getDate()+"일 · "+다음.e.name;
     document.getElementById("hi").innerHTML = 다음
-      ? esc(다음.e.name)+' <em>'+esc(다음.d.label)+'</em>'
+      ? esc(다음.d.label)+'<span style="font-size:13px;font-weight:700;color:var(--ink-4);letter-spacing:0;margin-left:8px">'+esc(String(다음.e.date).replace(/-/g,"."))+'</span>'
       : esc(name)+(지난시험 ? ' <a href="settings.html" style="display:block;margin-top:6px;font-size:15px;font-weight:700;color:var(--cta);text-decoration:none">'+esc(지난시험.e.name)+' 끝남, 다음 시험 날짜 입력 →</a>' : '');
     document.getElementById("remode").hidden=true;
   })();
@@ -642,7 +666,7 @@
     var bits=[];
     if(sp.q) bits.push("문제 "+sp.q+"개");
     if(sp.lec) bits.push("강의 "+sp.lec+"분");
-    if(sp.drill) bits.push("킬러 훈련 "+sp.drill+"문항");
+    if(sp.drill) bits.push("드릴 "+sp.drill+"문항");
 
     var said = R.done
       ? "오늘 목표 완료"+(bits.length?" ("+bits.join(", ")+")":"")
@@ -782,13 +806,13 @@
          "")+
     /* 정답률은 학부모 리포트와 같은 집계(전체 풀이 기록)에서 — 한 문항이 여러 개념에 걸려 개념별 합계로 세면 숫자가 어긋났다(2026-10-04) */
     tile("정답률", (전체R.pct==null?"—":전체R.pct+'<small>%</small>'),
-         "문제풀이 "+전체R.answers+"문항 기준")+
+         "기출 "+전체R.answers+"문항 기준")+
     /* 등급 가늠은 푼 문제가 50개를 넘기 전에는 내지 않는다 — 진도 1% 에서 「5등급」 이 나갔다(2026-10-04) */
     (전체R.answers>=50 && T.bandOf(전체R.pct)!=null
       ? tile("지금 성적대", T.bandOf(전체R.pct)+'<small>등급</small>', "내신 5등급 기준 <b>가늠</b>")
       : "")+
     tile("복습할 문항", 되돌릴+'<small>개</small>',
-         되돌릴 ? [대기.q?"문제 "+대기.q:"", 대기.ox?"O·X "+대기.ox:"", 대기.kw?'<a href="ox.html?kwwrong=1">개념어 '+대기.kw+'</a>':"", 대기.drill?"킬러 훈련 "+대기.drill:""].filter(Boolean).join(", ")
+         되돌릴 ? [대기.q?"문제 "+대기.q:"", 대기.ox?"O·X "+대기.ox:"", 대기.kw?'<a href="ox.html?kwwrong=1">개념어 '+대기.kw+'</a>':"", 대기.drill?"드릴 "+대기.drill:""].filter(Boolean).join(", ")
                 : "없음", 되돌릴>0);
   /* 네 칸은 접힌 '단원별' 첫머리에 둔다 — 열면 먼저 보인다 */
   (function(){ var b=document.getElementById("band"), m=document.querySelector("#more-stat .mbody");
@@ -980,7 +1004,7 @@
       esc(q.lb||"")+'</span></div>'+
       '<div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">'+
       '<button class="btn" id="qnext">'+
-      (quiz.i+1>=quiz.list.length?"결과 보기":"다음 문항")+'</button></div>';
+      (quiz.i+1>=quiz.list.length?"결과 보기":"다음")+'</button></div>';
     document.getElementById("qnext").onclick=function(){ quiz.i++; renderQ(); };
   }
   function endQuiz(){
@@ -990,7 +1014,7 @@
       ? "리포트 갱신"
       : got===0
         ? '이 단원 다시 <i class="gc">강추</i>'
-        : "오답 모아풀기";
+        : "복습";
     document.getElementById("quizhost").innerHTML=
       '<div class="quiz"><div class="verdict"><div class="big">'+got+
       '<small> / '+n+'</small></div><p>'+say+'</p>'+
@@ -998,7 +1022,7 @@
       esc(target.mid.m.name)+' 성취도 <b style="color:var(--ink-2)">'+
       st.achieve+'%</b></p>'+
       '<div class="acts"><a class="btn" href="study.html?leaf='+target.leaf.code+
-      '">이 단원 이어서 풀기</a>'+
+      '">이 단원 다음</a>'+
       '<button class="btn ghost" id="again3">다른 곳도 확인</button>'+
       '<button class="btn ghost" id="reload">리포트 새로 보기</button></div></div></div>';
     document.getElementById("again3").onclick=function(){
@@ -1081,7 +1105,7 @@
       }catch(e){}
       todo.unshift(끝냄
         ? {t:XM.exam.name+" "+XM.label, h:"오늘 회차 완료",
-           p:"오답 모아풀기", href:"exam.html"}
+           p:"복습", href:"exam.html"}
         : {t:XM.exam.name+" "+XM.label, h:"오늘의 모의고사",
            p:"25문항, 35분", href:"exam.html"});
     })();
@@ -1096,13 +1120,13 @@
       if(T.scopeOn() && 안.length){
         var 못한=안.filter(function(d){ return T.drillStat(d.id).n===0; });
         var 하나=(못한.length?못한:안)[0];
-        todo.push({t:"이번 시험 범위",h:하나.name+" 킬러 훈련",
+        todo.push({t:"이번 시험 범위",h:하나.name+" 드릴",
           p:하나.desc,href:"drill.html?type="+하나.id});
         if(범위썼나) todo.push({t:"알림",h:"시험 범위 안 문항 끝",
           p:"위쪽은 범위 밖",
           href:"settings.html"});
       }else{
-        todo.push({t:"킬러 훈련",h:"킬러 훈련",
+        todo.push({t:"드릴",h:"드릴",
           p:D.map(function(d){ return d.name; }).join(", "),
           href:"drill.html"});
       }
@@ -1126,7 +1150,7 @@
       var got=T.packs();
       cards.push({eb:"확장팩",name:"선택과목 확장팩",
         p:"고2는 통합사회 대신 세계시민과 지리, 사회와 문화 같은 선택과목을 듣습니다. "+
-          "과목을 하나씩 붙이면 개념트리와 문제풀이가 그 과목 범위로 바뀝니다."+
+          "과목을 하나씩 붙이면 합격 지도와 기출가 그 과목 범위로 바뀝니다."+
           (got.length?" 선택 "+got.length+"과목":""),
         btn:"과목 고르기",href:"settings.html",st:"값 미정, 준비 중"});
     }else{
@@ -1137,7 +1161,7 @@
     var base=T.BOOKS.filter(function(b){ return b.grade==="*"; })[0];
     if(base) cards.push({eb:"기본서",name:base.name,p:base.say,
       btn:"준비 중",href:"settings.html",st:"값·출간일 미정",dim:true});
-    cards.push({eb:"지금 되는 것",name:"킬러 훈련",
+    cards.push({eb:"지금 되는 것",name:"드릴",
       p:(window.DRILLS||[]).map(function(d){ return d.name; }).join(", ")+
         ". 무료로 열려 있습니다.",
       btn:"들어가기",href:"drill.html",st:"무료"});
@@ -1196,11 +1220,11 @@
                     : '<a class="lite" href="'+(걸음2?걸음2.href:'study.html?leaf='+단원.code)+'">더 하기</a>';
       host.innerHTML='<div class="bub">'+말2+'</div>'+
         '<div class="ans">'+큰단추2+
-        (CARDS[단원.code]?'<a class="lite" href="card.html?leaf='+단원.code+'">개념 보기</a>':'')+
+        (CARDS[단원.code]?'<a class="lite" href="card.html?leaf='+단원.code+'">개념</a>':'')+
         '<button type="button" class="lite" id="talkmore">다른 단원 학습</button></div>'+
         '<div class="askmore" id="askmore" hidden><div class="pickl">'+
-          '<a href="skilltree.html">단원별 기출<span>개념트리</span></a>'+
-          (틀린q.length?'<a href="study.html?leaf='+틀린q[0].leaf+'&mode=wrong">오답 모아풀기<span>'+틀린q.length+'문항</span></a>':'')+
+          '<a href="skilltree.html">단원별 기출<span>합격 지도</span></a>'+
+          (틀린q.length?'<a href="study.html?leaf='+틀린q[0].leaf+'&mode=wrong">복습<span>'+틀린q.length+'문항</span></a>':'')+
           '<a href="exam.html">시험처럼 풀기<span>모의고사</span></a>'+
         '</div></div>';
       document.getElementById("talkmore").onclick=function(){ var m=document.getElementById("askmore"); m.hidden=!m.hidden; if(!m.hidden) m.scrollIntoView({block:"nearest",behavior:"smooth"}); };
@@ -1228,12 +1252,12 @@
                  : '<a href="'+(걸음?걸음.href:'ox.html?leaf='+리프.code)+'" class="lite">더 하기</a>';
     host.innerHTML='<div class="bub">'+말+'</div>'+
       '<div class="ans">'+큰단추+
-      '<a class="lite" href="card.html?leaf='+리프.code+'">개념 보기</a>'+
+      '<a class="lite" href="card.html?leaf='+리프.code+'">개념</a>'+
       '<button type="button" class="lite" id="talkmore">다른 단원 학습</button></div>'+
       '<div class="askmore" id="askmore" hidden><div class="pickl">'+
-        '<a href="skilltree.html">단원별 O·X<span>개념트리</span></a>'+
-        (틀린?'<a href="ox.html?wrong=1">오답 모아풀기<span>'+틀린+'문장</span></a>':'')+
-        '<a href="naeshin.html">어려운 O·X만<span>범위 킬러</span></a>'+
+        '<a href="skilltree.html">단원별 O·X<span>합격 지도</span></a>'+
+        (틀린?'<a href="ox.html?wrong=1">복습<span>'+틀린+'문장</span></a>':'')+
+        '<a href="naeshin.html">어려운 O·X만<span>어려운 O·X</span></a>'+
         '<a href="exam.html">시험처럼 풀기<span>모의고사</span></a>'+
         '<a href="skilltree.html?lec='+리프.code+'">강의 보기<span>'+esc(개념)+'</span></a>'+
       '</div></div>';

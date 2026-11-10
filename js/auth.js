@@ -56,7 +56,19 @@
       options: { redirectTo: location.origin + location.pathname.replace(/[^/]*$/, "") + "login.html" }
     }).then(function () { return true; });
   }
-  function 로그아웃() { return ON ? sb.auth.signOut() : Promise.resolve(); }
+  /* 기기의 학습 기록 지우기 — 로그아웃·다른 계정 로그인 때. 화면이 메모리에 든 기록을 곧바로 다시 써넣을 수 있어
+     한 번 더 지운 뒤 새로 연다(1110 검수: 지운 직후 옛 기록이 되살아나 새 계정에 올라갔다) */
+  function 기기비우기() {
+    function 지우기() { 키들.concat(["terra.sync", "terra.sync.uid"]).forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} }); }
+    지우기();
+    return new Promise(function (res) { setTimeout(function () { 지우기(); res(); }, 400); });
+  }
+  /* 로그아웃: 먼저 마지막 기록을 올리고, 이 기기에서 지운다. 같은 PC 를 쓰는 다음 학생에게 기록이 넘어가지 않게 */
+  function 로그아웃() {
+    if (!ON) return Promise.resolve();
+    return 올리기(true).catch(function () {}).then(function () { return sb.auth.signOut(); })
+      .then(기기비우기).then(function () { location.replace("index.html"); });
+  }
 
   /* ── 기록 동기화 ────────────────────────────────────────── */
   function 꾸러미() {
@@ -70,11 +82,49 @@
       try { localStorage.setItem(k, o[k]); } catch (e) {}
     });
   }
-  var 마지막올림 = 0, 올림예약 = null;
-  function 올리기() {
+  /* ── 무엇이 바뀌었는지는 「내용」으로 본다 (2026-11-09 실사용 검수) ─────────
+     첫 설정(이름·시험·범위)은 savedAt 을 건드리지 않고, 올리기는 답할 때만 불렸다.
+     그래서 새 계정의 설정이 첫 답을 하기 전까지 서버에 없었다.
+     → 마지막으로 서버와 맞춘 내용의 지문(sig)과 그때 서버 시각(at)을 기기에 적고,
+       지문이 달라지면 올리고, 서버 시각이 앞서 가면(다른 기기가 올림) 내려받는다. */
+  function 지문(o) {
+    var s = JSON.stringify(o), h = 2166136261;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return (h >>> 0).toString(36) + ":" + s.length;
+  }
+  /* 두 기기 기록 합치기 — 문항 답은 문항마다 나중 것, 사건 기록은 합집합(시각순), 나머지는 이 기기 것 */
+  function 합치기(여기, 서버) {
+    var o = {}; Object.keys(여기).forEach(function (k) { o[k] = 여기[k]; });
+    Object.keys(서버 || {}).forEach(function (k) { if (o[k] == null && 서버[k] != null && 키들.indexOf(k) >= 0) o[k] = 서버[k]; });
+    var a = 기록읽기(여기["terra.tree.v1"]), b = 기록읽기(서버 && 서버["terra.tree.v1"]);
+    if (!b.ans) return o;
+    a.ans = a.ans || {};
+    Object.keys(b.ans).forEach(function (q) {
+      var x = a.ans[q], y = b.ans[q];
+      if (!x || ((y && y.at) || 0) > ((x && x.at) || 0)) a.ans[q] = y;
+    });
+    var 본 = {}, ev = [];
+    (a.ev || []).concat(b.ev || []).forEach(function (e) {
+      var 열쇠 = (e && e.k) + "|" + (e && e.q) + "|" + (e && e.at);
+      if (!본[열쇠]) { 본[열쇠] = 1; ev.push(e); }
+    });
+    ev.sort(function (p, q) { return ((p && p.at) || 0) - ((q && q.at) || 0); });
+    a.ev = ev;
+    a.savedAt = Math.max(a.savedAt || 0, b.savedAt || 0);
+    o["terra.tree.v1"] = JSON.stringify(a);
+    return o;
+  }
+  function 맞춤읽기() { try { return JSON.parse(localStorage.getItem("terra.sync") || "null") || {}; } catch (e) { return {}; } }
+  function 맞춤적기(uid, at) { try { localStorage.setItem("terra.sync", JSON.stringify({ uid: uid, at: at, sig: 지문(꾸러미()) })); } catch (e) {} }
+  function 바뀜() { var m = 맞춤읽기(); return m.sig !== 지문(꾸러미()); }
+
+  var 마지막올림 = 0, 올림예약 = null, 올리는중 = null;
+  function 올리기(강제) {
     if (!ON) return Promise.resolve(false);
+    if (올리는중) return 올리는중;
     return 사용자().then(function (u) {
       if (!u) return false;
+      if (!강제 && !바뀜()) return false;                    // 바뀐 게 없으면 부르지 않는다
       var now = Date.now();
       if (now - 마지막올림 < 4000) {                      // 답할 때마다 부르므로 묶어서
         /* 묶인 답도 4초 뒤 올린다. 그냥 버리면 마지막 답이 다음 답 때까지 서버에 없다 */
@@ -82,10 +132,29 @@
         return false;
       }
       마지막올림 = now;
-      return sb.from("records").upsert({
-        user_id: u.id, data: 꾸러미(), saved_at: new Date().toISOString()
-      }, { onConflict: "user_id" }).then(function () { 리포트올리기(u); return true; });
-    });
+      var 보낼것 = 꾸러미(), m = 맞춤읽기();
+      /* 폰과 PC 를 둘 다 열어 둔 학생: 그 사이 다른 기기가 올렸으면 덮지 말고 합친다(1109 검수에서 찾은 구멍) */
+      올리는중 = sb.from("records").select("saved_at").eq("user_id", u.id).maybeSingle().then(function (r0) {
+        var 서버시각 = r0 && r0.data ? Date.parse(r0.data.saved_at) : 0;
+        if (!서버시각 || m.uid !== u.id || 서버시각 <= (m.at || 0)) return null;
+        return sb.from("records").select("data").eq("user_id", u.id).maybeSingle().then(function (r1) { return r1 && r1.data ? r1.data.data : null; });
+      }).then(function (서버것) {
+        var 여기것 = 보낼것;
+        if (서버것) 보낼것 = 합치기(보낼것, 서버것);
+        var 시각 = new Date().toISOString();
+        return sb.from("records").upsert({ user_id: u.id, data: 보낼것, saved_at: 시각 }, { onConflict: "user_id" })
+          .then(function (r) { r.시각 = 시각; r.합침 = !!서버것; r.여기것 = 여기것; return r; });
+      }).then(function (r) {
+          올리는중 = null;
+          if (r.error) return false;                       // 실패하면 지문을 안 바꿔 다음에 다시 올린다
+          /* 지문은 이 기기 내용으로 적는다. 합쳤으면 서버가 더 많이 가진 것이므로 시각을 한 칸 뒤로 두어
+             다음에 화면을 열 때 합친 기록을 내려받게 한다 */
+          var at = Date.parse(r.시각) - (r.합침 ? 1 : 0);
+          try { localStorage.setItem("terra.sync", JSON.stringify({ uid: u.id, at: at, sig: 지문(r.여기것) })); } catch (e) {}
+          리포트올리기(u); return true;
+        }, function () { 올리는중 = null; return false; });
+      return 올리는중;
+    }).catch(function () { return false; });
   }
   function 기록읽기(글) { try { return JSON.parse(글 || "{}") || {}; } catch (e) { return {}; } }
   function 답수(t) { return Object.keys((t && t.ans) || {}).length; }
@@ -96,24 +165,35 @@
       return sb.from("records").select("data,saved_at").eq("user_id", u.id).maybeSingle()
         .then(function (r) {
           if (r.error) return false;                       // 읽기 실패를 「서버가 비었다」로 보면 서버 기록을 덮어쓴다
-          var row = r.data;
-          if (!row) { 맞춘계정(u.id); return 올리기(); }    // 서버가 비었으면 이 기기 것을 올린다
-          var 서버기록 = 기록읽기(row.data && row.data["terra.tree.v1"]), 여기기록 = {};
-          try { 여기기록 = 기록읽기(localStorage.getItem("terra.tree.v1")); } catch (e) {}
-          /* saved_at 은 올린 시각이라 언제나 기기의 savedAt 보다 늦다. 같은 기기 기록끼리 견주도록 savedAt 을 쓴다 */
-          var 서버 = 서버기록.savedAt || new Date(row.saved_at).getTime(), 여기 = 여기기록.savedAt || 0;
-          var 처음 = 맞춘계정() !== u.id;
-          /* 이 계정과 처음 맞추는 기기: 새 기기에서 몇 문제 풀고 로그인해도 쌓인 기록을 덮어쓰지 않게 답 수로 정한다 */
-          var 받을까 = 처음 ? 답수(서버기록) >= 답수(여기기록) : 서버 > 여기;
-          맞춘계정(u.id);
-          if (받을까) { 풀기(row.data); return "내려받음"; }
-          if (!처음 && 서버 === 여기) return false;         // 이미 같다
-          return 올리기();
+          var row = r.data, m = 맞춤읽기();
+          /* 이 기기 기록이 다른 계정 것이면 절대 올리지 않는다(1110 검수: 카카오 계정 기록 14문항이 새 구글 계정으로 올라갔다).
+             기기를 비우고, 이 계정 기록이 서버에 있으면 그것을 받는다 */
+          if (m.uid && m.uid !== u.id) {
+            return 기기비우기().then(function () {
+              if (row) { 풀기(row.data); 맞춤적기(u.id, Date.parse(row.saved_at)); }
+              return "내려받음";
+            });
+          }
+          if (!row) return 올리기(true);                    // 서버가 비었으면 이 기기 것을 올린다
+          var 서버시각 = Date.parse(row.saved_at), 처음 = m.uid !== u.id;
+          var 서버기록 = 기록읽기(row.data && row.data["terra.tree.v1"]), 여기기록 = 기록읽기(localStorage.getItem("terra.tree.v1"));
+          var 받을까;
+          if (처음) {
+            /* 이 계정과 처음 맞추는 기기: 새 기기에서 몇 문제 풀고 로그인해도 쌓인 기록을 덮어쓰지 않게 답 수로 정한다 */
+            /* 답 수가 같으면(둘 다 0 포함) 첫 설정을 마친 쪽을 남긴다 — 1109 검수: 빈 서버 기록이 방금 마친 설정을 덮었다 */
+            var 서버답 = 답수(서버기록), 여기답 = 답수(여기기록);
+            var 서버설정 = row.data && row.data["terra.onboarded"] === "1", 여기설정 = localStorage.getItem("terra.onboarded") === "1";
+            받을까 = 서버답 > 여기답 || (서버답 === 여기답 && (서버설정 || !여기설정));
+          } else if (서버시각 > (m.at || 0)) {
+            /* 다른 기기가 그 뒤에 올렸다. 이 기기도 그 사이 바뀌었으면 학생이 마지막으로 한 쪽을 남긴다 */
+            받을까 = !바뀜() || (서버기록.savedAt || 서버시각) >= (여기기록.savedAt || 0);
+          } else {
+            return 올리기();                                // 서버는 그대로 — 이 기기에서 바뀐 게 있으면 올린다
+          }
+          if (받을까) { 풀기(row.data); 맞춤적기(u.id, 서버시각); return "내려받음"; }
+          return 올리기(true);
         });
     }).catch(function () { return false; });
-  }
-  function 맞춘계정(id) {
-    try { if (id) localStorage.setItem("terra.sync.uid", id); return localStorage.getItem("terra.sync.uid"); } catch (e) { return null; }
   }
 
   /* ── 학부모 리포트 (2026-10-04) ──────────────────────────────
@@ -220,6 +300,11 @@
 
   /* 답할 때마다 올린다 — store.js 가 쏘는 사건 */
   window.addEventListener("terra:ev", function () { 올리기(); });
+  /* 답 말고 설정·시험·범위만 바꿔도 올라가게: 20초마다 지문만 견주고(기기 안 계산), 화면을 떠날 때도 한 번 */
+  if (ON) {
+    setInterval(function () { if (바뀜()) 올리기(); }, 20000);
+    document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden" && 바뀜()) 올리기(); });
+  }
   /* INITIAL_SESSION = 로그인한 채 화면을 연 때. 앞 화면에서 못 올린 마지막 답을 여기서 맞춘다.
      콜백 안에서 Supabase 를 바로 부르면 멈출 수 있어(공식 문서 경고) setTimeout 으로 빼낸다.
      다른 기기 기록을 받으면 메모리의 옛 기록이 덮어쓰지 않도록 화면을 다시 연다. login.html 은 terra:synced 로 스스로 옮겨 간다. */

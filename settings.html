@@ -132,7 +132,7 @@
   .bk{border:1px solid var(--line);border-radius:var(--r2);background:var(--surface);
     overflow:hidden;display:flex;flex-direction:column}
   .bk .cv{height:120px;display:flex;align-items:flex-end;padding:16px 18px;
-    background:linear-gradient(135deg,var(--red-soft),transparent 70%),var(--surface-2);
+    background:var(--surface-2);
     border-bottom:1px solid var(--line)}
   .bk .cv b{font-size:19px;color:var(--ink);letter-spacing:-.04em;
     font-family:var(--title);font-weight:var(--tw)}
@@ -225,6 +225,34 @@
   .sec.fold.open>.sechd:after{transform:rotate(-135deg)}
   .sec.fold>*:not(.sechd){display:none}
   .sec.fold.open>*:not(.sechd):not([hidden]){display:block;margin:0 16px 16px}
+
+  /* ═══ 2026-11-10 화면표준 5절 — 쪽 제목 900 26px · 묶음마다 판 한 장(18px) · 고르는 단추 44px/12px ═══ */
+  .wrapx{max-width:720px;padding:0 20px calc(40px + env(safe-area-inset-bottom,0px))}
+  .phead{display:block;padding:18px 0 6px}
+  .phead h1{font-size:26px;font-weight:900;letter-spacing:-.03em;margin:6px 0 0}
+  .sechd h2{font-size:16px;font-weight:800;letter-spacing:-.02em}
+  .sec.fold{border:0;border-radius:18px;box-shadow:0 1px 2px rgba(17,20,25,.05),0 0 0 1px var(--line);margin-top:10px}
+  .sec.fold>.sechd h2{font-size:16px;font-weight:800}
+  .sec.fold.open>*:not(.sechd):not([hidden]){margin:0 18px 18px}
+  .gr,.sk,.prbox,.urow{border:0;border-radius:18px;box-shadow:0 1px 2px rgba(17,20,25,.05),0 0 0 1px var(--line)}
+  .urow{border-radius:14px}
+  .gr[aria-pressed="true"],.sk[aria-pressed="true"]{box-shadow:0 0 0 1.5px var(--pt)}
+  .urow.on{box-shadow:0 0 0 1.5px var(--pt)}
+  .mins button,.sc-quick button,.sc-grid button,.pk{border:1.5px solid var(--line-2);border-radius:12px;background:var(--surface);color:var(--ink);font-weight:700}
+  .mins button,.sc-quick button{height:44px;min-height:44px;padding:0 12px;display:inline-flex;align-items:center;justify-content:center;position:relative}
+  .mins button b{font-size:16px;font-weight:800;letter-spacing:-.02em;display:inline}
+  .mins button b .u{font-size:13px}
+  .mins button[aria-pressed="true"],.sc-quick button:hover,.sc-grid button[aria-pressed="true"],.pk[aria-pressed="true"]{border-color:var(--pt);background:var(--pt-soft);color:var(--pt-ink)}
+  .mins button[aria-pressed="true"] b,.sc-grid button[aria-pressed="true"] b{color:var(--pt-ink)}
+  .urow.on .u{background:var(--pt-soft)}
+  .sw[aria-checked="true"]{background:var(--pt);border-color:var(--pt)}
+  .sec.fold .rt-set,.sec.fold .scope{background:none;border:0;padding:0;box-shadow:none}
+  .ulist .bk{border:0;background:none;padding:0}
+  /* 11-10 학년 고르기 — 표준 흰 판, 선택은 5절 모양(옅은 포인트 바탕 + 포인트 테두리) */
+  html body .gr{background:var(--surface)}
+  html body .gr[aria-pressed="true"]{background:var(--pt-soft,var(--red-soft));box-shadow:0 0 0 1.5px var(--pt,var(--red))}
+  /* 학년 카드가 붙어 보이던 원인: 접힌 판 안에서 .grades 가 grid 가 아니라 block 으로 풀려 gap 이 안 먹었다 → 카드에 아래 간격을 직접 준다 */
+  html body .grades>.gr{margin:0 0 12px}html body .grades>.gr:last-child{margin-bottom:0}
 </style>
 </head>
 <body>
@@ -258,7 +286,7 @@
   </section>
 
   <section class="sec" hidden>   <!-- 학생이 고를 일이 아니다. 학년에 맞춰 자동(2026-09-19 대표님) -->
-    <div class="sechd"><h2>개념트리를 묶는 축</h2>
+    <div class="sechd"><h2>합격 지도를 묶는 축</h2>
       <span class="cap">통합사회는 통합 과목이라 한 가지로 안 갈립니다</span></div>
     <div class="grades" id="axes"></div>
     <p class="note" id="axnote"></p>
@@ -347,6 +375,7 @@
 <script src="js/cards.js?v=7df28fb5"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/store.js?v=9ed2f66a"></script>
+<script src="js/tera-daeip-time.js"></script>
 <script src="js/cheer.js?v=4b8966be"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
 <script src="js/supa.config.js?v=85aed5a2"></script>
@@ -452,11 +481,7 @@
   function paintRt(){
     var goal=T.goalMin(), R=T.routine();
     document.getElementById("rtset").innerHTML=
-      '<div class="mins">'+MINS.map(function(v){
-        return '<button data-min="'+v+'" aria-pressed="'+(v===goal)+'" style="position:relative">'+
-          '<b>'+v+'<small class="u">분</small></b>'+
-          (v===15?'<i class="bdg bdg-good bdg-pin">추천</i>':'')+
-          '</button>'; }).join("")+'</div>'+
+      '<div id="tdt"></div>'+
       '<div class="rt-what">'+R.items.map(function(it){
         return '<span class="r"><i></i>'+esc(it.title)+' — '+esc(it.say)+
           '<span class="m2">'+it.min+'분</span></span>'; }).join("")+'</div>'+
@@ -470,9 +495,8 @@
           '<button class="sw" role="switch" id="ntog2" aria-checked="'+
           (st.on&&st.granted)+'"></button></span></div>';
       })();
-    document.querySelectorAll("[data-min]").forEach(function(b){
-      b.onclick=function(){ T.setGoalMin(+b.dataset.min); paintRt(); };
-    });
+    TERA_DAEIP.mount(document.getElementById("tdt"),"tongsa",function(){ T.setGoalMin(TERA_DAEIP.perMin()); paintRt(); });
+
     var N=window.TERRA_NOTIFY;
     var tg=document.getElementById("ntog2");
     if(tg&&N) tg.onclick=function(){
@@ -614,7 +638,7 @@
       document.getElementById("cheerrow").innerHTML=
         '<button type="button" id="cheersnd" aria-pressed="'+소리+'">소리 '+(소리?"켜짐":"꺼짐")+'</button>'+
         (window.ZZ?'<button type="button" id="cheertry">미리 보기</button>':'')+
-        '<button type="button" id="coachagain">개념트리 안내 다시 보기</button>'+
+        '<button type="button" id="coachagain">합격 지도 안내 다시 보기</button>'+
         /* 홈 「오늘의 루틴」 모양 셋(2026-10-11) — js/routinecard.js, localStorage terra.rt.view */
         '<span style="display:block;width:100%;margin-top:10px;font-weight:800">홈 루틴 모양</span>'+
         [["a","목록"],["b","길"],["c","막대"]].map(function(x){ var 지금=(function(){ try{ return localStorage.getItem("terra.rt.view")||"a"; }catch(e){ return "a"; } })();
@@ -648,10 +672,10 @@
     document.getElementById("plan").innerHTML=
       '<span class="tx"><h3>'+(p.sub?"구독 중":"무료로 쓰는 중")+'</h3>'+
       '<p>'+(p.sub
-        ? "모든 단원의 문제풀이와 트레이닝, 리포트를 제한 없이 씁니다."+
+        ? "모든 단원의 기출와 트레이닝, 리포트를 제한 없이 씁니다."+
           (p.since?" "+p.since+" 부터.":"")
-        : "지금도 개념트리와 리포트, 킬러 훈련을 쓸 수 있습니다. "+
-          "구독하면 문제풀이 분량과 확장팩 제한이 풀립니다.")+
+        : "지금도 합격 지도와 리포트, 드릴을 쓸 수 있습니다. "+
+          "구독하면 기출 분량과 확장팩 제한이 풀립니다.")+
       ' <b style="color:var(--ink-3)">값은 아직 정하지 않았습니다.</b></p></span>'+
       '<button class="sw" id="subsw" role="switch" aria-checked="'+(!!p.sub)+'"></button>';
     document.getElementById("subsw").onclick=function(){
@@ -725,7 +749,7 @@
   function 사람말(요약){
     var 조각=[];
     if(요약.문항) 조각.push("문항 "+요약.문항+"개");
-    if(요약.훈련) 조각.push("킬러 훈련 "+요약.훈련+"번");
+    if(요약.훈련) 조각.push("드릴 "+요약.훈련+"번");
     if(요약.시험) 조각.push("모의고사 "+요약.시험+"회");
     return 조각.length?조각.join(", "):"기록 없음";
   }
@@ -867,5 +891,10 @@
 </script>
 <!-- 테라러닝 홈 단추(공용 terrahome) -->
 <script src="js/terrahome.js?v=243c5cfd" data-slot=".nav .wrap" defer></script>
+<script>
+/* 10절 — 설정 첫 항목(하루 루틴)에 「추천」 한 개 */
+setTimeout(function(){ var h=[].slice.call(document.querySelectorAll(".sechd h2")).filter(function(x){ return x.textContent.replace(/\s+/g,"")==="하루루틴"; })[0];
+  if(h&&!h.querySelector(".recbadge")) h.insertAdjacentHTML("beforeend",'<i class="recbadge">추천</i>'); },600);
+</script>
 </body>
 </html>

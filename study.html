@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>문제풀이</title>
+<title>기출</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
@@ -18,6 +18,8 @@
 <link rel="stylesheet" href="css/cheer.css?v=386af7f8">
 <link rel="stylesheet" href="css/coach.css?v=9bd6a7e9">
 <link rel="stylesheet" href="css/question.css?v=6956a62b">
+<link rel="stylesheet" href="css/tera-q.css">
+<link rel="stylesheet" href="css/tera-q-tongsa.css">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:1360px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -257,14 +259,27 @@
   .rep li b{color:var(--ink)}
   .rep .note{margin-top:12px;padding-top:11px;border-top:1px solid var(--line);
     font-size:14.5px;color:var(--ink-4);line-height:1.6}
+
+  /* ═══ 2026-11-10 화면표준 4절 — 문제 풀이(선택형) ═══ */
+  .sbar4{height:4px;background:var(--surface-3)}
+  .sbar4 i{display:block;height:100%;width:0;background:var(--pt);transition:width .3s}
+  body:not(.inner) .sbar4{display:none}
+  body.inner .phead>div:first-child{display:none}
+  body.inner .phead{padding:10px 0 0}
+  body.inner .prog .sc{display:none}
+  .qcard{border:0;border-radius:18px;box-shadow:0 1px 2px rgba(17,20,25,.05),0 0 0 1px var(--line)}
+  @media(max-width:880px){ .wrapx{padding-left:20px;padding-right:20px} }
+  .opt{min-height:52px;border:1.5px solid var(--line-2);border-radius:14px;background:var(--surface);align-items:center}
+  html body .opt[data-s="ok"] .k{background:#16B364;color:#fff}
+  html body .opt[data-s="no"] .k{background:#E5322D;color:#fff}
 </style>
 </head>
 <body>
 <div class="wrapx">
   <div class="phead">
     <div>
-      <span class="kicker">문제풀이</span>
-      <h1 id="ttl">문제풀이</h1>
+      <span class="kicker">기출</span>
+      <h1 id="ttl">기출</h1>
       <p class="sub" id="lede"></p>
     </div>
     <div class="pheadact" id="headact"></div>
@@ -278,6 +293,10 @@
 <script src="js/pool.js?v=a86b23b9"></script>
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/qrender.js?v=3419f389"></script>
+<script src="js/tera-pad.js"></script>
+<script src="notes.js"></script>
+<script src="js/tera-q.js"></script>
+<script src="js/tera-q-tongsa.js"></script>
 <script src="js/cards.js?v=7df28fb5"></script>
 <script src="js/packs.js?v=87449626"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
@@ -307,7 +326,8 @@
     if(오답들.length) leafCode=오답들[0].leaf;
   }
   var leaf=leafCode?T.BY[leafCode]:null;
-  var list=[], i=0, marks=[], picked=null, done=false;
+  var list=[], i=0, marks=[], picks=[], picked=null, done=false;
+  function 다음번호(){ for(var k=i+1;k<list.length;k++) if(picks[k]==null) return k; for(k=0;k<i;k++) if(picks[k]==null) return k; return list.length; }
 
   function esc(t){ return String(t==null?"":t)
     .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
@@ -454,7 +474,7 @@
               '%;background:'+(오늘.이해도>=80?"#2FE0CE":"var(--lv2)")+'"></i></span></div>'+
           '<div class="go"><a class="btn" href="study.html?leaf='+오늘.code+'">지금 풀기 →</a>'+
             '<a class="btn ghost" href="card.html?leaf='+오늘.code+
-              '">개념 먼저 읽기</a></div>'+
+              '">개념</a></div>'+
         '</section>'+
         '<aside class="side">'+
           '<button class="more" id="moreBtn">다른 단원 학습<i>펼치기</i></button>'+
@@ -501,7 +521,7 @@
             (r.n?Math.round(st.solved/r.n*100):0)+'%;background:var(--lv2)"></i></span></button>';
         }).join("")+'</div></section>';
     }
-    return (last?'<section class="pickwrap"><div class="secthead"><h2>이어서 풀기</h2></div>'+
+    return (last?'<section class="pickwrap"><div class="secthead"><h2>다음</h2></div>'+
         '<div class="pickgrid"><button class="pk" data-go="'+last.code+'">'+
         '<span class="eb">마지막으로 본 곳</span><h3>'+esc(last.name)+'</h3>'+
         '<span class="meta">'+playable(last).length+'문항</span></button></div></section>':"")+
@@ -522,14 +542,14 @@
   /* ══════ 푸는 화면 ══════ */
   function shell(){
     var st=T.leafStat(leaf.code);
-    document.getElementById("ttl").textContent=전체오답?"틀린 문제 다시 풀기":leaf.name;
+    document.getElementById("ttl").textContent=전체오답?"복습":leaf.name;
     var S3=T.state(), g3=(S3.student&&S3.student.grade)||"고1";
     /* 부제는 단원 이름까지만 — 어느 학년 기출이 섞였는지는 문항마다 출처로 적힌다(2026-09-21) */
     document.getElementById("lede").textContent=
       (전체오답 ? "시험 범위 안에서 틀렸던 문제" : leaf.mid.root.name+", "+leaf.mid.name+
-      (wrongOnly?", 오답 모아풀기":""));
+      (wrongOnly?", 복습":""));
     document.getElementById("headact").innerHTML=
-      '<a class="btn ghost sm" href="skilltree.html?area='+leaf.mid.root.code+'">개념트리</a>'+
+      '<a class="btn ghost sm" href="skilltree.html?area='+leaf.mid.root.code+'">합격 지도</a>'+
       '<a class="btn ghost sm" href="study.html">다른 단원</a>';
     document.getElementById("root").innerHTML=
       '<div class="cols"><div><div class="qcard">'+
@@ -594,6 +614,12 @@
     document.getElementById("prog").innerHTML=
       /* 진행 점 20개·「0 / 0 맞음」 은 뺐다 — 문제가 화면 중간부터 시작했다(2026-09-21). 정답률은 끝에 나온다 */
       '<div class="sc">'+(done?list.length:(i+1))+' / '+list.length+'</div>';
+    /* 2026-11-10 화면표준 4절: 머리띠 오른쪽 「3 / 20」 + 머리띠 바로 아래 4px 진행 막대 */
+    var cur=done?list.length:(i+1);
+    if(T.진행표시) T.진행표시(cur+" / "+list.length);
+    var nv=document.querySelector(".nav"), sb=document.getElementById("sbar4");
+    if(nv && !sb){ sb=document.createElement("div"); sb.id="sbar4"; sb.className="sbar4"; sb.innerHTML="<i></i>"; nv.insertAdjacentElement("afterend",sb); }
+    if(sb) sb.firstChild.style.width=(list.length?Math.round((done?list.length:i)*100/list.length):0)+"%";
   }
   function session(){
     var got=marks.filter(Boolean).length, n=marks.length;
@@ -603,6 +629,18 @@
       '<div class="stat"><b>'+(n?Math.round(got/n*100)+"%":"—")+'</b><span>정답률</span></div></div>';
   }
 
+
+  /* 11-10 표준 8절 — 경제 단원(H) 계산 문항에만 「풀이 창」. steps 자료가 없으면 steps 없이 연다 */
+  function 풀이창(code, host, anchor, key){
+    try{
+      if(!window.TERA_PAD || !/^H/.test(code||"")) return;
+      var 글=(host.textContent||"");
+      if(!TERA_PAD.isCalc(글)) return;
+      var w=document.createElement("div"); w.className="padrow"; w.style.cssText="margin:12px 0 10px;display:flex;justify-content:flex-start";
+      TERA_PAD.button(w,{key:key,title:""});
+      anchor.insertAdjacentElement("beforebegin",w);
+    }catch(e){}
+  }
   function render(){
     if(i>=list.length){ return finish(); }
     var q=list[i], d=Q[q.id];
@@ -649,6 +687,13 @@
     document.querySelectorAll(".opt").forEach(function(b){
       b.onclick=function(){ judge(q,d,+b.dataset.v,b); };
     });
+    풀이창(q.leaf||leafCode, document.querySelector("#stage .qbody"), document.querySelector("#stage .opts"), "st"+q.id);
+    /* 11-10 문제 화면 공용 부품 */
+    if(window.TQT){
+      var 줄=document.querySelector("#stage .srcline");
+      TQT.q({ no:i+1, total:list.length, leaf:(q.leaf||leafCode), id:q.id, src:(줄?줄.textContent:""), host:document.getElementById("stage"), stem:".stem", before:document.querySelector("#stage .qbody"),
+        omrCfg:{ mount:document.querySelector(".cols"), total:list.length, nChoices:5, cur:function(){return i;}, answered:function(j){return picks[j]!=null;}, pick:function(j){return picks[j];}, onJump:function(j){ i=j; render(); window.scrollTo({top:0}); } } });
+    }
     webpFallback(document);
     window.scrollTo({top:0,behavior:"smooth"});
   }
@@ -690,7 +735,7 @@
 
   function judge(q,d,vpick,btn){
     var r=T.answer(q.id,vpick), ok=r?r.ok:(vpick===d.a);
-    marks.push(ok);
+    marks.push(ok); picks[i]=vpick;
     document.querySelectorAll(".opt").forEach(function(b,k){
       b.disabled=true;
       if(k===d.a){ b.dataset.s="ok"; } else if(b===btn) b.dataset.s="no";
@@ -705,9 +750,10 @@
       whyHtml(d,vpick,ok)+
       '<span class="src">'+esc(q.g||"")+' '+esc(q.d||"")+' '+(q.n||"")+'번, '+
       esc(d.lb||q.lb||"")+'</span></div>'+
-      '<div class="gorow stickgo"><button class="btn" id="next">'+(last?"결과 보기":"다음 문제")+'</button>'+
+      '<div class="gorow stickgo"><button class="btn" id="next">'+(last?"결과 보기":"다음")+'</button>'+
       '<span class="hint">'+(i+1)+' / '+list.length+'</span></div>';
-    document.getElementById("next").onclick=function(){ i++; render(); };
+    document.getElementById("next").onclick=function(){ i=다음번호(); render(); };
+    if(window.TQT) TQT.done({ answer:(d.a+1)+"번", conceptHref:(q.leaf||leafCode)?("card.html?leaf="+encodeURIComponent(q.leaf||leafCode)):"" });
     /* 답하면 판정이 보이는 데까지 내려간다 — 「다음 문제」 는 화면 아래에 붙어 있다 */
     setTimeout(function(){ var v=document.getElementById("v"); if(v) v.scrollIntoView({behavior:"smooth",block:"start"}); }, 420);
   }

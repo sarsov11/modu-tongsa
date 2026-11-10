@@ -47,10 +47,10 @@
       host.innerHTML = '<div class="lgbox">' +
         (opt.title ? '<h3 class="lgtitle">' + esc(opt.title) + '</h3>' : '') +
         (opt.sub ? '<p class="lgsub">' + esc(opt.sub) + '</p>' : '') +
-        '<button type="button" class="lgbtn kakao" id="lgKakao">' + K + '<span>카카오로 시작하기</span></button>' +
+        '<button type="button" class="lgbtn kakao" id="lgKakao">' + K + '<span>카카오로 시작</span></button>' +
         '<button type="button" class="lgbtn google" id="lgGoogle">' + G + '<span>Google 계정으로 계속하기</span></button>' +
         (opt.naver === false ? '' :
-          '<button type="button" class="lgbtn naver" disabled aria-disabled="true">' + N + '<span>네이버로 시작하기</span><em>준비 중</em></button>') +
+          '<button type="button" class="lgbtn naver" disabled aria-disabled="true">' + N + '<span>네이버로 시작</span><em>준비 중</em></button>') +
         (opt.skip ? '<a class="lgskip" href="' + esc(opt.skip) + '">나중에</a>' : '') +
         '</div>';
       host.querySelector("#lgKakao").onclick = function () { A.로그인("kakao"); };

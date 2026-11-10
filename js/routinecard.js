@@ -98,6 +98,41 @@
     ".rtc .wk div.tdy{color:var(--ink)}.rtc .wk div.tdy i{border-color:var(--cta);border-style:solid;border-width:2px}",
     ".rtc .ft{margin:10px 0 0;font-size:13.5px;color:var(--ink-3);text-align:center}.rtc .ft b{color:var(--amber)}",
     ".rtc.alldone{border-color:#16B364}.rtc.alldone .ttl h2{color:#16B364}",
+    /* ── 2026-11-10 화면표준 3절 (view a) ── */
+    ".rtc.rt-a{margin:14px 0 0;padding:0;border:0;background:none;box-shadow:none;border-radius:0}",
+    ".rtc.rt-a .rc-card{padding:20px 18px 18px;background:var(--surface);border-radius:18px;box-shadow:0 1px 2px rgba(17,20,25,.05),0 0 0 1px var(--line)}",
+    ".rtc.rt-a .rc-card h2{margin:0;font-size:20px;font-weight:900;letter-spacing:-.03em;color:var(--ink)}",
+    ".rtc.rt-a .rc-card .sum{margin:4px 0 0;font-size:13.5px;font-weight:600;color:var(--ink-3);line-height:1.5}",
+    ".rtc.rt-a .pbar{height:4px;border-radius:4px;background:var(--surface-3);overflow:hidden;margin:14px 0 6px}",
+    ".rtc.rt-a .pbar i{display:block;height:100%;background:var(--pt,var(--cta));border-radius:4px;transition:width .4s}",
+    ".rtc.rt-a .tl{list-style:none;margin:8px 0 16px;padding:0;display:grid;gap:6px}",
+    ".rtc.rt-a .tl::before{display:none}",
+    ".rtc.rt-a .tl li{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:center;padding:8px 10px;border-radius:14px;margin:0;background:none;box-shadow:none}",
+    ".rtc.rt-a .tl li.now{background:var(--pt-soft,var(--cta-soft))}",
+    ".rtc.rt-a .tl .c{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--surface-3);color:var(--ink-3);font:800 14px/1 var(--sans,inherit)}",
+    ".rtc.rt-a .tl li.now .c{background:var(--pt,var(--cta));color:#fff;animation:none}",
+    ".rtc.rt-a .tl li.done .c{background:var(--surface-3);color:var(--ink-4)}",
+    ".rtc.rt-a .tl .tx{min-width:0}",
+    ".rtc.rt-a .tl .tx b{display:block;font-size:15px;font-weight:800;letter-spacing:-.02em;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}",
+    ".rtc.rt-a .tl li.done .tx b{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--ink-4)}",
+    ".rtc.rt-a .tl .tx small{display:block;font-size:12.5px;font-weight:600;color:var(--ink-3);margin-top:2px;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}",
+    ".rtc.rt-a .tl .tm{font-size:13px;font-weight:700;color:var(--ink-3);font-variant-numeric:tabular-nums}",
+    ".rtc.rt-a .tl li.done .tm{color:var(--ink-4)}",
+    ".rtc.rt-a .go{display:flex;align-items:center;justify-content:center;width:100%;height:54px;margin:0;padding:0;border-radius:16px;background:var(--pt,var(--cta));color:#fff;font-size:16.5px;font-weight:800;letter-spacing:-.02em;box-shadow:0 14px 30px -14px color-mix(in srgb,var(--pt,var(--cta)) 60%,transparent)}",
+    ".rtc.rt-a .go:active{background:var(--pt-2,var(--cta-2))}",
+    ".rtc.rt-a .two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}",
+    ".rtc.rt-a .stat{padding:16px 18px}",
+    ".rtc.rt-a .stat b{display:block;font-size:22px;font-weight:900;letter-spacing:-.03em;font-variant-numeric:tabular-nums;color:var(--ink)}",
+    ".rtc.rt-a .stat span{display:block;font-size:12.5px;font-weight:600;color:var(--ink-3);margin-top:2px}",
+    ".rtc.rt-a .att{padding:16px 18px;margin:0 0 12px}",
+    ".rtc.rt-a .att h3{font-size:16px;font-weight:800;margin:0 0 12px;letter-spacing:-.02em}",
+    ".rtc.rt-a .days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}",
+    ".rtc.rt-a .days span{font-size:12px;font-weight:700;color:var(--ink-3)}",
+    ".rtc.rt-a .days i{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;margin:6px auto 0;background:var(--surface-3);font:800 12px/1 var(--sans,inherit);font-style:normal;color:var(--ink-4)}",
+    ".rtc.rt-a .days .on i{background:var(--pt,var(--cta));color:#fff}",
+    ".rtc.rt-a .days .part i{background:var(--pt-soft,var(--cta-soft))}",
+    ".rtc.rt-a .days .tdy2 i{box-shadow:0 0 0 2px var(--pt-line,var(--cta-line))}",
+    ".rtc.rt-a .att .ft{margin:12px 0 0;font-size:12.5px;font-weight:600;color:var(--ink-3);text-align:left}",
     /* 홈 대화 칸의 큰 단추는 카드가 대신한다 — 단추가 두 곳에 있으면 또 고르게 된다 */
     "body.has-rt #talk .bub,body.has-rt #talk .ans > a:first-child{display:none}",
     "body.has-rt #talk{margin-top:6px}"
@@ -135,17 +170,18 @@
         : n + "개, 위에서부터 차례로") + '</p></div></div>';
     var v = view(), body = "";
     if (v === "a") {
-      /* 머리를 큰 숫자 + 칸 막대로 다시 그린다(작은 고리는 진행이 안 읽혔다) */
-      head = '<div class="hd2"><div><span class="k">' + (allDone ? "오늘 루틴 끝" : "오늘의 루틴") + '</span><div class="big">' + nd + '<small> / ' + n + '</small></div></div>' +
-        '<div class="hr"><span class="chip">' + (allDone ? spent + "분 공부" : Math.max(1, goal - spent) + "분 남음") + '</span></div></div>' +
-        '<div class="seg4">' + items.map(function (it) { var s2 = st(it); return '<i class="' + s2 + '" style="flex:' + Math.max(1, it.min) + ' 1 0"></i>'; }).join("") + '</div>';
+      /* 2026-11-10 화면표준 3절: 판 한 장(제목·한 줄 요약·가는 막대·번호 동그라미 단계 목록·시작 54px) → 숫자 두 칸 → 이번 주 출석.
+         단계마다 다른 색은 쓰지 않는다 — 지금 할 줄만 옅은 포인트 바탕. */
+      var 남은 = Math.max(1, goal - spent), 칸 = n ? Math.round(nd * 100 / n) : 0;
+      head = '<section class="pan rc-card"><h2>' + (allDone ? "오늘 루틴 끝" : "오늘 " + (function (m) { var h = Math.floor(m / 60), r = m % 60; return (h ? h + "시간" : "") + (h && r ? " " : "") + (r ? r + "분" : ""); })(goal)) + '</h2>' +
+        '<p class="sum">' + (allDone ? spent + "분 공부, 내일 같은 시각에 다시" : "오늘의 루틴 " + nd + " / " + n + " · " + 남은 + "분 남음") + '</p>' +
+        '<div class="pbar"><i style="width:' + 칸 + '%"></i></div>';
       body = '<ol class="tl">' + items.map(function (it, i) {
-        var s2 = st(it) || "up", col = COL[it.kind] || "#6B7280";
-        return '<li class="' + s2 + '" style="--c:' + col + '"><span class="nd">' + (s2 === "done" ? "✓" : (ICON[it.kind] || (i + 1))) + '</span>' +
-          '<span class="tx">' + (s2 === "now" ? '<span class="k2">' + (i + 1) + '번째, 지금</span>' : '') + '<b>' + esc(it.title) + '</b>' + (s2 === "done" ? '' : '<span>' + esc(shortSay(it)) + '</span>') + '</span>' +   /* 끝낸 항목의 부제는 다시 계산된 다음 단원이라 실제로 한 것과 달라 뺀다(2026-10-13) */
-          '<span class="mn">' + (s2 === "done" ? "완료" : it.min + "분") + '</span>' +
-          (s2 === "now" ? '<a class="go" href="' + it.href + '">' + (nd ? "이어서 하기" : "시작하기") + ' →</a>' : '') + '</li>';
-      }).join("") + '</ol>';
+        var s2 = st(it) || "up";
+        return '<li class="' + s2 + '"><span class="c">' + (s2 === "done" ? "✓" : (i + 1)) + '</span>' +
+          '<span class="tx"><b>' + esc(it.title) + '</b>' + (s2 === "done" ? '' : '<small>' + esc(shortSay(it)) + '</small>') + '</span>' +   /* 끝낸 항목의 부제는 다시 계산된 다음 단원이라 실제로 한 것과 달라 뺀다(2026-10-13) */
+          '<span class="tm">' + (s2 === "done" ? "완료" : it.min + "분") + '</span></li>';
+      }).join("") + '</ol>' + (now && !allDone ? '<a class="go" href="' + now.href + '">시작</a>' : '');
     } else if (v === "b") {
       body = '<div class="path">' + items.map(function (it, i) {
         var s = st(it);
@@ -159,7 +195,7 @@
     }
     if (allDone) {
       var bn = C && C.bonusStep ? C.bonusStep() : null;
-      if (bn) body += '<a class="go" style="background:#16B364;color:#fff" href="' + bn.href + '">한 세트 더: ' + esc(bn.title) + ' (' + bn.min + '분)</a>';
+      if (bn) body += '<a class="go"' + (v === "a" ? '' : ' style="background:#16B364;color:#fff"') + ' href="' + bn.href + '">한 세트 더: ' + esc(bn.title) + ' (' + bn.min + '분)</a>';
     }
     var wk = weekCells();
     if (allDone) wk.forEach(function (c) { if (c.today) c.lv = 2; });   /* 루틴을 다 끝낸 날은 분이 모자라도 그날 칸에 불을 켠다 */
@@ -170,7 +206,19 @@
       '<p class="ft">' + (allDone ? "오늘 루틴 끝" : 오늘함 ? "루틴을 끝내면 오늘 칸에 표시됨" : "오늘 루틴을 끝내면 이번 주 첫 칸에 표시됨") +
       (window.TERRA_NOTIFY && TERRA_NOTIFY.on && TERRA_NOTIFY.on() ? ", 매일 " + TERRA_NOTIFY.at() + " 알림" : "") + '</p>';
     host.className = "rtc rt-" + v + (allDone ? " alldone" : "");
-    host.innerHTML = head + body + foot;
+    if (v === "a") {
+      var ws = T.weekSeries ? T.weekSeries() : [], wa = 0, wo = 0;
+      ws.forEach(function (x) { wa += x.ans || 0; wo += x.ok || 0; });
+      var 일곱 = '<div class="days">' + wk.map(function (c) {
+        return '<span class="' + (c.lv === 2 ? "on" : c.lv === 1 ? "part" : "") + (c.today ? " tdy2" : "") + '">' + c.nm + '<i>' + (c.lv === 2 ? "✓" : "") + '</i></span>';
+      }).join("") + '</div>';
+      host.innerHTML = head + body + '</section>' +
+        '<div class="two"><div class="pan stat"><b>' + (wa ? Math.round(wo * 100 / wa) + "%" : "—") + '</b><span>이번 주 정답률</span></div>' +
+        '<div class="pan stat"><b>' + (rep.solved || 0) + '</b><span>오늘 푼 문장</span></div></div>' +
+        '<section class="pan att"><h3>이번 주 출석</h3>' + 일곱 +
+        '<p class="ft">' + (allDone ? "오늘 루틴 끝" : 오늘함 ? "루틴을 끝내면 오늘 칸에 표시됨" : "오늘 루틴을 끝내면 이번 주 첫 칸에 표시됨") +
+        (window.TERRA_NOTIFY && TERRA_NOTIFY.on && TERRA_NOTIFY.on() ? ", 매일 " + TERRA_NOTIFY.at() + " 알림" : "") + '</p></section>';
+    } else host.innerHTML = head + body + foot;
     /* 그날 처음 「다 끝남」을 볼 때 한 번 — 짜잔 별 셋 */
     if (allDone && window.ZZ && ZZ.stars && ls("terra.rt.cele") !== T.dayKey()) { ls("terra.rt.cele", T.dayKey()); setTimeout(function () { ZZ.stars(3); }, 500); }
   }
