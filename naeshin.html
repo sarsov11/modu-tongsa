@@ -103,10 +103,10 @@
 <script src="js/tera-pad.js?v=b4d72bc2"></script>
 <script src="notes.js"></script>
 <script src="js/tera-q.js?v=69037a58"></script>
-<script src="js/tera-q-tongsa.js?v=64d2c2ed"></script>
+<script src="js/tera-q-tongsa.js?v=eed47b3d"></script>
 <script src="js/naeshin.js?v=7a07e790"></script>
 <script src="js/supa.config.js?v=a3ea51e7"></script>
-<script src="js/auth.js?v=7c16df38"></script>
+<script src="js/auth.js?v=aece7b36"></script>
 <script src="js/research.js?v=62660e08"></script>
 <script src="js/coach.js?v=59b600d3"></script>
 <script>
@@ -148,6 +148,8 @@
     host.querySelectorAll("[data-leaf]").forEach(function(b){ b.onclick=function(){ solve(b.dataset.leaf); }; });
     /* 10절: 목록의 첫 묶음(앱이 정한 순서 그대로)에 「추천」 한 개 */
     var 첫=host.querySelector(".pt .nm"); if(첫) 첫.insertAdjacentHTML("beforeend",'<i class="recbadge">추천</i>');
+    /* 한 화면에 칠한 단추는 하나 — 추천 단원만 칠하고 나머지는 테두리 단추 */
+    [].slice.call(host.querySelectorAll("[data-leaf]")).forEach(function(b,i){ if(i>0) b.classList.add("ghost"); });
   }
 
   function solve(leafCode){

@@ -8,6 +8,37 @@
 (function () {
   if (window.TQT) return;
   var d = document, Q = window.TERA_Q, cfg = null, cur = null, bar, T0 = Date.now(), tick = null, topSet = null;
+  /* 안내 말풍선은 아래 줄 바로 위에 고정한다(11-10). 지문 · 선지 · O·X 를 가리면 문제 화면을 그만큼 올려 말풍선 위에 보이게 한다.
+     그림이 늦게 뜨면 자리가 바뀌므로 여러 번(로드 · 크기 변경 때도) 다시 잰다. */
+  if (Q && !Q.__coachFix) {
+    Q.__coachFix = true;
+    var coach0 = Q.coach;
+    Q.coach = function () {
+      var c = coach0.apply(Q, arguments);
+      if (!c) return c;
+      var gap = d.createElement("div"); gap.className = "tq-coach-gap"; gap.style.cssText = "height:0;pointer-events:none"; d.body.appendChild(gap);
+      c.style.position = "fixed";
+      var 재기 = function () {
+        if (!c.isConnected) return;
+        var b = d.querySelector(".tq-bar"), r = c.getBoundingClientRect();
+        gap.style.height = "0px"; window.scrollTo(0, 0);
+        c.style.left = "16px"; c.style.top = ((b ? b.getBoundingClientRect().top : window.innerHeight - 64) - r.height - 10) + "px";
+        var a = c.getBoundingClientRect(), 가림 = 0;
+        [].slice.call(d.querySelectorAll(".tq-stem,.tq-box,.tq-choice,.tq-ox button,.opt,button.o,button.x,.qdata,.sent")).forEach(function (e) {
+          var q = e.getBoundingClientRect();
+          if (q.width > 1 && q.height > 1 && !(a.right <= q.left || a.left >= q.right || a.bottom <= q.top || a.top >= q.bottom)) 가림 = Math.max(가림, q.bottom - a.top + 12);
+        });
+        if (가림 > 0) {
+          gap.style.height = (가림 + 130) + "px"; window.scrollTo(0, 가림);
+        }
+      };
+      var 끝 = function () { gap.remove(); window.scrollTo(0, 0); window.removeEventListener("resize", 재기); d.removeEventListener("load", 재기, true); };
+      [].slice.call(c.querySelectorAll("button")).forEach(function (bt) { bt.addEventListener("click", function () { setTimeout(끝, 0); }, true); });
+      재기(); [300, 900, 1800].forEach(function (ms) { setTimeout(재기, ms); });
+      window.addEventListener("resize", 재기); d.addEventListener("load", 재기, true);
+      return c;
+    };
+  }
   /* 중요도 별(공용 badge): 합격 지도와 같은 순위 — 해마다 문항 수 상위 20% = 별 셋, 다음 30% = 별 둘, 나머지 = 별 하나 */
   function $(s, r) { return (r || d).querySelector(s); }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }

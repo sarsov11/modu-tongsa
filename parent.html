@@ -30,7 +30,8 @@
 
   .top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 0 10px}
   .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;color:var(--tx);text-decoration:none;white-space:nowrap}
-  .brand i{width:10px;height:10px;border-radius:12px;background:var(--ac);display:inline-block}
+  .brand .mk{display:grid;place-items:center;width:28px;height:28px;border-radius:12px;background:#E5202E;color:#fff;font-weight:800;font-size:14px}
+  .brand .nm{font-weight:800}.brand em{font-style:normal;color:#E5202E}
   .brand span{color:var(--tx3);font-weight:700}
   @media(max-width:440px){.brand span{display:none}}
   .seg{flex:none;display:inline-flex;background:var(--sf);border:1px solid var(--ln);border-radius:999px;padding:3px}
@@ -181,7 +182,7 @@
 <body>
 <div class="pr">
   <div class="top">
-    <a class="brand" id="brand" href="index.html"><i></i>모두의 통사 <span>학부모 리포트</span></a>
+    <a class="brand" id="brand" href="index.html"><b class="mk">대</b><b class="nm">모두의 <em>대입</em></b> <span>통합사회 · 학부모 리포트</span></a>
     <div class="seg" id="seg"><button data-k="day">일간</button><button data-k="week">주간</button></div>
   </div>
   <div class="pager"><button id="prev" aria-label="이전">‹</button><div class="mid"><b id="pt"></b><span id="ps"></span></div><button id="next" aria-label="다음">›</button></div>
@@ -199,7 +200,7 @@
 <script src="js/supa.config.js?v=a3ea51e7"></script>
 <script src="js/exam.js?v=de468b6e"></script>
 <script src="js/parent.js?v=cdb8db08"></script>
-<script src="js/auth.js?v=7c16df38"></script>
+<script src="js/auth.js?v=aece7b36"></script>
 <script src="js/research.js?v=62660e08"></script>
 <script>
 (function(){

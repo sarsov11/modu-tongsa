@@ -116,6 +116,9 @@
   html body.inner .foot{bottom:0;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
   html body.inner .foot .btn{height:54px;min-height:54px;border-radius:14px;font-size:16px;font-weight:800}
   html body.inner .exbar .bar{height:8px;background:#F1F3F5}
+  /* 하단 줄: 흰 바탕 · 위쪽 선 · 본문이 줄 밑으로 들어가지 않게 아래 여백(줄 높이만큼) */
+  html body.inner .foot{background:#fff;border-top:1px solid #E6E8EC;box-shadow:none}
+  html body.inner{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
   html body.inner .exbar .bar i{border-radius:999px;background:var(--pt)}
   html body.inner .foot{height:calc(72px + env(safe-area-inset-bottom));padding-top:11px;box-shadow:0 -2px 10px rgba(15,23,42,.08)}
   html body.inner .foot #jump{height:44px;min-height:44px;border-radius:12px;border:1px solid var(--pt);background:color-mix(in srgb,var(--pt) 5%,#fff);color:color-mix(in srgb,var(--pt) 78%,#111419);font-weight:600}
@@ -144,7 +147,7 @@
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/store.js?v=a750b224"></script>
 <script src="js/supa.config.js?v=a3ea51e7"></script>
-<script src="js/auth.js?v=7c16df38"></script>
+<script src="js/auth.js?v=aece7b36"></script>
 <script src="js/research.js?v=62660e08"></script>
 <script src="js/coach.js?v=59b600d3"></script>
 <script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
