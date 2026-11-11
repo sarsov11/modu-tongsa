@@ -8,15 +8,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#FAF8F3">
+<meta name="theme-color" content="#0F766E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=22afa090">
+<link rel="stylesheet" href="css/base.css?v=1111h">
 <link rel="stylesheet" href="css/coach.css?v=02d1145b">
-<link rel="stylesheet" href="css/question.css?v=482f4a2f">
+<link rel="stylesheet" href="css/question.css?v=1111h">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:1240px;margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -106,7 +106,7 @@
   .scopenote b{display:block;font-size:16px;margin-bottom:5px;color:var(--ink)}
   .scopenote span{display:block;font-size:16px;color:var(--ink-3);line-height:1.6}
   .scopenote a{display:inline-block;margin-top:10px;font-size:16px;font-weight:600;
-    color:#B3141F;text-decoration:none}
+    color:#0B5F59;text-decoration:none}
   .scopenote a:hover{text-decoration:underline}
   .band{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;
     background:var(--line);border:1px solid var(--line);border-radius:var(--r2);
@@ -173,7 +173,7 @@
     border-bottom:1px solid var(--line);background:var(--surface)}
   .quiz .qh .pips{display:flex;gap:4px}
   .quiz .qh .pips i{width:22px;height:5px;border-radius:12px;background:var(--line-2)}
-  .quiz .qh .pips i.ok{background:var(--mint)} .quiz .qh .pips i.no{background:var(--red)}
+  .quiz .qh .pips i.ok{background:var(--mint)} .quiz .qh .pips i.no{background:var(--wrong)}
   .quiz .qh .pips i.now{background:var(--ink-3)}
   .quiz .qh .who{margin-left:auto;font-family:var(--mono);font-size:14px;color:var(--ink-4);font-weight:800}
   .quiz .qb{padding:20px 20px 22px}
@@ -198,8 +198,8 @@
     color:var(--ink-3)}
   .opt[data-s="ok"]{border-color:var(--mint);background:rgba(47,224,206,.10);color:var(--ink)}
   .opt[data-s="ok"] .k{background:var(--mint);color:#06110F}
-  .opt[data-s="no"]{border-color:var(--red);background:var(--red-soft)}
-  .opt[data-s="no"] .k{background:var(--red);color:#fff}
+  .opt[data-s="no"]{border-color:var(--wrong);background:var(--wrong-soft)}
+  .opt[data-s="no"] .k{background:var(--wrong);color:#fff}
   .opt[disabled]{cursor:default}
   .why{margin-top:14px;border-radius:var(--r1);border:1px solid var(--line);
     background:var(--surface);padding:15px 17px;font-size:16px;line-height:1.75;
@@ -213,9 +213,9 @@
     font-family:var(--mono);font-size:14px;font-weight:800}
   .whyrow .tt{flex:1;min-width:0}
   .whyrow .tt b{display:block;font-size:14px;margin-bottom:3px;letter-spacing:.02em}
-  .whyrow.mine{background:var(--red-soft);border:1px solid var(--red-line)}
-  .whyrow.mine .no{background:var(--red);color:#fff}
-  .whyrow.mine .tt b{color:var(--red-2)}
+  .whyrow.mine{background:var(--wrong-soft);border:1px solid var(--wrong-line)}
+  .whyrow.mine .no{background:var(--wrong);color:#fff}
+  .whyrow.mine .tt b{color:var(--wrong-2)}
   .whyrow.right{background:rgba(47,224,206,.09);border:1px solid rgba(47,224,206,.32)}
   .whyrow.right .no{background:var(--mint);color:#06110F}
   .whyrow.right .tt b{color:var(--mint)}
@@ -294,23 +294,23 @@
   .stp2.after{border-color:var(--red)}
   .stp2.after .no{background:var(--red);color:#fff}
   .stp2.weekly{border-color:var(--mint)}
-  .stp2.weekly .no{background:var(--mint);color:#04150E}
-  .stp2.vacation .no{background:var(--amber);color:#1A1206}
+  .stp2.weekly .no{background:var(--mint);color:#061312}
+  .stp2.vacation .no{background:var(--amber);color:#081817}
   .stp2.note{border-style:dashed}
   .stp2.note .no{background:var(--surface-3);color:var(--ink-3)}
   .stp2 .badge{display:inline-block;margin-left:7px;font-size:14px;font-weight:700;
     padding:1px 6px;border-radius:999px;vertical-align:2px}
   .stp2.after .badge{background:var(--red);color:#fff}
   .stp2.weekly .badge{background:var(--mint-soft);color:var(--mint)}
-  .stp2.vacation .badge{background:rgba(232,163,61,.16);color:var(--amber)}
+  .stp2.vacation .badge{background:rgba(92,201,192,.16);color:var(--amber)}
   /* 알림 성격(범위 갱신·다음 범위) — 배지 규칙을 빠뜨려 배경이 투명했다 */
   .stp2.note .badge{background:var(--surface-3);color:var(--ink-3)}
   /* 개념 체크 — 확신도를 함께 묻는 자리라 문제풀이와 달라 보여야 한다 */
   .stp2.oxstep{border-color:var(--mint-2)}
-  .stp2.oxstep .no{background:var(--mint-2);color:#04150E}
+  .stp2.oxstep .no{background:var(--mint-2);color:#061312}
   .stp2.oxstep .badge{background:var(--mint-soft);color:var(--mint-2);font-family:var(--mono);font-weight:800}
   .stp2.done{opacity:.5}
-  .stp2.done .no{background:var(--mint);color:#04150E}
+  .stp2.done .no{background:var(--mint);color:#061312}
   .stp2 .tx h4{font-size:16px;font-weight:800;letter-spacing:-.01em}
   .stp2 .tx p{font-size:16px;color:var(--ink-3);margin-top:2px;line-height:1.5}
   .stp2 .tx .rz{font-size:14px;color:var(--ink-4);margin-top:3px;background:none;
@@ -450,13 +450,13 @@
   body.has-rt #talk::before{content:"다른 연습";display:block;font-size:16px;font-weight:800;letter-spacing:-.02em;margin:24px 2px 10px;color:var(--ink)}
   #talk .ans{grid-template-columns:1fr;gap:10px;max-width:none;margin-top:0}
   #talk .ans .lite{display:flex;justify-content:space-between;align-items:center;text-align:left;min-height:56px;padding:12px 16px;border:0;border-radius:18px;
-    background:var(--surface);box-shadow:0 1px 2px rgba(17,20,25,.05),0 0 0 1px var(--line);color:var(--ink);font-size:16px;font-weight:800;letter-spacing:-.02em}
+    background:var(--surface);box-shadow:0 1px 2px rgba(17,25,24,.05),0 0 0 1px var(--line);color:var(--ink);font-size:16px;font-weight:800;letter-spacing:-.02em}
   #talk .ans .lite::after{content:"›";flex:none;width:32px;height:32px;border-radius:50%;background:var(--surface-2);display:grid;place-items:center;color:var(--ink-3);font-size:16px;font-weight:700;line-height:1}
   .askmore{max-width:none}
-  .pickl a{border:0;border-radius:18px;box-shadow:0 1px 2px rgba(17,20,25,.05),0 0 0 1px var(--line);font-weight:800}
-  .more{border:0;border-radius:18px;box-shadow:0 1px 2px rgba(17,20,25,.05),0 0 0 1px var(--line)}
+  .pickl a{border:0;border-radius:18px;box-shadow:0 1px 2px rgba(17,25,24,.05),0 0 0 1px var(--line);font-weight:800}
+  .more{border:0;border-radius:18px;box-shadow:0 1px 2px rgba(17,25,24,.05),0 0 0 1px var(--line)}
   .more summary{font-size:16px;font-weight:800;letter-spacing:-.02em}
-  .scopenote{border:0;border-radius:18px;box-shadow:0 1px 2px rgba(17,20,25,.05),0 0 0 1px var(--line);margin:12px 0}
+  .scopenote{border:0;border-radius:18px;box-shadow:0 1px 2px rgba(17,25,24,.05),0 0 0 1px var(--line);margin:12px 0}
   .scopenote b{font-weight:800;font-size:16px}
   .scopenote span{font-size:14px;font-weight:600}
   .scopenote a{font-size:14px;font-weight:800}
@@ -546,12 +546,12 @@
 <script src="js/oxindex.js?v=3e274b64"></script>
 <script src="js/cards.js?v=4a02015e"></script>
 <script src="js/packs.js?v=87449626"></script>
-<script src="js/store.js?v=a750b224"></script>
+<script src="js/store.js?v=1111h"></script>
 <script src="js/supa.config.js?v=a3ea51e7"></script>
 <script src="js/auth.js?v=aece7b36"></script>
 <script src="js/research.js?v=62660e08"></script>
 <script src="js/coach.js?v=59b600d3"></script>
-<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script><script src="js/routinecard.js?v=1011a" defer></script>
+<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1111h" defer></script><script src="js/routinecard.js?v=1111h" defer></script>
 <script src="js/notify.js?v=c73fb7d9"></script>
 <script>
 (function(){
@@ -616,7 +616,7 @@
     FAMSTAT[f]={fam:f,roots:roots,mids:mids,leaves:leaves,n:n,play:play,solved:solved,
       pct:solved?Math.round(correct/solved*100):null,
       prog:play?Math.round(solved/play*100):0,
-      col:cv(FAMKEY[f])||"#4FC3E8"};
+      col:cv(FAMKEY[f])||"#6ACDC5"};
   });
 
   var o=T.overall(), f=T.forecast(), r=T.report(), S=T.state();
@@ -1297,6 +1297,6 @@
 <script src="js/zzstrat.js?v=f6862a5e"></script><script src="js/zzstrat_tongsa.js?v=efef2088"></script><style>@media(max-width:767px){.nav .wrap>.zs-btn{margin-left:auto!important;order:99}}</style><script>ZZSTRAT.auto("tongsa",{fab:false});</script>
 <script src="js/zzstrat_cover.js?v=488dc61b"></script>
 <!-- 테라러닝 홈 단추(공용 terrahome) -->
-<script src="js/terrahome.js?v=243c5cfd" data-slot=".nav .wrap" defer></script>
+<script src="js/terrahome.js?v=1111h" data-slot=".nav .wrap" defer></script>
 </body>
 </html>

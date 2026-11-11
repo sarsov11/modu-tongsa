@@ -8,15 +8,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#FAF8F3">
+<meta name="theme-color" content="#0F766E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=22afa090">
+<link rel="stylesheet" href="css/base.css?v=1111h">
 <link rel="stylesheet" href="css/coach.css?v=02d1145b">
-<link rel="stylesheet" href="css/stree.css?v=a99e75af">
+<link rel="stylesheet" href="css/stree.css?v=1111h">
 <style>
   /* 1025 대표님 「구김 없이, 넘기면 다 보이게」 — 궤도판(원 배치)은 숨기고 넘김판(공용 stree)을 그린다. 옛 판 _skilltree_궤도전_1025.html */
   body.stree-on .board, body.stree-on #treelist, body.stree-on #legend, body.stree-on .segbar, body.stree-on #crumb, body.stree-on #lede{display:none!important}
@@ -26,9 +26,9 @@
   body.tmap-on .phead{display:none}
   /* 1030 앰블럼판 탭(공용 embboard) */
   .embtabs{display:flex;gap:6px;margin-top:var(--s3,16px);padding:4px;border-radius:14px;background:var(--surface-2,#eef0f4)}
-  .embtabs button{flex:1;font:inherit;font-weight:800;font-size:16px;padding:10px 8px;border:0;border-radius:12px;background:none;color:var(--ink-3,#6b7280);cursor:pointer}
-  .embtabs button[aria-pressed="true"]{background:var(--surface,#fff);color:var(--ink,#1d2230);box-shadow:0 1px 3px rgba(0,0,0,.12)}
-  .embtabs b{font-weight:800;color:var(--pt,#E5202E)}
+  .embtabs button{flex:1;font:inherit;font-weight:800;font-size:16px;padding:10px 8px;border:0;border-radius:12px;background:none;color:var(--ink-3,#6b807e);cursor:pointer}
+  .embtabs button[aria-pressed="true"]{background:var(--surface,#fff);color:var(--ink,#1d302e);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  .embtabs b{font-weight:800;color:var(--pt,#0F766E)}
   #embhost{margin-top:var(--s3,16px)}
   body.emb-on #streehost{display:none!important}
 /* 합격 지도 3.1: 긴 소단원 이름은 두 줄로 */ .tm-l{height:auto!important;min-height:28px;padding-top:5px!important;padding-bottom:5px!important}.tm-l span{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.25!important;word-break:keep-all;overflow-wrap:anywhere}
@@ -54,8 +54,8 @@
   /* 11-10 합격 지도 — 지도가 화면 맨 위에서 시작한다. 범위 안내 줄글·오늘 카드는 뺐다(오늘 탭에 있다). 범위는 제목 줄의 칩 하나 + 작은 단추 둘 */
   body.tmap-on #pickhost,body.tmap-on #scopeband{display:none!important}
   .scopectl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-  .scopectl .sc-chip{height:34px;padding:0 13px;border-radius:999px;display:inline-flex;align-items:center;background:var(--pt-soft,rgba(229,32,46,.10));color:var(--pt-ink,#B01822);font:800 13px/1 inherit;white-space:nowrap}
-  .scopectl a,.scopectl button{height:34px;padding:0 13px;border-radius:999px;border:1px solid var(--line-2,#D3D7DD);background:var(--surface,#fff);color:var(--ink-2,#333941);font:700 13px/1 inherit;text-decoration:none;display:inline-flex;align-items:center;cursor:pointer;white-space:nowrap}
+  .scopectl .sc-chip{height:34px;padding:0 13px;border-radius:999px;display:inline-flex;align-items:center;background:var(--pt-soft,rgba(15,118,110,.10));color:var(--pt-ink,#0B5F59);font:800 13px/1 inherit;white-space:nowrap}
+  .scopectl a,.scopectl button{height:34px;padding:0 13px;border-radius:999px;border:1px solid var(--line-2,#D3D7DD);background:var(--surface,#fff);color:var(--ink-2,#334140);font:700 13px/1 inherit;text-decoration:none;display:inline-flex;align-items:center;cursor:pointer;white-space:nowrap}
   h1,h2,.pk-title{font-family:var(--title);font-weight:var(--tw);letter-spacing:var(--tls)}
 
   /* ── 머리 — 층을 옮기면 제목이 따라 움직인다 ── */
@@ -106,8 +106,8 @@
   /* 종이 스킨에서는 무대에도 무늬가 이어져야 한 장으로 보인다 */
   :root[data-skin="note"] .board .stage{
     background-image:
-      repeating-linear-gradient(0deg,transparent 0 21px,rgba(120,110,85,.11) 21px 22px),
-      repeating-linear-gradient(90deg,transparent 0 21px,rgba(120,110,85,.08) 21px 22px),
+      repeating-linear-gradient(0deg,transparent 0 21px,rgba(85,120,117,.11) 21px 22px),
+      repeating-linear-gradient(90deg,transparent 0 21px,rgba(85,120,117,.08) 21px 22px),
       radial-gradient(ellipse 80% 60% at 50% 46%,var(--neb-1),transparent 66%);
     background-color:var(--stage)}
   .board svg{display:block;width:100%;height:auto}
@@ -132,18 +132,18 @@
   .vwrap.on{display:block}
   .vbg{position:absolute;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(3px)}
   .vbox{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-        width:min(1080px,92vw);background:var(--bg-1,#12141a);border-radius:18px;
-        border:1px solid var(--line,#2a2e38);overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.5)}
-  .vhead{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line,#2a2e38)}
+        width:min(1080px,92vw);background:var(--bg-1,#121a19);border-radius:18px;
+        border:1px solid var(--line,#2a3837);overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.5)}
+  .vhead{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line,#2a3837)}
   .vhead h3{margin:0;font-size:16px;flex:1}
-  .vhead .vsub{font-size:14px;color:var(--ink-4,#8b93a5)}
-  .vhead button{background:none;border:0;color:var(--ink-3,#aab2c2);font-size:20px;cursor:pointer;line-height:1}
+  .vhead .vsub{font-size:14px;color:var(--ink-4,#8ba5a3)}
+  .vhead button{background:none;border:0;color:var(--ink-3,#aac2c0);font-size:20px;cursor:pointer;line-height:1}
   .vbox video{display:block;width:100%;background:#000;aspect-ratio:16/9}
 .vbox iframe.yt{display:block;width:100%;border:0;background:#000;aspect-ratio:16/9}
   .vmiss{padding:34px 26px;font-size:16px;line-height:1.85;color:var(--ink-2,#c9d0dd)}
   .vmiss b{color:var(--ink-1,#eef1f6)}
   .vmiss code{background:rgba(255,255,255,.07);padding:2px 7px;border-radius:12px;font-size:16px}
-  .btn.play{background:var(--accent,#e6203a);color:#fff;border-color:transparent;font-weight:700}
+  .btn.play{background:var(--accent,#0f766e);color:#fff;border-color:transparent;font-weight:700}
   /* ── 강의 시트 ── */
   .sheet{position:fixed;inset:0;z-index:90;display:flex;align-items:center;
     justify-content:center;padding:24px}
@@ -298,7 +298,7 @@
     text-decoration:underline;text-underline-offset:2px}
   .pick.done{opacity:.72}
   .pick.done::before{background:var(--mint)}
-  .pick.done .dot2{background:var(--mint);color:#04150E}
+  .pick.done .dot2{background:var(--mint);color:#061312}
   @media(max-width:560px){
     .pick{grid-template-columns:auto 1fr;gap:11px;padding:13px 14px}
     .pick .act{grid-column:1/-1;flex-direction:row;align-items:center;justify-content:space-between}
@@ -390,15 +390,15 @@
 <script src="js/cards.js?v=4a02015e"></script>
 <script src="js/packs.js?v=87449626"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/store.js?v=a750b224"></script>
+<script src="js/store.js?v=1111h"></script>
 <script src="js/supa.config.js?v=a3ea51e7"></script>
 <script src="js/auth.js?v=aece7b36"></script>
 <script src="js/research.js?v=62660e08"></script>
 <script src="js/coach.js?v=59b600d3"></script>
-<script src="js/stree.js?v=a1e8ac3a"></script>
+<script src="js/stree.js?v=1111h"></script>
 <script src="js/tera-map.js?v=1111g"></script>
-<script src="js/emblem.js?v=0b4d6893"></script><script src="js/hextree.js?v=7f615b80"></script><script src="js/embboard.js?v=1101h"></script><script src="js/titles.js?v=1101h"></script>
-<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script><script src="js/zzcoach.js?v=1009a" defer></script>
+<script src="js/emblem.js?v=1111h"></script><script src="js/hextree.js?v=1111h"></script><script src="js/embboard.js?v=1111h"></script><script src="js/titles.js?v=1101h"></script>
+<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1111h" defer></script><script src="js/zzcoach.js?v=1111h" defer></script>
 <script>
 (function(){
   var T=TERRA, L=window.LECT||{};
@@ -516,18 +516,18 @@
   var GOLD,STAR,SLINE,SINK,SINK2,SBG,SBG2,ACC,CORE;
   function paint(){
     FAMS.forEach(function(f){
-      var hex=cv(FAM[f].key)||"#4FC3E8", c=hsl(hex);
-      FAM[f].hex=cv("--ink-3")||"#6B7280"; FAM[f].h=c[0]; FAM[f].s=c[1];   /* 단원 색은 쓰지 않는다(10/20) */
+      var hex=cv(FAM[f].key)||"#6ACDC5", c=hsl(hex);
+      FAM[f].hex=cv("--ink-3")||"#6B807E"; FAM[f].h=c[0]; FAM[f].s=c[1];   /* 단원 색은 쓰지 않는다(10/20) */
     });
-    GOLD=ACH.S; STAR=cv("--star")||"#CFE0FF";
-    CORE=cv("--core-glow")||"#4E7BD6";
+    GOLD=ACH.S; STAR=cv("--star")||"#DBF3F1";
+    CORE=cv("--core-glow")||"#5BC8BF";
     /* 영상이 한 편도 없으면 강의 수·시간을 말하지 않는다(2026-09-17 감사: 0편인데 '21강, 다 들었어요'). */
     HASV=Object.keys(window.VIDEO||{}).length>0;
     /* 영상이 한 편도 없으면 강의 수·시간을 말하지 않는다(2026-09-17 감사: 0편인데 '21강, 다 들었어요'). */
     HASV=Object.keys(window.VIDEO||{}).length>0;
-    SLINE=cv("--stage-line")||"#2B3D5C"; SINK=cv("--stage-ink")||"#DEE8F8";
-    SINK2=cv("--stage-ink-2")||"#A9BEDF"; SBG=cv("--stage")||"#070B14";
-    SBG2=cv("--stage-2")||"#0C1424"; ACC=cv("--red")||"#E5484D";
+    SLINE=cv("--stage-line")||"#2B5C58"; SINK=cv("--stage-ink")||"#DEE8F8";
+    SINK2=cv("--stage-ink-2")||"#A9DFDB"; SBG=cv("--stage")||"#071413";
+    SBG2=cv("--stage-2")||"#0C2422"; ACC=cv("--red")||"#0F766E";
   }
   /* 바탕이 밝은 스킨은 계단이 뒤집힌다 — 진할수록 잘한 것 */
   function paper(){ var k=document.documentElement.dataset.skin;
@@ -546,7 +546,7 @@
   };
   /* ★ 2026-10-20 대표님 「색은 성취도 기준」 — 단원별 색(갈색·주황·빨강)이 비슷비슷해 무엇을 뜻하는지 안 보였다.
      이제 색 = 성취도 구간 하나뿐. 단원은 이름으로 가른다. 옛 판 _skilltree_성취도색전_1020.html */
-  var ACH={S:"#2F6FED",A:"#1FA35C",B:"#F2B705",C:"#E5484D",L:"#A3AAB4"};
+  var ACH={S:"#56C6BD",A:"#1FA398",B:"#23D4C6",C:"#0F766E",L:"#A3AAB4"};
   function achHex(av,played){ return ACH[tierOf(av,played)]; }
   function tone(f,t,dl){
     var c=hsl(ACH[t]||ACH.L), d=(dl||0)*(paper()?-.5:.5);
@@ -1754,7 +1754,7 @@
   (function 앰블럼판(){
     var TT=window.TTITLE, host=document.getElementById("embhost"), tabs=document.getElementById("embtabs");
     if(!window.TEMBOARD||!TT||!TT.앰블럼||!host||!tabs) return;
-    var 색=["#E5202E","#B3141F","#F08A91","#8E1019","#F4A0A6","#6B7280","#9AA0A8","#3A3F47","#C8101D","#EE6A72","#5F6670"];
+    var 색=["#0F766E","#0B5F59","#7FB8B2","#0B4F4A","#A8D3CE","#6B807E","#9AA0A8","#3A4746","#0B5F59","#7FB8B2","#5F706F"];
     var 얻은수=0, 전체수=0;
     /* 통합사회 1·2 가 섞이면 둘 다 「1단원」부터라 책 이름을 붙인다 */
     var 책이름={"통합사회1":"통합사회 1","통합사회2":"통합사회 2"}, 책들={};
@@ -1873,6 +1873,6 @@
 })();
 </script>
 <!-- 테라러닝 홈 단추(공용 terrahome) -->
-<script src="js/terrahome.js?v=243c5cfd" data-slot=".nav .wrap" defer></script>
+<script src="js/terrahome.js?v=1111h" data-slot=".nav .wrap" defer></script>
 </body>
 </html>

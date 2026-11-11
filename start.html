@@ -8,12 +8,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#FAF8F3">
+<meta name="theme-color" content="#0F766E">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=22afa090">
+<link rel="stylesheet" href="css/base.css?v=1111h">
 <link rel="stylesheet" href="css/cheer.css?v=b6d0f7c3">
-<link rel="stylesheet" href="css/question.css?v=482f4a2f">
+<link rel="stylesheet" href="css/question.css?v=1111h">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <link rel="stylesheet" href="css/keyword.css?v=99bb7d7b">
 <style>
@@ -60,7 +60,7 @@
   .skinb{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;border:1.5px solid var(--line-2);
     background:var(--surface);color:var(--ink-2);font:inherit;font-size:16px;cursor:pointer}
   .skinb i{width:16px;height:16px;border-radius:50%;box-shadow:0 0 0 1px rgba(128,128,128,.45)}
-  .skinb[aria-pressed="true"]{border-color:var(--cta,#2f5be7);color:var(--ink);font-weight:700}
+  .skinb[aria-pressed="true"]{border-color:var(--cta,#51c5bb);color:var(--ink);font-weight:700}
   .who{display:inline-block;margin-bottom:8px;padding:3px 10px;border-radius:999px;background:var(--cta-soft,#e8eeff);color:var(--ink-2);font-size:14px;font-weight:700}
   .tiles.two{grid-template-columns:1fr 1fr}
   .tiles.two .tile{flex-direction:column;align-items:flex-start;gap:6px;padding:16px}
@@ -116,14 +116,14 @@
     font-family:var(--mono);font-size:14px;font-weight:800;color:var(--ink-3)}
   .opt[data-s="ok"]{border-color:var(--mint);background:rgba(47,224,206,.10);color:var(--ink)}
   .opt[data-s="ok"] .k{background:var(--mint);color:#06110F}
-  .opt[data-s="no"]{border-color:var(--red);background:var(--red-soft)}
-  .opt[data-s="no"] .k{background:var(--red);color:#fff}
+  .opt[data-s="no"]{border-color:var(--wrong);background:var(--wrong-soft)}
+  .opt[data-s="no"] .k{background:var(--wrong);color:#fff}
   .opt[disabled]{cursor:default}
   .qsay{margin-top:12px;font-size:16px;color:var(--ink-2);line-height:1.6}
   .qsay.good{color:var(--mint)}
   .pips{display:flex;gap:5px;margin-bottom:12px}
   .pips i{flex:1;height:4px;border-radius:999px;background:var(--line-2)}
-  .pips i.ok{background:var(--mint)} .pips i.no{background:var(--red)} .pips i.now{background:var(--ink-3)}
+  .pips i.ok{background:var(--mint)} .pips i.no{background:var(--wrong)} .pips i.now{background:var(--ink-3)}
 
   /* 끝 — 오늘 할 것 하나 */
   .done .big{font-family:var(--mono);font-size:26px;font-weight:800;color:var(--ink);letter-spacing:-.05em;line-height:1;margin:6px 0 10px}
@@ -181,7 +181,7 @@
   .bsheet .in{max-width:520px;margin:0 auto}
   .bsheet h3{margin:0;font-size:20px;letter-spacing:-.04em;color:var(--ink)}
   .bsheet p{margin:6px 0 0;font-size:16px;color:var(--ink-3);line-height:1.55}
-  .bsheet .kk{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:16px;height:52px;border-radius:12px;border:0;background:#FEE500;color:#191600;font:inherit;font-size:16px;font-weight:800;cursor:pointer}
+  .bsheet .kk{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:16px;height:52px;border-radius:12px;border:0;background:#FEE500;color:#061312;font:inherit;font-size:16px;font-weight:800;cursor:pointer}
   .bsheet .gg{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:8px;height:52px;border-radius:12px;border:1px solid #DADCE0;background:#fff;color:#1f1f1f;font:inherit;font-size:16px;font-weight:700;cursor:pointer}
   .bsheet .nv{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:8px;height:52px;border-radius:12px;border:0;background:#03C75A;color:#fff;font:inherit;font-size:16px;font-weight:800;opacity:.45;cursor:default}
   .bsheet .later{display:block;margin:14px auto 0;border:0;background:none;color:var(--ink-4);font:inherit;font-size:16px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
@@ -230,7 +230,7 @@
   .opt[data-s="pick"] .k{background:var(--cta);color:var(--cta-ink,#fff)}
   .oxq .ox button[data-s="pick"]{border-color:var(--cta);background:var(--cta-soft);color:var(--ink)}
   .oxq .ox button[data-s="ok"]{border-color:var(--mint);background:rgba(47,224,206,.10);color:var(--ink)}
-  .oxq .ox button[data-s="no"]{border-color:var(--red);background:var(--red-soft);color:var(--ink)}
+  .oxq .ox button[data-s="no"]{border-color:var(--wrong);background:var(--wrong-soft);color:var(--ink)}
 </style>
 </head>
 <body>
@@ -260,7 +260,7 @@
 <script src="js/judge.js?v=af6f0190"></script>
 <script src="js/cards.js?v=4a02015e"></script>
 <script src="js/packs.js?v=87449626"></script>
-<script src="js/store.js?v=a750b224"></script>
+<script src="js/store.js?v=1111h"></script>
 <script src="js/schools.js?v=227ee5e4"></script>
 <script>window.ZZSTRAT=window.ZZSTRAT||{add:function(d){(window.__ZZS=window.__ZZS||{})[d.id]=d;}};</script>
 <script src="js/zzstrat_tongsa.js?v=efef2088"></script>
@@ -864,10 +864,10 @@
     var 실버끝=c[3]+삼/3, 골드끝=c[2]+이/3;
     var g = 점>=c[1]?1 : 점>=c[2]?2 : 점>=c[3]?3 : 4;
     var 등급말 = g<=3 ? g+"등급권" : "3등급 밑";
-    if(점>=c[1]) return {이름:"다이아", 글:"D", 색:"#3d6df2", 밝:"#b9d0ff", 점:점, 등급:g, 등급말:등급말};
+    if(점>=c[1]) return {이름:"다이아", 글:"D", 색:"#64cbc3", 밝:"#cbeeeb", 점:점, 등급:g, 등급말:등급말};
     if(점>=골드끝) return {이름:"플래티넘", 글:"P", 색:"#1f9d8f", 밝:"#a8f0e6", 점:점, 등급:g, 등급말:등급말};
-    if(점>=실버끝) return {이름:"골드", 글:"G", 색:"#c68a0c", 밝:"#ffe58a", 점:점, 등급:g, 등급말:등급말};
-    return {이름:"실버", 글:"S", 색:"#7d8a9c", 밝:"#eef2f7", 점:점, 등급:g, 등급말:등급말};
+    if(점>=실버끝) return {이름:"골드", 글:"G", 색:"#1db5a8", 밝:"#a7e2dd", 점:점, 등급:g, 등급말:등급말};
+    return {이름:"실버", 글:"S", 색:"#7d9c99", 밝:"#eef2f7", 점:점, 등급:g, 등급말:등급말};
   }
 
   /* 써 본 다음 가입(2026-10-24 대표님 C안) — 결과를 먼저 보이고 그 위에 저장 시트.
@@ -941,6 +941,6 @@
 })();
 </script>
 <!-- 테라러닝 홈 단추(공용 terrahome) -->
-<script src="js/terrahome.js?v=243c5cfd" data-slot=".obtop" defer></script>
+<script src="js/terrahome.js?v=1111h" data-slot=".obtop" defer></script>
 </body>
 </html>

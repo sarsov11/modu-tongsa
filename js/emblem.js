@@ -97,10 +97,10 @@
   };
 
   var 단계색 = [
-    { a: "#5b6170", b: "#3a3f4a", 이름: "잠김" },
-    { a: "#e3a26f", b: "#8a4b22", 이름: "동" },
-    { a: "#f4f7fb", b: "#8b97a8", 이름: "은" },
-    { a: "#fff1a6", b: "#c58a0a", 이름: "금" },
+    { a: "#5b706e", b: "#3a4a49", 이름: "잠김" },
+    { a: "#7ed4cd", b: "#228a81", 이름: "동" },
+    { a: "#f4f7fb", b: "#8ba8a6", 이름: "은" },
+    { a: "#bce9e5", b: "#1db2a6", 이름: "금" },
   ];
   var uid = 0;
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -114,7 +114,7 @@
   function svg(o) {
     o = o || {};
     var lv = Math.max(0, Math.min(3, o.단계 == null ? 2 : o.단계)), id = "te" + (++uid), sz = o.크기 || 96;
-    var col = lv === 0 ? "#4a505c" : (o.색 || "#3b6fd8"), 틀 = o.틀색 && lv > 0 ? { a: o.틀색[0], b: o.틀색[1] } : 단계색[lv];
+    var col = lv === 0 ? "#4a5c5a" : (o.색 || "#4fc4ba"), 틀 = o.틀색 && lv > 0 ? { a: o.틀색[0], b: o.틀색[1] } : 단계색[lv];
     var glyph = o.상징 === "글자" ? null : (G[o.상징] || G.star);
     var s = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="' + sz + '" height="' + sz + (o.x != null ? '" x="' + o.x + '" y="' + o.y : '') + '" class="temb temb-l' + lv + '" role="img" aria-label="' + esc(o.칭호 || "") + '">';
     s += '<defs><linearGradient id="' + id + 'f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + 틀.a + '"/><stop offset="1" stop-color="' + 틀.b + '"/></linearGradient>' +
@@ -124,7 +124,7 @@
     if (lv === 3) {
       var rays = "";
       for (var i = 0; i < 16; i++) { var a0 = Math.PI / 8 * i + Math.PI / 16, d = .045; rays += '<polygon points="50,48 ' + (50 + 50 * Math.cos(a0 - d)).toFixed(1) + ',' + (48 + 50 * Math.sin(a0 - d)).toFixed(1) + ' ' + (50 + 50 * Math.cos(a0 + d)).toFixed(1) + ',' + (48 + 50 * Math.sin(a0 + d)).toFixed(1) + '"/>'; }
-      s += '<radialGradient id="' + id + 'r" cx=".5" cy=".48" r=".5"><stop offset=".55" stop-color="#ffe27a" stop-opacity=".9"/><stop offset="1" stop-color="#ffe27a" stop-opacity="0"/></radialGradient>';
+      s += '<radialGradient id="' + id + 'r" cx=".5" cy=".48" r=".5"><stop offset=".55" stop-color="#9bded8" stop-opacity=".9"/><stop offset="1" stop-color="#9bded8" stop-opacity="0"/></radialGradient>';
       s += '<g class="temb-rays" fill="url(#' + id + 'r)">' + rays + '</g>';
     }
     if (o.큰 && lv > 0) {   // 큰 줄기: 양옆 날개 — 본체는 줄여서 날개 자리를 낸다
@@ -150,7 +150,7 @@
     /* 표 띠 */
     if (표 && glyph && lv > 0) {
       s += '<path d="M24 70 L76 70 L72 80 L28 80Z" fill="url(#' + id + 'f)" stroke="rgba(0,0,0,.35)" stroke-width=".8"/>' +
-        '<text x="50" y="78" text-anchor="middle" font-family="Pretendard Variable,Pretendard,Noto Sans KR,sans-serif" font-weight="900" font-size="' + (표.length > 4 ? 7 : 8.5) + '" fill="' + (lv === 2 ? "#3a4250" : "#3a2200") + '">' + esc(표) + '</text>';
+        '<text x="50" y="78" text-anchor="middle" font-family="Pretendard Variable,Pretendard,Noto Sans KR,sans-serif" font-weight="900" font-size="' + (표.length > 4 ? 7 : 8.5) + '" fill="' + (lv === 2 ? "#3a504e" : "#0e2c29") + '">' + esc(표) + '</text>';
     }
     if (o.큰 && lv > 0) s += '</g>';
     s += '</svg>';

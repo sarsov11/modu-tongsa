@@ -21,7 +21,7 @@
   if (opt.hide) return;
 
   var css = [
-    ".th-home{display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 10px 0 7px;border-radius:999px;background:rgba(255,255,255,.92);color:#16181D;",
+    ".th-home{display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 10px 0 7px;border-radius:999px;background:rgba(255,255,255,.92);color:#161D1C;",
     " border:1px solid rgba(0,0,0,.12);font:800 12.5px/1 'Pretendard','Noto Sans KR','Noto Sans JP',system-ui,sans-serif;letter-spacing:-.01em;text-decoration:none;",
     " box-shadow:0 2px 8px rgba(0,0,0,.08);-webkit-tap-highlight-color:transparent;white-space:nowrap}",
     ".th-home:hover{background:#fff}.th-home:active{transform:scale(.97)}",
@@ -29,7 +29,7 @@
     ".th-home.fix{position:fixed;z-index:2147479000}",
     ".th-home.fix.tl{left:max(10px,env(safe-area-inset-left));top:max(10px,env(safe-area-inset-top))}",
     ".th-home.fix.bl{left:max(12px,env(safe-area-inset-left));bottom:calc(14px + env(safe-area-inset-bottom,0px))}",
-    "@media (prefers-color-scheme:dark){.th-home.auto{background:rgba(30,32,38,.92);color:#F2F4F8;border-color:rgba(255,255,255,.16)}}",
+    "@media (prefers-color-scheme:dark){.th-home.auto{background:rgba(30,38,37,.92);color:#F2F4F8;border-color:rgba(255,255,255,.16)}}",
     "@media print{.th-home{display:none!important}}"
   ].join("\n");
   /* 왼쪽 화살표 + 「테라러닝」: 앱 밖 테라러닝 홈으로 나간다 */

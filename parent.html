@@ -7,9 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap">
-<meta name="theme-color" content="#F4F5F7">
+<meta name="theme-color" content="#0F766E">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=22afa090">
+<link rel="stylesheet" href="css/base.css?v=1111h">
 <!-- 학부모 리포트 (2026-10-04 개편, 대표님 A안 확정)
      일간: 마감 시각까지의 하루 → 다음 날 아침 발송. 주간: 월~일 → 월요일 아침 발송.
      계산은 js/parent.js(자료), 그리기는 여기, 보내기는 supabase/functions/parent-report.
@@ -19,9 +19,9 @@
   body.hasnext{padding-bottom:0!important}
   :root{
     --pg:#F4F5F7; --cd:#FFFFFF; --ln:#E6E8EC; --ln2:#D5D9DF;
-    --tx:#14171C; --tx2:#3A404A; --tx3:#5E6672; --sf:#F1F3F6;
-    --ac:#E5322D; --ok:#E5202E; --bad:#D0342C; --bads:#FCEAE9;
-    --bar:#1F2530; --bar2:#C9CED6; --r:20px; --sh:0 1px 2px rgba(16,24,40,.04),0 4px 16px rgba(16,24,40,.05);
+    --tx:#141C1B; --tx2:#3A4A49; --tx3:#5E7270; --sf:#F1F3F6;
+    --ac:#0F766E; --ok:#0F766E; --bad:#0B5F59; --bads:#E3F2F0;
+    --bar:#1F302F; --bar2:#C9CED6; --r:20px; --sh:0 1px 2px rgba(16,40,38,.04),0 4px 16px rgba(16,40,38,.05);
   }
   html,body{background:var(--pg)!important;color:var(--tx)}
   body{font-family:"Noto Sans KR",sans-serif;font-weight:500;-webkit-font-smoothing:antialiased}
@@ -30,8 +30,8 @@
 
   .top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 0 10px}
   .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:16px;color:var(--tx);text-decoration:none;white-space:nowrap}
-  .brand .mk{display:grid;place-items:center;width:28px;height:28px;border-radius:12px;background:#E5202E;color:#fff;font-weight:800;font-size:14px}
-  .brand .nm{font-weight:800}.brand em{font-style:normal;color:#E5202E}
+  .brand .mk{display:grid;place-items:center;width:28px;height:28px;border-radius:12px;background:#0F766E;color:#fff;font-weight:800;font-size:14px}
+  .brand .nm{font-weight:800}.brand em{font-style:normal;color:#0F766E}
   .brand span{color:var(--tx3);font-weight:700}
   @media(max-width:440px){.brand span{display:none}}
   .seg{flex:none;display:inline-flex;background:var(--sf);border:1px solid var(--ln);border-radius:999px;padding:3px}
@@ -72,7 +72,7 @@
   .kpi .v small{font-size:16px;font-weight:800;margin-left:2px;color:var(--tx2)}
   .kpi .sub{display:block;font-size:14px;font-weight:600;color:var(--tx3);margin-top:8px;line-height:1.45}
   .dl{font-weight:800;white-space:nowrap}
-  .dl.up{color:var(--pt,#E5202E)} .dl.dn{color:var(--bad)} .dl.eq{color:var(--tx3)}
+  .dl.up{color:var(--pt,#0F766E)} .dl.dn{color:var(--bad)} .dl.eq{color:var(--tx3)}
   @media(max-width:600px){.kpis{grid-template-columns:1fr 1fr}.kpi .v{font-size:26px}}
 
   .chart{display:flex;align-items:flex-end;gap:6px;height:150px;padding-top:22px}
@@ -155,7 +155,7 @@
   .pt{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--ln)}
   .pt:first-child{border-top:0;padding-top:0}
   .pt .ic{flex:none;width:26px;height:26px;border-radius:12px;display:grid;place-items:center;font-size:14px;font-weight:800;background:var(--sf);color:var(--tx3)}
-  .pt.up .ic{background:#FCEDEE;color:var(--pt,#E5202E)} .pt.dn .ic{background:var(--bads);color:var(--bad)}
+  .pt.up .ic{background:#E3F2F0;color:var(--pt,#0F766E)} .pt.dn .ic{background:var(--bads);color:var(--bad)}
   .pt b,.pl b{display:block;font-size:14px;font-weight:800;color:var(--tx3);margin-bottom:2px}
   .pt span,.pl span{display:block;font-size:16px;font-weight:700;color:var(--tx);line-height:1.5}
   .plan{border-color:var(--tx);border-width:1.5px}
@@ -196,7 +196,7 @@
 <script src="js/trend.js?v=77dea921"></script>
 <script src="js/packs.js?v=87449626"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/store.js?v=a750b224"></script>
+<script src="js/store.js?v=1111h"></script>
 <script src="js/supa.config.js?v=a3ea51e7"></script>
 <script src="js/exam.js?v=de468b6e"></script>
 <script src="js/parent.js?v=cdb8db08"></script>
@@ -244,13 +244,13 @@
   /* ── 그리기 — r 은 parent.js 가 만든 자료(이 기기) 또는 서버에서 받은 같은 자료 ──
      ★ 학부모가 궁금한 것만(2026-10-05 대표님): 학습 시간·과목별, 성취도 추이, 눈에 띄는 포인트,
        주간은 예상 등급 추이·시험별 추이·원인·다음 주 방향. 문항 수는 앞에 내지 않는다. */
-  var 과목색={"윤리":"#E5202E","지리":"#F08A91","일반사회":"#A8161F","기타":"#9AA0A8"};
+  var 과목색={"윤리":"#0F766E","지리":"#7FB8B2","일반사회":"#0B4F4A","기타":"#9AA0A8"};
   function 과목칸(fam, 합, 제목, 비교){
     if(!합) return '<div class="rc"><div class="rh"><h3>'+제목+'</h3></div><p class="empty">학습 기록 없음</p></div>';
     return '<div class="rc"><div class="rh"><h3>'+제목+'</h3><small>'+비교+'</small></div>'+
       '<div class="tot n">'+시간칸(합)+'</div>'+
-      '<div class="stack">'+fam.map(function(f){ return '<i style="width:'+(f.min/합*100).toFixed(1)+'%;background:'+(과목색[f.name]||"#9AA4B2")+'"></i>'; }).join("")+'</div>'+
-      '<div class="legend">'+fam.map(function(f){ return '<span><i style="background:'+(과목색[f.name]||"#9AA4B2")+'"></i>'+esc(f.name)+' <b class="n">'+시간(f.min)+'</b></span>'; }).join("")+'</div></div>';
+      '<div class="stack">'+fam.map(function(f){ return '<i style="width:'+(f.min/합*100).toFixed(1)+'%;background:'+(과목색[f.name]||"#9AB2B0")+'"></i>'; }).join("")+'</div>'+
+      '<div class="legend">'+fam.map(function(f){ return '<span><i style="background:'+(과목색[f.name]||"#9AB2B0")+'"></i>'+esc(f.name)+' <b class="n">'+시간(f.min)+'</b></span>'; }).join("")+'</div></div>';
   }
   /* 꺾은선 — pts=[{x 라벨, v 값|null}]. inv=true 면 작은 값이 위(등급) */
   function 선(pts, o){
@@ -455,6 +455,6 @@
 })();
 </script>
 <!-- 테라러닝 홈 단추(공용 terrahome) -->
-<script src="js/terrahome.js?v=243c5cfd" data-slot=".top" defer></script>
+<script src="js/terrahome.js?v=1111h" data-slot=".top" defer></script>
 </body>
 </html>

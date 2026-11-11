@@ -519,17 +519,17 @@
   function setGrade(g) { S.student.grade = g; flush(); }
 
   var LADDER = [
-    { min: 0, name: "언랭", short: "UR", color: "#7C8A94" },
-    { min: 12, name: "브론즈 Ⅲ", short: "B3", color: "#C08552" },
-    { min: 22, name: "브론즈 Ⅱ", short: "B2", color: "#C08552" },
-    { min: 32, name: "브론즈 Ⅰ", short: "B1", color: "#C08552" },
-    { min: 42, name: "실버 Ⅲ", short: "S3", color: "#AEBCC6" },
-    { min: 50, name: "실버 Ⅱ", short: "S2", color: "#AEBCC6" },
-    { min: 58, name: "실버 Ⅰ", short: "S1", color: "#AEBCC6" },
-    { min: 66, name: "골드 Ⅲ", short: "G3", color: "#E3B04B" },
-    { min: 74, name: "골드 Ⅱ", short: "G2", color: "#E3B04B" },
-    { min: 82, name: "골드 Ⅰ", short: "G1", color: "#E3B04B" },
-    { min: 90, name: "다이아", short: "DIA", color: "#5FD0F5" }
+    { min: 0, name: "언랭", short: "UR", color: "#7C9492" },
+    { min: 12, name: "브론즈 Ⅲ", short: "B3", color: "#52C0B7" },
+    { min: 22, name: "브론즈 Ⅱ", short: "B2", color: "#52C0B7" },
+    { min: 32, name: "브론즈 Ⅰ", short: "B1", color: "#52C0B7" },
+    { min: 42, name: "실버 Ⅲ", short: "S3", color: "#AEC6C4" },
+    { min: 50, name: "실버 Ⅱ", short: "S2", color: "#AEC6C4" },
+    { min: 58, name: "실버 Ⅰ", short: "S1", color: "#AEC6C4" },
+    { min: 66, name: "골드 Ⅲ", short: "G3", color: "#63CBC2" },
+    { min: 74, name: "골드 Ⅱ", short: "G2", color: "#63CBC2" },
+    { min: 82, name: "골드 Ⅰ", short: "G1", color: "#63CBC2" },
+    { min: 90, name: "다이아", short: "DIA", color: "#80D4CD" }
   ];
   function rank() {
     var o = overall();
@@ -1082,9 +1082,9 @@
      내용은 그대로 두고 옷만 갈아입는다. 고른 값은 이 브라우저에 남는다.
      화면이 뜨기 전에 <head> 안 한 줄이 먼저 입혀 준다(깜빡임 방지). */
   var SKINS = [{id: "white", name: "화이트", dot: "#FFFFFF"},   /* ★ 기본(2026-09-22 대표님 「기본을 화이트 디자인으로」) */
-               {id: "jelly", name: "젤리", dot: "#FFC2DC"},
+               {id: "jelly", name: "젤리", dot: "#D1F0ED"},
                {id: "paper", name: "종이", dot: "#FAF8F3"},
-               {id: "", name: "밤", dot: "#0B1120"},
+               {id: "", name: "밤", dot: "#0B201E"},
                {id: "note", name: "모눈 노트", dot: "#F0EBDA"}];
   function skin() {
     try {

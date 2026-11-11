@@ -26,5 +26,5 @@
 /* 전체 화면 로그인(login.html) */
 .lgpage{min-height:calc(100vh - var(--nav-h));display:flex;align-items:center;justify-content:center;padding:32px 20px}
 .lgpage .lgbox{width:100%}
-.lgpage .lgmark{width:64px;height:64px;border-radius:14px;background:#0B0C0F;color:#fff;display:grid;place-items:center;
+.lgpage .lgmark{width:64px;height:64px;border-radius:14px;background:#0B0F0F;color:#fff;display:grid;place-items:center;
   font-weight:800;font-size:16px;letter-spacing:-.06em;margin-bottom:14px}

@@ -5,21 +5,21 @@ body.tqs:not(.tqs-off) .gorow.stickgo,body.tqs:not(.tqs-off) .qtag,body.tqs:not(
 body.tqs:not(.tqs-off) .qtop{display:none!important}
 body.tqs:not(.tqs-off) .page,body.tqs:not(.tqs-off) .wrapx{max-width:560px;font-family:'Pretendard Variable',Pretendard,-apple-system,'Malgun Gothic',sans-serif;padding-bottom:120px}
 body.tqs:not(.tqs-off) .tq-prog{margin:14px 0 22px}
-body.tqs:not(.tqs-off) .tq-meta .tq-src{font-size:13px;font-weight:500;color:#5F6670;white-space:nowrap}
+body.tqs:not(.tqs-off) .tq-meta .tq-src{font-size:13px;font-weight:500;color:#5F706F;white-space:nowrap}
 body.tqs:not(.tqs-off) .tq-meta .tq-tg{display:inline-flex}
 /* 발문 */
 body.tqs:not(.tqs-off) .qwrap,body.tqs:not(.tqs-off) .qcard,body.tqs:not(.tqs-off) .card.qwrap{border:0;border-radius:0;box-shadow:none;background:none;padding:0;margin:0 0 22px;overflow:visible}
-body.tqs:not(.tqs-off) .qstem,body.tqs:not(.tqs-off) .sent,body.tqs:not(.tqs-off) .stem,body.tqs:not(.tqs-off) .qbody .stem{font-weight:600;font-size:20px;line-height:30px;color:#14171C;letter-spacing:-.5px;word-break:keep-all;overflow-wrap:anywhere;margin:0 0 22px}
+body.tqs:not(.tqs-off) .qstem,body.tqs:not(.tqs-off) .sent,body.tqs:not(.tqs-off) .stem,body.tqs:not(.tqs-off) .qbody .stem{font-weight:600;font-size:20px;line-height:30px;color:#141C1B;letter-spacing:-.5px;word-break:keep-all;overflow-wrap:anywhere;margin:0 0 22px}
 body.tqs:not(.tqs-off) .qbody{padding:0}
-body.tqs:not(.tqs-off) .qdata,body.tqs:not(.tqs-off) .qbody .qdata,body.tqs:not(.tqs-off) .qbody .figure{margin:-8px 0 22px;padding:14px 16px;border-radius:12px;background:#F6F7F9;border:1px solid #E6E8EC;font-weight:500;font-size:16px;line-height:28px;color:#3A3F47}
+body.tqs:not(.tqs-off) .qdata,body.tqs:not(.tqs-off) .qbody .qdata,body.tqs:not(.tqs-off) .qbody .figure{margin:-8px 0 22px;padding:14px 16px;border-radius:12px;background:#F6F7F9;border:1px solid #E6E8EC;font-weight:500;font-size:16px;line-height:28px;color:#3A4746}
 body.tqs:not(.tqs-off) .qpick{margin:0 0 22px;padding:14px 16px;border-radius:12px;background:#F6F7F9;border:1px solid #E6E8EC}
-body.tqs:not(.tqs-off) .qpick .tx{font-weight:500;font-size:16px;line-height:28px;color:#14171C;letter-spacing:-.5px}
-body.tqs:not(.tqs-off) .qpick .no{color:#5F6670}
+body.tqs:not(.tqs-off) .qpick .tx{font-weight:500;font-size:16px;line-height:28px;color:#141C1B;letter-spacing:-.5px}
+body.tqs:not(.tqs-off) .qpick .no{color:#5F706F}
 body.tqs:not(.tqs-off) .step{margin-top:0}
 /* 선지: 판 없이 줄로 · 번호 동그라미 30px */
 body.tqs:not(.tqs-off) .opts{display:grid;gap:10px;grid-template-columns:1fr}
-body.tqs:not(.tqs-off) .opt{display:flex;align-items:flex-start;gap:10px;min-height:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;font-weight:500;font-size:16px;line-height:30px;color:#3A3F47;text-align:left;letter-spacing:-.5px}
-body.tqs:not(.tqs-off) .opt .k{flex:none;width:30px;height:30px;border-radius:999px;border:1px solid #9AA0A8;display:grid;place-items:center;font-weight:500;font-size:16px;line-height:1;color:#3A3F47;background:#fff}
+body.tqs:not(.tqs-off) .opt{display:flex;align-items:flex-start;gap:10px;min-height:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;font-weight:500;font-size:16px;line-height:30px;color:#3A4746;text-align:left;letter-spacing:-.5px}
+body.tqs:not(.tqs-off) .opt .k{flex:none;width:30px;height:30px;border-radius:999px;border:1px solid #9AA0A8;display:grid;place-items:center;font-weight:500;font-size:16px;line-height:1;color:#3A4746;background:#fff}
 body.tqs:not(.tqs-off) .opt:hover .k{border-color:var(--pt)}
 body.tqs:not(.tqs-off) .opt[data-s="ok"]{color:#16B364;font-weight:700;background:none;border:0;box-shadow:none}
 body.tqs:not(.tqs-off) .opt[data-s="ok"] .k{border-color:#16B364;background:#16B364;color:#fff}
@@ -27,20 +27,20 @@ body.tqs:not(.tqs-off) .opt[data-s="no"]{color:#E5322D;background:none;border:0;
 body.tqs:not(.tqs-off) .opt[data-s="no"] .k{border-color:#E5322D;color:#E5322D}
 body.tqs:not(.tqs-off) .opt[data-s="ans"]{color:#16B364;background:none}
 /* O·X 64px 는 그대로, 해설 판 */
-body.tqs:not(.tqs-off) .verdict{margin-top:10px;padding:20px;border:1px solid #E6E8EC;border-radius:12px;background:#fff;font-weight:500;font-size:16px;line-height:28.8px;color:#3A3F47;letter-spacing:-.5px}
+body.tqs:not(.tqs-off) .verdict{margin-top:10px;padding:20px;border:1px solid #E6E8EC;border-radius:12px;background:#fff;font-weight:500;font-size:16px;line-height:28.8px;color:#3A4746;letter-spacing:-.5px}
 body.tqs:not(.tqs-off) .verdict.good,body.tqs:not(.tqs-off) .verdict.bad,body.tqs:not(.tqs-off) .verdict.warn{background:#fff}
 body.tqs:not(.tqs-off) .verdict .say{font-size:16px;line-height:28.8px}
 body.tqs:not(.tqs-off) .tq-exptabs{margin-top:26px}
-body.tqs:not(.tqs-off) .tq-exptabs a{display:inline-flex;align-items:center;height:50px;padding:0 18px;font-weight:500;font-size:14px;line-height:1;color:#5F6670;text-decoration:none}
-body.tqs:not(.tqs-off) .verdict .tq-ans{display:block;margin-top:14px;padding-top:12px;border-top:1px solid #F1F3F5;text-align:right;font-weight:700;color:#14171C}
+body.tqs:not(.tqs-off) .tq-exptabs a{display:inline-flex;align-items:center;height:50px;padding:0 18px;font-weight:500;font-size:14px;line-height:1;color:#5F706F;text-decoration:none}
+body.tqs:not(.tqs-off) .verdict .tq-ans{display:block;margin-top:14px;padding-top:12px;border-top:1px solid #F1F3F5;text-align:right;font-weight:700;color:#141C1B}
 body.tqs:not(.tqs-off) .oxnext{display:none}
 /* 아래 줄 보조 */
 .tq-pos{border:0;background:none;cursor:pointer;font-family:inherit}
 .tq-bar{display:flex;align-items:center;gap:2px;max-width:none}
-.tq-bar .tq-doubt{position:absolute;left:12px;bottom:calc(76px + env(safe-area-inset-bottom));display:flex;gap:8px;padding:8px;border-radius:14px;background:#fff;box-shadow:0 10px 24px -12px rgba(15,23,42,.35),0 0 0 1px #E6E8EC}
+.tq-bar .tq-doubt{position:absolute;left:12px;bottom:calc(76px + env(safe-area-inset-bottom));display:flex;gap:8px;padding:8px;border-radius:14px;background:#fff;box-shadow:0 10px 24px -12px rgba(15,42,40,.35),0 0 0 1px #E6E8EC}
 .tq-bar .tq-doubt[hidden]{display:none}
-.tq-bar .tq-doubt button{height:36px;padding:0 14px;border-radius:999px;border:1px solid #D3D7DD;background:#fff;font-weight:600;font-size:14px;line-height:1;color:#3A3F47;cursor:pointer}
-.tq-bar .tq-doubt button.is-on{border-color:var(--pt);background:color-mix(in srgb,var(--pt) 10%,#fff);color:color-mix(in srgb,var(--pt) 78%,#111419)}
+.tq-bar .tq-doubt button{height:36px;padding:0 14px;border-radius:999px;border:1px solid #D3D7DD;background:#fff;font-weight:600;font-size:14px;line-height:1;color:#3A4746;cursor:pointer}
+.tq-bar .tq-doubt button.is-on{border-color:var(--pt);background:color-mix(in srgb,var(--pt) 10%,#fff);color:color-mix(in srgb,var(--pt) 78%,#111918)}
 .tq-bar .tq-nav:disabled{opacity:.35}
 body.tqs-off .tq-bar{display:none}
 @media(min-width:960px){.tq-bar{padding-left:max(16px,calc(50% - 480px));padding-right:max(16px,calc(50% - 480px))}}
@@ -48,7 +48,7 @@ body.tqs:not(.tqs-off) #stage>.card:not(.done){border:0;border-radius:0;box-shad
 body.tqs:not(.tqs-off) #stage>.card .tag,body.tqs:not(.tqs-off) #stage>.card .qfall{display:none}
 /* 묶음 풀이(study) — 번호판 */
 body.tqs:not(.tqs-off) .side{display:none!important}
-body.tqs:not(.tqs-off) .data,body.tqs:not(.tqs-off) .boki{margin:-8px 0 22px;padding:14px 16px;border-radius:12px;background:#F6F7F9;border:1px solid #E6E8EC;font-weight:500;font-size:16px;line-height:28px;color:#3A3F47}
+body.tqs:not(.tqs-off) .data,body.tqs:not(.tqs-off) .boki{margin:-8px 0 22px;padding:14px 16px;border-radius:12px;background:#F6F7F9;border:1px solid #E6E8EC;font-weight:500;font-size:16px;line-height:28px;color:#3A4746}
 body.tqs:not(.tqs-off) .cols{display:block;margin-top:0}
 @media(min-width:960px){
   body.tqs:not(.tqs-off) .wrapx:has(.cols.has-omr){max-width:980px}
@@ -68,18 +68,18 @@ body.tqs:not(.tqs-off) .back,body.tqs:not(.tqs-off) .grp{display:none!important}
 /* 드릴 — 질문 줄을 발문처럼, 옆 카드·모드 줄은 문제 중에 숨긴다 */
 body.tqs:not(.tqs-off) .kgrid{display:block}
 body.tqs:not(.tqs-off) .qbar{background:none;border:0;padding:0;margin:0 0 22px;box-shadow:none}
-body.tqs:not(.tqs-off) #qtext,body.tqs:not(.tqs-off) .qbar .q{font-weight:600;font-size:20px;line-height:30px;color:#14171C;letter-spacing:-.5px;word-break:keep-all}
+body.tqs:not(.tqs-off) #qtext,body.tqs:not(.tqs-off) .qbar .q{font-weight:600;font-size:20px;line-height:30px;color:#141C1B;letter-spacing:-.5px;word-break:keep-all}
 body.tqs:not(.tqs-off) #qmeta,body.tqs:not(.tqs-off) #setbar,body.tqs:not(.tqs-off) #scopehost{display:none!important}
 body.tqs:not(.tqs-off) .stage{border:0;box-shadow:none;background:none;padding:0}
 body.tqs:not(.tqs-off) .stage .body{padding:0}
 body.tqs:not(.tqs-off) .tq-meta .tq-no{white-space:nowrap}
-body.tqs:not(.tqs-off) .opts.c2 .opt{justify-content:center;align-items:center;min-height:52px;padding:12px 16px;border:1.5px solid #D3D7DD;border-radius:14px;background:#fff;font-weight:600;color:#14171C;text-align:center}
+body.tqs:not(.tqs-off) .opts.c2 .opt{justify-content:center;align-items:center;min-height:52px;padding:12px 16px;border:1.5px solid #D3D7DD;border-radius:14px;background:#fff;font-weight:600;color:#141C1B;text-align:center}
 html body.tqs:not(.tqs-off) .opts.c2 .opt[data-s="ok"]{border:1.5px solid #16B364;background:color-mix(in srgb,#16B364 10%,#fff);color:#0F7B4F}
 html body.tqs:not(.tqs-off) .opts.c2 .opt[data-s="no"]{border:1.5px solid #E5322D;background:color-mix(in srgb,#E5322D 8%,#fff);color:#E5322D}
 
-/* 11-10 눈이 편한 화면 — 회색 글자는 #5F6670 보다 옅지 않게(공용 tera-q.css 의 옅은 회색 글자를 앱에서 덮는다) · 구역 사이 22px 이상 */
-body.tqs .tq-meta .tq-no,body.tqs .tq-tabs button,body.tqs .tq-icon{color:#5F6670}
-body.tqs .tq-choice.is-out .tq-t,body.tqs .tq-x,body.tqs .tq-ox button.is-rest,body.tqs .tq-pos small,body.tqs .tq-coach-off{color:#5F6670}
+/* 11-10 눈이 편한 화면 — 회색 글자는 #5F706F 보다 옅지 않게(공용 tera-q.css 의 옅은 회색 글자를 앱에서 덮는다) · 구역 사이 22px 이상 */
+body.tqs .tq-meta .tq-no,body.tqs .tq-tabs button,body.tqs .tq-icon{color:#5F706F}
+body.tqs .tq-choice.is-out .tq-t,body.tqs .tq-x,body.tqs .tq-ox button.is-rest,body.tqs .tq-pos small,body.tqs .tq-coach-off{color:#5F706F}
 body.tqs:not(.tqs-off) .tq-meta{margin-bottom:22px}
 body.tqs:not(.tqs-off) .qwrap,body.tqs:not(.tqs-off) .qcard,body.tqs:not(.tqs-off) .card.qwrap{margin-bottom:26px}
 body.tqs:not(.tqs-off) .verdict{box-shadow:none}
@@ -87,7 +87,7 @@ body.tqs:not(.tqs-off) .verdict{box-shadow:none}
 body.tqs .tq-icon.is-on{background:#fff;border-color:var(--pt);color:var(--pt)}
 
 /* 11-10 전 화면 정돈 — 공용 tera-q.css 의 푸른 회색을 중립 회색으로(포인트 색 외 딴색 0) */
-:root{--tq-ink:#14171C;--tq-ink2:#3A3F47;--tq-sub:#5F6670;--tq-line:#E6E8EC;--tq-fill:#F1F3F5}
-.tq-badge,.tq-tool,.tq-coach p{color:#4B5159}
-.tq-coach{color:#3A3F47}
+:root{--tq-ink:#141C1B;--tq-ink2:#3A4746;--tq-sub:#5F706F;--tq-line:#E6E8EC;--tq-fill:#F1F3F5}
+.tq-badge,.tq-tool,.tq-coach p{color:#4B5958}
+.tq-coach{color:#3A4746}
 .tq-coach,.tq-coach p{font-weight:500}

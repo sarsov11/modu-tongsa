@@ -13,7 +13,7 @@
    avg = 해마다 몇 문제, pct = 성취도 0~100. */
 (function () {
   "use strict";
-  var PAL = ["#2563EB", "#10B981", "#8B5CF6", "#F97316", "#EC4899", "#06B6D4", "#84CC16", "#E11D48", "#6366F1"];
+  var PAL = ["#4DC3BA", "#10B981", "#7ED4CD", "#4CC3B9", "#68CCC4", "#06B6D4", "#20C2B5", "#0F766E", "#80D4CD"];
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function cv(k) { try { return getComputedStyle(document.documentElement).getPropertyValue(k).trim(); } catch (e) { return ""; } }
   function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }

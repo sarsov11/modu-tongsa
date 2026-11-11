@@ -128,7 +128,7 @@
 .picks .pick[aria-pressed="true"] .n{ color:var(--mint-2); font-weight:700; }
 /* 채점 뒤 */
 .picks .pick[data-s="ok"]{ border-color:var(--mint); background:var(--mint-soft); color:var(--ink); }
-.picks .pick[data-s="no"]{ border-color:var(--red); background:var(--red-soft); color:var(--red-2); }
+.picks .pick[data-s="no"]{ border-color:var(--wrong); background:var(--wrong-soft); color:var(--wrong-2); }
 .picks .pick[data-s="ans"]{ border-color:var(--mint); color:var(--mint-2); font-weight:600; }
 .picks .pick:disabled{ cursor:default; }
 

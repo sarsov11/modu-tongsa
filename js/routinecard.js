@@ -22,7 +22,7 @@
   }
   /* 항목 이름 앞 그림 — 글자 대신 모양으로 종류를 가른다 */
   var ICON = { due: "↺", card: "개", ox: "OX", q: "✎", drill: "⚡", exam: "시", exwrong: "↺", lec: "▶", weekly: "★", after: "↺" };
-  var COL = { due: "#F59E0B", after: "#F59E0B", exwrong: "#F59E0B", card: "#3B82F6", lec: "#3B82F6", ox: "#8B5CF6", q: "#E5484D", drill: "#F97316", exam: "#0EA5E9", weekly: "#EAB308" };
+  var COL = { due: "#40C0B5", after: "#40C0B5", exwrong: "#40C0B5", card: "#65CCC3", lec: "#65CCC3", ox: "#7ED4CD", q: "#0F766E", drill: "#4CC3B9", exam: "#23D4C6", weekly: "#22D0C2" };
   function shortSay(it) { return String(it.sayShort || it.say || "").split(" — ")[0]; }
 
   var css = [
@@ -41,9 +41,9 @@
     ".rtc ol.ls li .tx span{display:block;font-size:14px;color:var(--ink-3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
     ".rtc ol.ls li .mn{font:800 13px/1 var(--mono);color:var(--ink-3)}",
     ".rtc ol.ls li.done{opacity:.62}.rtc ol.ls li.done .ic{background:#16B364;border-color:#16B364;color:#fff}.rtc ol.ls li.done .tx b{text-decoration:line-through;text-decoration-thickness:2px}",
-    ".rtc ol.ls li.now{border-color:var(--cta);background:var(--cta-soft,rgba(229,72,77,.08));flex-wrap:wrap}",
+    ".rtc ol.ls li.now{border-color:var(--cta);background:var(--cta-soft,rgba(15,118,110,.08));flex-wrap:wrap}",
     ".rtc ol.ls li.now .ic{background:var(--cta);border-color:var(--cta);color:var(--cta-ink,#fff);animation:rtPulse 1.6s ease-out infinite}",
-    "@keyframes rtPulse{0%{box-shadow:0 0 0 0 rgba(229,72,77,.55)}100%{box-shadow:0 0 0 12px rgba(229,72,77,0)}}",
+    "@keyframes rtPulse{0%{box-shadow:0 0 0 0 rgba(15,118,110,.55)}100%{box-shadow:0 0 0 12px rgba(15,118,110,0)}}",
     ".rtc .go{display:flex;align-items:center;justify-content:center;width:100%;margin-top:10px;padding:15px 16px;border-radius:14px;background:var(--cta);color:var(--cta-ink,#fff);text-decoration:none;font-weight:800;font-size:16px;letter-spacing:-.02em}",
     /* A2 (2026-10-11 「짜침」 고침): 상자 안 상자를 걷고 세로 길 하나, 종류별 색 아이콘, 지금 할 것만 떠 있는 카드 */
     ".rtc.rt-a{background:var(--surface);border:0;box-shadow:0 10px 30px -14px rgba(0,0,0,.35),0 0 0 1px var(--line)}",
@@ -51,7 +51,7 @@
     ".rtc .hd2 .big{font:800 26px/1 var(--mono);color:var(--ink);letter-spacing:-.04em}.rtc .hd2 .big small{font-size:16px;color:var(--ink-3);font-weight:800}",
     ".rtc .hd2 .hr{margin-left:auto;text-align:right}.rtc .hd2 .chip{display:inline-block;padding:6px 11px;border-radius:999px;background:var(--bg);font:800 14px/1 var(--mono);color:var(--ink)}",
     ".rtc .seg4{display:flex;gap:5px;margin:12px 0 4px}.rtc .seg4 i{height:12px;border-radius:12px;background:var(--line-2)}",
-    ".rtc .seg4 i.done{background:linear-gradient(90deg,#16B364,#3DD68C)}.rtc .seg4 i.now{background:var(--line-2);position:relative;overflow:hidden}",
+    ".rtc .seg4 i.done{background:linear-gradient(90deg,#16B364,#4FC4BA)}.rtc .seg4 i.now{background:var(--line-2);position:relative;overflow:hidden}",
     ".rtc .seg4 i.now::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,var(--cta),transparent);animation:rtSweep 1.6s ease-in-out infinite}",
     "@keyframes rtSweep{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}",
     ".rtc .tl{position:relative;margin:12px 0 0;padding:0;list-style:none}",
@@ -59,7 +59,7 @@
     ".rtc .tl li{position:relative;display:flex;align-items:center;gap:13px;padding:9px 4px}",
     ".rtc .tl .nd{position:relative;z-index:1;flex:0 0 auto;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font:800 16px/1 var(--mono);background:var(--c);box-shadow:0 3px 0 rgba(0,0,0,.18)}",
     ".rtc .tl li.up .nd{background:var(--surface);color:var(--c);box-shadow:inset 0 0 0 2.5px var(--c)}",
-    ".rtc .tl li.done .nd{background:#16B364;box-shadow:0 3px 0 #0E8A4B}",
+    ".rtc .tl li.done .nd{background:#16B364;box-shadow:0 3px 0 #15837A}",
     ".rtc .tl .tx{flex:1;min-width:0}.rtc .tl .tx b{display:block;font-size:16px;font-weight:800;letter-spacing:-.02em;color:var(--ink)}",
     ".rtc .tl .tx span{display:block;margin-top:2px;font-size:14px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
     ".rtc .tl .mn{font:800 13px/1 var(--mono);color:var(--ink-3)}.rtc .tl li.done .mn{color:#16B364}",
@@ -70,9 +70,9 @@
     ".rtc .tl li.now .tx b{font-size:16px}.rtc .tl li.now .k2{display:block;font-size:13px;font-weight:800;color:var(--c);margin-bottom:2px}",
     ".rtc .tl li.now .go{margin-top:12px;border-radius:14px;box-shadow:0 4px 0 color-mix(in srgb,var(--cta) 70%,#000)}",
     ".rtc.rt-a .wk div i{width:28px;height:28px;border:2px solid var(--line-2);font-size:13px;font-weight:800}",
-    ".rtc.rt-a .wk div.full i{background:linear-gradient(160deg,#FFB020,#FF6A00);border:0;color:#fff;box-shadow:0 2px 6px rgba(255,106,0,.35)}",
-    ".rtc.rt-a .wk div.part i{border-color:#FFB020}.rtc.rt-a .wk div.tdy i{border-color:var(--ink)}",
-    ".rtc.rt-a .ft b{color:#FF6A00}",
+    ".rtc.rt-a .wk div.full i{background:linear-gradient(160deg,#58C7BE,#40BFB5);border:0;color:#fff;box-shadow:0 2px 6px rgba(64,191,181,.35)}",
+    ".rtc.rt-a .wk div.part i{border-color:#58C7BE}.rtc.rt-a .wk div.tdy i{border-color:var(--ink)}",
+    ".rtc.rt-a .ft b{color:#40BFB5}",
     /* B 길 */
     ".rtc .path{position:relative;margin:16px 0 4px;padding:4px 0}",
     ".rtc .path .nd{position:relative;display:flex;align-items:center;gap:12px;margin:0 0 18px;text-decoration:none;color:inherit}",
@@ -88,7 +88,7 @@
     ".rtc .bar i{flex:1;height:10px;border-radius:12px;background:var(--line-2)}.rtc .bar i.done{background:#16B364}.rtc .bar i.now{background:var(--cta);animation:rtBlink 1.4s ease-in-out infinite}",
     "@keyframes rtBlink{50%{opacity:.45}}",
     ".rtc .barl{display:flex;gap:5px}.rtc .barl span{flex:1;font-size:11.5px;color:var(--ink-3);font-weight:700;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rtc .barl span.now{color:var(--cta)}",
-    ".rtc .nowcard{margin-top:12px;border-radius:14px;border:1.5px solid var(--cta);padding:14px;background:var(--cta-soft,rgba(229,72,77,.08))}",
+    ".rtc .nowcard{margin-top:12px;border-radius:14px;border:1.5px solid var(--cta);padding:14px;background:var(--cta-soft,rgba(15,118,110,.08))}",
     ".rtc .nowcard .k{font-size:13px;font-weight:800;color:var(--cta)}.rtc .nowcard h3{margin:4px 0 2px;font-size:20px;font-weight:800;color:var(--ink)}.rtc .nowcard p{margin:0;font-size:14px;color:var(--ink-3)}",
     /* 주간 칸 */
     ".rtc .wk{display:flex;justify-content:space-between;gap:4px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}",
@@ -100,7 +100,7 @@
     ".rtc.alldone{border-color:#16B364}.rtc.alldone .ttl h2{color:#16B364}",
     /* ── 2026-11-10 화면표준 3절 (view a) ── */
     ".rtc.rt-a{margin:14px 0 0;padding:0;border:0;background:none;box-shadow:none;border-radius:0}",
-    ".rtc.rt-a .rc-card{padding:20px 18px 18px;background:var(--surface);border-radius:18px;box-shadow:0 1px 2px rgba(17,20,25,.05),0 0 0 1px var(--line)}",
+    ".rtc.rt-a .rc-card{padding:20px 18px 18px;background:var(--surface);border-radius:18px;box-shadow:0 1px 2px rgba(17,25,24,.05),0 0 0 1px var(--line)}",
     ".rtc.rt-a .rc-card h2{margin:0;font-size:20px;font-weight:800;letter-spacing:-.03em;color:var(--ink)}",
     ".rtc.rt-a .rc-card .sum{margin:4px 0 0;font-size:14px;font-weight:600;color:var(--ink-3);line-height:1.5}",
     ".rtc.rt-a .pbar{height:4px;border-radius:12px;background:var(--surface-3);overflow:hidden;margin:14px 0 6px}",

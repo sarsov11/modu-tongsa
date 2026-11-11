@@ -8,17 +8,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#FAF8F3">
+<meta name="theme-color" content="#0F766E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=22afa090">
+<link rel="stylesheet" href="css/base.css?v=1111h">
 <link rel="stylesheet" href="css/cheer.css?v=b6d0f7c3">
 <link rel="stylesheet" href="css/coach.css?v=02d1145b">
 <link rel="stylesheet" href="css/tera-q.css?v=1110p">
-<link rel="stylesheet" href="css/tera-q-tongsa.css?v=0219224b">
+<link rel="stylesheet" href="css/tera-q-tongsa.css?v=1111h">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .page{max-width:var(--wrap);margin:0 auto;padding:0 var(--s3) var(--s6)}
@@ -42,27 +42,27 @@
   .mapwrap{position:relative;background:#05070A;border-radius:12px;overflow:hidden;
     border:1px solid var(--line)}
   .mapwrap svg{display:block;width:100%;height:auto}
-  .land{fill:#151D27;stroke:#31445A;stroke-width:.4;vector-effect:non-scaling-stroke}
+  .land{fill:#152726;stroke:#315A57;stroke-width:.4;vector-effect:non-scaling-stroke}
   .city{fill:var(--mint)}
-  .city.dim{fill:#20313C}
+  .city.dim{fill:#203C3A}
   .pulse{fill:none;stroke:var(--mint);stroke-width:.9;vector-effect:non-scaling-stroke}
   .clab{font-family:"Noto Sans KR",sans-serif;font-weight:700;fill:#EAF6F8;paint-order:stroke;
     stroke:#05070A;stroke-width:3.5;stroke-linejoin:round}
 
-  :root{--citydim:#20313C;--axis:#333C47;--axis-ink:#545B64}
+  :root{--citydim:#203C3A;--axis:#334745;--axis-ink:#546463}
   .clabt{fill:#EAF6F8}
   :root[data-skin="paper"], :root[data-skin="white"]{--citydim:#B9C4D0;--axis:#C9C3B5;--axis-ink:#8A8F9C}
-  :root[data-skin="paper"] .clabt, :root[data-skin="white"] .clabt{fill:#1F2430}
+  :root[data-skin="paper"] .clabt, :root[data-skin="white"] .clabt{fill:#1F302F}
   :root[data-skin="paper"] .passage:before, :root[data-skin="white"] .passage:before{color:#C9C3B5}
   .mapbg{fill:#05070A}
-  .city.off{fill:#18222C}
+  .city.off{fill:#182C2A}
   /* ── 종이 스킨: 어두운 판을 밝게 (2026-09-16) ── */
   :root[data-skin="paper"] .mapwrap, :root[data-skin="white"] .mapwrap{background:#EDF1F5}
   :root[data-skin="paper"] .mapbg, :root[data-skin="white"] .mapbg{fill:#EDF1F5}
   :root[data-skin="paper"] .land, :root[data-skin="white"] .land{fill:#D7DEE6;stroke:#B5C0CC}
   :root[data-skin="paper"] .city.dim, :root[data-skin="white"] .city.dim{fill:#B9C4D0}
   :root[data-skin="paper"] .city.off, :root[data-skin="white"] .city.off{fill:#C9D2DB}
-  :root[data-skin="paper"] .clab, :root[data-skin="white"] .clab{fill:#1F2430;stroke:#EDF1F5}
+  :root[data-skin="paper"] .clab, :root[data-skin="white"] .clab{fill:#1F302F;stroke:#EDF1F5}
   :root[data-skin="paper"] .passage, :root[data-skin="white"] .passage{background:var(--surface-2);border-color:var(--line-2);color:var(--ink)}
   :root[data-skin="paper"] .qimg, :root[data-skin="white"] .qimg{background:var(--surface-2)}
   :root[data-skin="paper"] .ppc, :root[data-skin="white"] .ppc{background:var(--surface-2)}
@@ -114,7 +114,7 @@
     font-size:14px;font-weight:800;color:var(--ink-4)}
   .opt b{color:var(--ink);font-weight:700}
   .opt[data-s="ok"]{border-color:var(--mint);background:var(--mint-soft);color:var(--ink)}
-  .opt[data-s="no"]{border-color:var(--red);background:var(--red-soft)}
+  .opt[data-s="no"]{border-color:var(--wrong);background:var(--wrong-soft)}
   .opts.c2 .opt{justify-content:center;font-size:16px;font-weight:800;padding:20px}
 
   .gorow{display:flex;align-items:center;gap:14px;margin-top:18px;flex-wrap:wrap}
@@ -169,7 +169,7 @@
   .verdict-line{display:inline-block;font-family:var(--kr);font-size:14px;font-weight:700;
     letter-spacing:-.01em;padding:4px 9px;border-radius:12px;margin-right:8px}
   .verdict-line.ok{color:var(--mint);background:rgba(47,224,206,.12);border:1px solid rgba(47,224,206,.4)}
-  .verdict-line.no{color:var(--red-2);background:var(--red-soft);border:1px solid var(--red-line)}
+  .verdict-line.no{color:var(--wrong-2);background:var(--wrong-soft);border:1px solid var(--wrong-line)}
 
   /* ── 노동 사례 판단 (조합형) ── */
   .lcflag{display:inline-block;font-size:14px;letter-spacing:.02em;
@@ -228,12 +228,12 @@
   /* ── 문항 이미지 ── */
   /* 제시문 — 기출 크롭(흰 바탕)을 쓰지 않는다. 사이트 색으로 다시 짠다. */
   .passage{position:relative;border-radius:14px;padding:30px 32px 28px;
-    background:linear-gradient(180deg,#121A26,#0D131C);
-    border:1px solid #223046;border-left:3px solid var(--mint);
+    background:linear-gradient(180deg,#122624,#0D1C1B);
+    border:1px solid #224643;border-left:3px solid var(--mint);
     font-size:16px;line-height:2.02;color:#DCE7F5;letter-spacing:-.012em;
     word-break:keep-all;text-wrap:pretty}
   .passage:before{content:"\201C";position:absolute;left:18px;top:6px;font-size:26px;
-    color:#2A3B54;line-height:1;font-family:Georgia,serif}
+    color:#2A5450;line-height:1;font-family:Georgia,serif}
   .passage .src{display:block;margin-top:16px;font-family:var(--mono);font-size:14px;
     color:var(--ink-4);letter-spacing:.04em;font-weight:800}
   .hintrow{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 4px;align-items:center}
@@ -290,7 +290,7 @@
     border:1px solid var(--line);border-radius:12px;padding:7px 12px;background:var(--surface-2);font-weight:800}
   .startcard .btn.big{font-size:16px;padding:16px 40px}
 
-  .qimg{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#0F1216}
+  .qimg{border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#0F1615}
   .qimg img{display:block;width:100%}
 
   /* ── 경제 ── */
@@ -303,7 +303,7 @@
   .dtable td.lab{background:var(--surface-2);color:var(--ink-3)}
   .tnote{font-size:14px;color:var(--ink-4);margin-top:9px;line-height:1.65}
   .tnote b{color:var(--ink-2)}
-  .ppc{background:#0B0E12;border:1px solid var(--line);border-radius:12px}
+  .ppc{background:#0B1211;border:1px solid var(--line);border-radius:12px}
   .ppc svg{display:block;width:100%;height:auto}
   .slider{margin-top:16px}
   .slider label{display:flex;justify-content:space-between;font-size:16px;color:var(--ink-3);
@@ -317,21 +317,21 @@
   .grow .bwrap{flex:1;height:12px;background:var(--surface-2);border-radius:12px;overflow:hidden}
   .grow .bwrap i{display:block;height:100%;border-radius:12px;transition:width .18s}
   .grow .bwrap i.up{background:var(--mint)}
-  .grow .bwrap i.dn{background:var(--red)}
+  .grow .bwrap i.dn{background:var(--wrong)}
   .grow .v{flex:0 0 56px;text-align:right}
   .grow .u{flex:0 0 92px;text-align:right;color:var(--ink-4);font-size:14px}
   .grow .v.up{color:var(--mint)}
-  .grow .v.dn{color:var(--red-2)}
+  .grow .v.dn{color:var(--wrong-2)}
   .vpill{font-family:var(--mono);font-size:14px;padding:7px 12px;border-radius:12px;
     border:1px solid var(--line-2);color:var(--ink-3);font-weight:800}
   .vpill.good{border-color:var(--mint);color:var(--mint);background:rgba(47,224,206,.09)}
-  .vpill.bad{border-color:var(--red-line);color:var(--red-2);background:var(--red-soft)}
+  .vpill.bad{border-color:var(--wrong-line);color:var(--wrong-2);background:var(--wrong-soft)}
 
   /* ── 옆 패널 ── */
   .side{display:flex;flex-direction:column;gap:var(--s3)}
   .streak{display:flex;gap:4px;flex-wrap:wrap}
   .streak i{width:15px;height:15px;border-radius:12px;background:var(--lv1);display:block}
-  .streak i.ok{background:var(--mint)} .streak i.no{background:var(--red)}
+  .streak i.ok{background:var(--mint)} .streak i.no{background:var(--wrong)}
   .pushrow{display:flex;align-items:center;justify-content:space-between;gap:12px;
     padding:13px 0;border-bottom:1px solid var(--line)}
   .pushrow:last-child{border-bottom:none}
@@ -406,7 +406,7 @@
 <script src="notes.js"></script>
 <script src="js/tera-q.js?v=1111g"></script>
 <script src="js/tera-q-tongsa.js?v=eed47b3d"></script>
-<script src="js/atlas.js?v=b77a2dac"></script>
+<script src="js/atlas.js?v=1111h"></script>
 <script src="js/thinker.js?v=72a943f9"></script>
 <script src="js/subkiller.js?v=00662b97"></script>
 <script src="js/laborcase.js?v=b8aa0ab8"></script>
@@ -422,9 +422,9 @@
 <script src="js/cards.js?v=4a02015e"></script>
 <script src="js/packs.js?v=87449626"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/store.js?v=a750b224"></script>
+<script src="js/store.js?v=1111h"></script>
 <script src="js/cheer.js?v=d35f9315"></script>
-<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
+<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1111h" defer></script>
 <script src="js/supa.config.js?v=a3ea51e7"></script>
 <script src="js/auth.js?v=aece7b36"></script>
 <script src="js/research.js?v=62660e08"></script>
@@ -1039,13 +1039,13 @@
     if(showTerm && term!=null){
       var x=sx(term), inb=(term>q.lo&&term<q.hi);
       now='<polygon points="'+x+','+(y-18)+' '+(x-7)+','+(y-30)+' '+(x+7)+','+(y-30)+'" fill="'+
-        (inb?"var(--mint)":"#E5484D")+'"/>'+
-        '<text x="'+x+'" y="'+(y-34)+'" text-anchor="middle" fill="'+(inb?"var(--mint)":"#FF6369")+
+        (inb?"var(--mint)":"#0F766E")+'"/>'+
+        '<text x="'+x+'" y="'+(y-34)+'" text-anchor="middle" fill="'+(inb?"var(--mint)":"#7FB8B2")+
         '" font-size="11.5" font-family="IBM Plex Mono">'+r2(term)+'</text>';
     }
     return '<div class="ppc"><svg viewBox="0 0 '+W+' '+H+'">'+
       '<line x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'" stroke="var(--axis)" stroke-width="1.5"/>'+
-      band+now+mark(q.oa,"#E5484D",q.C[0]+" "+r2(q.oa),true)+
+      band+now+mark(q.oa,"#0F766E",q.C[0]+" "+r2(q.oa),true)+
       mark(q.ob,"#8A929C",q.C[1]+" "+r2(q.ob),false)+
       '<text x="'+PL+'" y="'+(H-6)+'" fill="var(--axis-ink)" font-size="11" font-family="IBM Plex Mono">'+
       q.G[0]+' 1개의 기회비용 ('+q.G[1]+') →</text></svg></div>';
@@ -2007,6 +2007,6 @@
 })();
 </script>
 <!-- 테라러닝 홈 단추(공용 terrahome) -->
-<script src="js/terrahome.js?v=243c5cfd" data-slot=".nav .wrap" defer></script>
+<script src="js/terrahome.js?v=1111h" data-slot=".nav .wrap" defer></script>
 </body>
 </html>

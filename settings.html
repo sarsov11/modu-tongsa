@@ -8,14 +8,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#FAF8F3">
+<meta name="theme-color" content="#0F766E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/login.css?v=f7dbf027">
-<link rel="stylesheet" href="css/base.css?v=22afa090">
+<link rel="stylesheet" href="css/login.css?v=1111h">
+<link rel="stylesheet" href="css/base.css?v=1111h">
 <link rel="stylesheet" href="css/cheer.css?v=b6d0f7c3">
 <link rel="stylesheet" href="css/coach.css?v=02d1145b">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
@@ -231,10 +231,10 @@
   .phead{display:block;padding:18px 0 6px}
   .phead h1{font-size:26px;font-weight:800;letter-spacing:-.03em;margin:6px 0 0}
   .sechd h2{font-size:16px;font-weight:800;letter-spacing:-.02em}
-  .sec.fold{border:0;border-radius:18px;box-shadow:0 1px 2px rgba(17,20,25,.05),0 0 0 1px var(--line);margin-top:10px}
+  .sec.fold{border:0;border-radius:18px;box-shadow:0 1px 2px rgba(17,25,24,.05),0 0 0 1px var(--line);margin-top:10px}
   .sec.fold>.sechd h2{font-size:16px;font-weight:800}
   .sec.fold.open>*:not(.sechd):not([hidden]){margin:0 18px 18px}
-  .gr,.sk,.prbox,.urow{border:0;border-radius:18px;box-shadow:0 1px 2px rgba(17,20,25,.05),0 0 0 1px var(--line)}
+  .gr,.sk,.prbox,.urow{border:0;border-radius:18px;box-shadow:0 1px 2px rgba(17,25,24,.05),0 0 0 1px var(--line)}
   .urow{border-radius:14px}
   .gr[aria-pressed="true"],.sk[aria-pressed="true"]{box-shadow:0 0 0 1.5px var(--pt)}
   .urow.on{box-shadow:0 0 0 1.5px var(--pt)}
@@ -374,10 +374,10 @@
 <script src="js/drills.js?v=3f81d010"></script>
 <script src="js/cards.js?v=4a02015e"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/store.js?v=a750b224"></script>
+<script src="js/store.js?v=1111h"></script>
 <script src="js/tera-daeip-time.js?v=1be48a54"></script>
 <script src="js/cheer.js?v=d35f9315"></script>
-<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
+<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1111h" defer></script>
 <script src="js/supa.config.js?v=a3ea51e7"></script>
 <script src="js/parent.js?v=cdb8db08"></script>
 <script src="js/auth.js?v=aece7b36"></script>
@@ -602,11 +602,11 @@
 
   /* ── 디자인 ── */
   var PREV={
-    "":     {bg:"#070B14", ring:"#4FC3E8", fill:"#2A7E95", ink:"#DEE8F8"},
-    "paper":{bg:"linear-gradient(rgba(31,36,48,.08) 1px,transparent 1px) 0 0/14px 14px,linear-gradient(90deg,rgba(31,36,48,.08) 1px,transparent 1px) 0 0/14px 14px,#FAF8F3", ring:"#2F5BEA", fill:"#A9BCF5", ink:"#171B24"},   /* 없어서 밤으로 떨어져 종이·밤이 똑같이 보였다(2026-09-19 대표님) */
-    "note": {bg:"#F6F2E7", ring:"#C2452F", fill:"#EDB3A5", ink:"#1F2B44"},   /* 실제 주 색(--red #C2452F)으로 — 파랑이라 종이와 똑같아 보였다 */
-    "jelly":{bg:"#FFF6FA", ring:"#F0417E", fill:"#F9A7C6", ink:"#33232C"},
-    "white":{bg:"#FFFFFF", ring:"#E5202E", fill:"#F5A3A8", ink:"#111419"}
+    "":     {bg:"#071413", ring:"#6ACDC5", fill:"#2A958C", ink:"#DEE8F8"},
+    "paper":{bg:"linear-gradient(rgba(31,48,47,.08) 1px,transparent 1px) 0 0/14px 14px,linear-gradient(90deg,rgba(31,48,47,.08) 1px,transparent 1px) 0 0/14px 14px,#FAF8F3", ring:"#53C6BC", fill:"#B7E7E3", ink:"#172423"},   /* 없어서 밤으로 떨어져 종이·밤이 똑같이 보였다(2026-09-19 대표님) */
+    "note": {bg:"#F6F2E7", ring:"#0F766E", fill:"#AEE4E0", ink:"#1F4441"},   /* 실제 주 색(--red #0F766E)으로 — 파랑이라 종이와 똑같아 보였다 */
+    "jelly":{bg:"#FFF6FA", ring:"#65CCC3", fill:"#B8E8E4", ink:"#233332"},
+    "white":{bg:"#FFFFFF", ring:"#0F766E", fill:"#B3E6E1", ink:"#111918"}
   };
   function paintSkins(){
     var now=T.skin();
@@ -897,7 +897,7 @@
 </script>
 <script src="js/zzstrat.js?v=f6862a5e"></script><script src="js/zzstrat_tongsa.js?v=efef2088"></script><script src="js/zzstrat_cover.js?v=488dc61b"></script>
 <!-- 테라러닝 홈 단추(공용 terrahome) -->
-<script src="js/terrahome.js?v=243c5cfd" data-slot=".nav .wrap" defer></script>
+<script src="js/terrahome.js?v=1111h" data-slot=".nav .wrap" defer></script>
 <script>
 /* 10절 — 설정 첫 항목(하루 루틴)에 「추천」 한 개 */
 setTimeout(function(){ var h=[].slice.call(document.querySelectorAll(".sechd h2")).filter(function(x){ return x.textContent.replace(/\s+/g,"")==="하루루틴"; })[0];

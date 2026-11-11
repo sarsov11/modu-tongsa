@@ -8,15 +8,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&family=Gaegu:wght@300;400;700&family=Gowun+Dodum&family=Jua&display=swap">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#FAF8F3">
+<meta name="theme-color" content="#0F766E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=22afa090">
+<link rel="stylesheet" href="css/base.css?v=1111h">
 <link rel="stylesheet" href="css/coach.css?v=02d1145b">
-<link rel="stylesheet" href="css/question.css?v=482f4a2f">
+<link rel="stylesheet" href="css/question.css?v=1111h">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
 <style>
   .wrapx{max-width:900px;margin:0 auto;padding:0 var(--s3) calc(var(--s6) + 120px)}   /* 아래 선생님 띠 자리 */
@@ -45,7 +45,7 @@
     color:var(--ink)}
   .omr button[data-kl="1"]{box-shadow:inset 0 -2px 0 var(--red)}
   .omr button[data-s="ok"]{background:var(--mint-soft);border-color:var(--mint);color:var(--ink)}
-  .omr button[data-s="no"]{background:var(--red-soft);border-color:var(--red);color:var(--red-2)}
+  .omr button[data-s="no"]{background:var(--wrong-soft);border-color:var(--wrong);color:var(--wrong-2)}
   @media(max-width:560px){ .omr{grid-template-columns:repeat(9,1fr)} }
 
   /* ── 문항 ── */
@@ -120,8 +120,8 @@
   html body.inner .foot{background:#fff;border-top:1px solid #E6E8EC;box-shadow:none}
   html body.inner{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
   html body.inner .exbar .bar i{border-radius:999px;background:var(--pt)}
-  html body.inner .foot{height:calc(72px + env(safe-area-inset-bottom));padding-top:11px;box-shadow:0 -2px 10px rgba(15,23,42,.08)}
-  html body.inner .foot #jump{height:44px;min-height:44px;border-radius:12px;border:1px solid var(--pt);background:color-mix(in srgb,var(--pt) 5%,#fff);color:color-mix(in srgb,var(--pt) 78%,#111419);font-weight:600}
+  html body.inner .foot{height:calc(72px + env(safe-area-inset-bottom));padding-top:11px;box-shadow:0 -2px 10px rgba(15,42,40,.08)}
+  html body.inner .foot #jump{height:44px;min-height:44px;border-radius:12px;border:1px solid var(--pt);background:color-mix(in srgb,var(--pt) 5%,#fff);color:color-mix(in srgb,var(--pt) 78%,#111918);font-weight:600}
 </style>
 </head>
 <body>
@@ -145,12 +145,12 @@
 <script src="js/cards.js?v=4a02015e"></script>
 <script src="js/packs.js?v=87449626"></script>
 <script src="js/oxindex.js?v=3e274b64"></script>
-<script src="js/store.js?v=a750b224"></script>
+<script src="js/store.js?v=1111h"></script>
 <script src="js/supa.config.js?v=a3ea51e7"></script>
 <script src="js/auth.js?v=aece7b36"></script>
 <script src="js/research.js?v=62660e08"></script>
 <script src="js/coach.js?v=59b600d3"></script>
-<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1009a" defer></script>
+<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1111h" defer></script>
 <script src="js/qrender.js?v=3419f389"></script>
 <script src="js/exam.js?v=de468b6e"></script>
 <script src="js/notify.js?v=c73fb7d9"></script>
@@ -499,6 +499,6 @@
 })();
 </script>
 <!-- 테라러닝 홈 단추(공용 terrahome) -->
-<script src="js/terrahome.js?v=243c5cfd" data-slot=".nav .wrap" defer></script>
+<script src="js/terrahome.js?v=1111h" data-slot=".nav .wrap" defer></script>
 </body>
 </html>
