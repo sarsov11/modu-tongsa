@@ -4,7 +4,7 @@
    SVG 좌표 배치를 안 쓰고 HTML 흐름으로만 그린다 — 이름이 길어도 줄이 바뀔 뿐 겹치지 않는다.
    색은 앱 변수(--surface·--ink·--pt1~6)를 쓰고, 없으면 아래 기본값. */
 .st{--st-bg:var(--surface,#fff);--st-bg2:var(--surface-2,#F7F8FA);--st-line:var(--line,#E6E8EC);--st-line2:var(--line-2,#D3D7DD);
-  --st-ink:var(--ink,#111918);--st-ink2:var(--ink-2,#2B3837);--st-ink3:var(--ink-3,#4B6361);--st-ink4:var(--ink-4,#6B807E);
+  --st-ink:var(--ink,#111419);--st-ink2:var(--ink-2,#333941);--st-ink3:var(--ink-3,#5F6670);--st-ink4:var(--ink-4,#6B7280);
   --st-gold:var(--gold,#40BFB5);--st-r:var(--r3,14px);--st-pw:372px;
   position:relative;font-family:var(--kr,var(--font,"Pretendard","Noto Sans KR",sans-serif));color:var(--st-ink);
   -webkit-tap-highlight-color:transparent}

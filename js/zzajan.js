@@ -277,7 +277,7 @@
     add("zz-big", "--c2:" + c2, title + (sub ? "<small>" + sub + "</small>" : ""), 2600);
   }
   function levelUp(n) { bigScene("#65CCC3", "#77D2CA", String(n), TXT.lvT, TXT.lvS(n), "levelup"); }
-  var GRADE = { C: ["#6B807E", "#D1D5DB"], B: ["#22D3C4", "#9DDED9"], A: ["#20C6B8", "#A7E2DD"], S: ["#1A9E93", "#8CD9D2"] };
+  var GRADE = { C: ["#6B7280", "#D1D5DB"], B: ["#22D3C4", "#9DDED9"], A: ["#20C6B8", "#A7E2DD"], S: ["#1A9E93", "#8CD9D2"] };
   function promote(from, to) { var g = GRADE[to] || GRADE.S; bigScene(g[0], g[1], to, TXT.prT(to), from ? from + " → " + to : "", to === "S" ? "fanfare" : "levelup"); }
   function stars(n) {
     if (!(n >= 1)) return;   /* 별 0개는 부르지 않는다(40% 미만) */

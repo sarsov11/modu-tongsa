@@ -11,7 +11,7 @@
 <meta name="theme-color" content="#0F766E">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=1111h">
+<link rel="stylesheet" href="css/base.css?v=1112k">
 <link rel="stylesheet" href="css/cheer.css?v=b6d0f7c3">
 <link rel="stylesheet" href="css/question.css?v=1111h">
 <script>try{var _s=localStorage.getItem("terra.skin");if(_s===null||_s==="")_s="white";if(_s==="night")_s="";if(_s==="diary")_s="jelly";if(_s)document.documentElement.dataset.skin=_s;}catch(e){}</script>
@@ -937,10 +937,10 @@
   var 로컬=/^(localhost|127\.|0\.0\.0\.0|\[::1\]|192\.168\.)/.test(location.hostname);
   if(!("serviceWorker" in navigator)) return;
   if(로컬){ navigator.serviceWorker.getRegistrations&&navigator.serviceWorker.getRegistrations().then(function(rs){ rs.forEach(function(r){ r.unregister(); }); }); return; }
-  navigator.serviceWorker.register("sw.js").catch(function(){});
+  navigator.serviceWorker.register("sw.js?v=1112k").catch(function(){});
 })();
 </script>
 <!-- 테라러닝 홈 단추(공용 terrahome) -->
-<script src="js/terrahome.js?v=1111h" data-slot=".obtop" defer></script>
+<script src="js/terrahome.js?v=1112k" data-slot=".obtop" defer></script>
 </body>
 </html>

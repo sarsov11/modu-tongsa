@@ -21,7 +21,7 @@
   if (opt.hide) return;
 
   var css = [
-    ".th-home{display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 10px 0 7px;border-radius:999px;background:rgba(255,255,255,.92);color:#161D1C;",
+    ".th-home{display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 10px 0 7px;border-radius:999px;background:rgba(255,255,255,.92);color:#111419;",
     " border:1px solid rgba(0,0,0,.12);font:800 12.5px/1 'Pretendard','Noto Sans KR','Noto Sans JP',system-ui,sans-serif;letter-spacing:-.01em;text-decoration:none;",
     " box-shadow:0 2px 8px rgba(0,0,0,.08);-webkit-tap-highlight-color:transparent;white-space:nowrap}",
     ".th-home:hover{background:#fff}.th-home:active{transform:scale(.97)}",

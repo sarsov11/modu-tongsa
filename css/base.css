@@ -189,7 +189,7 @@
   --bg:#FFFFFF; --bg-2:#FAFAFB; --surface:#FFFFFF; --surface-2:#F7F8FA;
   --surface-3:#EFF1F4;
   --line:#E6E8EC; --line-2:#D3D7DD; --line-3:#B4BAC3;
-  --ink:#111918; --ink-2:#334140; --ink-3:#5A6766; --ink-4:#5F706F;   /* 2026-09-24 대표님 판정: 보조 글씨 명암비 4.5 이상(옛 --ink-4 #949AA3 = 2.83) */
+  --ink:#111419; --ink-2:#333941; --ink-3:#5F6670; --ink-4:#5F6670;   /* 2026-09-24 대표님 판정: 보조 글씨 명암비 4.5 이상(옛 --ink-4 #949AA3 = 2.83) */
 
   --red:#0F766E; --red-2:#0B5F59; --red-3:#0B4F4A;
   --red-soft:rgba(15,118,110,.07); --red-line:rgba(15,118,110,.40);
@@ -201,7 +201,7 @@
   --fam-geo:#0F766E; --fam-soc:#0B4F4A; --fam-eth:#7FB8B2; --mint:#0F766E;
 
   --stage:#FFFFFF; --stage-2:#FFFFFF; --stage-line:#DEE1E6;
-  --stage-ink:#111918; --stage-ink-2:#6B7A79; --star:#E6E8EC;
+  --stage-ink:#111419; --stage-ink-2:#6B7A79; --star:#E6E8EC;
   --neb-1:rgba(15,118,110,.07); --neb-2:rgba(17,25,24,.03);
   --core-glow:#0F766E;
   --crop:#F4F4F6;
@@ -266,7 +266,7 @@
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--ink-2);
+body{margin:0;background:var(--bg);color:var(--ink);
   background-image:var(--paper);background-size:14px 14px;
   font-family:var(--kr);font-size:16px;line-height:1.68;font-weight:500;   /* 2026-09-24 대표님 판정 「글씨는 무조건 진해야」 — 본문 500 이상 */
   -webkit-font-smoothing:antialiased;word-break:keep-all}
@@ -614,7 +614,7 @@ h1,h2,h3,h4{font-weight:900!important}
 :root{--pt:var(--cta);--pt-2:var(--cta-2);--pt-soft:var(--cta-soft);--pt-line:var(--cta-line);--pt-ink:var(--cta)}
 :root[data-skin="white"]{
   --pt:#0F766E; --pt-2:#0B5F59; --pt-soft:rgba(15,118,110,.10); --pt-line:rgba(15,118,110,.40);
-  --pt-ink:color-mix(in srgb,#0F766E 78%,#111918);
+  --pt-ink:color-mix(in srgb,#0F766E 78%,#111419);
   --no:#E5322D; --ok:#16B364;
   --sans:"Pretendard Variable",Pretendard,"Noto Sans KR","Malgun Gothic",system-ui,sans-serif;
   --kr:var(--sans); --title:var(--sans);
@@ -798,7 +798,7 @@ html body .rc-card .go,html body .go{box-shadow:none}
 :root,:root[data-skin]{--wrong:#E5322D;--wrong-2:#C42A25;--wrong-soft:rgba(229,50,45,.10);--wrong-line:rgba(229,50,45,.38)}
 :root,:root[data-skin]{--mint:#0B5F59;--mint-2:#0F766E;--mint-soft:rgba(15,118,110,.10);--amber:#9AA0A8;--fam-geo:#0F766E;--fam-soc:#0B4F4A;--fam-eth:#7FB8B2}
 .bdg-hard{background:rgba(15,118,110,.10);color:#0B5F59;box-shadow:inset 0 0 0 1px rgba(15,118,110,.3)}
-.bdg-done{background:#F1F3F5;color:#3A4746;box-shadow:inset 0 0 0 1px #D3D7DD}
+.bdg-done{background:#F1F3F5;color:#333941;box-shadow:inset 0 0 0 1px #D3D7DD}
 .scopenote{border:1px solid #E6E8EC;background:#fff}
 .scopenote a{color:#0B5F59}
 

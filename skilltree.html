@@ -14,9 +14,9 @@
 <meta name="apple-mobile-web-app-title" content="모두의 통사">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="icon" href="icons/favicon.png">
-<link rel="stylesheet" href="css/base.css?v=1111h">
+<link rel="stylesheet" href="css/base.css?v=1112k">
 <link rel="stylesheet" href="css/coach.css?v=02d1145b">
-<link rel="stylesheet" href="css/stree.css?v=1111h">
+<link rel="stylesheet" href="css/stree.css?v=1112k">
 <style>
   /* 1025 대표님 「구김 없이, 넘기면 다 보이게」 — 궤도판(원 배치)은 숨기고 넘김판(공용 stree)을 그린다. 옛 판 _skilltree_궤도전_1025.html */
   body.stree-on .board, body.stree-on #treelist, body.stree-on #legend, body.stree-on .segbar, body.stree-on #crumb, body.stree-on #lede{display:none!important}
@@ -26,7 +26,7 @@
   body.tmap-on .phead{display:none}
   /* 1030 앰블럼판 탭(공용 embboard) */
   .embtabs{display:flex;gap:6px;margin-top:var(--s3,16px);padding:4px;border-radius:14px;background:var(--surface-2,#eef0f4)}
-  .embtabs button{flex:1;font:inherit;font-weight:800;font-size:16px;padding:10px 8px;border:0;border-radius:12px;background:none;color:var(--ink-3,#6b807e);cursor:pointer}
+  .embtabs button{flex:1;font:inherit;font-weight:800;font-size:16px;padding:10px 8px;border:0;border-radius:12px;background:none;color:var(--ink-3,#6B7280);cursor:pointer}
   .embtabs button[aria-pressed="true"]{background:var(--surface,#fff);color:var(--ink,#1d302e);box-shadow:0 1px 3px rgba(0,0,0,.12)}
   .embtabs b{font-weight:800;color:var(--pt,#0F766E)}
   #embhost{margin-top:var(--s3,16px)}
@@ -55,7 +55,7 @@
   body.tmap-on #pickhost,body.tmap-on #scopeband{display:none!important}
   .scopectl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .scopectl .sc-chip{height:34px;padding:0 13px;border-radius:999px;display:inline-flex;align-items:center;background:var(--pt-soft,rgba(15,118,110,.10));color:var(--pt-ink,#0B5F59);font:800 13px/1 inherit;white-space:nowrap}
-  .scopectl a,.scopectl button{height:34px;padding:0 13px;border-radius:999px;border:1px solid var(--line-2,#D3D7DD);background:var(--surface,#fff);color:var(--ink-2,#334140);font:700 13px/1 inherit;text-decoration:none;display:inline-flex;align-items:center;cursor:pointer;white-space:nowrap}
+  .scopectl a,.scopectl button{height:34px;padding:0 13px;border-radius:999px;border:1px solid var(--line-2,#D3D7DD);background:var(--surface,#fff);color:var(--ink-2,#333941);font:700 13px/1 inherit;text-decoration:none;display:inline-flex;align-items:center;cursor:pointer;white-space:nowrap}
   h1,h2,.pk-title{font-family:var(--title);font-weight:var(--tw);letter-spacing:var(--tls)}
 
   /* ── 머리 — 층을 옮기면 제목이 따라 움직인다 ── */
@@ -397,8 +397,8 @@
 <script src="js/coach.js?v=59b600d3"></script>
 <script src="js/stree.js?v=1111h"></script>
 <script src="js/tera-map.js?v=1111g"></script>
-<script src="js/emblem.js?v=1111h"></script><script src="js/hextree.js?v=1111h"></script><script src="js/embboard.js?v=1111h"></script><script src="js/titles.js?v=1101h"></script>
-<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1111h" defer></script><script src="js/zzcoach.js?v=1111h" defer></script>
+<script src="js/emblem.js?v=1112k"></script><script src="js/hextree.js?v=1111h"></script><script src="js/embboard.js?v=1111h"></script><script src="js/titles.js?v=1101h"></script>
+<script src="js/zzsfx.js?v=1009a" defer></script><script src="js/zzajan.js?v=1112k" defer></script><script src="js/zzcoach.js?v=1111h" defer></script>
 <script>
 (function(){
   var T=TERRA, L=window.LECT||{};
@@ -517,7 +517,7 @@
   function paint(){
     FAMS.forEach(function(f){
       var hex=cv(FAM[f].key)||"#6ACDC5", c=hsl(hex);
-      FAM[f].hex=cv("--ink-3")||"#6B807E"; FAM[f].h=c[0]; FAM[f].s=c[1];   /* 단원 색은 쓰지 않는다(10/20) */
+      FAM[f].hex=cv("--ink-3")||"#6B7280"; FAM[f].h=c[0]; FAM[f].s=c[1];   /* 단원 색은 쓰지 않는다(10/20) */
     });
     GOLD=ACH.S; STAR=cv("--star")||"#DBF3F1";
     CORE=cv("--core-glow")||"#5BC8BF";
@@ -1754,7 +1754,7 @@
   (function 앰블럼판(){
     var TT=window.TTITLE, host=document.getElementById("embhost"), tabs=document.getElementById("embtabs");
     if(!window.TEMBOARD||!TT||!TT.앰블럼||!host||!tabs) return;
-    var 색=["#0F766E","#0B5F59","#7FB8B2","#0B4F4A","#A8D3CE","#6B807E","#9AA0A8","#3A4746","#0B5F59","#7FB8B2","#5F706F"];
+    var 색=["#0F766E","#0B5F59","#7FB8B2","#0B4F4A","#A8D3CE","#6B7280","#9AA0A8","#333941","#0B5F59","#7FB8B2","#5F6670"];
     var 얻은수=0, 전체수=0;
     /* 통합사회 1·2 가 섞이면 둘 다 「1단원」부터라 책 이름을 붙인다 */
     var 책이름={"통합사회1":"통합사회 1","통합사회2":"통합사회 2"}, 책들={};
@@ -1868,11 +1868,11 @@
     return;
   }
   addEventListener("load", function () {
-    navigator.serviceWorker.register("sw.js").catch(function () {});
+    navigator.serviceWorker.register("sw.js?v=1112k").catch(function () {});
   });
 })();
 </script>
 <!-- 테라러닝 홈 단추(공용 terrahome) -->
-<script src="js/terrahome.js?v=1111h" data-slot=".nav .wrap" defer></script>
+<script src="js/terrahome.js?v=1112k" data-slot=".nav .wrap" defer></script>
 </body>
 </html>
