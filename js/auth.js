@@ -28,6 +28,7 @@
     ((document.querySelector('meta[name="terra-service"]') || {}).content) || "tongsa";
   var 키들 = (내스크립트 && 내스크립트.getAttribute("data-keys")) ?
     내스크립트.getAttribute("data-keys").split(",").map(function (s) { return s.trim(); }).filter(Boolean) :
+    서비스 !== "tongsa" ? [] :   /* 통사 키 목록이 다른 서비스 줄에 섞여 올라가던 것(1112 NCS 시험에서 발견) */
     ["terra.tree.v1", "terra.exam.log", "terra.goalmin", "terra.state", "terra.scope", "terra.snap", "terra.cards", "terra.axis", "terra.onboarded"];
   var 맞춤키 = "terra.sync." + 서비스;
   var sb = ON ? C.client() : null;
@@ -64,13 +65,20 @@
     return sb.auth.signInWithOAuth({
       provider: 어디,
       /* login.html 로 돌아온다 — 첫 실행 가드(start.html)에 안 걸리는 화면이고, 내려받기가 끝나면 거기서 갈 곳을 정한다 */
-      options: { redirectTo: location.origin + location.pathname.replace(/[^/]*$/, "") + "login.html" }
+      /* 통사는 login.html 로 돌아와 갈 곳을 정한다(data-return). 다른 서비스는 누른 화면 그대로 돌아온다 */
+      options: { redirectTo: (내스크립트 && 내스크립트.getAttribute("data-return")) ?
+        location.origin + location.pathname.replace(/[^/]*$/, "") + 내스크립트.getAttribute("data-return") :
+        location.href.split("#")[0] }
     }).then(function () { return true; });
   }
   /* 기기의 학습 기록 지우기 — 로그아웃·다른 계정 로그인 때. 화면이 메모리에 든 기록을 곧바로 다시 써넣을 수 있어
      한 번 더 지운 뒤 새로 연다(1110 검수: 지운 직후 옛 기록이 되살아나 새 계정에 올라갔다) */
   function 기기비우기() {
-    function 지우기() { 키들.concat([맞춤키, "terra.sync", "terra.sync.uid"]).forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} }); }
+    function 지우기() {
+      var 목록 = 키들.concat([맞춤키, "terra.sync", "terra.sync.uid"]);
+      try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (우리키(k)) 목록.push(k); } } catch (e) {}
+      목록.forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
+    }
     지우기();
     return new Promise(function (res) { setTimeout(function () { 지우기(); res(); }, 400); });
   }
@@ -82,14 +90,27 @@
   }
 
   /* ── 기록 동기화 ────────────────────────────────────────── */
+  /* 앞글자로 고르는 키(다른 서비스는 키 이름이 정해져 있지 않다: mj.단원 같은 식). data-prefixes="mj.,stree." */
+  var 앞글자들 = (내스크립트 && 내스크립트.getAttribute("data-prefixes")) ?
+    내스크립트.getAttribute("data-prefixes").split(",").map(function (s) { return s.trim(); }).filter(Boolean) : [];
+  var 빼기 = /^(terra\.rs|terra\.sync|sb-)/;   // 연구 대기열·맞춤 표시·로그인 세션은 기록이 아니다
+  function 우리키(k) {
+    if (!k || 빼기.test(k)) return false;
+    if (키들.indexOf(k) >= 0) return true;
+    for (var i = 0; i < 앞글자들.length; i++) if (k.indexOf(앞글자들[i]) === 0) return true;
+    return false;
+  }
   function 꾸러미() {
     var o = {};
     키들.forEach(function (k) { try { o[k] = localStorage.getItem(k); } catch (e) {} });
+    if (앞글자들.length) try {
+      for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i); if (우리키(k)) o[k] = localStorage.getItem(k); }
+    } catch (e) {}
     return o;
   }
   function 풀기(o) {
     Object.keys(o || {}).forEach(function (k) {
-      if (키들.indexOf(k) < 0 || o[k] == null) return;
+      if (!우리키(k) || o[k] == null) return;
       try { localStorage.setItem(k, o[k]); } catch (e) {}
     });
   }
@@ -129,7 +150,7 @@
   function 맞춤적기(uid, at) { try { localStorage.setItem(맞춤키, JSON.stringify({ uid: uid, at: at, sig: 지문(꾸러미()) })); } catch (e) {} }
   function 바뀜() { var m = 맞춤읽기(); return m.sig !== 지문(꾸러미()); }
 
-  var 마지막올림 = 0, 올림예약 = null, 올리는중 = null;
+  var 마지막올림 = 0, 올림예약 = null, 올리는중 = null, 로그인됨 = false;
   function 올리기(강제) {
     if (!ON) return Promise.resolve(false);
     if (올리는중) return 올리는중;
@@ -310,16 +331,17 @@
   }
 
   /* 답할 때마다 올린다 — store.js 가 쏘는 사건 */
-  window.addEventListener("terra:ev", function () { 올리기(); });
+  window.addEventListener("terra:ev", function () { if (로그인됨) 올리기(); });
   /* 답 말고 설정·시험·범위만 바꿔도 올라가게: 20초마다 지문만 견주고(기기 안 계산), 화면을 떠날 때도 한 번 */
   if (ON) {
-    setInterval(function () { if (바뀜()) 올리기(); }, 20000);
-    document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden" && 바뀜()) 올리기(); });
+    setInterval(function () { if (로그인됨 && 바뀜()) 올리기(); }, 20000);   // 로그인 안 한 학생은 서버를 부르지 않는다
+    document.addEventListener("visibilitychange", function () { if (로그인됨 && document.visibilityState === "hidden" && 바뀜()) 올리기(); });
   }
   /* INITIAL_SESSION = 로그인한 채 화면을 연 때. 앞 화면에서 못 올린 마지막 답을 여기서 맞춘다.
      콜백 안에서 Supabase 를 바로 부르면 멈출 수 있어(공식 문서 경고) setTimeout 으로 빼낸다.
      다른 기기 기록을 받으면 메모리의 옛 기록이 덮어쓰지 않도록 화면을 다시 연다. login.html 은 terra:synced 로 스스로 옮겨 간다. */
   if (ON) sb.auth.onAuthStateChange(function (ev, session) {
+    로그인됨 = !!(session && session.user && !session.user.is_anonymous);
     if (ev !== "SIGNED_IN" && !(ev === "INITIAL_SESSION" && session)) return;
     setTimeout(function () {
       내려받기().then(function (결과) {
