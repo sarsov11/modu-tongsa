@@ -16,6 +16,7 @@
     Q.coach = function () {
       var c = coach0.apply(Q, arguments);
       if (!c) return c;
+      if (c.classList.contains("tq-coach-flow")) return c;   // 11-12 끼워 넣은 띠는 그대로 둔다(고정 · 올리기 없음)
       var gap = d.createElement("div"); gap.className = "tq-coach-gap"; gap.style.cssText = "height:0;pointer-events:none"; d.body.appendChild(gap);
       c.style.position = "fixed";
       var 재기 = function () {
