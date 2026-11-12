@@ -197,9 +197,11 @@
     setTimeout(function () {
       if (!cur || d.querySelector(".tq-coach")) return;
       var t1 = $(".tq-term");
-      if (t1 && Q.coach(t1, { key: "term", title: "표시된 말을 누르면 뜻이 나와요", text: "번호 줄의 단추로 개념어 표시를 끌 수 있어요." })) return;
-      if (!cur.answered && Q.coach(tool("doubt"), { key: "doubt", title: "헷갈리면 헷갈림을 눌러요", text: "누르면 반반이나 찍었어요를 고를 수 있어요." })) return;
-      Q.coach(tool("pen"), { key: "pen", title: "펜을 누르면 문제 위에 바로 써요", text: "다시 누르면 필기가 끝나요." });
+      /* 11-12: 안내는 문제 글 위에 한 줄 띠로 끼워 넣는다(공용 tq-coach-flow). host 를 안 주면 main · .page 가 없는 이 화면에서 아래쪽에 떠서 선지를 가렸다 */
+      var host = d.getElementById("stage") || $(".qcard");
+      if (t1 && Q.coach(t1, { host: host, key: "term", title: "표시된 말을 누르면 뜻이 나와요", text: "번호 줄의 단추로 개념어 표시를 끌 수 있어요." })) return;
+      if (!cur.answered && Q.coach(tool("doubt"), { host: host, key: "doubt", title: "헷갈리면 헷갈림을 눌러요", text: "누르면 반반이나 찍었어요를 고를 수 있어요." })) return;
+      Q.coach(tool("pen"), { host: host, key: "pen", title: "펜을 누르면 문제 위에 바로 써요", text: "다시 누르면 필기가 끝나요." });
     }, 700);
     return n;
   }
